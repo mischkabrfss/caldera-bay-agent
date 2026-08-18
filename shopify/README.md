@@ -227,7 +227,25 @@ Trois éléments couvrent cette obligation :
 Cette page décrit une méthode que vous devez réellement appliquer : si vos pratiques
 diffèrent, adaptez-la avant publication.
 
-### Pour importer les avis existants du produit — Judge.me
+### Branchement Judge.me — fait côté thème, à finir côté admin
+Le thème est prêt : section `soleva-judgeme` sur la fiche produit (widget d'avis),
+étoiles Judge.me sous le titre du produit, et `assets/soleva-jdgm.css` qui met le widget
+aux couleurs SOLEVA.
+
+Vérifié dans Shopify au moment de l'écriture : **aucun métachamp `judgeme` ni
+`reviews.rating` sur le produit, et aucune intégration d'application activée dans le
+thème** — donc zéro avis synchronisé et widget non chargé. Trois actions à faire :
+
+1. Applications → vérifier que **Judge.me** est bien installé sur la boutique.
+2. Boutique en ligne → Thèmes → Personnaliser → **Paramètres du thème → Intégrations
+   d'applications** → activer *Judge.me Reviews*. Sans ça, le widget reste vide.
+3. Dans Judge.me → *Import reviews* → coller l'URL AliExpress du produit.
+
+Tant que ce n'est pas fait, la section affiche son titre, le texte de provenance et le
+bouton « Laisser un avis ». Un rappel de ces étapes s'affiche dans l'éditeur de thème
+uniquement, jamais pour les visiteurs.
+
+### Alternative : import Judge.me depuis l'application
 
 1. Applications → rechercher **Judge.me Product Reviews** → Installer (offre gratuite).
 2. Dans Judge.me : *Import reviews* → coller l'URL AliExpress du produit → importer.
