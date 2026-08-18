@@ -74,8 +74,12 @@ a été créé et reçoit tout le design sur mesure. 12 fichiers y ont été éc
 | `sections/soleva-band.liquid` | bandeau image parallaxe avec appel à l'action |
 | `sections/soleva-reviews.liquid` | section avis sur fond sombre, carrousel, note moyenne |
 | `sections/soleva-contact.liquid` | formulaire de contact + blocs d'information |
+| `sections/soleva-product.liquid` | fiche produit : galerie, sélecteurs, panier, dépliants |
+| `assets/soleva-product.css` | styles de la fiche produit |
+| `snippets/soleva-logo.liquid` | symbole et logotype SOLEVA en SVG |
 | `templates/index.json` | page d'accueil assemblée (6 sections) |
 | `templates/page.contact.json` | page contact dans la même direction artistique |
+| `templates/product.json` | fiche produit assemblée (produit + avis + bandeau) |
 
 **Page d'accueil, dans l'ordre :** hero plein écran → Bienvenue chez SOLEVA →
 bandeau parallaxe « N'hésitez pas à nous écrire » → Tout pour vos baskets (4 cartes,
@@ -84,6 +88,14 @@ bandeau final « Commander le sac SOLEVA ».
 
 Quatre boutons mènent de l'accueil à la fiche produit : hero, section Bienvenue,
 bloc image + texte, et bandeau final.
+
+**Page produit** — galerie avec vignettes et fondu au changement d'image, pastille
+« Best-seller », prix avec prix barré et pourcentage de remise calculé automatiquement,
+sélecteurs **Couleur** et **Format** en pastilles (les combinaisons en rupture se
+barrent toutes seules), sélecteur de quantité, bouton d'ajout au panier, bandeau de
+réassurance à 4 entrées, trois dépliants (mode d'emploi, compatibilité, livraison et
+retours), puis la description longue. Suivie de la section avis et d'un bandeau contact.
+Le bloc d'achat reste collé en haut au défilement sur grand écran.
 
 **Animations** — zoom lent sur le hero, apparitions échelonnées au scroll, parallaxe
 sur les bandeaux image, bandeau de réassurance défilant en boucle, survols avec
@@ -126,16 +138,48 @@ Un plan payant est requis dans les deux cas.
 
 ---
 
-## 4. Avis clients
+## 4. Avis clients — installation de Judge.me
 
-Aucun avis n'a été créé. Reprendre les avis Google d'une autre boutique reviendrait à
-publier de faux avis : c'est interdit par l'article L121-2 du Code de la consommation et
-la directive Omnibus (jusqu'à 300 000 € d'amende et 10 % du chiffre d'affaires), et c'est
-un motif de fermeture de boutique chez Shopify.
+La section avis est construite et en place sur l'accueil et la fiche produit, mais ses
+cinq cartes sont des emplacements vides. Marche à suivre :
 
-Options légitimes :
-1. **Judge.me / Loox / Fera** (gratuit au démarrage) — collecte automatique des avis
-   après achat, et import possible des avis réels du produit chez le fournisseur.
-2. **Avis vérifiés / Trustpilot** — plus crédible, payant.
-3. Démarrage sans avis, avec la garantie 30 jours en réassurance le temps des premières
-   commandes.
+1. Applications → rechercher **Judge.me Product Reviews** → Installer (offre gratuite).
+2. Dans Judge.me : *Import reviews* → coller l'URL AliExpress du produit → importer.
+   Cela récupère les avis réels d'acheteurs de ce produit, avec leurs photos.
+3. Vérifier les avis importés et supprimer ceux qui ne sont pas exploitables.
+4. Activer la demande d'avis automatique après achat, pour vos propres clients.
+5. Deux options d'affichage :
+   - garder la section SOLEVA et y recopier les meilleurs avis à la main ;
+   - ou remplacer la section par le widget Judge.me, qui se met à jour tout seul.
+6. Une fois de vrais avis en place, décocher **Afficher l'avertissement** dans l'éditeur
+   et ajuster la note moyenne.
+
+Ce qui n'a délibérément pas été fait : le badge « Google Avis » avec une note et un
+nombre d'avis. Il suppose une fiche Google Business Profile, que SOLEVA n'a pas encore.
+Créez la fiche, collectez de vrais avis, puis branchez une application d'avis Google —
+le bandeau sombre est déjà dimensionné pour l'accueillir.
+
+Publier des avis inventés ou repris d'une autre boutique est sanctionné par
+l'article L121-2 du Code de la consommation et la directive Omnibus (jusqu'à 300 000 €
+d'amende et 10 % du chiffre d'affaires), et vaut fermeture de boutique chez Shopify.
+
+---
+
+## 5. Logo
+
+Trois fichiers dans `shopify/brand/` :
+
+| Fichier | Usage |
+|---|---|
+| `soleva-logo.svg` | symbole seul, encre sur fond transparent — logo d'en-tête |
+| `soleva-favicon.svg` | symbole vert sur pastille encre — favicon |
+| `soleva-lockup.svg` | symbole + logotype SOLEVA — signature, documents, réseaux |
+
+Le symbole reprend le motif du lavage : un anneau, deux vagues et trois bulles. Il est
+déjà utilisé en version vectorielle dans le hero via `snippets/soleva-logo.liquid`,
+donc il reste net à toutes les tailles sans rien charger.
+
+Pour le mettre en en-tête : Personnaliser → En-tête → Logo → téléverser `soleva-logo.svg`.
+Pour le favicon : Personnaliser → Paramètres du thème → Favicon → `soleva-favicon.svg`.
+Le logotype `soleva-lockup.svg` utilise la police Playfair Display, avec Georgia en
+solution de repli si la police n'est pas installée sur le poste qui l'ouvre.

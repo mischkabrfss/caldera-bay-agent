@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 120" width="920" height="240" role="img" aria-label="SOLEVA">
+  <g fill="none" stroke="#0F2A38" stroke-width="3.2">
+    <circle cx="60" cy="60" r="54"/>
+    <path d="M29 73.5c7.4 6.4 13.6 6.4 21 0s13.6-6.4 21 0 12.8 6.2 19 1.4" stroke-linecap="round"/>
+    <path d="M29 61c7.4 6.4 13.6 6.4 21 0s13.6-6.4 21 0 12.8 6.2 19 1.4" stroke-linecap="round" opacity=".5"/>
+    <circle cx="45" cy="43.5" r="5" stroke-width="2.8"/>
+    <circle cx="60.5" cy="34" r="7.6" stroke-width="2.8"/>
+    <circle cx="75" cy="44.5" r="3.6" stroke-width="2.8"/>
+  </g>
+  <text x="142" y="76" fill="#0F2A38" font-family="Playfair Display, Georgia, 'Times New Roman', serif" font-weight="900" font-size="52" letter-spacing="7.5">SOLEVA</text>
+</svg>
