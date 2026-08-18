@@ -1,7 +1,7 @@
 # SOLEVA™ — configuration de la boutique Shopify
 
 Boutique : `s70d0u-qg.myshopify.com` · France · EUR · Europe/Paris
-Thème live : **SOLEVA — Boutique** · Brouillon à jour : **SOLEVA — Boutique v3**
+Thème live : **SOLEVA — Boutique v4** · Brouillon à jour : **SOLEVA — Boutique v5**
 
 > **Boucle de travail.** L'API interdit toute écriture sur le thème publié. Chaque série
 > de modifications part donc dans un duplicata (`v2`, puis `v3`…) que vous prévisualisez
@@ -308,3 +308,25 @@ Pour le mettre en en-tête : Personnaliser → En-tête → Logo → téléverse
 Pour le favicon : Personnaliser → Paramètres du thème → Favicon → `soleva-favicon.svg`.
 Le logotype `soleva-lockup.svg` utilise la police Playfair Display, avec Georgia en
 solution de repli si la police n'est pas installée sur le poste qui l'ouvre.
+
+
+---
+
+## 6. Règle de couleur
+
+Le vert menthe `#17B890` est **réservé aux appels à l'action de vente** : Découvrir le sac,
+Commander, Ajouter au panier. Partout ailleurs il est remplacé, pour que le vert signifie
+une seule chose sur tout le site — acheter.
+
+| Zone | Couleur |
+|---|---|
+| Bouton « Laisser un avis » sur le bandeau sombre | ivoire `#F4F7F8` sur encre |
+| Étoiles des avis (fond sombre) | or `#E8B44A` |
+| Étoiles produit (fond clair) | or `#C9922B` |
+| Boutons « Envoyer » des formulaires | encre `#0F2A38` |
+| Sélecteur d'étoiles du formulaire d'avis | or `#E0A82E` |
+
+Les surcharges vivent dans `assets/soleva-tune.css`, chargé en dernier.
+
+### Accroche de la page d'accueil
+Sous le logo : **« Le sac qui lave vos baskets »** — six mots, le produit et sa fonction.
