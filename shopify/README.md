@@ -1,7 +1,12 @@
 # SOLEVA™ — configuration de la boutique Shopify
 
 Boutique : `s70d0u-qg.myshopify.com` · France · EUR · Europe/Paris
-Thème live : **Helio** · Thème sur mesure prêt à publier : **SOLEVA — Boutique**
+Thème live : **SOLEVA — Boutique** · Brouillon en cours : **SOLEVA — Boutique v2**
+
+> **Boucle de travail.** L'API interdit toute écriture sur le thème publié. Chaque série
+> de modifications part donc dans un duplicata (`v2`, puis `v3`…) que vous prévisualisez
+> et publiez. Pour éviter ce va-et-vient, gardez un thème de travail non publié et ne
+> publiez qu'une fois satisfait.
 
 ---
 
