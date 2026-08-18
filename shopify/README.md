@@ -27,14 +27,24 @@ Handle : `/products/sac-de-lavage-chaussures-soleva`
 L'option unique `Color` (6 valeurs mélangeant couleur et quantité) a été remplacée par
 deux options croisées :
 
-| | 1 sac | Lot de 2 (-33 %) |
-|---|---|---|
-| Gris Ardoise | 24,90 € (barré 39,90 €) | 39,90 € (barré 79,80 €) |
-| Bleu Ocean | 24,90 € (barré 39,90 €) | 39,90 € (barré 79,80 €) |
-| Gris & Bleu | 24,90 € (barré 39,90 €) | 39,90 € (barré 79,80 €) |
+9 variantes : 3 coloris × 3 formats.
 
-Les prix d'origine étaient incohérents (10,99 € à 29,99 € pour le même produit).
-Cette grille est une proposition : ajustez-la librement, la structure reste valable.
+| Format | Prix | Comparé à | Remise | Pastille |
+|---|---|---|---|---|
+| 1 sac | 24,90 € | 39,90 € | | |
+| Lot de 2 | 39,90 € | 49,80 € | −20 % | Le plus acheté |
+| Lot de 3 | 49,90 € | 74,70 € | −33 % | Meilleure offre |
+
+Le prix comparé des lots vaut le prix de la même quantité achetée à l'unité
+(2 × 24,90 et 3 × 24,90) : c'est la formulation défendable pour une offre multi-achat.
+
+> **Point de vigilance.** Le prix barré de 39,90 € sur l'unité n'a jamais été pratiqué.
+> L'article L112-1-1 du Code de la consommation impose qu'une annonce de réduction
+> renvoie au prix le plus bas pratiqué dans les 30 jours précédents. Tant que ce prix
+> n'a pas réellement été appliqué, retirez ce prix barré ou vendez d'abord à 39,90 €.
+
+Les pastilles sont pilotées par le réglage « Pastilles sur les options » de la section
+fiche produit, au format `valeur|pastille`, une par ligne.
 
 ### Collections
 - `Best-sellers` — automatique, sur le tag `best-seller`
@@ -57,6 +67,11 @@ Cette grille est une proposition : ajustez-la librement, la structure reste vala
 
 Les textes juridiques sont rédigés pour le droit français : rétractation L221-18,
 garantie de conformité L217-3, livraison L216-1, médiation L612-1, LCEN, RGPD.
+
+### Template produit
+Le produit pointait sur `product.sac-de-lavage-chaussures`, un template généré par Shopify
+lors de la création de la boutique — c'est lui qui s'affichait, pas la fiche sur mesure.
+Le suffixe de template a été vidé : le produit utilise désormais `templates/product.json`.
 
 ### Navigation
 - **Menu principal** : Accueil · Le sac SOLEVA™ · Nous contacter
