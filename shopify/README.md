@@ -48,6 +48,7 @@ Cette grille est une proposition : ajustez-la librement, la structure reste vala
 | Mentions légales | `/pages/mentions-legales` |
 | Nous contacter (refonte) | `/pages/contact` |
 | Laisser un avis | `/pages/laisser-un-avis` |
+| Origine de nos avis | `/pages/avis-clients` |
 
 Les textes juridiques sont rédigés pour le droit français : rétractation L221-18,
 garantie de conformité L217-3, livraison L216-1, médiation L612-1, LCEN, RGPD.
@@ -83,6 +84,8 @@ a été créé et reçoit tout le design sur mesure. 12 fichiers y ont été éc
 | `sections/soleva-gallery.liquid` | mosaïque photo avec révélation au scroll |
 | `sections/soleva-video.liquid` | vidéo de démonstration + 3 étapes |
 | `sections/soleva-review-form.liquid` | formulaire d'avis avec notation en étoiles |
+| `assets/soleva-x.css` | carrousel, barre d'achat fixe, soulignement des titres |
+| `assets/soleva-x.js` | carrousel, barre d'achat, inclinaison des cartes, parallaxe du hero |
 | `templates/index.json` | page d'accueil assemblée (6 sections) |
 | `templates/page.contact.json` | page contact dans la même direction artistique |
 | `templates/product.json` | fiche produit assemblée (produit + vidéo + galerie + avis + bandeau) |
@@ -96,12 +99,17 @@ bandeau final « Commander le sac SOLEVA ».
 Quatre boutons mènent de l'accueil à la fiche produit : hero, section Bienvenue,
 bloc image + texte, et bandeau final.
 
-**Page produit** — galerie avec vignettes et fondu au changement d'image, pastille
-« Best-seller », prix avec prix barré et pourcentage de remise calculé automatiquement,
+**Page produit** — **carrousel** plein cadre : glissement au doigt, flèches au survol,
+pastilles de progression, compteur de photos, navigation au clavier, vignettes
+synchronisées, et saut automatique à la bonne photo quand on change de coloris.
+Pastille « Best-seller », prix avec prix barré et pourcentage de remise calculé
+automatiquement,
 sélecteurs **Couleur** et **Format** en pastilles (les combinaisons en rupture se
 barrent toutes seules), sélecteur de quantité, bouton d'ajout au panier, bandeau de
 réassurance à 4 entrées, trois dépliants (mode d'emploi, compatibilité, livraison et
-retours). Le bloc d'achat reste collé en haut au défilement sur grand écran.
+retours). Le bloc d'achat reste collé en haut au défilement sur grand écran, et une
+**barre d'achat fixe** apparaît en bas de l'écran sur mobile dès que le bouton principal
+sort du champ.
 
 Sous le bloc d'achat, le pavé de texte a été remplacé par une **section vidéo** avec
 trois étapes courtes en dessous, puis une **mosaïque de 7 photos** qui se révèlent au
@@ -113,13 +121,22 @@ La section vidéo accepte une vidéo téléversée dans Contenu → Fichiers, ou
 ou Vimeo. Tant qu'aucune vidéo n'est fournie, l'emplacement affiche la marche à suivre
 plutôt qu'un trou.
 
+**Photos** — les 8 visuels du fournisseur ont été remplacés par les vôtres. Chaque coloris
+est associé à sa photo : choisir Bleu Océan fait défiler le carrousel jusqu'à la bonne
+image. La mosaïque affiche 6 photos légendées, dont les deux avant / après en pleine
+largeur.
+
 **Animations** — zoom lent sur le hero, apparitions échelonnées au scroll, parallaxe sur
 les bandeaux image, bandeau de réassurance défilant en boucle, survols avec élévation sur
 les cartes, flèche de défilement animée, compteur sur la note moyenne, barre de
 progression de lecture en haut de page, révélation des photos par volet montant,
 brillance qui balaie les boutons au survol, titres qui apparaissent mot par mot,
-défilement fluide sur les ancres, halo pulsé sur le bouton de lecture vidéo.
-Tout est désactivé automatiquement si le visiteur a activé « réduire les animations ».
+défilement fluide sur les ancres, halo pulsé sur le bouton de lecture vidéo, contenu du
+hero qui s'éloigne et s'estompe au défilement, trait qui se dessine sous chaque titre de
+section, inclinaison légère des cartes suivant la souris, pulsation du prix à chaque
+changement de variante, pastilles du carrousel qui s'étirent, barre d'achat qui remonte
+en glissant. Tout est désactivé automatiquement si le visiteur a activé « réduire les
+animations ».
 
 Chaque texte, image, bouton et avis est un réglage éditable dans
 **Boutique en ligne → Thèmes → SOLEVA — Boutique → Personnaliser**.
@@ -171,6 +188,24 @@ Tant qu'aucun avis réel n'est saisi, elle affiche « Soyez le premier à donner
 avec le bouton de dépôt, et masque la note moyenne — pas de cartes vides ni de note
 inventée. Dès qu'un bloc « Avis » contient un vrai texte, les cartes et la note
 apparaissent automatiquement et le message d'administration disparaît.
+
+### Afficher un avis repris d'ailleurs — la règle
+Chaque bloc « Avis » a un champ **Provenance**, affiché sous le texte de l'avis. Un avis
+d'un acheteur du même modèle sur une autre plateforme est parfaitement publiable, à une
+condition : la provenance doit être **lisible à côté de l'avis**, pas rangée dans une page
+de politiques. L'article L111-7-2 du Code de la consommation impose que l'information sur
+l'origine et le contrôle des avis figure à proximité des avis eux-mêmes — c'est cette
+visibilité qui rend la pratique légale, et la dissimuler la rendrait trompeuse.
+
+Trois éléments couvrent cette obligation :
+1. Le champ **Provenance** sur chaque avis (« Client SOLEVA · achat vérifié », ou le nom
+   de la plateforme d'origine).
+2. Le paragraphe **Provenance des avis** affiché juste au-dessus des cartes.
+3. La page **`/pages/avis-clients`** qui détaille sources, vérifications, délai de
+   publication, calcul de la moyenne et procédure de signalement.
+
+Cette page décrit une méthode que vous devez réellement appliquer : si vos pratiques
+diffèrent, adaptez-la avant publication.
 
 ### Pour importer les avis existants du produit — Judge.me
 
