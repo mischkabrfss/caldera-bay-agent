@@ -1,7 +1,7 @@
 # SOLEVA™ — configuration de la boutique Shopify
 
 Boutique : `s70d0u-qg.myshopify.com` · France · EUR · Europe/Paris
-Thème live : **Helio** · Thème de travail créé : **SOLEVA — Boutique** (dupliqué, non publié)
+Thème live : **Helio** · Thème sur mesure prêt à publier : **SOLEVA — Boutique**
 
 ---
 
@@ -52,28 +52,50 @@ Les textes juridiques sont rédigés pour le droit français : rétractation L22
 garantie de conformité L217-3, livraison L216-1, médiation L612-1, LCEN, RGPD.
 
 ### Navigation
-- **Menu principal** : Accueil · Le sac SOLEVA™ · Boutique · Aide (5 sous-entrées) · À propos
+- **Menu principal** : Accueil · Le sac SOLEVA™ · Contact
 - **Pied de page** : contact, FAQ, livraison, suivi, retours, expédition, CGV, mentions légales, confidentialité
 
 ---
 
-## 2. Fichier de thème à appliquer
+## 2. Thème sur mesure « SOLEVA — Boutique »
 
-`shopify/theme/templates/index.json` — page d'accueil réécrite aux couleurs SOLEVA™
-(14 blocs de texte : titre principal, boutons, image + texte, citation, carrousel des
-3 bénéfices).
+Le thème live (Helio) n'est pas modifiable par API. Un duplicata **SOLEVA — Boutique**
+a été créé et reçoit tout le design sur mesure. 12 fichiers y ont été écrits :
 
-**Comment l'appliquer** — le thème live ne peut pas être écrit par API, un duplicata
-a donc été préparé :
+| Fichier | Rôle |
+|---|---|
+| `assets/soleva.css` | design system complet + animations |
+| `assets/soleva.js` | apparitions au scroll, parallaxe, carrousel d'avis, compteur |
+| `snippets/soleva-head.liquid` | chargement des assets, garde anti-double-exécution |
+| `snippets/soleva-icon.liquid` | jeu d'icônes SVG |
+| `sections/soleva-hero.liquid` | hero plein écran, image animée Ken Burns, logo, 2 boutons |
+| `sections/soleva-intro.liquid` | bandeau de bienvenue |
+| `sections/soleva-features.liquid` | cartes d'atouts, bloc image + texte, bandeau défilant |
+| `sections/soleva-band.liquid` | bandeau image parallaxe avec appel à l'action |
+| `sections/soleva-reviews.liquid` | section avis sur fond sombre, carrousel, note moyenne |
+| `sections/soleva-contact.liquid` | formulaire de contact + blocs d'information |
+| `templates/index.json` | page d'accueil assemblée (6 sections) |
+| `templates/page.contact.json` | page contact dans la même direction artistique |
 
-1. Boutique en ligne → Thèmes → **SOLEVA — Boutique** → ⋯ → Modifier le code
-2. Ouvrir `templates/index.json`
-3. Remplacer tout le contenu par celui de ce fichier, Enregistrer
-4. Prévisualiser, puis Publier quand le rendu convient
+**Page d'accueil, dans l'ordre :** hero plein écran → Bienvenue chez SOLEVA →
+bandeau parallaxe « N'hésitez pas à nous écrire » → Tout pour vos baskets (4 cartes,
+bloc image + texte, bandeau défilant) → Ils nous font confiance (avis) →
+bandeau final « Commander le sac SOLEVA ».
 
-Le thème **Helio** actuellement en ligne n'est pas touché tant que vous ne publiez pas.
+Quatre boutons mènent de l'accueil à la fiche produit : hero, section Bienvenue,
+bloc image + texte, et bandeau final.
 
----
+**Animations** — zoom lent sur le hero, apparitions échelonnées au scroll, parallaxe
+sur les bandeaux image, bandeau de réassurance défilant en boucle, survols avec
+élévation sur les cartes, flèche de défilement animée, compteur sur la note moyenne.
+Tout est désactivé automatiquement si le visiteur a activé « réduire les animations ».
+
+Chaque texte, image, bouton et avis est un réglage éditable dans
+**Boutique en ligne → Thèmes → SOLEVA — Boutique → Personnaliser**.
+
+**À faire :** prévisualiser le thème, choisir les images dans l'éditeur, puis publier.
+Les images actuelles sont celles du fournisseur déjà présentes dans la boutique — elles
+sont référencées par défaut mais remplaçables en deux clics dans chaque section.
 
 ## 3. À faire côté administration (non accessible par API)
 
