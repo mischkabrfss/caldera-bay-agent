@@ -47,12 +47,13 @@ Cette grille est une proposition : ajustez-la librement, la structure reste vala
 | Conditions générales de vente | `/pages/cgv` |
 | Mentions légales | `/pages/mentions-legales` |
 | Nous contacter (refonte) | `/pages/contact` |
+| Laisser un avis | `/pages/laisser-un-avis` |
 
 Les textes juridiques sont rédigés pour le droit français : rétractation L221-18,
 garantie de conformité L217-3, livraison L216-1, médiation L612-1, LCEN, RGPD.
 
 ### Navigation
-- **Menu principal** : Accueil · Le sac SOLEVA™ · Contact
+- **Menu principal** : Accueil · Le sac SOLEVA™ · Nous contacter
 - **Pied de page** : contact, FAQ, livraison, suivi, retours, expédition, CGV, mentions légales, confidentialité
 
 ---
@@ -77,9 +78,15 @@ a été créé et reçoit tout le design sur mesure. 12 fichiers y ont été éc
 | `sections/soleva-product.liquid` | fiche produit : galerie, sélecteurs, panier, dépliants |
 | `assets/soleva-product.css` | styles de la fiche produit |
 | `snippets/soleva-logo.liquid` | symbole et logotype SOLEVA en SVG |
+| `assets/soleva-anim.css` | animations avancées : révélations, brillance, barre de progression |
+| `assets/soleva-anim.js` | découpe des titres en mots, lecteur vidéo, notation en étoiles |
+| `sections/soleva-gallery.liquid` | mosaïque photo avec révélation au scroll |
+| `sections/soleva-video.liquid` | vidéo de démonstration + 3 étapes |
+| `sections/soleva-review-form.liquid` | formulaire d'avis avec notation en étoiles |
 | `templates/index.json` | page d'accueil assemblée (6 sections) |
 | `templates/page.contact.json` | page contact dans la même direction artistique |
-| `templates/product.json` | fiche produit assemblée (produit + avis + bandeau) |
+| `templates/product.json` | fiche produit assemblée (produit + vidéo + galerie + avis + bandeau) |
+| `templates/page.laisser-un-avis.json` | page de dépôt d'avis |
 
 **Page d'accueil, dans l'ordre :** hero plein écran → Bienvenue chez SOLEVA →
 bandeau parallaxe « N'hésitez pas à nous écrire » → Tout pour vos baskets (4 cartes,
@@ -94,12 +101,24 @@ bloc image + texte, et bandeau final.
 sélecteurs **Couleur** et **Format** en pastilles (les combinaisons en rupture se
 barrent toutes seules), sélecteur de quantité, bouton d'ajout au panier, bandeau de
 réassurance à 4 entrées, trois dépliants (mode d'emploi, compatibilité, livraison et
-retours), puis la description longue. Suivie de la section avis et d'un bandeau contact.
-Le bloc d'achat reste collé en haut au défilement sur grand écran.
+retours). Le bloc d'achat reste collé en haut au défilement sur grand écran.
 
-**Animations** — zoom lent sur le hero, apparitions échelonnées au scroll, parallaxe
-sur les bandeaux image, bandeau de réassurance défilant en boucle, survols avec
-élévation sur les cartes, flèche de défilement animée, compteur sur la note moyenne.
+Sous le bloc d'achat, le pavé de texte a été remplacé par une **section vidéo** avec
+trois étapes courtes en dessous, puis une **mosaïque de 7 photos** qui se révèlent au
+scroll, puis les avis et un bandeau contact. La description longue reste enregistrée sur
+le produit (utile pour le référencement) mais n'est plus affichée : un simple interrupteur
+« Afficher la description complète » la remet si besoin.
+
+La section vidéo accepte une vidéo téléversée dans Contenu → Fichiers, ou un lien YouTube
+ou Vimeo. Tant qu'aucune vidéo n'est fournie, l'emplacement affiche la marche à suivre
+plutôt qu'un trou.
+
+**Animations** — zoom lent sur le hero, apparitions échelonnées au scroll, parallaxe sur
+les bandeaux image, bandeau de réassurance défilant en boucle, survols avec élévation sur
+les cartes, flèche de défilement animée, compteur sur la note moyenne, barre de
+progression de lecture en haut de page, révélation des photos par volet montant,
+brillance qui balaie les boutons au survol, titres qui apparaissent mot par mot,
+défilement fluide sur les ancres, halo pulsé sur le bouton de lecture vidéo.
 Tout est désactivé automatiquement si le visiteur a activé « réduire les animations ».
 
 Chaque texte, image, bouton et avis est un réglage éditable dans
@@ -138,10 +157,22 @@ Un plan payant est requis dans les deux cas.
 
 ---
 
-## 4. Avis clients — installation de Judge.me
+## 4. Avis clients
 
-La section avis est construite et en place sur l'accueil et la fiche produit, mais ses
-cinq cartes sont des emplacements vides. Marche à suivre :
+### Le dépôt d'avis fonctionne déjà
+La page **`/pages/laisser-un-avis`** est en ligne et reliée au bouton « Laisser un avis »
+des deux sections d'avis, ainsi qu'au pied de page. Elle contient un vrai formulaire :
+notation en étoiles cliquable, prénom, e-mail, numéro de commande, texte de l'avis.
+L'envoi arrive dans la boîte de réception de la boutique via le formulaire de contact
+Shopify — aucune application requise.
+
+### La section d'avis s'adapte toute seule
+Tant qu'aucun avis réel n'est saisi, elle affiche « Soyez le premier à donner votre avis »
+avec le bouton de dépôt, et masque la note moyenne — pas de cartes vides ni de note
+inventée. Dès qu'un bloc « Avis » contient un vrai texte, les cartes et la note
+apparaissent automatiquement et le message d'administration disparaît.
+
+### Pour importer les avis existants du produit — Judge.me
 
 1. Applications → rechercher **Judge.me Product Reviews** → Installer (offre gratuite).
 2. Dans Judge.me : *Import reviews* → coller l'URL AliExpress du produit → importer.
@@ -154,8 +185,12 @@ cinq cartes sont des emplacements vides. Marche à suivre :
 6. Une fois de vrais avis en place, décocher **Afficher l'avertissement** dans l'éditeur
    et ajuster la note moyenne.
 
-Ce qui n'a délibérément pas été fait : le badge « Google Avis » avec une note et un
-nombre d'avis. Il suppose une fiche Google Business Profile, que SOLEVA n'a pas encore.
+Ce qui n'a pas été fait, et ne peut pas l'être depuis ici : aller chercher les avis
+réels du produit sur AliExpress ou CJ. Le proxy réseau de la session bloque ces domaines.
+L'import Judge.me ci-dessus est la voie la plus rapide ; sinon, collez les avis et ils
+seront intégrés en quelques minutes.
+
+Le badge « Google Avis » avec une note et un nombre d'avis n'a pas été mis non plus. Il suppose une fiche Google Business Profile, que SOLEVA n'a pas encore.
 Créez la fiche, collectez de vrais avis, puis branchez une application d'avis Google —
 le bandeau sombre est déjà dimensionné pour l'accueillir.
 
