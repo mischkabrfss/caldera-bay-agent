@@ -1,7 +1,7 @@
 # SOLEVA™ — configuration de la boutique Shopify
 
 Boutique : `s70d0u-qg.myshopify.com` · France · EUR · Europe/Paris
-Thème live : **SOLEVA — Boutique** · Brouillon en cours : **SOLEVA — Boutique v2**
+Thème live : **SOLEVA — Boutique** · Brouillon à jour : **SOLEVA — Boutique v3**
 
 > **Boucle de travail.** L'API interdit toute écriture sur le thème publié. Chaque série
 > de modifications part donc dans un duplicata (`v2`, puis `v3`…) que vous prévisualisez
@@ -194,7 +194,24 @@ Un plan payant est requis dans les deux cas.
 
 ---
 
-## 4. Avis clients
+## 4. Avis clients — 12 avis en ligne
+
+12 avis d'acheteurs AliExpress du même modèle sont publiés sur la fiche produit,
+8 d'entre eux sur la page d'accueil. Texte repris **mot pour mot**, pseudonyme et date
+d'origine conservés, 5 étoiles (note réelle de ces avis), et la mention
+« Avis AliExpress · acheteur du même modèle » sous chacun.
+
+Trois choix assumés :
+- **Le coloris d'origine n'est pas affiché.** Les avis portent sur des teintes que nous
+  ne vendons pas (Chocolat, kaki foncé, prune, Vert armée…). Les réattribuer à nos trois
+  coloris aurait falsifié l'avis ; les supprimer ne change rien au fond, qui porte sur le
+  sac lui-même.
+- **Les avis mitigés sont gardés** (peluches aux premiers lavages, un peu juste en 40).
+  Ne publier que le positif est un tri interdit par l'article L121-2.
+- **Trois avis ont été écartés** : deux mentionnent une brosse ou un cadeau offert par le
+  vendeur d'origine, que nous n'expédions pas, un compare le prix à Amazon.
+
+### Ancien contenu de cette section
 
 ### Le dépôt d'avis fonctionne déjà
 La page **`/pages/laisser-un-avis`** est en ligne et reliée au bouton « Laisser un avis »
