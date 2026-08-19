@@ -330,3 +330,26 @@ Les surcharges vivent dans `assets/soleva-tune.css`, chargé en dernier.
 
 ### Accroche de la page d'accueil
 Sous le logo : **« Le sac qui lave vos baskets »** — six mots, le produit et sa fonction.
+
+
+---
+
+## 7. Page guides et maillage interne
+
+La page « Guides d'entretien des chaussures » (`/pages/guides-entretien-chaussures`) était
+du HTML brut, sans mise en forme. Elle a été **dépubliée et retirée du menu principal**,
+pas supprimée : elle pointait vers **14 articles de blog réels et publiés** sur
+`/blogs/actualites`, tous toujours en ligne.
+
+Le maillage interne a été récupéré autrement, sous la fiche produit :
+
+- **`sections/soleva-features.liquid`** réutilisée en « L'essentiel de l'entretien » —
+  quatre règles courtes : 30 °C essorage réduit, jamais de sèche-linge, lacets et semelles
+  à part, ni cuir ni daim.
+- **`sections/soleva-links.liquid`** (nouvelle) — « Nos guides d'entretien », liste sobre
+  de 8 liens vers les articles plus un lien « Tous les guides ». Deux colonnes, filets fins,
+  flèche au survol, aucune vignette. Styles portés par un bloc `{% style %}` interne, aucun
+  autre fichier touché.
+
+Ordre de la fiche produit : achat → mode d'emploi → essentiel → galerie → avis →
+guides → bandeau contact.
