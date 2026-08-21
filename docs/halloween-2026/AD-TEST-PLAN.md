@@ -1,132 +1,161 @@
-# Wicked Hollow — Halloween 2026 · Ad Test Plan (V2 — post-restructuring)
+# Wicked Hollow — Halloween 2026 · Ad Test Plan (V3 — post-audit)
 
-**Budget total : 500 €** (≈ $540 selon change 2026 stable) · **Horizon : 25 août → 28 octobre** · **Plateforme : Meta (Instagram + Facebook)**.
+**Budget total : 500 €** (~$540 USD stable) · **Horizon : 25 août → 28 octobre** · **Plateforme : Meta (Instagram + Facebook)** · **Payment fees : 5 %**.
 
-## Décision structurelle (V2)
+## Décision structurelle V3
 
-Le POD ne peut pas être le véhicule d'acquisition payante (marges 30–41 % contribution, ROAS d'équilibre 2.4–3.4 impraticable sur du froid). **Les 3 produits physiques CJ deviennent la porte d'entrée.**
+L'assortiment ne contient plus qu'**un seul produit d'acquisition** : **The Watcher — 12ft Giant Inflatable Ghost** (SKU CJDP30526200001, retail $109.99, coût rendu $43.06 vérifié, marge contribution à 5 % = 49.9 %, ROAS break-even = 2.01).
 
----
+**L'intégralité des 500 € va sur The Watcher.** Un 2e produit d'acquisition arrivera après validation Round 2 sourcing.
 
-## Les 3 produits à tester en premier
+## Économie du fantôme (rappel)
 
-| Produit | Type | Retail | Marge contribution cible | ROAS équilibre | Pourquoi |
-|---|---|---|---|---|---|
-| **The Butler · Motion Doorbell** | Physique CJ | $44.99 | ≥ 53 % | 1.90 | Meilleure filmabilité (réactions trick-or-treaters). Marge la plus confortable des 3 physiques. Ticket accessible. |
-| **Disco Ball Ghost 14"** | Physique CJ | $59.99 | ≥ 46 % (60 % si CJ ≤ $18) | 1.88–2.15 | Bet #1 mainstream. Ticket haut avec profit unitaire max. Créa satisfying/reflection maximale. |
-| **Pumpkin Glow 20ft Lights** | Physique CJ | $24.99 | ≥ 54 % | 1.85 | Ticket bas = CAC bas = test peu risqué. Sert aussi de bundle attach en Phase 3. |
+- Retail : **$109.99**
+- Coût rendu : **$43.06** (shipping supplier gratuit, FedEx US 3-5 jours + 1-3 processing)
+- Marge brute : $66.93 (60.9 %)
+- Payment fees 5 % : $5.50
+- Reserve retours 6 % : $6.60
+- **Marge contribution : $54.83 (49.9 %)**
+- **ROAS break-even : 2.01**
+- **CAC max tolérable : $33.00** (30 % du retail — règle interne)
+- **Profit par unité après CAC max : $21.83**
 
-**Note** : Disco Ghost Pillow (POD, meilleure marge POD) reste **produit d'upsell/organique**, jamais paid cold. Il apparaît dans le bundle Pastel Corner et dans les email flows.
+Traduit :
+- On peut payer jusqu'à **$33 d'acquisition par vente** et rester profitable.
+- Chaque vente au CAC max génère **$21.83 de profit unitaire**.
+- Un ROAS ≥ 2.01 = point d'équilibre.
+- Un ROAS ≥ 3.3 = profit uplift substantiel (CAC $33 sur AOV $109.99).
+
+## 5 concepts créa vidéo (pour le fantôme)
+
+Le format "gonflable qui se déploie en 90 secondes devant une maison" est un cadeau publicitaire. 5 concepts exploitables, tous en 9:16 vertical Reels, durée 6-15s :
+
+### Concept A — "90 seconds" (transformation timelapse)
+- **Ouverture** (0-1s) : plan sur une pelouse vide au crépuscule
+- **Corps** (1-6s) : timelapse accéléré du fantôme qui se gonfle en 90 sec réelles compressées à 5 sec — le tissu ondule, la silhouette monte, les LED s'allument
+- **Fin** (6-8s) : cadre stable, fantôme à sa hauteur, texte overlay "12 ft. 90 seconds. Everything included."
+- **Angle** : simplicité, "up in 90 seconds" est le hook copywriting
+- **Voix off / musique** : pas de voix, track dark ambient qui monte
+
+### Concept B — "Neighbor reaction" (POV first-person)
+- **Ouverture** : plan trottoir, quelqu'un marche vers une maison
+- **Corps** : la caméra tilt up, révèle le fantôme qui domine la pelouse
+- **Fin** : la personne s'arrête, plan sur son visage ("wait, what")
+- **Angle** : preuve sociale, "the yard everyone stops for"
+- **CTA texte** : "This is what wins Halloween"
+
+### Concept C — "Setup in 3 steps" (tuto visuel)
+- Trois shots courts (2s chacun) : (1) déplier sur pelouse, (2) planter les 7 stakes, (3) plug adapter into wall
+- Fin : cut au fantôme déployé la nuit avec LED
+- **Angle** : anti-friction — répond à l'objection "trop compliqué à installer"
+- **Overlay** : "Step 1, 2, 3. Halloween done."
+
+### Concept D — "Night vs day" (avant/après)
+- Split screen : gauche = pelouse jour, fantôme dégonflé posé au sol · droite = même pelouse nuit, fantôme déployé LED flames actives
+- **Angle** : montrer les 2 états, valider que ça se range facilement (objection stockage)
+- **Overlay** : "Packs flat. Reads from three houses away."
+
+### Concept E — "The block reaction" (long form 20s)
+- Timelapse ambulatoire : trick-or-treaters qui passent, groupes qui s'arrêtent, phones qui sortent pour filmer, kids qui pointent
+- Format documentaire, montage rapide
+- **Angle** : "the house everyone stops for" — preuve sociale multipliée
+- **Musique** : track upbeat spooky
+- **CTA final** : "Own the yard. Order by Oct 24."
+
+**Priorité** : lancer A + B + C en Phase 1 (les 3 angles fonctionnels distincts), garder D + E pour rotation Phase 2 si l'un s'essouffle.
 
 ---
 
 ## Phase 1 — Test avant-saison (25 août → 15 septembre)
 
-**Budget alloué : 180 €** (~$195) — 36 % du total. Priorité au sourcing des physiques : sans les 3 SKUs CJ validés, cette phase est bloquée. Décaler au 1er septembre si CJ pas prêt le 25 août.
+**Budget : 180 € (~$195)** — 36 % du total.
 
-**Objectif** : trouver quel angle créa performe sur chaque produit physique. Objectif ROAS Phase 1 : ≥ 1.3.
+Bloqué tant que : (a) UL/ETL confirmé, (b) 3 créas A/B/C livrées, (c) product page ghost complète avec vraies photos lifestyle.
 
-- **Structure** : 1 CBO campaign · 3 ad sets (1 par produit physique) · 20 €/adset/jour pendant 9 jours
-- **Audience** : Advantage+ audience (Meta broad)
-- **Créas par produit** : 3 angles distincts
-  - **Angle A (satisfying/product-in-context)** : le produit qui fait « son effet » — Doorbell qui déclenche, Disco Ball Ghost qui projette la lumière, Lights qui s'allument au crépuscule
-  - **Angle B (transformation)** : porche vide → porche complet ; mantel vide → mantel scenic
-  - **Angle C (POV first-person)** : POV trick-or-treater qui presse le doorbell ; POV qui découvre le disco ghost sur un shelf
-- **Format prioritaire** : Reels 9:16 pour Doorbell, feed 4:5 pour Disco Ball Ghost et Lights
-- **Landing page** : product page directe → recommandations bundle en bas de page
+- **Structure Meta** : 1 CBO campaign · 3 ad sets (1 par créa A/B/C) · 22 €/adset/jour pendant 9 jours
+- **Audience** : Advantage+ audience broad
+- **Landing page** : product page ghost direct → recommandations bundle en bas
+- **Placement** : Reels prioritaire, Feed secondaire
 
-### Seuils de décision Phase 1 (J+7 puis J+14)
+### Seuils Phase 1 (J+7 puis J+14)
 
 | Métrique | Continuer | Couper | Doubler |
 |---|---|---|---|
-| **CTR (link)** | ≥ 1.5 % | < 1.0 % | ≥ 3.0 % |
-| **CPM** | ≤ $25 | > $40 | — |
-| **Add-to-cart rate** | ≥ 4 % | < 2 % | — |
-| **Purchase (cumul 9j)** | ≥ 2 | 0 après $90 dépensés | ≥ 5 |
-| **ROAS 7j glissant** | ≥ 1.0 | < 0.6 | ≥ 1.5 |
+| CTR (link) | ≥ 1.5 % | < 1.0 % | ≥ 3.0 % |
+| CPM | ≤ $25 | > $40 | — |
+| Add-to-cart rate | ≥ 3 % | < 1.5 % | — |
+| Purchase (cumul 9j) | ≥ 2 | 0 après $100 dépensés | ≥ 5 |
+| ROAS 7j glissant | ≥ 1.2 | < 0.7 | ≥ 1.8 |
 
 **Actions** :
-- 0 purchase après $90 → couper ce produit
-- ROAS ≥ 1.5 ET ≥ 5 purchases → doubler le budget sur ce produit en Phase 2
+- 0 purchase après $100 dépensés → pause créa, réforme
+- ROAS ≥ 1.8 ET ≥ 5 purchases → doubler le budget sur la meilleure créa en Phase 2
 
 ---
 
 ## Phase 2 — Confirmation début octobre (28 septembre → 12 octobre)
 
-**Budget alloué : 200 €** (~$216) — 40 % du total.
+**Budget : 200 € (~$216)** — 40 % du total.
 
-**Objectif** : atteindre ROAS ≥ 1.9 (au-dessus break-even) et activer les bundles pour lifter AOV.
+**Objectif** : atteindre ROAS ≥ 2.0 (au-dessus break-even 2.01) et activer les bundles.
 
-- **Structure** :
-  - Si 1 winner → 3 ad sets sur ce winner (broad + interests + LAL 1% Phase 1 buyers), 20 €/j chacun
-  - Si 2 winners → 2 ad sets par winner (broad + LAL 1%), 15 €/j chacun
-  - Si 3 winners → chapeau bas, 15 €/j chacun sur broad + retargeting fine 30j
-- **Activation bundles** : les 2 bundles apparaissent en cross-sell sur product page + en pop-up « add to save » après add-to-cart
-- **Email** : activer flow abandon panier avec code -10 % Bundle si panier > $70
+- **Structure** : la créa winner Phase 1 déployée sur 3 audiences (broad + interests halloween + LAL 1 % des acheteurs Phase 1), 20-25 €/j chacune
+- **Bundles activés** :
+  - Haunted Threshold Bundle ($169.99) mis en cross-sell sur product page + pop-up post-ATC
+  - Full Haunt Bundle ($219.99) en 2e recommandation
+- **Créa retargeting** : intro Concept D ou E (nouveauté visuelle sur audience chaude)
 
 ### Seuils Phase 2 (J+7)
 
 | Métrique | Continuer | Couper | Scaler |
 |---|---|---|---|
-| **ROAS 7j** | ≥ 1.9 | < 1.3 | ≥ 2.5 |
-| **AOV** | ≥ $65 | < $50 | ≥ $85 |
-| **Bundle attach rate** | ≥ 15 % | < 8 % → refonte pop-up | ≥ 25 % |
+| ROAS 7j | ≥ 2.0 | < 1.4 | ≥ 2.7 |
+| AOV | ≥ $130 | < $110 | ≥ $170 |
+| Bundle attach rate | ≥ 10 % | < 5 % → refonte pop-up | ≥ 20 % |
+
+**Scale rule** : +30-50 % budget par 3 jours max sur ad set qui hit ≥ 2.7 ROAS. Ne jamais doubler du jour au lendemain (Meta punit).
 
 ---
 
 ## Phase 3 — Montée au pic (13 octobre → 28 octobre)
 
-**Budget alloué : 160 €** (~$173) — 24 % du total. **Concentré à 90 % sur la fenêtre 18–25 octobre** (pic conversion Meta Halloween).
+**Budget : 160 € (~$173)** — 24 % du total, **concentré à 90 % sur 18-25 octobre** (pic conversion Meta Halloween).
 
-**Objectif** : max volume + retargeting agressif + activation Doorbell (fenêtre courte : porche 25–31 oct).
+**Objectif** : maximiser volume, urgency messaging, retargeting agressif.
 
 - **Structure** :
-  - 1 ad set winner Phase 2 en broad, budget maintenu ou +30 %
-  - 1 ad set **Bundle Threshold** (Doorbell + Doormat + Lights) — angle « The complete porch, save $20 », 20 €/j pendant 6 jours
-  - 1 ad set **Retargeting 30 j** — visiteurs product pages + ATC non convertis, urgency messaging (« Last day for October 31 delivery »), 15 €/j
-- **Créa urgence** : « Order by Oct 24 for Halloween delivery » — hardcoded dans les créas retargeting
+  - Winner Phase 2 sur audience broad, budget maintenu ou +30 %
+  - Retargeting 30 j (product page + ATC non convertis) avec urgency créa "Order by Oct 24 for Halloween delivery"
+  - Bundle Haunted Threshold en angle principal (le "everything you need for Oct 31")
 
-### Seuils Phase 3 (quotidien)
+### Seuils Phase 3 quotidiens
 
 | Métrique | Action |
 |---|---|
 | ROAS quotidien ≥ 3.0 | Scaler +30 % lendemain |
-| ROAS 3j glissant < 1.4 | Pause immédiate |
-| Stock CJ signalé < 100 unités sur un SKU | Coupure ad immédiate pour ce SKU + retirer bundle qui l'inclut |
+| ROAS 3j glissant < 1.5 | Pause immédiate cet ad set |
+| Stock ghost signalé < 100 unités | Coupure ad immédiate — tenable brisée |
+| Delivery time supplier > 6 jours | Pause + audit CJ |
 
 ---
 
 ## Kill switches globaux
 
-1. **Perte cumulée > 40 % du budget de phase sans ROAS ≥ 1.0** → pause 48h, refonte créa complète
-2. **Refund rate > 8 %** → produit défaillant, pause immédiate, audit supplier CJ
-3. **Meta ad account restriction** → arrêt total, resolve first
-4. **Delivery supplier > 8 jours en octobre** → couper l'ad pour ce produit (promesse tenable brisée)
-5. **Chemin critique** : si les 3 physiques CJ ne sont pas validés + stockés US d'ici le 10 septembre → **abandon complet du plan ad, bascule sur assortiment 100 % POD organique** (SEO + email + TikTok organic) sans budget paid
-
----
-
-## Rôle du POD (résumé)
-
-| Produit POD | Fonction paid | Fonction non-paid |
-|---|---|---|
-| Doormats (×2) | jamais | SEO evergreen, cross-sell porche, email |
-| Disco Ghost Pillow | jamais | Bundle Pastel Corner, cross-sell salon, email disco-ghost |
-| Bat Swarm Pillow | jamais | Cross-sell salon, upsell shopping cart |
-| Coffin Mug | jamais | Bundle Pastel Corner uniquement (retiré du catalog standalone) |
-| Sherpa Blanket | jamais | Cross-sell + email cozy season |
-| Shower Curtain | jamais | Bet exploratoire — laisse-le émerger via SEO/Pinterest organique |
+1. **Perte cumulée > 40 % du budget de phase sans ROAS ≥ 1.0** → pause 48h, refonte créa
+2. **Refund rate > 8 %** → audit supplier + product page (défaut probable)
+3. **Meta ad account restriction/warning** → arrêt total, resolve first
+4. **UL/ETL certification** finalement invalidée → arrêt total, produit basculé PROJET SUSPENDU
 
 ---
 
 ## Post-mortem obligatoire (30 octobre)
 
-Documenter :
-- Winner : quel produit physique a payé le budget ad ?
-- Best créa angle : A/B/C ?
-- Miss : produits éliminés Phase 1, causes ?
-- Bundle attach rate réel vs prévu (15 %)
-- CAC réel vs L max de UNIT-ECONOMICS.csv
-- AOV réel vs prévu ($79 projeté V2)
-- Baromètre bet #1 (disco ghost mainstream) : validé, invalidé, entre les deux ?
-- Signal V2 : le pivot POD-organique / physique-paid a-t-il tenu ?
+À documenter :
+- Winner créa (A/B/C/D/E) et pourquoi
+- CAC réel vs CAC max tolérable ($33)
+- AOV réel vs projeté ($129.75)
+- Bundle attach rate réel vs prévu (10-20 %)
+- Marge contribution réelle vs 49.9 % théorique (surtout : refunds réels)
+- ROAS final cumulé sur la saison
+- Nombre de review clients (bonus si UGC exploitable pour 2027)
+- Baromètre bet #1 (disco ghost mainstream) — invalidé si Full Haunt ne fait pas de ventes malgré l'inclusion du Disco Ghost Pillow

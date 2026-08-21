@@ -1,107 +1,94 @@
-# Wicked Hollow — Halloween 2026 · Media Shotlist
+# Wicked Hollow — Halloween 2026 · Media Shotlist (V3)
 
-Format standard : **4:5 vertical · 2000 × 2500 px · sRGB · PNG ou JPG haute qualité**.
+Format standard : **4:5 vertical · 2000 × 2500 px · sRGB · PNG ou JPG haute qualité**. Vidéos ad : **9:16 · 1080 × 1920 px · 6–15 sec**.
 
-Chaque produit : 4 shots (hero packshot, in-context lifestyle, detail, scale/hand-held). Convention nommage : `<handle>-XX-<type>.jpg`.
+Convention nommage : `<handle>-XX-<type>.jpg`.
 
-⚠️ Aucun visuel importé pour l'instant — les produits sont DRAFT sans image. Deux voies au choix :
-1. Générer les visuels via Midjourney/Runway/ChatGPT Image et uploader manuellement dans chaque product page
-2. Utiliser les mockups fournis par Printful (POD) et par le fournisseur CJ (physiques), avec retouche brand consistency
+⚠️ Aucun visuel brandé importé pour l'instant. Le ghost a 6 photos fournisseur CJ importées (webp, altText en hash à réécrire). Les 6 POD n'ont aucune image.
 
 ---
 
-## POD Printful (visuels générables via Printful Mockup Generator)
+## PRIORITÉ 1 — The Watcher (12ft Ghost) · produit d'acquisition unique
 
-### welcome-my-pretties-coir-doormat
-- `welcome-my-pretties-coir-doormat-01-hero.jpg` — packshot straight-on, fond crème
-- `welcome-my-pretties-coir-doormat-02-worn.jpg` — sur porche en bois avec chaussures juste posées
-- `welcome-my-pretties-coir-doormat-03-detail.jpg` — close-up sur la texture coir + le lettering
-- `welcome-my-pretties-coir-doormat-04-scale.jpg` — main humaine posée dessus pour l'échelle
+C'est le produit qui reçoit les 500 € de budget ad. Priorité absolue sur ses visuels.
 
-### trick-or-treat-yourself-coir-doormat
-- `trick-or-treat-yourself-coir-doormat-01-hero.jpg`
-- `trick-or-treat-yourself-coir-doormat-02-worn.jpg` — sur porche avec citrouille sculptée à côté
-- `trick-or-treat-yourself-coir-doormat-03-detail.jpg`
-- `trick-or-treat-yourself-coir-doormat-04-scale.jpg`
+### Photos produit (5 prises requises)
 
-### disco-ghost-throw-pillow-cover
-- `disco-ghost-throw-pillow-cover-01-hero.jpg` — packshot pillow droit
-- `disco-ghost-throw-pillow-cover-02-worn.jpg` — sur canapé beige, contexte lumière naturelle
-- `disco-ghost-throw-pillow-cover-03-detail.jpg` — zoom sur le motif miroir + zipper
-- `disco-ghost-throw-pillow-cover-04-scale.jpg` — tenu à deux mains
+| Fichier | Description | Higgsfield feasibility |
+|---|---|---|
+| `the-watcher-12ft-01-hero.jpg` | Packshot fond neutre gradient sombre, fantôme déployé plein cadre, angle 3/4 face, LED yeux + flames actives | **OUI** — Higgsfield peut générer à partir des photos fournisseur CJ (composition virtuelle + éclairage nuit) |
+| `the-watcher-12ft-02-hero-yard-night.jpg` | Fantôme déployé devant maison typique US (porche + citrouilles), crépuscule bleuté, LED actives, ambiance cinématique | **OUI** — Higgsfield excelle en scenes lifestyle nocturnes. Fournir 2-3 refs de "typical US suburban porch at dusk" + le fantôme découpé |
+| `the-watcher-12ft-03-detail-face.jpg` | Close-up sur les yeux rouges clignotants + bouche flammes LED orange | **PARTIEL** — Higgsfield peut zoomer/enhance à partir des photos fournisseur mais risque de dégrader le rendu LED. Alternative : shot manuel du fantôme réel sur commande de test |
+| `the-watcher-12ft-04-scale-human.jpg` | Personne debout à côté (silhouette adulte 5'10") pour donner l'échelle 12 ft | **OUI** — Higgsfield peut composer un mannequin numérique à côté. Refs : "adult person silhouette next to inflatable Halloween decoration, low angle" |
+| `the-watcher-12ft-05-package-compact.jpg` | Colis compact fermé + sac de transport + accessoires étalés (7 stakes, 3 ropes, blower, adapter) | **NON** — nécessite photo réelle du produit à réception. Fournisseur CJ peut fournir photo colis ; sinon shot manuel obligatoire |
 
-### vintage-bat-swarm-throw-pillow-cover
-- `vintage-bat-swarm-throw-pillow-cover-01-hero.jpg`
-- `vintage-bat-swarm-throw-pillow-cover-02-worn.jpg` — sur canapé, ambiance gothique/dark academia
-- `vintage-bat-swarm-throw-pillow-cover-03-detail.jpg`
-- `vintage-bat-swarm-throw-pillow-cover-04-scale.jpg`
+### Vidéos ad (5 concepts — voir AD-TEST-PLAN.md)
 
-### but-first-coffin-ceramic-mug
-- `but-first-coffin-ceramic-mug-01-hero.jpg` — packshot 3/4 view
-- `but-first-coffin-ceramic-mug-02-worn.jpg` — tenu à la main avec café fumant, matin
-- `but-first-coffin-ceramic-mug-03-detail.jpg` — wraparound print
-- `but-first-coffin-ceramic-mug-04-scale.jpg` — sur bureau à côté d'un carnet
+| Fichier | Concept | Higgsfield feasibility |
+|---|---|---|
+| `the-watcher-12ft-ad-A-90seconds.mp4` | Timelapse gonflage 90s compressé 5s | **OUI** — Higgsfield peut générer un timelapse animé à partir de 2-3 keyframes (dégonflé, mi-gonflé, gonflé) |
+| `the-watcher-12ft-ad-B-neighbor-reaction.mp4` | POV trottoir + tilt up + réaction visage | **PARTIEL** — Higgsfield fait bien le tilt up mais la réaction visage humain reste risquée (uncanny). Alternative : shot iPhone réel après réception |
+| `the-watcher-12ft-ad-C-setup-3steps.mp4` | 3 shots courts setup | **OUI** — Higgsfield peut composer 3 clips distincts et enchaîner |
+| `the-watcher-12ft-ad-D-day-vs-night.mp4` | Split screen jour/nuit | **OUI** — Higgsfield gère bien le split screen composé |
+| `the-watcher-12ft-ad-E-block-reaction.mp4` | Long form 20s timelapse ambulatoire + groupes | **NON pour lancement** — nécessite le vrai produit installé + tournage sur une soirée trick-or-treat. Recommandé pour saison 2027 (UGC collecté). |
 
-### cursed-comfort-sherpa-blanket
-- `cursed-comfort-sherpa-blanket-01-hero.jpg` — packshot déplié à plat
-- `cursed-comfort-sherpa-blanket-02-worn.jpg` — sur canapé avec pieds enroulés dedans, TV en arrière-plan
-- `cursed-comfort-sherpa-blanket-03-detail.jpg` — split print vs sherpa back
-- `cursed-comfort-sherpa-blanket-04-scale.jpg` — tenu à deux mains ouvert
+**Recommandation** : lancer A + B (Higgsfield generable) + C (Higgsfield ok) pour Phase 1. Attendre réception d'un exemplaire physique pour tourner D et E manuellement fin septembre.
 
-### boo-yall-halloween-shower-curtain
-- `boo-yall-halloween-shower-curtain-01-hero.jpg` — packshot suspendu sur tringle blanche
-- `boo-yall-halloween-shower-curtain-02-worn.jpg` — installé dans salle de bain lumière naturelle, tapis + bougie visible
-- `boo-yall-halloween-shower-curtain-03-detail.jpg` — buttonholes + tissu
-- `boo-yall-halloween-shower-curtain-04-scale.jpg` — personne debout devant
+### Actions immédiates ghost
+
+1. Renommer les 6 altText CJ (`6f88db14800dc...`) → altText descriptifs anglais : "12ft ghost inflatable front view", "12ft ghost inflatable side view", etc.
+2. Lancer Higgsfield sur les 5 prises photo prioritaires (batch overnight)
+3. Générer les 3 vidéos A/B/C via Higgsfield vidéo mode
 
 ---
 
-## Physique CJ (visuels fournisseur à importer + retouche)
+## PRIORITÉ 2 — POD (rôle AOV / organique / bundle)
 
-### the-butler-motion-activated-skeleton-doorbell
-- `the-butler-motion-activated-skeleton-doorbell-01-hero.jpg` — packshot fond neutre, angle 3/4
-- `the-butler-motion-activated-skeleton-doorbell-02-worn.jpg` — monté sur porte extérieure, nuit avec LED eyes rouges allumées
-- `the-butler-motion-activated-skeleton-doorbell-03-detail.jpg` — bouton + capteur PIR visible
-- `the-butler-motion-activated-skeleton-doorbell-04-scale.jpg` — main pointant vers le bouton
-- **Créa vidéo 6s recommandée** : POV d'un trick-or-treater tendant la main, LED s'allume, son + réaction
+Les 6 POD n'ont pas besoin de visuels de qualité pub cold. Priorité : mockups Printful natifs suffisent pour les product pages, upsell pop-ups, et emails.
 
-### disco-ball-ghost-14-mirror-mosaic-centerpiece
-- `disco-ball-ghost-14-mirror-mosaic-centerpiece-01-hero.jpg` — packshot fond pastel lilas
-- `disco-ball-ghost-14-mirror-mosaic-centerpiece-02-worn.jpg` — sur mantel avec bougie allumée, reflets projetés sur le mur
-- `disco-ball-ghost-14-mirror-mosaic-centerpiece-03-detail.jpg` — close-up sur les tuiles miroir
-- `disco-ball-ghost-14-mirror-mosaic-centerpiece-04-scale.jpg` — à côté d'un livre de poche pour l'échelle
-- **Créa vidéo 6s recommandée** : rotation lente 360° avec spot lumineux qui balaye, effet cocktail
+### Génération recommandée
 
-### pumpkin-glow-20ft-led-string-lights
-- `pumpkin-glow-20ft-led-string-lights-01-hero.jpg` — packshot en cercle, off
-- `pumpkin-glow-20ft-led-string-lights-02-worn.jpg` — enroulé autour d'une balustrade de porche, allumé au crépuscule
-- `pumpkin-glow-20ft-led-string-lights-03-detail.jpg` — 3 bulbs pumpkin en gros plan
-- `pumpkin-glow-20ft-led-string-lights-04-scale.jpg` — main tenant une extrémité
+**Utilisez le Printful Mockup Generator** (natif, gratuit, US-fit) pour les 6 POD. Il génère automatiquement les 4-6 mockups par produit (packshot + lifestyle) à partir du design PNG que tu uploades. Pas besoin de Higgsfield ici.
 
----
+| Produit | Priorité mockups | Higgsfield utilité |
+|---|---|---|
+| welcome-my-pretties-coir-doormat | packshot + porch lifestyle | Faible (Printful mockup natif suffit) |
+| trick-or-treat-yourself-coir-doormat | packshot + porch lifestyle | Faible |
+| disco-ghost-throw-pillow-cover | packshot + canapé lifestyle | Faible (mockup Printful ok) |
+| vintage-bat-swarm-throw-pillow-cover | packshot + canapé lifestyle | Faible |
+| but-first-coffin-mug (SUPPRIMÉ) | — | — |
+| cursed-comfort-sherpa-blanket | packshot + couch scene | **OUI** pour lifestyle "cozy movie night" |
+| boo-yall-shower-curtain | packshot + salle de bain installée | **OUI** — Printful mockup salle de bain souvent médiocre, Higgsfield fera mieux |
 
-## Bundles
+### Actions POD
 
-### trick-or-treat-threshold-bundle
-- `trick-or-treat-threshold-bundle-01-hero.jpg` — flatlay des 3 items ensemble sur fond bois
-- `trick-or-treat-threshold-bundle-02-worn.jpg` — scène porche complète : doormat + doorbell installé + string lights allumées, crépuscule
-
-### pastel-spooky-corner-bundle
-- `pastel-spooky-corner-bundle-01-hero.jpg` — flatlay des 3 items sur fond lilas
-- `pastel-spooky-corner-bundle-02-worn.jpg` — scène mantel : disco ball ghost + pillow visible sur canapé en arrière-plan + mug fumant au premier plan
+1. Créer les 6 produits POD dans Printful US (ou Printify partenaires US)
+2. Uploader les fichiers design (voir folder `/designs/` à créer)
+3. Exporter les mockups Printful (packshot + 1-2 lifestyle par produit)
+4. Uploader dans Shopify via update-product `images` param (URLs HTTPS publiques Printful ok)
+5. Pour blanket + shower curtain : compléter avec 1 shot Higgsfield lifestyle
 
 ---
 
-## Produits sans visuel utilisable actuellement
+## PRIORITÉ 3 — Bundles
 
-**Tous.** Les 12 produits ont été créés sans images. À générer/importer avant publication.
+Les 2 bundles ont besoin de shots composites (flatlay ou scene).
 
-**Priorité si budget visuel limité** : les 3 candidats du plan de test ad (`ad-test-plan.md`) — Disco Ghost Pillow, Disco Ball Ghost Mirror, Welcome My Pretties Doormat. Ces 3 doivent avoir les 4 shots complets + 1 vidéo verticale 6s chacun avant le lancement des tests.
+| Bundle | Fichier hero | Higgsfield feasibility |
+|---|---|---|
+| Haunted Threshold Bundle | Scene porche avec ghost + doormat + pillow visible sur banc | **OUI** — Higgsfield compose bien les scènes lifestyle |
+| The Full Haunt Bundle | Split scene : yard avec ghost / living room avec blanket + pillow | **OUI** — split scene est un format Higgsfield-friendly |
 
-## Style guide commun
+---
 
-- **Palette** : crème (#F5EFE0), noir profond (#1A1210), orange citrouille (#E8763A), lilas iridescent (#C9B4E0)
-- **Ambiance lumière** : naturelle golden hour ou tungstène chaud — jamais fluorescent bleu
-- **Contexte** : intérieurs de maison en bois clair / vintage, extérieurs porche bois avec citrouilles/feuilles mortes en accessoire — jamais studio blanc pur (trop dropshipping)
-- **Modèles** : mains uniquement (pas de visage) — évite les problèmes de rights & photograph modèle, focus produit
-- **Texte overlay sur vidéos ad** : Inter Bold ou une serif condensée noire, jamais de sous-titres jaunes/TikTok defaults
+## Style guide commun (rappel)
+
+- **Palette** : crème (#F5EFE0), noir profond (#1A1210), orange citrouille (#E8763A), rouge LED (#D9302B pour eyes ghost)
+- **Ambiance lumière** : crépuscule bleuté ou golden hour tungstène chaud
+- **Contextes** : maisons US suburbaines typiques (fantôme), intérieurs bois clair vintage (POD indoor), porches bois (doormats)
+- **Modèles** : mains + silhouettes uniquement, pas de visages identifiables (droits + focus produit)
+- **Overlays vidéo** : Inter Bold ou serif condensée, jamais les sous-titres jaunes TikTok defaults
+
+## Deadline
+
+Les visuels du ghost doivent être prêts pour le **lancement Phase 1 le 25 août**. Si Higgsfield ne rend pas d'ici cette date, décaler le début d'ad au 1er septembre — mieux vaut retarder que lancer sans lifestyle photo.
