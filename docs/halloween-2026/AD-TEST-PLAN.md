@@ -1,68 +1,71 @@
-# Wicked Hollow — Halloween 2026 · Ad Test Plan (V3 — post-audit)
+# Wicked Hollow — Halloween 2026 · Ad Test Plan (V4 — deux angles)
 
 **Budget total : 500 €** (~$540 USD stable) · **Horizon : 25 août → 28 octobre** · **Plateforme : Meta (Instagram + Facebook)** · **Payment fees : 5 %**.
 
-## Décision structurelle V3
+## Décision structurelle V4
 
-L'assortiment ne contient plus qu'**un seul produit d'acquisition** : **The Watcher — 12ft Giant Inflatable Ghost** (SKU CJDP30526200001, retail $109.99, coût rendu $43.06 vérifié, marge contribution à 5 % = 49.9 %, ROAS break-even = 2.01).
+**Deux produits d'acquisition testés en parallèle** dans des registres émotionnels distincts :
 
-**L'intégralité des 500 € va sur The Watcher.** Un 2e produit d'acquisition arrivera après validation Round 2 sourcing.
+1. **The Watcher — 12ft Ghost** ($119.99) → angle **scary / block-stopper**. Cible : households qui vont hard sur Halloween, corner lots, TikTok-native.
+2. **The Cairn — 9ft Stacked Pumpkins** ($89.99) → angle **friendly / family-forward**. Cible : familles avec jeunes enfants, ticket d'entrée plus bas ($30 sous le ghost), moins effrayant.
 
-## Économie du fantôme (rappel)
+Le second gonflable (Welcoming Committee Banner $109.99) reste **produit d'assortiment sans ad dédié en Phase 1-2**. Il apparaît dans le Complete Yard Kit Bundle et sera potentiellement testé en Phase 3 si budget permet.
 
-- Retail : **$109.99**
-- Coût rendu : **$43.06** (shipping supplier gratuit, FedEx US 3-5 jours + 1-3 processing)
-- Marge brute : $66.93 (60.9 %)
-- Payment fees 5 % : $5.50
-- Reserve retours 6 % : $6.60
-- **Marge contribution : $54.83 (49.9 %)**
-- **ROAS break-even : 2.01**
-- **CAC max tolérable : $33.00** (30 % du retail — règle interne)
-- **Profit par unité après CAC max : $21.83**
+## Économie des 2 produits testés
 
-Traduit :
-- On peut payer jusqu'à **$33 d'acquisition par vente** et rester profitable.
-- Chaque vente au CAC max génère **$21.83 de profit unitaire**.
-- Un ROAS ≥ 2.01 = point d'équilibre.
-- Un ROAS ≥ 3.3 = profit uplift substantiel (CAC $33 sur AOV $109.99).
+| | The Watcher | The Cairn |
+|---|---|---|
+| Retail | $119.99 | $89.99 |
+| Coût rendu | $43.06 (ship supplier free) | $33.76 (ship supplier free) |
+| Marge brute | $76.93 (64.1 %) | $56.23 (62.5 %) |
+| Marge contribution 5% | **$63.73 (53.1 %)** | **$46.33 (51.5 %)** |
+| ROAS break-even | **1.88** | **1.94** |
+| CAC max tolérable (30 %) | $36.00 | $27.00 |
+| Profit par unité à CAC max | $27.73 | $19.33 |
+| Stock US | 460 | 230 |
 
-## 5 concepts créa vidéo (pour le fantôme)
+## Répartition du budget
 
-Le format "gonflable qui se déploie en 90 secondes devant une maison" est un cadeau publicitaire. 5 concepts exploitables, tous en 9:16 vertical Reels, durée 6-15s :
+- **Watcher** : 60 % du budget (~$324) — meilleur ticket, meilleur profit unitaire, hero
+- **Cairn** : 40 % du budget (~$216) — ticket accessible, meilleur volume potentiel
 
-### Concept A — "90 seconds" (transformation timelapse)
-- **Ouverture** (0-1s) : plan sur une pelouse vide au crépuscule
-- **Corps** (1-6s) : timelapse accéléré du fantôme qui se gonfle en 90 sec réelles compressées à 5 sec — le tissu ondule, la silhouette monte, les LED s'allument
-- **Fin** (6-8s) : cadre stable, fantôme à sa hauteur, texte overlay "12 ft. 90 seconds. Everything included."
-- **Angle** : simplicité, "up in 90 seconds" est le hook copywriting
-- **Voix off / musique** : pas de voix, track dark ambient qui monte
+Rationale : le Watcher tolère un CAC plus élevé donc peut se permettre du testing plus long ; le Cairn amortit plus vite mais avec moins de dollars par vente.
 
-### Concept B — "Neighbor reaction" (POV first-person)
-- **Ouverture** : plan trottoir, quelqu'un marche vers une maison
-- **Corps** : la caméra tilt up, révèle le fantôme qui domine la pelouse
-- **Fin** : la personne s'arrête, plan sur son visage ("wait, what")
-- **Angle** : preuve sociale, "the yard everyone stops for"
-- **CTA texte** : "This is what wins Halloween"
+## 5 concepts créa — The Watcher (scary angle)
 
-### Concept C — "Setup in 3 steps" (tuto visuel)
-- Trois shots courts (2s chacun) : (1) déplier sur pelouse, (2) planter les 7 stakes, (3) plug adapter into wall
-- Fin : cut au fantôme déployé la nuit avec LED
-- **Angle** : anti-friction — répond à l'objection "trop compliqué à installer"
-- **Overlay** : "Step 1, 2, 3. Halloween done."
+Voir V3 conservé :
+- **A** — "90 seconds" (timelapse inflate)
+- **B** — "Neighbor reaction" (POV first-person)
+- **C** — "Setup in 3 steps" (tuto visuel)
+- **D** — "Day vs night" (split screen)
+- **E** — "Block reaction" (long form 20s, reporté 2027 après UGC)
 
-### Concept D — "Night vs day" (avant/après)
-- Split screen : gauche = pelouse jour, fantôme dégonflé posé au sol · droite = même pelouse nuit, fantôme déployé LED flames actives
-- **Angle** : montrer les 2 états, valider que ça se range facilement (objection stockage)
-- **Overlay** : "Packs flat. Reads from three houses away."
+## 3 concepts créa — The Cairn (family angle)
 
-### Concept E — "The block reaction" (long form 20s)
-- Timelapse ambulatoire : trick-or-treaters qui passent, groupes qui s'arrêtent, phones qui sortent pour filmer, kids qui pointent
-- Format documentaire, montage rapide
-- **Angle** : "the house everyone stops for" — preuve sociale multipliée
-- **Musique** : track upbeat spooky
-- **CTA final** : "Own the yard. Order by Oct 24."
+Format 9:16 vertical Reels, durée 6-12s. Ton chaleureux/festif — contraste avec le Watcher scary.
 
-**Priorité** : lancer A + B + C en Phase 1 (les 3 angles fonctionnels distincts), garder D + E pour rotation Phase 2 si l'un s'essouffle.
+### Concept F — "Six faces" (character reveal)
+- **Ouverture** (0-1s) : plan bas, camera au niveau du sol
+- **Corps** (1-6s) : tilt up lent le long du tower, révélant chaque face carved différente une à une, chacune éclairée de l'intérieur
+- **Fin** (6-9s) : plan large sur le tower complet à la nuit, texte overlay "Six faces. One yard. Nine feet of Halloween."
+- **Angle** : découverte progressive, storytelling silencieux
+- **Track** : ambient warm, cloches lointaines
+
+### Concept G — "Mommy, look" (family POV)
+- **Ouverture** : plan trottoir depuis vue enfant, main d'adulte tenue
+- **Corps** : petit groupe en costumes s'approche, pointant vers un yard qui s'éclaire au fur et à mesure
+- **Fin** : plan sur les pumpkins glowing, dialogue overlay "Mommy — LOOK." puis "This year, be the house they remember."
+- **Angle** : émotionnel famille, appel aux parents qui achètent
+- **CTA texte** : "Own the yard. Feel like Christmas came in October."
+
+### Concept H — "Morning to night" (transformation avant/après)
+- **Ouverture** : pelouse vide au matin, coffee cup sur porche au premier plan
+- **Corps** (2-4s) : coupe rapide → même pelouse crépuscule, tower installé, LED allumés
+- **Fin** : "Front lawn ready in the time it takes to make coffee."
+- **Angle** : simplicité, anti-friction — répond à l'objection "j'ai pas le temps"
+- **Track** : upbeat léger, pas de voix
+
+**Priorité de lancement** : F + G (les 2 angles émotionnels forts) en Phase 1. Garder H pour rotation Phase 2 si G s'essouffle.
 
 ---
 
@@ -70,26 +73,29 @@ Le format "gonflable qui se déploie en 90 secondes devant une maison" est un ca
 
 **Budget : 180 € (~$195)** — 36 % du total.
 
-Bloqué tant que : (a) UL/ETL confirmé, (b) 3 créas A/B/C livrées, (c) product page ghost complète avec vraies photos lifestyle.
+Bloqué tant que : (a) UL/ETL confirmé sur les 3 gonflables, (b) créas A/B/C + F/G livrées, (c) product pages Watcher + Cairn complètes avec vraies photos lifestyle.
 
-- **Structure Meta** : 1 CBO campaign · 3 ad sets (1 par créa A/B/C) · 22 €/adset/jour pendant 9 jours
-- **Audience** : Advantage+ audience broad
-- **Landing page** : product page ghost direct → recommandations bundle en bas
+- **Structure Meta** : 2 CBO campaigns (une par produit acquisition) 
+  - **Campaign Watcher** : 3 ad sets (A/B/C) · 14 €/adset/jour × 9j = $115
+  - **Campaign Cairn** : 2 ad sets (F/G) · 9 €/adset/jour × 9j = $80
+- **Audience** : Advantage+ audience broad (US)
 - **Placement** : Reels prioritaire, Feed secondaire
 
 ### Seuils Phase 1 (J+7 puis J+14)
+
+Par ad set :
 
 | Métrique | Continuer | Couper | Doubler |
 |---|---|---|---|
 | CTR (link) | ≥ 1.5 % | < 1.0 % | ≥ 3.0 % |
 | CPM | ≤ $25 | > $40 | — |
 | Add-to-cart rate | ≥ 3 % | < 1.5 % | — |
-| Purchase (cumul 9j) | ≥ 2 | 0 après $100 dépensés | ≥ 5 |
+| Purchase (cumul 9j) | ≥ 2 | 0 après $90 dépensés | ≥ 5 |
 | ROAS 7j glissant | ≥ 1.2 | < 0.7 | ≥ 1.8 |
 
 **Actions** :
-- 0 purchase après $100 dépensés → pause créa, réforme
-- ROAS ≥ 1.8 ET ≥ 5 purchases → doubler le budget sur la meilleure créa en Phase 2
+- 0 purchase après $90 → pause créa, réforme
+- ROAS ≥ 1.8 ET ≥ 5 purchases → doubler le budget en Phase 2
 
 ---
 
@@ -97,36 +103,38 @@ Bloqué tant que : (a) UL/ETL confirmé, (b) 3 créas A/B/C livrées, (c) produc
 
 **Budget : 200 € (~$216)** — 40 % du total.
 
-**Objectif** : atteindre ROAS ≥ 2.0 (au-dessus break-even 2.01) et activer les bundles.
+**Objectif** : dépasser ROAS 2.0 sur au moins un produit, activer les 3 bundles.
 
-- **Structure** : la créa winner Phase 1 déployée sur 3 audiences (broad + interests halloween + LAL 1 % des acheteurs Phase 1), 20-25 €/j chacune
+- **Structure** :
+  - Winner Watcher Phase 1 → 3 audiences (broad + interests halloween + LAL 1 % buyers), 15 €/j
+  - Winner Cairn Phase 1 → 2 audiences (broad + LAL 1 % buyers), 12 €/j
 - **Bundles activés** :
-  - Haunted Threshold Bundle ($169.99) mis en cross-sell sur product page + pop-up post-ATC
-  - Full Haunt Bundle ($219.99) en 2e recommandation
-- **Créa retargeting** : intro Concept D ou E (nouveauté visuelle sur audience chaude)
+  - Haunted Threshold ($179.99) et Full Haunt ($229.99) en cross-sell sur Watcher product page
+  - **Complete Yard Kit ($279.99)** en hero cross-sell sur Watcher + Cairn pages : "Get the whole yard for $40 off"
 
 ### Seuils Phase 2 (J+7)
 
 | Métrique | Continuer | Couper | Scaler |
 |---|---|---|---|
 | ROAS 7j | ≥ 2.0 | < 1.4 | ≥ 2.7 |
-| AOV | ≥ $130 | < $110 | ≥ $170 |
-| Bundle attach rate | ≥ 10 % | < 5 % → refonte pop-up | ≥ 20 % |
+| AOV | ≥ $130 | < $105 | ≥ $170 |
+| Bundle attach rate | ≥ 10 % | < 5 % | ≥ 20 % |
+| Yard Kit attach rate | ≥ 2 % | < 0.5 % | ≥ 5 % |
 
-**Scale rule** : +30-50 % budget par 3 jours max sur ad set qui hit ≥ 2.7 ROAS. Ne jamais doubler du jour au lendemain (Meta punit).
+**Scale rule** : +30-50 % budget par 3 jours max sur ad set ≥ 2.7 ROAS.
 
 ---
 
 ## Phase 3 — Montée au pic (13 octobre → 28 octobre)
 
-**Budget : 160 € (~$173)** — 24 % du total, **concentré à 90 % sur 18-25 octobre** (pic conversion Meta Halloween).
+**Budget : 160 € (~$173)** — 24 % du total, **concentré 18-25 octobre**.
 
-**Objectif** : maximiser volume, urgency messaging, retargeting agressif.
+**Objectif** : max volume + retargeting agressif + urgency messaging + **potentiel test 3e produit acquisition** (Skeleton Banner à $109.99) si budget résiduel.
 
 - **Structure** :
-  - Winner Phase 2 sur audience broad, budget maintenu ou +30 %
-  - Retargeting 30 j (product page + ATC non convertis) avec urgency créa "Order by Oct 24 for Halloween delivery"
-  - Bundle Haunted Threshold en angle principal (le "everything you need for Oct 31")
+  - Winners Phase 2 (Watcher + Cairn) maintenus, budget +30 % si ROAS ≥ 2.5
+  - Nouveau ad set Complete Yard Kit Bundle en angle "everything you need for Oct 31, save $40"
+  - Retargeting 30j (product page + ATC non convertis) avec urgency "Order by Oct 24 for Halloween delivery"
 
 ### Seuils Phase 3 quotidiens
 
@@ -134,28 +142,29 @@ Bloqué tant que : (a) UL/ETL confirmé, (b) 3 créas A/B/C livrées, (c) produc
 |---|---|
 | ROAS quotidien ≥ 3.0 | Scaler +30 % lendemain |
 | ROAS 3j glissant < 1.5 | Pause immédiate cet ad set |
-| Stock ghost signalé < 100 unités | Coupure ad immédiate — tenable brisée |
+| Stock ghost < 100 unités OR Cairn < 100 OR Banner < 200 | Coupure ad immédiate pour ce SKU + retirer bundle inclus |
 | Delivery time supplier > 6 jours | Pause + audit CJ |
 
 ---
 
 ## Kill switches globaux
 
-1. **Perte cumulée > 40 % du budget de phase sans ROAS ≥ 1.0** → pause 48h, refonte créa
-2. **Refund rate > 8 %** → audit supplier + product page (défaut probable)
-3. **Meta ad account restriction/warning** → arrêt total, resolve first
-4. **UL/ETL certification** finalement invalidée → arrêt total, produit basculé PROJET SUSPENDU
+1. Perte cumulée > 40 % du budget de phase sans ROAS ≥ 1.0 → pause 48h, refonte créa
+2. Refund rate > 8 % → audit supplier + product page
+3. Meta ad account restriction → arrêt total
+4. **UL/ETL invalidé sur l'un des 3 gonflables** → arrêt total pour ce SKU + suppression bundle qui l'inclut
+5. Bagues LED réclamation age hazard → retrait produit immédiat
 
 ---
 
 ## Post-mortem obligatoire (30 octobre)
 
-À documenter :
-- Winner créa (A/B/C/D/E) et pourquoi
-- CAC réel vs CAC max tolérable ($33)
-- AOV réel vs projeté ($129.75)
+- Winner créa par produit (A/B/C ou F/G ou H)
+- CAC réel vs CAC max ($36 Watcher, $27 Cairn)
+- AOV réel vs projeté ($143.55 V4)
 - Bundle attach rate réel vs prévu (10-20 %)
-- Marge contribution réelle vs 49.9 % théorique (surtout : refunds réels)
-- ROAS final cumulé sur la saison
-- Nombre de review clients (bonus si UGC exploitable pour 2027)
-- Baromètre bet #1 (disco ghost mainstream) — invalidé si Full Haunt ne fait pas de ventes malgré l'inclusion du Disco Ghost Pillow
+- Yard Kit attach rate réel vs prévu (2-5 %)
+- Marge contribution réelle vs théorique
+- ROAS final cumulé
+- Baromètre bet #1 (disco ghost mainstream) : validé si le Disco Ghost Pillow dans Full Haunt vend
+- Cairn vs Watcher : quel angle a converti le mieux ? Signal pour 2027 (family-friendly vs scary)

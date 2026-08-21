@@ -1,94 +1,122 @@
-# Wicked Hollow — Halloween 2026 · Media Shotlist (V3)
+# Wicked Hollow — Halloween 2026 · Media Shotlist (V4)
 
 Format standard : **4:5 vertical · 2000 × 2500 px · sRGB · PNG ou JPG haute qualité**. Vidéos ad : **9:16 · 1080 × 1920 px · 6–15 sec**.
 
 Convention nommage : `<handle>-XX-<type>.jpg`.
 
-⚠️ Aucun visuel brandé importé pour l'instant. Le ghost a 6 photos fournisseur CJ importées (webp, altText en hash à réécrire). Les 6 POD n'ont aucune image.
-
 ---
 
-## PRIORITÉ 1 — The Watcher (12ft Ghost) · produit d'acquisition unique
+## PRIORITÉ 1 — Les 3 gonflables (produits d'acquisition)
 
-C'est le produit qui reçoit les 500 € de budget ad. Priorité absolue sur ses visuels.
+Ce sont eux qui reçoivent le budget publicitaire de 500 €. Visuels absolument critiques.
 
-### Photos produit (5 prises requises)
+### The Watcher (12ft Ghost) · SKU CJDP30526200001
 
 | Fichier | Description | Higgsfield feasibility |
 |---|---|---|
-| `the-watcher-12ft-01-hero.jpg` | Packshot fond neutre gradient sombre, fantôme déployé plein cadre, angle 3/4 face, LED yeux + flames actives | **OUI** — Higgsfield peut générer à partir des photos fournisseur CJ (composition virtuelle + éclairage nuit) |
-| `the-watcher-12ft-02-hero-yard-night.jpg` | Fantôme déployé devant maison typique US (porche + citrouilles), crépuscule bleuté, LED actives, ambiance cinématique | **OUI** — Higgsfield excelle en scenes lifestyle nocturnes. Fournir 2-3 refs de "typical US suburban porch at dusk" + le fantôme découpé |
-| `the-watcher-12ft-03-detail-face.jpg` | Close-up sur les yeux rouges clignotants + bouche flammes LED orange | **PARTIEL** — Higgsfield peut zoomer/enhance à partir des photos fournisseur mais risque de dégrader le rendu LED. Alternative : shot manuel du fantôme réel sur commande de test |
-| `the-watcher-12ft-04-scale-human.jpg` | Personne debout à côté (silhouette adulte 5'10") pour donner l'échelle 12 ft | **OUI** — Higgsfield peut composer un mannequin numérique à côté. Refs : "adult person silhouette next to inflatable Halloween decoration, low angle" |
-| `the-watcher-12ft-05-package-compact.jpg` | Colis compact fermé + sac de transport + accessoires étalés (7 stakes, 3 ropes, blower, adapter) | **NON** — nécessite photo réelle du produit à réception. Fournisseur CJ peut fournir photo colis ; sinon shot manuel obligatoire |
+| `the-watcher-12ft-01-hero.jpg` | Packshot fond neutre gradient sombre, fantôme déployé, LED yeux + flames actives | **OUI** — Higgsfield depuis photos fournisseur CJ + éclairage nuit synthé |
+| `the-watcher-12ft-02-hero-yard-night.jpg` | Devant maison typique US, crépuscule bleuté, LED actives | **OUI** — refs "US suburban porch at dusk" + fantôme composé |
+| `the-watcher-12ft-03-detail-face.jpg` | Close-up yeux + flames bouche | **PARTIEL** — risque dégradation LED, alternative shot manuel |
+| `the-watcher-12ft-04-scale-human.jpg` | Silhouette adulte 5'10" à côté pour échelle | **OUI** — mannequin numérique |
+| `the-watcher-12ft-05-package-compact.jpg` | Colis + sac + 7 stakes + 3 ropes + blower + adapter | **NON** — nécessite photo réelle réception |
 
-### Vidéos ad (5 concepts — voir AD-TEST-PLAN.md)
+### The Welcoming Committee (9.6ft Skeleton Banner) · SKU CJHD254437201AZ
 
-| Fichier | Concept | Higgsfield feasibility |
+| Fichier | Description | Higgsfield feasibility |
 |---|---|---|
-| `the-watcher-12ft-ad-A-90seconds.mp4` | Timelapse gonflage 90s compressé 5s | **OUI** — Higgsfield peut générer un timelapse animé à partir de 2-3 keyframes (dégonflé, mi-gonflé, gonflé) |
-| `the-watcher-12ft-ad-B-neighbor-reaction.mp4` | POV trottoir + tilt up + réaction visage | **PARTIEL** — Higgsfield fait bien le tilt up mais la réaction visage humain reste risquée (uncanny). Alternative : shot iPhone réel après réception |
-| `the-watcher-12ft-ad-C-setup-3steps.mp4` | 3 shots courts setup | **OUI** — Higgsfield peut composer 3 clips distincts et enchaîner |
-| `the-watcher-12ft-ad-D-day-vs-night.mp4` | Split screen jour/nuit | **OUI** — Higgsfield gère bien le split screen composé |
-| `the-watcher-12ft-ad-E-block-reaction.mp4` | Long form 20s timelapse ambulatoire + groupes | **NON pour lancement** — nécessite le vrai produit installé + tournage sur une soirée trick-or-treat. Recommandé pour saison 2027 (UGC collecté). |
+| `welcoming-committee-01-hero.jpg` | Packshot fond neutre, bannière déployée, 2 squelettes + banner "Happy Halloween" + gravestones | **OUI** — depuis photos fournisseur |
+| `welcoming-committee-02-yard-dusk.jpg` | Sur pelouse devant maison US, LED actives crépuscule, banner lisible depuis le trottoir | **OUI** — composition avec ref maison |
+| `welcoming-committee-03-detail-banner.jpg` | Close-up sur le lettrage "Happy Halloween" + skeleton hands | **OUI** — zoom depuis packshot |
+| `welcoming-committee-04-scale.jpg` | Personne debout devant la bannière (9.6 ft large = ~2 personnes de bras à bras) | **OUI** — silhouette composée |
+| `welcoming-committee-05-package.jpg` | Colis fermé + contenu étalé | **NON** — shot manuel réception |
 
-**Recommandation** : lancer A + B (Higgsfield generable) + C (Higgsfield ok) pour Phase 1. Attendre réception d'un exemplaire physique pour tourner D et E manuellement fin septembre.
+### The Cairn (9ft Stacked Pumpkins) · SKU CJDP30549140001
 
-### Actions immédiates ghost
+| Fichier | Description | Higgsfield feasibility |
+|---|---|---|
+| `the-cairn-01-hero.jpg` | Packshot tower 9ft, 6 pumpkins visibles LED allumés | **OUI** — depuis photos fournisseur |
+| `the-cairn-02-yard-night.jpg` | Sur allée devant maison, LED intérieures glow orange chaud, kids en costume passant à côté (silhouettes) | **OUI** — composition family-friendly |
+| `the-cairn-03-detail-faces.jpg` | Zoom sur les 6 faces sculptées uniques | **OUI** — zoom + enhancement |
+| `the-cairn-04-scale.jpg` | Enfant en costume à côté (2 ft) pour renforcer angle familial | **OUI** — silhouette enfant composé |
+| `the-cairn-05-package.jpg` | Compact deflated | **NON** — shot manuel réception |
 
-1. Renommer les 6 altText CJ (`6f88db14800dc...`) → altText descriptifs anglais : "12ft ghost inflatable front view", "12ft ghost inflatable side view", etc.
-2. Lancer Higgsfield sur les 5 prises photo prioritaires (batch overnight)
-3. Générer les 3 vidéos A/B/C via Higgsfield vidéo mode
+### Vidéos ad (voir AD-TEST-PLAN v4 pour la liste complète des concepts)
+
+Higgsfield vidéo mode peut générer les timelapse "90 seconds inflate" et les scenes lifestyle nocturnes. Le POV "trick-or-treater approche" est risqué (uncanny valley visage humain) → shot manuel iPhone après réception.
 
 ---
 
-## PRIORITÉ 2 — POD (rôle AOV / organique / bundle)
+## PRIORITÉ 2 — Accessoires physiques CJ
 
-Les 6 POD n'ont pas besoin de visuels de qualité pub cold. Priorité : mockups Printful natifs suffisent pour les product pages, upsell pop-ups, et emails.
+### Cobweb Lace Mantel Scarf · SKU CJHD26005990001
 
-### Génération recommandée
+| Fichier | Description | Higgsfield feasibility |
+|---|---|---|
+| `cobweb-lace-01-hero.jpg` | Packshot déplié à plat sur fond blanc pour montrer le pattern | **OUI** — depuis photo fournisseur |
+| `cobweb-lace-02-mantel-lit.jpg` | Sur cheminée avec bougies orange allumées, mode Halloween | **OUI** — scene compose bien |
+| `cobweb-lace-03-table-christmas.jpg` | Sur table avec bougies vertes + branches sapin — mode Noël | **OUI** — angle cross-season pour email flow décembre |
+| `cobweb-lace-04-detail-lace.jpg` | Close-up sur la texture openwork | **OUI** — zoom depuis hero |
 
-**Utilisez le Printful Mockup Generator** (natif, gratuit, US-fit) pour les 6 POD. Il génère automatiquement les 4-6 mockups par produit (packshot + lifestyle) à partir du design PNG que tu uploades. Pas besoin de Higgsfield ici.
+### Glow Rings 50-Pack · SKU CJLX130994902BY
+
+| Fichier | Description | Higgsfield feasibility |
+|---|---|---|
+| `glow-rings-01-hero.jpg` | Packshot du pack + une poignée de rings devant, mix couleurs | **OUI** — compose depuis photos individuelles |
+| `glow-rings-02-trick-treat.jpg` | Main tendue sur un porche donnant les rings à un enfant en costume (silhouette) | **OUI** — scene family-friendly composée |
+| `glow-rings-03-detail-glow.jpg` | Close-up d'un ring éclairé dans le noir, doigt visible | **OUI** — macro glow synthé |
+| `glow-rings-04-scale.jpg` | 5 rings alignés à côté d'une pièce US pour l'échelle | **NON** — shot manuel réception |
+
+---
+
+## PRIORITÉ 3 — POD Printful (rôle AOV)
+
+**Utiliser le Printful Mockup Generator natif** (gratuit, US-fit) pour les 6 POD. Pas besoin de Higgsfield sauf pour blanket + shower curtain lifestyle premium.
 
 | Produit | Priorité mockups | Higgsfield utilité |
 |---|---|---|
 | welcome-my-pretties-coir-doormat | packshot + porch lifestyle | Faible (Printful mockup natif suffit) |
 | trick-or-treat-yourself-coir-doormat | packshot + porch lifestyle | Faible |
-| disco-ghost-throw-pillow-cover | packshot + canapé lifestyle | Faible (mockup Printful ok) |
+| disco-ghost-throw-pillow-cover | packshot + canapé lifestyle | Faible |
 | vintage-bat-swarm-throw-pillow-cover | packshot + canapé lifestyle | Faible |
-| but-first-coffin-mug (SUPPRIMÉ) | — | — |
-| cursed-comfort-sherpa-blanket | packshot + couch scene | **OUI** pour lifestyle "cozy movie night" |
-| boo-yall-shower-curtain | packshot + salle de bain installée | **OUI** — Printful mockup salle de bain souvent médiocre, Higgsfield fera mieux |
-
-### Actions POD
-
-1. Créer les 6 produits POD dans Printful US (ou Printify partenaires US)
-2. Uploader les fichiers design (voir folder `/designs/` à créer)
-3. Exporter les mockups Printful (packshot + 1-2 lifestyle par produit)
-4. Uploader dans Shopify via update-product `images` param (URLs HTTPS publiques Printful ok)
-5. Pour blanket + shower curtain : compléter avec 1 shot Higgsfield lifestyle
+| cursed-comfort-sherpa-blanket | packshot + couch movie-night | **OUI** pour lifestyle cozy premium |
+| boo-yall-shower-curtain | packshot + salle de bain installée | **OUI** — Printful mockup salle de bain médiocre |
 
 ---
 
-## PRIORITÉ 3 — Bundles
+## PRIORITÉ 4 — Bundles
 
-Les 2 bundles ont besoin de shots composites (flatlay ou scene).
+### Complete Yard Kit Bundle (le nouveau — 3 gonflables)
 
-| Bundle | Fichier hero | Higgsfield feasibility |
+| Fichier | Description | Higgsfield feasibility |
 |---|---|---|
-| Haunted Threshold Bundle | Scene porche avec ghost + doormat + pillow visible sur banc | **OUI** — Higgsfield compose bien les scènes lifestyle |
-| The Full Haunt Bundle | Split scene : yard avec ghost / living room avec blanket + pillow | **OUI** — split scene est un format Higgsfield-friendly |
+| `yard-kit-01-hero-flatlay.jpg` | Les 3 packshots côte à côte sur fond bois, hierarchy visible (12ft > 9.6ft > 9ft) | **OUI** — composition simple |
+| `yard-kit-02-scene-full-yard.jpg` | Pelouse complète : Watcher au centre, Banner devant, Cairn latéral — nuit LED actives | **OUI** — c'est le shot signature qui vend le bundle |
+| `yard-kit-03-detail-set-hierarchy.jpg` | Vue aérienne diagramme "recommended layout" avec les 3 emplacements | **OUI** — infographic style |
+
+### Haunted Threshold Bundle
+- `haunted-threshold-01-hero.jpg` — flatlay ghost + doormat + pillow sur fond bois
+- `haunted-threshold-02-scene.jpg` — porche complet setup, ghost au fond de la pelouse
+
+### The Full Haunt Bundle
+- `full-haunt-01-hero.jpg` — split scene extérieur (ghost) / intérieur (blanket + pillow)
+- `full-haunt-02-scene.jpg` — living room cozy avec ghost visible à travers la fenêtre en arrière-plan
 
 ---
 
 ## Style guide commun (rappel)
 
-- **Palette** : crème (#F5EFE0), noir profond (#1A1210), orange citrouille (#E8763A), rouge LED (#D9302B pour eyes ghost)
-- **Ambiance lumière** : crépuscule bleuté ou golden hour tungstène chaud
-- **Contextes** : maisons US suburbaines typiques (fantôme), intérieurs bois clair vintage (POD indoor), porches bois (doormats)
-- **Modèles** : mains + silhouettes uniquement, pas de visages identifiables (droits + focus produit)
-- **Overlays vidéo** : Inter Bold ou serif condensée, jamais les sous-titres jaunes TikTok defaults
+- **Palette** : crème (#F5EFE0), noir profond (#1A1210), orange citrouille (#E8763A), rouge LED (#D9302B) pour eyes ghost, vert acide (#7ABF3A) pour LED pumpkins optionnel
+- **Ambiance lumière** : crépuscule bleuté / golden hour tungstène chaud / studio dark pour packshots
+- **Contextes** : maisons US suburbaines (gonflables), intérieurs bois clair vintage (POD indoor), porches bois (doormats)
+- **Modèles** : mains, silhouettes, silhouettes d'enfants pour le Cairn — pas de visages identifiables
+- **Overlays vidéo** : Inter Bold ou serif condensée, jamais TikTok defaults
 
 ## Deadline
 
-Les visuels du ghost doivent être prêts pour le **lancement Phase 1 le 25 août**. Si Higgsfield ne rend pas d'ici cette date, décaler le début d'ad au 1er septembre — mieux vaut retarder que lancer sans lifestyle photo.
+**Priorité absolue** : les 5 shots du Watcher + 5 du Cairn (2 produits testés en Phase 1 ad) doivent être livrés d'ici le **25 août**. Sans ces visuels, décaler Phase 1 au 1er septembre.
+
+## Ce qui manque encore
+
+- Shots réels colis pour les 3 gonflables + Glow Rings (nécessite réception d'un exemplaire test)
+- UGC pour Phase 3 (à collecter fin septembre après premières livraisons clients)
+- Video "block reaction" (Concept E de AD-TEST-PLAN) — nécessite tournage sur vraie soirée trick-or-treat, reporté à 2027
