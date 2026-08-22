@@ -100,7 +100,7 @@ export function NexoraCheckoutCard() {
   const price = useCurrentPrice();
 
   return (
-    <div className={styles.nexoraProduct}>
+    <div id="paiement" className={styles.nexoraProduct}>
       <button className={styles.nexoraPayButton} type="button" onClick={startCheckout} disabled={loading}>
         <span className={styles.nexoraPayInner}>
           <span className={styles.aiLogo}><i /><b>N</b></span>

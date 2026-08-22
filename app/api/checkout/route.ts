@@ -22,7 +22,7 @@ export async function POST() {
   body.set('submit_type', 'pay');
   body.set('customer_creation', 'always');
   body.set('success_url', `${siteUrl}/vente/succes?session_id={CHECKOUT_SESSION_ID}`);
-  body.set('cancel_url', `${siteUrl}/vente#offre`);
+  body.set('cancel_url', `${siteUrl}/vente#paiement`);
   body.set('line_items[0][quantity]', '1');
   body.set('line_items[0][price_data][currency]', 'eur');
   body.set('line_items[0][price_data][unit_amount]', String(currentPriceInCents()));

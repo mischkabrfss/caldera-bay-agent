@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { CheckoutButton, NexoraCheckoutCard, PromoBar } from './SalesActions';
+import { NexoraCheckoutCard, PromoBar } from './SalesActions';
 import styles from './vente.module.css';
 
 export default function SalesPage() {
@@ -8,30 +8,18 @@ export default function SalesPage() {
       <PromoBar />
       <nav className={styles.nav} aria-label="Navigation principale">
         <Link className={styles.brand} href="/vente" aria-label="Nexora, accueil"><span>N</span>NEXORA</Link>
-        <a className={styles.navCta} href="#offre">Accéder à la formation</a>
+        <a className={styles.navCta} href="#paiement">Accéder à la formation</a>
       </nav>
 
       <section className={styles.hero}>
         <div className={styles.aurora} aria-hidden="true" />
-        <div className={styles.paymentProof}>
-          <div className={styles.proofTop}>
-            <span className={styles.proofLogo}>S</span>
-            <div><b>Résultat historique</b><small>Avant l’ouverture du nouveau compte Stripe</small></div>
-            <em>Résultat personnel du créateur</em>
-          </div>
-          <div className={styles.proofAmount}>
-            <span>Revenus générés auparavant</span><strong>+12 000 $</strong>
-            <small>Ce résultat ne garantit pas les résultats futurs.</small>
-          </div>
-        </div>
-
         <div className={styles.heroGrid}>
           <div className={styles.heroCopy}>
             <p className={styles.eyebrow}>NEXORA DIGITAL BUSINESS ACADEMY</p>
             <h1>Construis ton offre.<br />Lance-la. <span>Vends-la.</span></h1>
             <p className={styles.lead}>Une formation guidée pour trouver une idée, créer un produit digital, attirer tes premiers prospects et mettre en place un système de vente complet.</p>
             <div className={styles.heroActions}>
-              <a className={styles.primary} href="#offre">Commencer pour 34,99 € <b>→</b></a>
+              <a className={styles.primary} href="#paiement">Commencer pour 34,99 € <b>→</b></a>
               <a className={styles.secondary} href="#contenu">Voir ce qui est inclus</a>
             </div>
             <p className={styles.reassurance}>Accès à vie · 3 parcours · Coach Nexo · Licence MRR</p>
@@ -57,25 +45,7 @@ export default function SalesPage() {
       <section className={styles.nexoStrip}>
         <div className={styles.nexoPulse} aria-hidden="true"><span>N</span></div>
         <div><p className={styles.eyebrow}>TON COACH DANS LA FORMATION</p><h2>Tu bloques ? Demande à Nexo.</h2><p>Nexo t’aide à comprendre une leçon, reformuler ton offre, écrire ta bio, préparer un contenu ou choisir ta prochaine action.</p></div>
-        <a href="#offre">Découvrir Nexo <span>→</span></a>
-      </section>
-
-      <section id="offre" className={styles.offerSection}>
-        <div className={styles.offerCard}>
-          <div className={styles.offerVisual}><div className={styles.coverMark}>N</div><h3>NEXORA</h3><p>Digital Business Academy</p><span>CRÉER · VENDRE · GRANDIR</span></div>
-          <div className={styles.offerDetails}>
-            <p className={styles.eyebrow}>OFFRE DE LANCEMENT</p><h2>L’académie complète.</h2>
-            <ul><li>3 programmes adaptés à ton objectif</li><li>Leçons, missions, quiz et modèles</li><li>Coach Nexo intégré</li><li>Licence de revente MRR incluse</li><li>Accès à vie et futures mises à jour</li><li>Confirmation Stripe puis accès par e-mail</li></ul>
-          </div>
-          <div className={styles.offerCheckout}>
-            <span className={styles.launchTag}>JUSQU’AU 29 AOÛT</span>
-            <div className={styles.priceLine}><strong>34,99 €</strong><del>50 €</del></div>
-            <p className={styles.priceNote}>Paiement unique. Le tarif passera automatiquement à 50 € à la fin du compte à rebours.</p>
-            <CheckoutButton />
-            <div className={styles.paymentMethods} aria-label="Moyens de paiement gérés par Stripe"><span>Carte</span><span>Apple Pay</span><span>Google Pay</span><span>Link</span></div>
-            <p className={styles.secureNote}>Paiement hébergé et sécurisé par Stripe. Les moyens disponibles varient selon le pays et l’appareil.</p>
-          </div>
-        </div>
+        <a href="#paiement">Accéder à NEXORA <span>→</span></a>
       </section>
 
       <section className={styles.mrrSection}>
