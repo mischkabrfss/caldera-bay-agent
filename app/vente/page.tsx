@@ -1,9 +1,11 @@
 import Link from 'next/link';
+import { CheckoutButton, PromoBar } from './SalesActions';
 import styles from './vente.module.css';
 
 export default function SalesPage() {
   return (
     <main className={styles.page}>
+      <PromoBar />
       <nav className={styles.nav} aria-label="Navigation principale">
         <Link className={styles.brand} href="/vente" aria-label="Nexora, accueil">
           <span>N</span>
@@ -28,13 +30,17 @@ export default function SalesPage() {
           <p className={styles.reassurance}>3 parcours personnalisés · Coach Nexo intégré · Accès à vie</p>
         </div>
 
-        <div className={styles.heroVisual} aria-hidden="true">
-          <div className={styles.orbit} />
-          <div className={styles.orbitSmall} />
-          <div className={styles.core}><span>N</span><small>TON PLAN D&apos;ACTION</small></div>
-          <div className={`${styles.floatCard} ${styles.cardOne}`}><b>01</b><span>Trouver l&apos;idée</span></div>
-          <div className={`${styles.floatCard} ${styles.cardTwo}`}><b>02</b><span>Créer l&apos;offre</span></div>
-          <div className={`${styles.floatCard} ${styles.cardThree}`}><b>03</b><span>Vendre</span></div>
+        <div className={styles.heroVisual} aria-label="Aperçu de l'offre NEXORA">
+          <div className={styles.resultCard}>
+            <small>RÉSULTAT DU CRÉATEUR</small>
+            <strong>+12 000 €</strong>
+            <span>de paiements encaissés</span>
+            <em>Résultat personnel · ne garantit pas les résultats futurs</em>
+          </div>
+          <div className={styles.productMiniCard}>
+            <div className={styles.productArt}><span>N</span><b>NEXORA</b><small>Digital Business Academy</small></div>
+            <div><small>FORMATION COMPLÈTE</small><strong>34,99 €</strong><del>50 €</del></div>
+          </div>
         </div>
       </section>
 
@@ -191,10 +197,14 @@ export default function SalesPage() {
             </ul>
           </div>
           <div className={styles.offerCheckout}>
-            <small>ACCÈS COMPLET</small>
-            <p className={styles.pricePending}>Tarif de lancement<br />bientôt disponible</p>
-            <a className={styles.checkoutButton} href="#contact" aria-disabled="true">Paiement bientôt disponible <span>→</span></a>
-            <p>Le bouton sera connecté à Stripe avant l&apos;ouverture.</p>
+            <span className={styles.launchTag}>OFFRE DE LANCEMENT</span>
+            <div className={styles.priceLine}><strong>34,99 €</strong><del>50 €</del></div>
+            <p className={styles.priceNote}>Prix valable jusqu&apos;au 29 août 2026 à 23 h 59, puis passage automatique à 50 €.</p>
+            <CheckoutButton />
+            <div className={styles.paymentMethods} aria-label="Moyens de paiement gérés par Stripe">
+              <span>Carte</span><span>Apple Pay</span><span>Google Pay</span><span>Link</span>
+            </div>
+            <p className={styles.secureNote}>Paiement sécurisé par Stripe · Les moyens affichés dépendent du pays et de l&apos;appareil.</p>
           </div>
         </div>
       </section>
@@ -218,7 +228,7 @@ export default function SalesPage() {
         <p className={styles.eyebrow}>PRÊT À ARRÊTER DE TOURNER EN ROND ?</p>
         <h2>Ton idée mérite mieux qu&apos;un dossier oublié.</h2>
         <p>Transforme-la en une offre claire, présentable et prête à vendre.</p>
-        <a href="#offre">Découvrir l&apos;offre NEXORA <span>→</span></a>
+        <CheckoutButton compact />
       </section>
 
       <footer className={styles.footer}>
