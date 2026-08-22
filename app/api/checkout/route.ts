@@ -46,8 +46,18 @@ export async function POST() {
       body,
     });
 
-    const session = (await stripeResponse.json()) as { url?: string; error?: { message?: string } };
+    const session = (await stripeResponse.json()) as {
+      url?: string;
+      error?: { type?: string; code?: string; param?: string; message?: string };
+    };
     if (!stripeResponse.ok || !session.url) {
+      console.error('Stripe Checkout creation failed', {
+        status: stripeResponse.status,
+        type: session.error?.type,
+        code: session.error?.code,
+        param: session.error?.param,
+        message: session.error?.message,
+      });
       return Response.json({ error: 'Stripe n’a pas pu ouvrir le paiement. Réessaie dans un instant.' }, { status: 502 });
     }
 
