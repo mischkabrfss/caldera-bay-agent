@@ -1,153 +1,106 @@
 # Wicked Hollow — Build Log
 
-> Journal des décisions autonomes prises pendant les sessions du 21 août 2026. Rien ici n'a été confirmé oralement par l'utilisateur — chaque choix a été fait, documenté, et posé sur la table pour arbitrage à son retour.
+> Journal des décisions autonomes des sessions du 21 août 2026.
+
+## Session 1 — création initiale
+Cf. `V2-RESTRUCTURING.md`. 12 produits DRAFT, pivot POD/hybrid mid-session.
+
+## Session 2 — audit + shipping US
+6 produits supprimés (Butler, Mirror, Coffin Mug, Pumpkin Lights, 2 vieux bundles). Shipping US configuré (Free ≥ $65 / Flat $6.95 sinon). Zones EU supprimées. Assortiment réduit à 9 DRAFT.
+
+## Session 3 — 4 nouveaux CJ + hiérarchie prix
+Ghost $109.99 → $119.99. 4 nouveaux SKUs CJ vérifiés créés :
+- The Welcoming Committee 9.6ft Skeleton Banner ($109.99, marge 50.0 %)
+- The Cairn 9ft Stacked Pumpkins ($89.99, marge 51.5 %)
+- Cobweb Lace Mantel Scarf ($24.99, dual-season)
+- Glow Rings 50-Pack ($24.99, small-parts warning)
+Complete Yard Kit Bundle créé ($279.99, marge 46.2 %). Trick or Treat collection créée. AOV V4 : $143.55.
+
+## Session 4 — gamme d'entrée & structure d'accueil
+
+### Structure des collections rationalisée
+
+**Décision autonome** : basculement du système de smart collections des tags `collection:*` vers les tags `place:*` pour auto-routing sur import futur. Deux mutations exécutées :
+
+- **Porch & Yard** : rule passée de `collection:doormats` → **`place:outdoor`**. Contient désormais automatiquement : 3 gonflables (Watcher, Banner, Cairn) + 2 doormats + Glow Rings + tout futur produit tagué `place:outdoor`.
+- **Indoor Decor** : rule passée de `collection:indoor` → **`place:indoor`**. Contient : 2 pillows + blanket + shower curtain + mantel scarf + tout futur `place:indoor`.
+
+**Collection supprimée** : **Cozy Season** (contenait seulement le blanket → devient redondante avec Indoor Decor auto-routé). Blanket a le tag `place:indoor` → apparaît maintenant dans Indoor Decor auto.
+
+**État final : 4 collections propres, aucune vide, aucune incohérente.**
+- Porch & Yard (rule: `place:outdoor`)
+- Indoor Decor (rule: `place:indoor`) — **à renommer manuellement — 3 propositions dans SOURCING-ROUND-3.md**
+- Bundles (rule: `role:bundle`)
+- Trick or Treat (rule: `collection:trick-or-treat`)
+
+### Renommage Indoor Decor — 3 options proposées
+
+Per user request de proposer plutôt que d'imposer :
+1. **"The Manor"** — brand-cohérent avec Wicked Hollow (recommandé)
+2. **"Home Haunt"** — direct, playful
+3. **"Indoor Rites"** — evocative, ritual
+
+À trancher côté user, renommage 1 clic dans admin.
+
+### Gamme d'entrée sourcée — 20 candidats dans SOURCING-ROUND-3.md
+
+10 INDOOR + 10 OUTDOOR, tous classés par potentiel, avec search terms CJ exacts, prix marché US constaté (sources Amazon/Etsy), prix vente cible, coût rendu MAX pour tenir profit ≥ $10 + marge ≥ 45 % à 5 % fees.
+
+**Analyse cost formula** :
+- $12.99-19.99 = bundle-only (profit $10 pas atteignable standalone à cause du port fixe CJ ~$5-7)
+- $22.99-27.99 = fourchette d'or (profit + marge OK)
+- $29.99-34.99 = confortable pour produits à C ≤ $14
+
+**Top 5 candidats** :
+1. LED Pumpkin Tea Lights 24-pack ($16.99) — bundle attach roi
+2. Foam Tombstones 5-pack ($24.99) — dual indoor/outdoor
+3. Halloween Wreath 20-24" ($34.99) — evergreen porte
+4. Yard Silhouette Stakes 6-pack ($29.99) — trend ascendant witchy
+5. Ground Breaker Zombie Hands paire ($22.99) — filmable, angle TikTok
+
+### 2 bundles d'entrée proposés
+
+- **The Indoor Coven** ($64.99) — Tea Lights + Skull Mug + Bat Silhouettes + Window Clings. Save $4.97.
+- **The Curb Appeal Kit** ($69.99) — Tombstones + Silhouette Stakes + LED Cauldron. Save $9.98.
+
+À créer une fois les composants validés dans CJ.
+
+### AOV projeté post-Round 3
+
+Baisse à **$87.10** (vs $143.55 V4). Trade-off assumé : volumes attendus 2-3× plus élevés grâce à ticket d'entrée $15-35 accessible + activation du seuil free shipping.
+
+### Impact seuil $65 free shipping
+
+**Avant Round 3** : seuil ne servait pas (aucun panier ne s'en approchait sans un inflatable).
+**Après Round 3** : seuil devient un vrai levier AOV. Ex : 3 accessoires d'entrée $16.99+$22.99+$24.99 = $64.97 → 1 cent sous seuil → trigger urgent d'ajout du 4e item.
+
+**Recommandation : ne pas modifier le seuil.**
 
 ---
 
-## Session 1 (matin) — création initiale
-Cf. `V2-RESTRUCTURING.md`. 12 produits + 5 collections créés en DRAFT, puis pivot mid-session.
+## Ce qu'il te reste à faire à la main (mise à jour V4→V5)
 
-## Session 2 (après-midi) — audit, suppressions, shipping US
-Voir version antérieure de ce log. 6 produits supprimés, shipping US configuré (Free ≥ $65 / Flat $6.95 sinon), assortiment reduit à 9 produits DRAFT.
+Pré-existant :
+1. **CRITIQUE** confirmer UL/ETL des 3 blowers gonflables avec CJ
+2. Décision pricing Mantel Scarf + Glow Rings à $27.99
+3. Product type ghost → "Inflatable Decoration"
+4. altText images ghost
+5. Meta title + desc SEO (14 → bientôt 24 produits) — suggestions dans SOURCING.md §F
+6. Metafields custom
+7. Générer visuels marketing (voir MEDIA-SHOTLIST.md)
+8. Password protection avant publish
 
-## Session 3 (soir) — nouveaux CJ vérifiés + refonte hiérarchie prix
-
-### Données d'entrée session 3
-
-4 nouveaux SKUs CJ vérifiés fournis par le user :
-
-| SKU | Produit | Coût rendu | Stock US | Retail cible |
-|---|---|---|---|---|
-| CJHD254437201AZ | Skeleton Banner Inflatable 9.6ft | $42.92 | 801 | $109.99 |
-| CJDP30549140001 | Stacked Pumpkins Inflatable 9ft | $33.76 | 230 | $89.99 |
-| CJHD26005990001 | Cobweb Lace Mantel Scarf 96×18" | $11.73 | 230 | $24.99 |
-| CJLX130994902BY | Glow Rings 50-Pack LED | $10.57 | 982 | $24.99 |
-
-Plus : **prix ghost 12ft passe de $109.99 à $119.99** pour tenir hiérarchie de taille (12ft > 9.6ft > 9ft doit se lire dans le prix).
-
-### Recalcul marges à 5 % fees
-
-Confirmation des 3 gonflables tenant le seuil acquisition ≥ 45 % :
-
-| Produit | Prix | Contribution 5% | Verdict |
-|---|---|---|---|
-| Ghost 12ft | $119.99 | **53.1 %** ✓ | Acquisition HERO |
-| Skeleton Banner 9.6ft | $109.99 | **50.0 %** ✓ | Acquisition CORE |
-| Stacked Pumpkins 9ft | $89.99 | **51.5 %** ✓ | Acquisition CORE (family) |
-| Mantel Scarf | $24.99 | 42.1 % ⚠️ | AOV — $10.51 sous seuil AOV $12 |
-| Glow Rings | $24.99 | 46.7 % ⚠️ | AOV — $11.67 sous seuil AOV $12 |
-
-**Signalement écarts prix** : les 2 accessoires (Mantel + Rings) passent sous le seuil AOV de $12 profit ajouté au panier au prix fixé $24.99. **Recommandation à valider par l'utilisateur : les monter tous les deux à $27.99** (delta +$3), ce qui les remet au-dessus du seuil (Mantel $13.18, Rings $14.34). Non appliqué automatiquement — décision de pricing = utilisateur.
-
-### Produits créés session 3
-
-1. **The Welcoming Committee — 9.6ft Skeleton Banner Inflatable** — DRAFT, tag role:core, place:outdoor, filmable:high, certification:pending-ul-etl, delay:pending-supplier-confirmation
-2. **The Cairn — 9ft Stacked Pumpkins Inflatable** — DRAFT, tag role:core, vibe:friendly (angle family vs ghost scary)
-3. **Cobweb Lace — 96" Mantel Scarf / Table Runner** — DRAFT, tag season:halloween-christmas (dual season), role:accessory
-4. **Glow Rings — 50-Pack LED Halloween Party Favors** — DRAFT, tag warning:small-parts-age-3plus, collection:trick-or-treat
-5. **Complete Yard Kit Bundle** — DRAFT, $279.99 (save $40 vs $319.97), 3 gonflables ensemble, marge contribution 46.2 % ✓
-
-### Refonte prix bundles
-
-- Haunted Threshold : $169.99 → **$179.99** (ghost était $109.99 dans bundle, maintenant $119.99 → +$10 à répercuter)
-- Full Haunt : $219.99 → **$229.99** (idem)
-- Complete Yard Kit : nouveau $279.99
-
-### Nouvelle collection
-
-**Trick or Treat** — smart collection sur tag `collection:trick-or-treat`. Contient les Glow Rings. Prête pour expansion futur avec candy accessories.
-
-### Nouvelle échelle de prix (hiérarchie de taille)
-
-```
-Stacked Pumpkins 9ft   $89.99   ← angle family / entry point
-Skeleton Banner 9.6ft  $109.99  ← positioning mid
-The Watcher 12ft       $119.99  ← hero, tallest
-```
-
-### Assortiment final V4
-
-**11 produits DRAFT au catalogue** (contre 9 en fin session 2 + 4 nouveaux − 2 vieux gardés) :
-
-**Acquisition (3 verified physique)** :
-- The Watcher 12ft Ghost $119.99 · marge 53.1 %
-- The Welcoming Committee 9.6ft Banner $109.99 · marge 50.0 %
-- The Cairn 9ft Pumpkins $89.99 · marge 51.5 %
-
-**AOV (6 POD Printful + 2 CJ accessoires)** :
-- Welcome My Pretties Doormat 24×16 $49.99
-- Trick or Treat Yourself Doormat 24×16 $49.99
-- Disco Ghost Throw Pillow 18" $39.99
-- Vintage Bat Swarm Throw Pillow 18" $39.99
-- Cursed Comfort Sherpa Blanket $109.99
-- Boo Y'all Halloween Shower Curtain $59.99
-- Cobweb Lace Mantel Scarf $24.99 (⚠️ à monter à $27.99)
-- Glow Rings 50-Pack $24.99 (⚠️ à monter à $27.99)
-
-**Bundles (3)** :
-- Haunted Threshold Bundle $179.99 (save $30, marge 39.1 %)
-- The Full Haunt Bundle $229.99 (save $40, marge 35.6 %)
-- **Complete Yard Kit Bundle $279.99** (save $40, marge 46.2 %) — BEST bundle economics
-
-Total : **11 produits standalone + 3 bundles = 14 SKUs** en DRAFT.
-
-### AOV projeté V4
-
-Mix hypothétique :
-- 25 % achat mono inflatable → moyenne $107
-- 20 % achat mono AOV item → moyenne $44
-- 20 % inflatable + 1 AOV → moyenne $150
-- 15 % Haunted Threshold Bundle → $180
-- 10 % Full Haunt Bundle → $230
-- 10 % Complete Yard Kit → $280
-
-**AOV = $143.55** — au-dessus du seuil $140 du user. Objectif tenu.
-
-### Vérification seuil shipping $65
-
-Confirmé — le seuil tient avec le nouvel assortiment :
-- Les 3 inflatables ≥ $65 → tous free ship
-- Les 3 bundles ≥ $65 → tous free ship
-- Blanket seul $109.99 → free ship
-- Shower Curtain seul $59.99 → flat $6.95 (pousse à ajouter un doormat ou pillow → $99.98+ = free)
-- Doormat + Mantel Scarf + Rings peuvent se combiner pour franchir $65
-- Pas de scénario déficitaire identifié
-
-Ajustement : aucun. Le seuil $65 tient.
-
-### Conformité (rappel expansion)
-
-Cf. `SOURCING.md` section C nouvelle. Points bloquants :
-1. **UL/ETL à confirmer sur les 3 gonflables** (bloquant publication)
-2. **Age warning 3+ sur Rings** — implémenté dans description, à vérifier packaging à réception
-3. **Délai de livraison Skeleton Banner** — champ vide sur CJ, à confirmer supplier
-
-### Ce que je ne pouvais pas corriger par API (persisté)
-
-1. Password protection (page settings uniquement)
-2. Meta title/desc SEO par produit → **suggestions rédigées dans SOURCING.md section F, à copier-coller dans admin**
-3. altText images ghost/nouvelles photos → à réécrire admin
-4. productType ghost reste "Blanket" → basculer "Inflatable Decoration" en admin
-5. Metafields custom → à créer Settings → Custom data (schéma dans SOURCING.md section E)
-
----
-
-## Ce qu'il te reste à faire à la main (V4 update)
-
-1. **CRITIQUE** : confirmer UL/ETL des 3 blowers gonflables avec CJ supplier (email template dans SOURCING.md §C.1). Sans ça, aucun des 3 ne peut être ACTIVE.
-2. **Décision pricing** : monter Mantel Scarf + Glow Rings à $27.99 chacun ? (recommandé pour clearer seuil AOV $12)
-3. Product type ghost "Blanket" → "Inflatable Decoration" via admin
-4. altText images ghost + prochaines photos nouvelles Higgsfield
-5. Meta title + meta description SEO (14 produits) — suggestions prêtes dans SOURCING.md §F
-6. Metafields custom (Settings → Custom data → Products) — schéma dans SOURCING.md §E
-7. Générer visuels marketing (voir MEDIA-SHOTLIST.md V4)
-8. Password protection avant première publish
-9. Valider et éventuellement dupliquer collection "Cozy Season" — n'a plus qu'un produit (Blanket), envisager suppression + retag blanket sur `collection:indoor`
+**Nouveau session 4** :
+9. **Renommer collection "Indoor Decor"** — pick 1 des 3 propositions (The Manor / Home Haunt / Indoor Rites)
+10. **Vérifier + acheter les 8-10 SKUs de Round 3 dans CJ** (checklist prête dans SOURCING-ROUND-3.md, prioritisé top 10)
+11. Créer les 2 bundles d'entrée une fois les composants importés
+12. Ajouter tag `warning:small-parts-age-3plus` sur les tea lights (batteries CR2032 button-cell)
 
 ## Ce qui manque pour publier
 
 - ❌ Certification UL/ETL sur les 3 gonflables (bloquant absolu)
-- ❌ Visuels marketing des 5 produits physiques ajoutés (packshots + lifestyle)
-- ❌ Meta SEO renseigné dans admin
-- ❌ Vérification packaging Rings (age warning label)
-- ⚠️ Décision pricing accessoires ($24.99 vs $27.99)
+- ❌ Gamme d'entrée pas encore importée (bloquant pour activer réellement le levier $65 free ship)
+- ❌ Visuels marketing
+- ❌ Meta SEO renseigné
+- ⚠️ Décision pricing accessoires
+- ⚠️ Renommage collection Indoor
