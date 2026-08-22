@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { CheckoutButton, PromoBar } from './SalesActions';
+import { CheckoutButton, NexoraCheckoutCard, PromoBar } from './SalesActions';
 import styles from './vente.module.css';
 
 export default function SalesPage() {
@@ -16,11 +16,11 @@ export default function SalesPage() {
         <div className={styles.paymentProof}>
           <div className={styles.proofTop}>
             <span className={styles.proofLogo}>S</span>
-            <div><b>Paiements encaissés</b><small>Résultat personnel du créateur</small></div>
-            <em>Vérifié sur le dashboard de paiement</em>
+            <div><b>Résultat historique</b><small>Avant l’ouverture du nouveau compte Stripe</small></div>
+            <em>Résultat personnel du créateur</em>
           </div>
           <div className={styles.proofAmount}>
-            <span>Total encaissé</span><strong>+12 000 €</strong>
+            <span>Revenus générés auparavant</span><strong>+12 000 $</strong>
             <small>Ce résultat ne garantit pas les résultats futurs.</small>
           </div>
         </div>
@@ -36,11 +36,7 @@ export default function SalesPage() {
             </div>
             <p className={styles.reassurance}>Accès à vie · 3 parcours · Coach Nexo · Licence MRR</p>
           </div>
-          <a className={styles.nexoraProduct} href="#offre" aria-label="Voir l'offre NEXORA">
-            <div className={styles.orbitOne} /><div className={styles.orbitTwo} />
-            <div className={styles.nexoCore}><span>N</span><b>NEXORA</b><small>CLIQUER POUR ACCÉDER</small></div>
-            <div className={styles.floatLabel}>FORMATION COMPLÈTE</div>
-          </a>
+          <NexoraCheckoutCard />
         </div>
       </section>
 

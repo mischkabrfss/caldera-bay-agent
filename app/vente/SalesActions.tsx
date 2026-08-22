@@ -17,6 +17,38 @@ function remaining(): Countdown {
   };
 }
 
+function useCheckout() {
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+
+  async function startCheckout() {
+    setLoading(true);
+    setMessage('');
+    try {
+      const response = await fetch('/api/checkout', { method: 'POST' });
+      const data = (await response.json()) as { url?: string; error?: string };
+      if (!response.ok || !data.url) throw new Error(data.error || 'Paiement indisponible');
+      window.location.assign(data.url);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Paiement momentanément indisponible');
+      setLoading(false);
+    }
+  }
+
+  return { loading, message, startCheckout };
+}
+
+function useCurrentPrice() {
+  const [price, setPrice] = useState('34,99 €');
+  useEffect(() => {
+    const updatePrice = () => setPrice(Date.now() >= PROMO_END ? '50 €' : '34,99 €');
+    updatePrice();
+    const timer = window.setInterval(updatePrice, 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
+  return price;
+}
+
 export function PromoBar() {
   const [time, setTime] = useState<Countdown | null>(null);
 
@@ -50,30 +82,8 @@ export function PromoBar() {
 }
 
 export function CheckoutButton({ compact = false }: { compact?: boolean }) {
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
-  const [price, setPrice] = useState('34,99 €');
-
-  useEffect(() => {
-    const updatePrice = () => setPrice(Date.now() >= PROMO_END ? '50 €' : '34,99 €');
-    updatePrice();
-    const timer = window.setInterval(updatePrice, 60_000);
-    return () => window.clearInterval(timer);
-  }, []);
-
-  async function startCheckout() {
-    setLoading(true);
-    setMessage('');
-    try {
-      const response = await fetch('/api/checkout', { method: 'POST' });
-      const data = (await response.json()) as { url?: string; error?: string };
-      if (!response.ok || !data.url) throw new Error(data.error || 'Paiement indisponible');
-      window.location.assign(data.url);
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Paiement momentanément indisponible');
-      setLoading(false);
-    }
-  }
+  const { loading, message, startCheckout } = useCheckout();
+  const price = useCurrentPrice();
 
   return (
     <div className={compact ? styles.checkoutCompact : styles.checkoutAction}>
@@ -81,6 +91,29 @@ export function CheckoutButton({ compact = false }: { compact?: boolean }) {
         {loading ? 'Ouverture du paiement…' : `Accéder à NEXORA — ${price}`} <span>→</span>
       </button>
       {message && <small role="status">{message}</small>}
+    </div>
+  );
+}
+
+export function NexoraCheckoutCard() {
+  const { loading, message, startCheckout } = useCheckout();
+  const price = useCurrentPrice();
+
+  return (
+    <div className={styles.nexoraProduct}>
+      <button className={styles.nexoraPayButton} type="button" onClick={startCheckout} disabled={loading}>
+        <span className={styles.nexoraPayInner}>
+          <span className={styles.aiLogo}><i /><b>N</b></span>
+          <span className={styles.nexoraPayCopy}>
+            <small>DIGITAL BUSINESS ACADEMY</small>
+            <strong>NEXORA</strong>
+            <em>{loading ? 'Ouverture de Stripe…' : `Commencer — ${price}`}</em>
+          </span>
+          <span className={styles.payArrow}>→</span>
+        </span>
+      </button>
+      <small className={styles.nexoraPayHint}>Clique sur NEXORA pour ouvrir immédiatement le paiement Stripe sécurisé.</small>
+      {message && <small className={styles.nexoraPayError} role="status">{message}</small>}
     </div>
   );
 }
