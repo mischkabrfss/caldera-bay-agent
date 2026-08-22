@@ -1,0 +1,34 @@
+{% render 'wh-brand-head' %}
+
+<aside class="wh-announcement" role="note" aria-label="Store announcement">
+  {%- if section.settings.link_url != blank -%}
+    <a href="{{ section.settings.link_url }}">{{ section.settings.message | escape }}</a>
+  {%- else -%}
+    <span>{{ section.settings.message | escape }}</span>
+  {%- endif -%}
+</aside>
+
+{% schema %}
+{
+  "name": "WH · Announcement bar",
+  "class": "wh-announcement-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Message",
+      "default": "Free US shipping on orders $65+ · Order by Oct 24 to arrive before Halloween"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link (optional)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "WH · Announcement bar"
+    }
+  ]
+}
+{% endschema %}

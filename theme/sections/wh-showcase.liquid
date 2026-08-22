@@ -1,0 +1,73 @@
+{% render 'wh-brand-head' %}
+
+{%- assign source_collection = collections[section.settings.collection] -%}
+
+<section class="wh-showcase wh-section" aria-label="Showcase">
+  <div class="wh-container">
+    <header class="wh-showcase__head">
+      <div>
+        <p class="wh-eyebrow wh-eyebrow--brick">{{ section.settings.eyebrow | escape }}</p>
+        <h2 class="wh-h2 wh-showcase__title">{{ section.settings.title }}</h2>
+      </div>
+      {%- if section.settings.view_all_url != blank -%}
+        <a href="{{ section.settings.view_all_url }}" class="wh-btn wh-btn--ghost">
+          {{ section.settings.view_all_label | escape }} →
+        </a>
+      {%- endif -%}
+    </header>
+
+    <div class="wh-showcase__grid">
+      {%- assign max_items = section.settings.max_items | default: 8 -%}
+      {%- if source_collection.products.size > 0 -%}
+        {%- for product in source_collection.products limit: max_items -%}
+          <a href="{{ product.url }}" class="wh-card">
+            <div class="wh-media-frame wh-media-frame--4x5 {% unless product.featured_image %}wh-media-frame--placeholder{% endunless %}"
+                 data-placeholder-label="{{ product.title | truncate: 40 }}">
+              {%- if product.featured_image -%}
+                {{
+                  product.featured_image
+                  | image_url: width: 800
+                  | image_tag:
+                    loading: 'lazy',
+                    sizes: '(min-width: 1200px) 25vw, (min-width: 768px) 33vw, 50vw',
+                    widths: '320, 480, 640, 800',
+                    alt: product.title | escape
+                }}
+              {%- endif -%}
+            </div>
+            <h3 class="wh-card__title">{{ product.title | escape }}</h3>
+            <div class="wh-price">
+              <span class="wh-price__value">{{ product.price | money }}</span>
+              {%- if product.compare_at_price > product.price -%}
+                <span class="wh-price__compare">{{ product.compare_at_price | money }}</span>
+              {%- endif -%}
+            </div>
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..4) -%}
+          <div class="wh-card">
+            <div class="wh-media-frame wh-media-frame--4x5 wh-media-frame--placeholder" data-placeholder-label="Product {{ i }}"></div>
+            <h3 class="wh-card__title" style="color: var(--wh-ink-muted);">Add products to <em>{{ section.settings.collection | default: 'this collection' }}</em></h3>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "WH · Product showcase",
+  "class": "wh-showcase-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "In the catalogue" },
+    { "type": "richtext", "id": "title", "label": "Title", "default": "<p>What people are already carrying to the porch.</p>" },
+    { "type": "collection", "id": "collection", "label": "Source collection" },
+    { "type": "range", "id": "max_items", "min": 4, "max": 12, "step": 2, "default": 8, "label": "Max products" },
+    { "type": "text", "id": "view_all_label", "label": "View all label", "default": "See everything" },
+    { "type": "url",  "id": "view_all_url",   "label": "View all link" }
+  ],
+  "presets": [ { "name": "WH · Product showcase" } ]
+}
+{% endschema %}

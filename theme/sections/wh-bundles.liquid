@@ -1,0 +1,120 @@
+{% render 'wh-brand-head' %}
+
+<section class="wh-bundles wh-section" aria-label="Bundles">
+  <div class="wh-container">
+    <header style="margin-bottom: var(--wh-space-10); max-width: 640px;">
+      <p class="wh-eyebrow wh-eyebrow--brick">{{ section.settings.eyebrow | escape }}</p>
+      <h2 class="wh-h2">{{ section.settings.title }}</h2>
+      <p class="wh-lede">{{ section.settings.lede | escape }}</p>
+    </header>
+
+    <div class="wh-grid wh-grid--3">
+      {%- for block in section.blocks -%}
+        {%- assign bundle_product = all_products[block.settings.product_handle] -%}
+        <a href="{% if bundle_product != blank %}{{ bundle_product.url }}{% else %}#{% endif %}" class="wh-bundle-card" {{ block.shopify_attributes }}>
+          {%- if block.settings.badge != blank -%}
+            <span class="wh-badge wh-badge--charcoal" style="align-self: flex-start;">{{ block.settings.badge | escape }}</span>
+          {%- endif -%}
+          <h3 class="wh-bundle-card__title">{{ block.settings.title | escape }}</h3>
+          <ul class="wh-bundle-card__items">
+            {%- assign items = block.settings.items | newline_to_br | split: '<br />' -%}
+            {%- for item in items -%}
+              {%- assign trimmed = item | strip -%}
+              {%- if trimmed != blank -%}
+                <li>{{ trimmed | escape }}</li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+          <div class="wh-bundle-card__pricing">
+            <div class="wh-price">
+              <span class="wh-price__value">
+                {%- if bundle_product != blank -%}
+                  {{ bundle_product.price | money }}
+                {%- else -%}
+                  {{ block.settings.price_display | escape }}
+                {%- endif -%}
+              </span>
+              {%- if block.settings.compare_display != blank -%}
+                <span class="wh-price__compare">{{ block.settings.compare_display | escape }}</span>
+              {%- endif -%}
+            </div>
+            {%- if block.settings.save_display != blank -%}
+              <span class="wh-price__save">Save {{ block.settings.save_display | escape }}</span>
+            {%- endif -%}
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "WH · Bundles",
+  "class": "wh-bundles-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Bundled and priced to move" },
+    { "type": "richtext", "id": "title", "label": "Title", "default": "<p>Three ways in.</p>" },
+    { "type": "textarea", "id": "lede", "label": "Lede", "default": "The yard on its own is enough. The living room is enough. Or the whole scene, priced under the sum of its parts." }
+  ],
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "bundle",
+      "name": "Bundle",
+      "settings": [
+        { "type": "text",     "id": "badge", "label": "Badge (optional)", "default": "Outdoor" },
+        { "type": "text",     "id": "title", "label": "Title", "default": "Haunted Threshold" },
+        { "type": "textarea", "id": "items", "label": "Included items (one per line)", "default": "The Watcher — 12ft Ghost\nCoir Doormat (choice)\nVintage Bat Swarm Pillow" },
+        { "type": "text",     "id": "product_handle",   "label": "Bundle product handle (optional)" },
+        { "type": "text",     "id": "price_display",    "label": "Price display (fallback)", "default": "$179.99" },
+        { "type": "text",     "id": "compare_display",  "label": "Compare-at display (optional)", "default": "$209.97" },
+        { "type": "text",     "id": "save_display",     "label": "Save display", "default": "$30" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "WH · Bundles",
+      "blocks": [
+        {
+          "type": "bundle",
+          "settings": {
+            "badge": "Outdoor",
+            "title": "Haunted Threshold",
+            "items": "The Watcher — 12ft Ghost\nCoir doormat (your choice)\nVintage Bat Swarm Pillow",
+            "product_handle": "haunted-threshold-ghost-doormat-pillow-bundle",
+            "price_display": "$179.99",
+            "compare_display": "$209.97",
+            "save_display": "$30"
+          }
+        },
+        {
+          "type": "bundle",
+          "settings": {
+            "badge": "Indoor + Outdoor",
+            "title": "The Full Haunt",
+            "items": "The Watcher — 12ft Ghost\nCursed Comfort Sherpa Blanket\nDisco Ghost Throw Pillow",
+            "product_handle": "the-full-haunt-ghost-blanket-pillow-bundle",
+            "price_display": "$229.99",
+            "compare_display": "$269.97",
+            "save_display": "$40"
+          }
+        },
+        {
+          "type": "bundle",
+          "settings": {
+            "badge": "Outdoor · signature",
+            "title": "Complete Yard Kit",
+            "items": "The Watcher — 12ft Ghost\nThe Welcoming Committee — 9.6ft Banner\nThe Cairn — 9ft Pumpkin Tower",
+            "product_handle": "complete-yard-kit-3-giant-inflatables-bundle",
+            "price_display": "$279.99",
+            "compare_display": "$319.97",
+            "save_display": "$40"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

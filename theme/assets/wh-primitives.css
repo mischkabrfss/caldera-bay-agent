@@ -1,0 +1,387 @@
+/* ==========================================================================
+   Wicked Hollow — Primitives
+   Scoped to .wh-* classes to avoid conflicts with Horizon base.css
+   Requires wh-tokens.css to be loaded first.
+   ========================================================================== */
+
+/* --- Utility · container ---------------------------------------------- */
+.wh-container {
+  width: 100%;
+  max-width: var(--wh-container-max);
+  margin-inline: auto;
+  padding-inline: var(--wh-container-gutter);
+}
+
+.wh-container--narrow {
+  max-width: 960px;
+}
+
+.wh-container--wide {
+  max-width: 1560px;
+}
+
+/* --- Utility · section wrapper --------------------------------------- */
+.wh-section {
+  padding-block: clamp(48px, 8vw, 96px);
+}
+
+.wh-section--tight {
+  padding-block: clamp(32px, 5vw, 56px);
+}
+
+.wh-section--generous {
+  padding-block: clamp(64px, 10vw, 128px);
+}
+
+.wh-section--dark {
+  background-color: var(--wh-surface-dark);
+  color: var(--wh-ink-inverse);
+}
+
+.wh-section--deep {
+  background-color: var(--wh-surface-deep);
+  color: var(--wh-ink-inverse);
+}
+
+.wh-section--brick {
+  background-color: var(--wh-brick-500);
+  color: var(--wh-ink-inverse);
+}
+
+/* --- Typography · text helpers --------------------------------------- */
+.wh-eyebrow {
+  font-family: var(--wh-font-body);
+  font-size: var(--wh-fs-eyebrow);
+  font-weight: var(--wh-fw-body-strong);
+  letter-spacing: var(--wh-tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--wh-ink-muted);
+  margin: 0 0 var(--wh-space-4);
+  line-height: 1;
+}
+
+.wh-eyebrow--inverse { color: rgba(244, 239, 228, 0.7); }
+.wh-eyebrow--brick   { color: var(--wh-brick-500); }
+
+.wh-h1, .wh-h2, .wh-h3, .wh-h4, .wh-hero-title {
+  font-family: var(--wh-font-display);
+  font-weight: var(--wh-fw-display-regular);
+  letter-spacing: var(--wh-tracking-tight);
+  line-height: var(--wh-lh-tight);
+  margin: 0;
+  color: inherit;
+  text-wrap: balance;
+}
+
+.wh-hero-title { font-size: var(--wh-fs-hero); font-weight: var(--wh-fw-display-light); }
+.wh-h1         { font-size: var(--wh-fs-h1); }
+.wh-h2         { font-size: var(--wh-fs-h2); }
+.wh-h3         { font-size: var(--wh-fs-h3); line-height: var(--wh-lh-snug); }
+.wh-h4         { font-size: var(--wh-fs-h4); line-height: var(--wh-lh-snug); }
+
+.wh-italic { font-style: italic; }
+
+.wh-lede {
+  font-family: var(--wh-font-body);
+  font-size: var(--wh-fs-body-lg);
+  line-height: var(--wh-lh-body);
+  color: var(--wh-ink-default);
+  max-width: 52ch;
+  margin: 0 0 var(--wh-space-6);
+  text-wrap: pretty;
+}
+
+.wh-lede--inverse { color: rgba(244, 239, 228, 0.85); }
+
+.wh-body {
+  font-family: var(--wh-font-body);
+  font-size: var(--wh-fs-body);
+  line-height: var(--wh-lh-body);
+  color: var(--wh-ink-default);
+  margin: 0 0 var(--wh-space-4);
+}
+
+.wh-body--muted   { color: var(--wh-ink-muted); }
+.wh-body--inverse { color: rgba(244, 239, 228, 0.85); }
+
+/* --- Primitive · Button ---------------------------------------------- */
+.wh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--wh-space-2);
+  padding: 14px 28px;
+  min-height: 48px;
+  font-family: var(--wh-font-body);
+  font-size: var(--wh-fs-body-sm);
+  font-weight: var(--wh-fw-body-medium);
+  letter-spacing: var(--wh-tracking-caps);
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--wh-radius-none);
+  cursor: pointer;
+  transition: background-color var(--wh-duration-base) var(--wh-ease-out),
+              color var(--wh-duration-base) var(--wh-ease-out),
+              border-color var(--wh-duration-base) var(--wh-ease-out),
+              transform var(--wh-duration-quick) var(--wh-ease-out);
+  will-change: transform;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.wh-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--wh-shadow-focus);
+}
+
+.wh-btn:active {
+  transform: translateY(1px);
+}
+
+/* Primary — brick on bone. The Manor's single loud accent. */
+.wh-btn--primary {
+  background-color: var(--wh-brick-500);
+  color: var(--wh-ink-inverse);
+  border-color: var(--wh-brick-500);
+}
+.wh-btn--primary:hover  { background-color: var(--wh-brick-600); border-color: var(--wh-brick-600); }
+.wh-btn--primary:disabled { background-color: var(--wh-bone-300); border-color: var(--wh-bone-300); cursor: not-allowed; }
+
+/* Secondary — outline on dark or light */
+.wh-btn--outline {
+  background-color: transparent;
+  color: var(--wh-ink-default);
+  border-color: currentColor;
+}
+.wh-btn--outline:hover { background-color: var(--wh-charcoal-900); color: var(--wh-ink-inverse); border-color: var(--wh-charcoal-900); }
+
+.wh-btn--outline-inverse {
+  background-color: transparent;
+  color: var(--wh-ink-inverse);
+  border-color: var(--wh-bone-50);
+}
+.wh-btn--outline-inverse:hover { background-color: var(--wh-bone-50); color: var(--wh-ink-strong); }
+
+/* Ghost — text-only, for tertiary actions */
+.wh-btn--ghost {
+  background: transparent;
+  color: var(--wh-ink-default);
+  border: none;
+  padding: 8px 12px;
+  min-height: auto;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.wh-btn--ghost:hover { color: var(--wh-brick-500); }
+
+/* Size variants */
+.wh-btn--sm { padding: 10px 20px; min-height: 40px; font-size: 12px; }
+.wh-btn--lg { padding: 18px 36px; min-height: 56px; font-size: 15px; }
+
+/* --- Primitive · Badge ----------------------------------------------- */
+.wh-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-family: var(--wh-font-body);
+  font-size: 11px;
+  font-weight: var(--wh-fw-body-strong);
+  letter-spacing: var(--wh-tracking-eyebrow);
+  text-transform: uppercase;
+  background-color: var(--wh-brick-100);
+  color: var(--wh-brick-600);
+  border-radius: var(--wh-radius-full);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.wh-badge--fir      { background: var(--wh-fir-100); color: var(--wh-fir-500); }
+.wh-badge--charcoal { background: var(--wh-charcoal-800); color: var(--wh-bone-50); }
+.wh-badge--bone     { background: var(--wh-bone-100); color: var(--wh-ink-default); }
+.wh-badge--outline  { background: transparent; color: currentColor; border: 1px solid currentColor; }
+
+/* --- Primitive · Price ----------------------------------------------- */
+.wh-price {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--wh-space-2);
+  font-family: var(--wh-font-body);
+  color: var(--wh-ink-default);
+}
+
+.wh-price__value {
+  font-size: var(--wh-fs-body-lg);
+  font-weight: var(--wh-fw-body-strong);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--wh-tracking-tight);
+}
+
+.wh-price__compare {
+  font-size: var(--wh-fs-body-sm);
+  color: var(--wh-ink-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.wh-price__save {
+  font-size: var(--wh-fs-eyebrow);
+  font-weight: var(--wh-fw-body-strong);
+  letter-spacing: var(--wh-tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--wh-brick-500);
+}
+
+/* --- Primitive · Media Frame (locks ratio, no layout shift) ---------- */
+.wh-media-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--wh-charcoal-900);
+}
+
+.wh-media-frame > img,
+.wh-media-frame > video,
+.wh-media-frame > picture {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.wh-media-frame--4x5  { aspect-ratio: 4 / 5; }
+.wh-media-frame--1x1  { aspect-ratio: 1 / 1; }
+.wh-media-frame--16x9 { aspect-ratio: 16 / 9; }
+.wh-media-frame--21x9 { aspect-ratio: 21 / 9; }
+.wh-media-frame--3x4  { aspect-ratio: 3 / 4; }
+
+/* Placeholder — when no image is present, render a tasteful marker
+   instead of a blank gray rectangle. Manor-appropriate. */
+.wh-media-frame--placeholder {
+  background:
+    linear-gradient(135deg,
+      var(--wh-charcoal-950) 0%,
+      var(--wh-charcoal-800) 50%,
+      var(--wh-charcoal-950) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(244, 239, 228, 0.4);
+}
+
+.wh-media-frame--placeholder::after {
+  content: attr(data-placeholder-label);
+  font-family: var(--wh-font-display);
+  font-style: italic;
+  font-size: var(--wh-fs-body);
+  letter-spacing: var(--wh-tracking-caps);
+  text-align: center;
+  padding: var(--wh-space-4);
+}
+
+/* --- Primitive · Card ------------------------------------------------ */
+.wh-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wh-space-3);
+  background-color: transparent;
+  color: inherit;
+  text-decoration: none;
+  transition: transform var(--wh-duration-base) var(--wh-ease-out);
+}
+
+.wh-card:hover .wh-media-frame > img {
+  transform: scale(1.03);
+}
+
+.wh-media-frame > img {
+  transition: transform var(--wh-duration-slow) var(--wh-ease-out);
+}
+
+.wh-card__title {
+  font-family: var(--wh-font-display);
+  font-size: var(--wh-fs-h4);
+  font-weight: var(--wh-fw-display-regular);
+  line-height: var(--wh-lh-snug);
+  color: inherit;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.wh-card__meta {
+  font-family: var(--wh-font-body);
+  font-size: var(--wh-fs-body-sm);
+  color: var(--wh-ink-muted);
+  margin: 0;
+}
+
+/* --- Primitive · Input ---------------------------------------------- */
+.wh-input {
+  width: 100%;
+  padding: 14px 16px;
+  min-height: 48px;
+  font-family: var(--wh-font-body);
+  font-size: var(--wh-fs-body);
+  color: var(--wh-ink-default);
+  background-color: var(--wh-bone-50);
+  border: 1px solid var(--wh-border-subtle);
+  border-radius: var(--wh-radius-none);
+  transition: border-color var(--wh-duration-base) var(--wh-ease-out);
+}
+
+.wh-input:focus {
+  outline: none;
+  border-color: var(--wh-brick-500);
+  box-shadow: 0 0 0 3px rgba(181, 88, 63, 0.2);
+}
+
+.wh-input::placeholder {
+  color: var(--wh-ink-muted);
+}
+
+/* --- Primitive · Grid ----------------------------------------------- */
+.wh-grid {
+  display: grid;
+  gap: var(--wh-space-6);
+}
+
+.wh-grid--2 { grid-template-columns: 1fr; }
+.wh-grid--3 { grid-template-columns: 1fr; }
+.wh-grid--4 { grid-template-columns: repeat(2, 1fr); }
+
+@media (min-width: 768px) {
+  .wh-grid--2 { grid-template-columns: repeat(2, 1fr); }
+  .wh-grid--3 { grid-template-columns: repeat(3, 1fr); }
+  .wh-grid--4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* --- Utility · Divider ---------------------------------------------- */
+.wh-divider {
+  border: none;
+  border-top: 1px solid var(--wh-border-subtle);
+  margin-block: var(--wh-space-16) 0;
+}
+
+.wh-divider--inverse { border-top-color: var(--wh-charcoal-700); }
+
+/* --- Utility · Accessibility ---------------------------------------- */
+.wh-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Utility · Focus trap ------------------------------------------- */
+*:focus-visible {
+  outline: 2px solid var(--wh-brick-500);
+  outline-offset: 2px;
+}

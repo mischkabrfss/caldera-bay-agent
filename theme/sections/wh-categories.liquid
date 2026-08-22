@@ -1,0 +1,91 @@
+{% render 'wh-brand-head' %}
+
+<section class="wh-categories wh-section" aria-label="Categories">
+  <div class="wh-container">
+    <header style="margin-bottom: var(--wh-space-10); max-width: 640px;">
+      <p class="wh-eyebrow wh-eyebrow--brick">{{ section.settings.eyebrow | escape }}</p>
+      <h2 class="wh-h2">{{ section.settings.title }}</h2>
+    </header>
+
+    <div class="wh-categories__grid">
+      {%- for block in section.blocks -%}
+        <a
+          href="{{ block.settings.link }}"
+          class="wh-category-tile"
+          {{ block.shopify_attributes }}
+        >
+          <div class="wh-category-tile__media">
+            {%- if block.settings.image -%}
+              {{
+                block.settings.image
+                | image_url: width: 1400
+                | image_tag:
+                  loading: 'lazy',
+                  sizes: '(min-width: 768px) 50vw, 100vw',
+                  widths: '480, 720, 960, 1200, 1400',
+                  alt: block.settings.image.alt | default: block.settings.title
+              }}
+            {%- else -%}
+              <div class="wh-media-frame wh-media-frame--placeholder" data-placeholder-label="{{ block.settings.title }}"></div>
+            {%- endif -%}
+          </div>
+          <div class="wh-category-tile__inner">
+            <p class="wh-eyebrow wh-eyebrow--inverse wh-category-tile__eyebrow">{{ block.settings.eyebrow | escape }}</p>
+            <h3 class="wh-category-tile__title">{{ block.settings.title | escape }}</h3>
+            <p class="wh-category-tile__hint">{{ block.settings.hint | escape }}</p>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "WH · Categories",
+  "class": "wh-categories-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Two rooms of the season" },
+    { "type": "richtext", "id": "title", "label": "Title", "default": "<p>The yard and the parlor. Everything else is optional.</p>" }
+  ],
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category tile",
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Outdoor" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Porch & Yard" },
+        { "type": "text", "id": "hint", "label": "One-liner", "default": "Inflatables that read from three houses away." },
+        { "type": "url",  "id": "link", "label": "Link" },
+        { "type": "image_picker", "id": "image", "label": "Image" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "WH · Categories",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "eyebrow": "Outdoor",
+            "title": "Porch & Yard",
+            "hint": "Inflatables and coir underfoot. Everything the neighbors read first.",
+            "link": "shopify://collections/porch-yard"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "eyebrow": "Indoor",
+            "title": "Indoor Decor",
+            "hint": "Pillows, blankets, small ceremonies for the parlor.",
+            "link": "shopify://collections/indoor-decor"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

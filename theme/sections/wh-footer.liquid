@@ -1,0 +1,94 @@
+{% render 'wh-brand-head' %}
+
+<footer class="wh-footer" role="contentinfo">
+  <div class="wh-container">
+    <div class="wh-footer__grid">
+      <div>
+        <p class="wh-footer__wordmark">Wicked Hollow</p>
+        <p class="wh-footer__tagline">{{ section.settings.tagline | escape }}</p>
+      </div>
+
+      {%- for block in section.blocks -%}
+        <div {{ block.shopify_attributes }}>
+          <p class="wh-footer__heading">{{ block.settings.heading | escape }}</p>
+          <ul class="wh-footer__links">
+            {%- assign links = block.settings.links | newline_to_br | split: '<br />' -%}
+            {%- for row in links -%}
+              {%- assign trimmed = row | strip -%}
+              {%- if trimmed != blank -%}
+                {%- assign parts = trimmed | split: '|' -%}
+                {%- assign label = parts[0] | strip -%}
+                {%- assign href = parts[1] | strip | default: '#' -%}
+                <li><a href="{{ href }}">{{ label | escape }}</a></li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="wh-footer__bottom">
+      <span>© {{ 'now' | date: '%Y' }} Wicked Hollow. All rights reserved.</span>
+      <span>Made for the seasons when the light gets low.</span>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "WH · Footer",
+  "class": "wh-footer-section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Objects and atmospheres for the seasons when the light gets low. Shipped from the US, made to keep."
+    }
+  ],
+  "max_blocks": 3,
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Column",
+      "settings": [
+        { "type": "text",     "id": "heading", "label": "Heading",   "default": "Catalogue" },
+        {
+          "type": "textarea",
+          "id": "links",
+          "label": "Links — one per line, format: Label | URL",
+          "default": "Porch & Yard | /collections/porch-yard\nIndoor Decor | /collections/indoor-decor\nBundles | /collections/bundles\nTrick or Treat | /collections/trick-or-treat"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "WH · Footer",
+      "blocks": [
+        {
+          "type": "column",
+          "settings": {
+            "heading": "Catalogue",
+            "links": "Porch & Yard | /collections/porch-yard\nIndoor Decor | /collections/indoor-decor\nBundles | /collections/bundles\nTrick or Treat | /collections/trick-or-treat"
+          }
+        },
+        {
+          "type": "column",
+          "settings": {
+            "heading": "The Manor",
+            "links": "Season notes | /pages/season-notes\nAbout | /pages/about\nContact | /pages/contact"
+          }
+        },
+        {
+          "type": "column",
+          "settings": {
+            "heading": "Practical",
+            "links": "Shipping | /pages/shipping\nReturns | /pages/returns\nFAQ | /pages/faq\nSearch | /search"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

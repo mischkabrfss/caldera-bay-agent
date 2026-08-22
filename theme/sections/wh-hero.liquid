@@ -1,0 +1,76 @@
+{% render 'wh-brand-head' %}
+
+<section
+  class="wh-hero {% unless section.settings.image %}wh-hero--placeholder{% endunless %}"
+  aria-label="Hero"
+>
+  <div class="wh-hero__media" aria-hidden="true">
+    {%- if section.settings.image -%}
+      {{
+        section.settings.image
+        | image_url: width: 2400
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          sizes: '100vw',
+          widths: '640, 960, 1280, 1600, 2000, 2400',
+          alt: section.settings.image.alt | default: 'Wicked Hollow'
+      }}
+    {%- endif -%}
+  </div>
+
+  <div class="wh-container wh-hero__inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="wh-eyebrow wh-hero__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+
+    <h1 class="wh-hero-title wh-hero__title">
+      {{ section.settings.title }}
+    </h1>
+
+    {%- if section.settings.lede != blank -%}
+      <p class="wh-lede wh-hero__lede">{{ section.settings.lede | escape }}</p>
+    {%- endif -%}
+
+    <div class="wh-hero__cta">
+      {%- if section.settings.cta_primary_label != blank and section.settings.cta_primary_url != blank -%}
+        <a href="{{ section.settings.cta_primary_url }}" class="wh-btn wh-btn--primary wh-btn--lg">
+          {{ section.settings.cta_primary_label | escape }}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.cta_secondary_label != blank and section.settings.cta_secondary_url != blank -%}
+        <a href="{{ section.settings.cta_secondary_url }}" class="wh-btn wh-btn--outline-inverse wh-btn--lg">
+          {{ section.settings.cta_secondary_label | escape }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "WH · Hero",
+  "class": "wh-hero-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Manor · 2026 season" },
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Title (use <em> for italic accent)",
+      "default": "<p>Objects and atmospheres for the seasons <em>when the light gets low</em>.</p>"
+    },
+    {
+      "type": "textarea",
+      "id": "lede",
+      "label": "Supporting line",
+      "default": "A small catalogue of decor made to greet October, stay through November, and belong in the room long after the pumpkins go."
+    },
+    { "type": "image_picker", "id": "image", "label": "Hero image (optional — leave blank for placeholder)" },
+    { "type": "text", "id": "cta_primary_label",   "label": "Primary CTA label",   "default": "Enter The Manor" },
+    { "type": "url",  "id": "cta_primary_url",     "label": "Primary CTA link" },
+    { "type": "text", "id": "cta_secondary_label", "label": "Secondary CTA label", "default": "See the yard" },
+    { "type": "url",  "id": "cta_secondary_url",   "label": "Secondary CTA link" }
+  ],
+  "presets": [ { "name": "WH · Hero" } ]
+}
+{% endschema %}

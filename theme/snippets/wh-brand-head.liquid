@@ -1,0 +1,15 @@
+{% comment %}
+  Wicked Hollow — brand head payload.
+  Renders the fonts, tokens, and primitive stylesheets once per page.
+  Include from theme.liquid <head> or from the first Wicked Hollow section that fires.
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=Inter+Tight:wght@400;500;600&display=swap"
+>
+{{ 'wh-tokens.css' | asset_url | stylesheet_tag }}
+{{ 'wh-primitives.css' | asset_url | stylesheet_tag }}
+{{ 'wh-homepage.css' | asset_url | stylesheet_tag }}

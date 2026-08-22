@@ -1,0 +1,64 @@
+{% render 'wh-brand-head' %}
+
+<section class="wh-editorial wh-section wh-section--generous" aria-label="Editorial">
+  <div class="wh-container">
+    <div class="wh-editorial__grid">
+      <div>
+        <p class="wh-eyebrow wh-eyebrow--brick">{{ section.settings.eyebrow | escape }}</p>
+        <h2 class="wh-editorial__title">{{ section.settings.title }}</h2>
+        <div class="wh-editorial__body">
+          {{ section.settings.body }}
+        </div>
+        {%- if section.settings.cta_label != blank and section.settings.cta_url != blank -%}
+          <a href="{{ section.settings.cta_url }}" class="wh-btn wh-btn--outline-inverse" style="margin-top: var(--wh-space-6);">
+            {{ section.settings.cta_label | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+
+      <div>
+        <div class="wh-media-frame wh-media-frame--3x4 {% unless section.settings.image %}wh-media-frame--placeholder{% endunless %}"
+             data-placeholder-label="{{ section.settings.placeholder_caption }}">
+          {%- if section.settings.image -%}
+            {{
+              section.settings.image
+              | image_url: width: 1200
+              | image_tag:
+                loading: 'lazy',
+                sizes: '(min-width: 900px) 50vw, 100vw',
+                widths: '480, 720, 960, 1200',
+                alt: section.settings.image.alt | default: 'Editorial'
+            }}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "WH · Editorial moment",
+  "class": "wh-editorial-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "A note from The Manor" },
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Title",
+      "default": "<p>Halloween is not the point. <em>The season is.</em></p>"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>We built this catalogue for the months when the light gets low and the house asks for attention. October gets the loudest costume — a 12-foot ghost, a skeleton banner, a tower of glowing pumpkins. November keeps the pillows and the coir. December inherits the lace, the tapers, the quiet.</p><p>Nothing here was designed to be thrown out on November 1st.</p>"
+    },
+    { "type": "image_picker", "id": "image", "label": "Editorial image" },
+    { "type": "text", "id": "placeholder_caption", "label": "Placeholder caption (when no image)", "default": "Photograph pending" },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Read the season notes" },
+    { "type": "url",  "id": "cta_url",   "label": "CTA link" }
+  ],
+  "presets": [ { "name": "WH · Editorial moment" } ]
+}
+{% endschema %}

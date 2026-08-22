@@ -1,0 +1,63 @@
+{% render 'wh-brand-head' %}
+
+<section class="wh-countdown wh-section" aria-label="Countdown to Halloween">
+  <div class="wh-container">
+    <p class="wh-eyebrow wh-eyebrow--inverse wh-countdown__label">{{ section.settings.eyebrow | escape }}</p>
+    <h2 class="wh-countdown__title">{{ section.settings.title }}</h2>
+
+    <div
+      class="wh-countdown__grid"
+      role="timer"
+      aria-live="polite"
+      data-wh-countdown
+      data-target-iso="{{ section.settings.target_iso }}"
+    >
+      <div class="wh-countdown__unit">
+        <span class="wh-countdown__number" data-wh-count="days">--</span>
+        <span class="wh-countdown__unit-label">Days</span>
+      </div>
+      <div class="wh-countdown__unit">
+        <span class="wh-countdown__number" data-wh-count="hours">--</span>
+        <span class="wh-countdown__unit-label">Hours</span>
+      </div>
+      <div class="wh-countdown__unit">
+        <span class="wh-countdown__number" data-wh-count="minutes">--</span>
+        <span class="wh-countdown__unit-label">Minutes</span>
+      </div>
+    </div>
+
+    <p class="wh-countdown__note">{{ section.settings.note | escape }}</p>
+  </div>
+</section>
+
+<script src="{{ 'wh-countdown.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "WH · Countdown",
+  "class": "wh-countdown-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Time on the porch" },
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Title",
+      "default": "<p>Halloween is coming. Order early to get it up in time.</p>"
+    },
+    {
+      "type": "text",
+      "id": "target_iso",
+      "label": "Target date (ISO 8601, UTC)",
+      "info": "Format YYYY-MM-DDTHH:MM:SSZ. Ex: 2026-10-31T04:00:00Z (midnight Halloween in Eastern US)",
+      "default": "2026-10-31T04:00:00Z"
+    },
+    {
+      "type": "textarea",
+      "id": "note",
+      "label": "Under-timer note",
+      "default": "Order by Oct 24 to receive before Halloween. Bundles ship from US warehouses in 3–8 business days."
+    }
+  ],
+  "presets": [ { "name": "WH · Countdown" } ]
+}
+{% endschema %}

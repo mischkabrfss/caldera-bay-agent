@@ -1,0 +1,44 @@
+{% render 'wh-brand-head' %}
+
+<section class="wh-reassurance" aria-label="Shipping and returns">
+  <div class="wh-container">
+    <div class="wh-reassurance__grid">
+      {%- for block in section.blocks -%}
+        <div class="wh-reassurance__item" {{ block.shopify_attributes }}>
+          <p class="wh-reassurance__label">{{ block.settings.label | escape }}</p>
+          <p class="wh-reassurance__value">{{ block.settings.value | escape }}</p>
+          <p class="wh-reassurance__detail">{{ block.settings.detail | escape }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "WH · Reassurance",
+  "class": "wh-reassurance-section",
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Reassurance",
+      "settings": [
+        { "type": "text",     "id": "label",  "label": "Label",  "default": "Shipping" },
+        { "type": "text",     "id": "value",  "label": "Value",  "default": "Free over $65" },
+        { "type": "textarea", "id": "detail", "label": "Detail", "default": "Standard $6.95 below. All orders ship from US warehouses in 2–8 business days." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "WH · Reassurance",
+      "blocks": [
+        { "type": "item", "settings": { "label": "Shipping", "value": "Free over $65", "detail": "Standard $6.95 below. All orders ship from US warehouses in 2–8 business days." } },
+        { "type": "item", "settings": { "label": "Returns",  "value": "30 days, no notes", "detail": "Send it back within 30 days if the room disagreed. Refund goes to the card, not the store." } },
+        { "type": "item", "settings": { "label": "Support",  "value": "Real people, real fast", "detail": "Email replies within one business day, always from someone who knows the catalogue." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

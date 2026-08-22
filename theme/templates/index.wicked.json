@@ -1,0 +1,211 @@
+{
+  "sections": {
+    "announcement": {
+      "type": "wh-announcement",
+      "settings": {
+        "message": "Free US shipping on orders $65+ · Order by Oct 24 to arrive before Halloween",
+        "link_url": ""
+      }
+    },
+    "hero": {
+      "type": "wh-hero",
+      "settings": {
+        "eyebrow": "The Manor · 2026 season",
+        "title": "<p>Objects and atmospheres for the seasons <em>when the light gets low</em>.</p>",
+        "lede": "A small catalogue of decor made to greet October, stay through November, and belong in the room long after the pumpkins go.",
+        "cta_primary_label": "Enter The Manor",
+        "cta_primary_url": "/collections/all",
+        "cta_secondary_label": "See the yard",
+        "cta_secondary_url": "/collections/porch-yard"
+      }
+    },
+    "showcase_signature": {
+      "type": "wh-showcase",
+      "settings": {
+        "eyebrow": "The signature pieces",
+        "title": "<p>What the yard reads from the sidewalk.</p>",
+        "collection": "porch-yard",
+        "max_items": 6,
+        "view_all_label": "See the yard collection",
+        "view_all_url": "/collections/porch-yard"
+      }
+    },
+    "categories": {
+      "type": "wh-categories",
+      "settings": {
+        "eyebrow": "Two rooms of the season",
+        "title": "<p>The yard and the parlor. Everything else is optional.</p>"
+      },
+      "blocks": {
+        "outdoor": {
+          "type": "category",
+          "settings": {
+            "eyebrow": "Outdoor",
+            "title": "Porch & Yard",
+            "hint": "Inflatables that read from three houses away, coir underfoot, string lights on the porch.",
+            "link": "/collections/porch-yard"
+          }
+        },
+        "indoor": {
+          "type": "category",
+          "settings": {
+            "eyebrow": "Indoor",
+            "title": "Indoor Decor",
+            "hint": "Pillows, blankets, lace, small ceremonies for the parlor.",
+            "link": "/collections/indoor-decor"
+          }
+        }
+      },
+      "block_order": ["outdoor", "indoor"]
+    },
+    "editorial": {
+      "type": "wh-editorial",
+      "settings": {
+        "eyebrow": "A note from The Manor",
+        "title": "<p>Halloween is not the point. <em>The season is.</em></p>",
+        "body": "<p>We built this catalogue for the months when the light gets low and the house asks for attention. October gets the loudest costume — a 12-foot ghost, a skeleton banner, a tower of glowing pumpkins. November keeps the pillows and the coir. December inherits the lace, the tapers, the quiet.</p><p>Nothing here was designed to be thrown out on November 1st.</p>",
+        "placeholder_caption": "Editorial photograph pending"
+      }
+    },
+    "bundles": {
+      "type": "wh-bundles",
+      "settings": {
+        "eyebrow": "Bundled and priced to move",
+        "title": "<p>Three ways in.</p>",
+        "lede": "The yard on its own is enough. The living room is enough. Or the whole scene, priced under the sum of its parts."
+      },
+      "blocks": {
+        "threshold": {
+          "type": "bundle",
+          "settings": {
+            "badge": "Outdoor",
+            "title": "Haunted Threshold",
+            "items": "The Watcher — 12ft Ghost\nCoir doormat (your choice)\nVintage Bat Swarm Pillow",
+            "product_handle": "haunted-threshold-ghost-doormat-pillow-bundle",
+            "price_display": "$179.99",
+            "compare_display": "$209.97",
+            "save_display": "$30"
+          }
+        },
+        "full_haunt": {
+          "type": "bundle",
+          "settings": {
+            "badge": "Indoor + Outdoor",
+            "title": "The Full Haunt",
+            "items": "The Watcher — 12ft Ghost\nCursed Comfort Sherpa Blanket\nDisco Ghost Throw Pillow",
+            "product_handle": "the-full-haunt-ghost-blanket-pillow-bundle",
+            "price_display": "$229.99",
+            "compare_display": "$269.97",
+            "save_display": "$40"
+          }
+        },
+        "yard_kit": {
+          "type": "bundle",
+          "settings": {
+            "badge": "Outdoor · signature",
+            "title": "Complete Yard Kit",
+            "items": "The Watcher — 12ft Ghost\nThe Welcoming Committee — 9.6ft Banner\nThe Cairn — 9ft Pumpkin Tower",
+            "product_handle": "complete-yard-kit-3-giant-inflatables-bundle",
+            "price_display": "$279.99",
+            "compare_display": "$319.97",
+            "save_display": "$40"
+          }
+        }
+      },
+      "block_order": ["threshold", "full_haunt", "yard_kit"]
+    },
+    "reassurance": {
+      "type": "wh-reassurance",
+      "blocks": {
+        "shipping": {
+          "type": "item",
+          "settings": {
+            "label": "Shipping",
+            "value": "Free over $65",
+            "detail": "Standard $6.95 below. All orders ship from US warehouses in 2–8 business days."
+          }
+        },
+        "returns": {
+          "type": "item",
+          "settings": {
+            "label": "Returns",
+            "value": "30 days, no notes",
+            "detail": "Send it back within 30 days if the room disagreed. Refund goes to the card, not the store."
+          }
+        },
+        "support": {
+          "type": "item",
+          "settings": {
+            "label": "Support",
+            "value": "Real people, real fast",
+            "detail": "Email replies within one business day, always from someone who knows the catalogue."
+          }
+        }
+      },
+      "block_order": ["shipping", "returns", "support"]
+    },
+    "countdown": {
+      "type": "wh-countdown",
+      "settings": {
+        "eyebrow": "Time on the porch",
+        "title": "<p>Halloween is coming. Order early to get it up in time.</p>",
+        "target_iso": "2026-10-31T04:00:00Z",
+        "note": "Order by Oct 24 to receive before Halloween. Bundles ship from US warehouses in 3–8 business days."
+      }
+    },
+    "capture": {
+      "type": "wh-capture",
+      "settings": {
+        "eyebrow": "The list",
+        "title": "<p>Get on the list. <em>Nothing else.</em></p>",
+        "lede": "One quiet email each month with new arrivals, a mood, and access to seasonal drops before they open publicly.",
+        "input_placeholder": "your@email.com",
+        "cta_label": "Get on the list",
+        "success_message": "Welcome. Look for a note within a few minutes.",
+        "legal": "You can unsubscribe any time. We never sell your address."
+      }
+    },
+    "footer": {
+      "type": "wh-footer",
+      "settings": {
+        "tagline": "Objects and atmospheres for the seasons when the light gets low. Shipped from the US, made to keep."
+      },
+      "blocks": {
+        "col1": {
+          "type": "column",
+          "settings": {
+            "heading": "Catalogue",
+            "links": "Porch & Yard | /collections/porch-yard\nIndoor Decor | /collections/indoor-decor\nBundles | /collections/bundles\nTrick or Treat | /collections/trick-or-treat"
+          }
+        },
+        "col2": {
+          "type": "column",
+          "settings": {
+            "heading": "The Manor",
+            "links": "Season notes | /pages/season-notes\nAbout | /pages/about\nContact | /pages/contact"
+          }
+        },
+        "col3": {
+          "type": "column",
+          "settings": {
+            "heading": "Practical",
+            "links": "Shipping | /pages/shipping\nReturns | /pages/returns\nFAQ | /pages/faq\nSearch | /search"
+          }
+        }
+      },
+      "block_order": ["col1", "col2", "col3"]
+    }
+  },
+  "order": [
+    "announcement",
+    "hero",
+    "showcase_signature",
+    "categories",
+    "editorial",
+    "bundles",
+    "reassurance",
+    "countdown",
+    "capture",
+    "footer"
+  ]
+}

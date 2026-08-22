@@ -1,0 +1,67 @@
+{% render 'wh-brand-head' %}
+
+<section class="wh-capture wh-section" aria-label="Email capture">
+  <div class="wh-container">
+    <div class="wh-capture__inner">
+      <p class="wh-eyebrow wh-eyebrow--brick">{{ section.settings.eyebrow | escape }}</p>
+      <h2 class="wh-h2 wh-capture__title">{{ section.settings.title }}</h2>
+      <p class="wh-lede wh-capture__lede">{{ section.settings.lede | escape }}</p>
+
+      {%- form 'customer', class: 'wh-capture__form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter, wh-homepage-capture">
+        <label for="wh-capture-email" class="wh-visually-hidden">Email address</label>
+        <input
+          id="wh-capture-email"
+          class="wh-input"
+          type="email"
+          name="contact[email]"
+          placeholder="{{ section.settings.input_placeholder | escape }}"
+          required
+          autocomplete="email"
+        >
+        <button type="submit" class="wh-btn wh-btn--primary">
+          {{ section.settings.cta_label | escape }}
+        </button>
+
+        {%- if form.posted_successfully? -%}
+          <p class="wh-body wh-body--inverse" style="width: 100%; margin-top: var(--wh-space-4);">
+            {{ section.settings.success_message | escape }}
+          </p>
+        {%- elsif form.errors -%}
+          <p class="wh-body wh-body--inverse" style="width: 100%; margin-top: var(--wh-space-4); color: var(--wh-brick-400);">
+            {{ form.errors.messages.email }}
+          </p>
+        {%- endif -%}
+      {%- endform -%}
+
+      <p class="wh-capture__legal">{{ section.settings.legal | escape }}</p>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "WH · Email capture",
+  "class": "wh-capture-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The list" },
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Title",
+      "default": "<p>Get on the list. <em>Nothing else.</em></p>"
+    },
+    {
+      "type": "textarea",
+      "id": "lede",
+      "label": "Lede",
+      "default": "One quiet email each month with new arrivals, a mood, and access to seasonal drops before they open publicly."
+    },
+    { "type": "text", "id": "input_placeholder", "label": "Placeholder", "default": "your@email.com" },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Get on the list" },
+    { "type": "text", "id": "success_message", "label": "Success message", "default": "Welcome. Look for a note within a few minutes." },
+    { "type": "text", "id": "legal", "label": "Legal fine print", "default": "You can unsubscribe any time. We never sell your address." }
+  ],
+  "presets": [ { "name": "WH · Email capture" } ]
+}
+{% endschema %}
