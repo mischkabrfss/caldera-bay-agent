@@ -4,6 +4,66 @@
 
 ---
 
+## Session 12 — 25 août 2026 · installation Liquid dans le thème dupliqué
+
+**Cible d'écriture** : thème `Wicked Hollow · The Manor` (renommé depuis "Copie de Helio"), id `gid://shopify/OnlineStoreTheme/193409024266`, role UNPUBLISHED. Le thème MAIN Helio (id 193379533066) n'a PAS été touché.
+
+### 19 fichiers écrits via `themeFilesUpsert` + relus par `theme.files` API
+
+| Fichier | Écrit | Relu | Taille |
+|---|---|---|---|
+| `assets/wh-tokens.css` | ✓ | ✓ | 1 714 B |
+| `assets/wh-homepage.css` | ✓ | ✓ | 13 092 B |
+| `assets/wh-product.css` | ✓ | ✓ | 4 959 B |
+| `assets/wh-motion.js` | ✓ | ✓ | 3 550 B |
+| `snippets/wh-brand-head.liquid` | ✓ | ✓ | 681 B |
+| `snippets/wh-svg-defs.liquid` | ✓ | ✓ | 6 894 B |
+| `sections/wh-announcement.liquid` | ✓ | ✓ | 837 B |
+| `sections/wh-hero.liquid` | ✓ | ✓ | 3 057 B |
+| `sections/wh-product-rail.liquid` | ✓ | ✓ | 5 262 B |
+| `sections/wh-house-tour.liquid` | ✓ | ✓ | 4 155 B |
+| `sections/wh-bundle.liquid` | ✓ | ✓ | 4 091 B |
+| `sections/wh-reassurance.liquid` | ✓ | ✓ | 1 979 B |
+| `sections/wh-reviews.liquid` | ✓ | ✓ | 1 344 B |
+| `sections/wh-footer.liquid` | ✓ | ✓ | 3 104 B |
+| `sections/wh-product-main.liquid` | ✓ | ✓ | 4 999 B |
+| `sections/wh-product-info.liquid` | ✓ | ✓ | 4 987 B |
+| `sections/wh-product-sticky.liquid` | ✓ | ✓ | 1 559 B |
+| `templates/index.json` | ✓ | ✓ | 5 983 B |
+| `templates/product.wicked.json` | ✓ | ✓ | 2 706 B |
+
+### Erreurs rencontrées et résolues
+
+- `wh-footer.liquid` : label `payment_methods` > 70 caractères → raccourci en "Payment methods (comma-separated)" + `info` séparé
+- `wh-announcement.liquid` : setting `url` avec default `/pages/shipping` refusé (les url type ne prennent qu'une URL absolue ou vide) → retiré le default, mis dans le template JSON à la place
+- `wh-product-main.liquid` : `{% if %}` imbriqué dans `{{ }}` (loading:eager/lazy conditionnel dans image_tag) → séparé en 2 branches `{%- if forloop.first -%}` avant le tag
+
+Aucun upsert n'a été laissé silencieusement échoué.
+
+### 5 produits basculés sur `product.wicked` template via `productUpdate`
+
+- Ghost (10599372882186), Cairn (10599376847114), Banner (10599380156682), Mantel (10599414169866), Rings (10599415218442) → tous `templateSuffix: "wicked"` ✓
+
+### Thème renommé
+
+`Copie de Helio` → `Wicked Hollow · The Manor` via `themeUpdate` ✓.
+
+### 3 points les plus faibles (honnête)
+
+1. **Product page manque le schéma d'échelle avec humain** — le brief l'appelait "argument n°1 sur ce type de produit". Le fichier `wh-product-main.liquid` a la galerie native mais aucun visuel scale-with-human n'existe dans le catalogue. Je peux ajouter un slide SVG silhouette humain à côté du ghost dans `wh-svg-defs`, mais idéalement c'est la vraie photo scale demain.
+2. **Pas de cart drawer custom** — je m'appuie sur le drawer natif Horizon/Helio (link vers `/cart` au niveau des `product` form). Le brief mentionnait "spring du tiroir panier" — ça reste au niveau de Helio par défaut.
+3. **Motion light** — j'ai fait sticky mobile + gallery swipe + countdown honnête + reveal on scroll, mais pas la brume dérivante ni la chauve-souris rare qui traverse. Ces effets d'ambiance sont dans le brief comme optionnels, absents ici. À ajouter en Session 13 si tu valides le socle.
+
+### Reste bloquant publication
+
+- Photos supplier 2000×2500 (attente demain — le silhouette SVG s'efface dès que la première media Shopify est présente)
+- Password protection à activer admin (non-API)
+- Payment methods à confirmer admin (footer settings.payment_methods = éditable)
+- Nom boutique "Halloween Heven" à corriger en "Wicked Hollow" (API Admin GraphQL n'expose pas `shopUpdate` — passage obligatoire par admin)
+- Publier le thème quand validé (Online Store → Themes → Wicked Hollow · The Manor → Publish)
+
+---
+
 ## Session 11 — 25 août 2026 · pivot catalogue + repositionnement DTC
 
 Décision structurelle : après vérification manuelle CJ (masques US warehouse = contrefaçons IP Valak/The Nun, génériques = Chine 5-11j), la piste masques/costumes est abandonnée. Catalogue final = 5 SKUs. Boutique repositionnée narrativement autour de "LA MAISON ENTIÈRE LE SOIR D'HALLOWEEN" avec promesse "la maison dont les gens parleront le lendemain". Puis pivot vers standard DTC premium avec passe rendu preview mobile-first à 5 largeurs.
