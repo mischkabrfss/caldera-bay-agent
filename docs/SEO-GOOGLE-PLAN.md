@@ -285,6 +285,58 @@ Sans ces éléments, Google Merchant + Rich Results ne passent pas correctement 
 
 ---
 
+## D2 — Hiérarchie éditoriale par niveau de page
+
+Ajouté Session 8. Règle explicite du poids éditorial et du volume de contenu attendu selon le niveau de la page dans l'arborescence. Objectif : concentrer l'effort SEO là où il convertit, ne pas gaspiller sur les pages secondaires.
+
+### Poids éditorial par niveau
+
+| Niveau | Type de page | Longueur intro | H1 travaillé | Description body | Justification |
+|---|---|---|---|---|---|
+| **L1** | Homepage | N/A (JSON template) | Voix Manor pure, jamais keyword | Sections ordonnées par priorité commerciale | Elle vend la marque, pas un mot-clé |
+| **L2a** | **Collection prioritaire** (Giant Inflatables) | **120-180 mots** | ✓ travaillé | 2-3 paragraphes avec CTA implicite | Pilier SEO différenciant, capte l'intention forte |
+| **L2b** | **Collection secondaire** (Porch & Yard) | **80-120 mots** | ✓ travaillé | 1 paragraphe + bullet points optionnels | Hub d'entrée large, moins concurrentiel |
+| **L2c** | **Collection en attente** (Indoor Decor, Trick or Treat, Vestments) | **60-80 mots** (prête) | Simple | 1 paragraphe court | Se ré-ouvre quand ≥3 produits |
+| **L3a** | **Fiche produit héros** (Ghost, Banner) | Description 250-350 mots | Titre Manor + meta title ≤60 char | Structure : accroche → bénéfices → faits → cas d'usage → specs | Ce sont les pages qui reçoivent le trafic ad |
+| **L3b** | **Fiche produit standard** (Cairn) | 180-250 mots | Idem | Idem | Rank organique attendu, pas d'ad focus |
+| **L3c** | **Accessoire** (Mantel, Rings, futurs masques/costumes) | 120-180 mots | Titre Manor + meta ≤60 char | Structure allégée : accroche → 3 bénéfices → specs | AOV et long-tail, pas de dépense ad directe |
+| **L4** | Pages statiques (about, shipping, returns, faq) | 150-300 mots | Neutre | Utilitaire | Pas de rank ambition, trust signals |
+
+### Ordre des sections homepage (ordre commercial reflète priorité SEO interne)
+
+1. Announcement bar
+2. Hero (Giant Inflatables angle)
+3. **Section Giant Inflatables** (collection block en 3-4 cards)
+4. **Section Porch & Yard** (collection block)
+5. Editorial moment (voix Manor, ancre la marque)
+6. Bundles (à venir Session 9 — Complete Yard Kit + Haunted Threshold)
+7. Reassurance (shipping, returns)
+8. Countdown (honnête vers 31 oct)
+9. Email capture
+10. Footer
+
+### Application au corpus actuel (Session 8)
+
+| Produit | Cible mots | Réel | Verdict |
+|---|---|---|---|
+| Ghost (héros L3a) | 250-350 | ~340 | ✓ |
+| Banner (héros L3a) | 250-350 | ~310 | ✓ |
+| Cairn (standard L3b) | 180-250 | ~230 | ✓ |
+| Mantel (accessoire L3c) | 120-180 | ~140 | ✓ |
+| Rings (accessoire L3c) | 120-180 | ~150 | ✓ |
+
+Toutes les 5 fiches respectent leur cible mots. Les 10 fiches masques/costumes de `SOURCING-ROUND-4.md` sont écrites au niveau L3c (120-180 mots par accroche+bénéfices) — cohérent avec leur rôle AOV/long-tail.
+
+### Règles de ré-ouverture des collections en attente
+
+- **Indoor Decor** : ré-ouvre dès que ≥3 produits taggés `place:indoor` (mantel actuel + 2 masques/costumes indoor à venir chantier G).
+- **Trick or Treat** : ré-ouvre dès que ≥4 produits taggés `collection:trick-or-treat` (Rings actuel + Round 3 gamme d'entrée $12-19 déjà cataloguée dans `SOURCING-ROUND-3.md`).
+- **Vestments** : ré-ouvre dès validation de ≥5 masques/accessoires du chantier G tagués `place:worn`.
+
+Chaque ré-ouverture = 1 nouvelle collection à créer avec sa rule smart + intro éditoriale L2c prête (60-80 mots).
+
+---
+
 ## Priorité d'exécution SEO
 
 1. **Renseigner les 14 meta titles + descriptions** dans admin Shopify (copier-coller depuis ce fichier). ETA : 20 min.

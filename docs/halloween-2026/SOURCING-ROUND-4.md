@@ -1,524 +1,835 @@
-# Wicked Hollow — Sourcing Round 4 · gamme "à porter" (masques, accessoires, costumes, cadeau)
+# Wicked Hollow — Sourcing Round 4 · fiches prêtes à l'emploi + checklist CJ
 
-> **Note de honnêteté** : WebSearch est en rate-limit weekly jusqu'au 24 août 17h UTC. L'intelligence marché ci-dessous est **compilée depuis les recherches croisées des Rounds 1-3** (déjà exécutées et validées cette semaine) **+ connaissance générale de la catégorie wearable Halloween**. Prix marché US indicatifs, à re-vérifier au moment de sourcer. Fondamentaux catégorie (evergreen masques latex, capes, couronnes) : confiance élevée. Signaux TikTok/Meta Ad Library de la semaine : confiance abaissée.
-
----
-
-## Seuils économiques (à 5 % fees)
-
-### Profil HÉROS d'impulsion (peut porter la pub) — retours 6 %
-
-| Retail | Coût rendu MAX | Contribution ≥ 55 % | ROAS ≤ 1.8 |
-|---|---|---|---|
-| $29.99 | **$10.20** | ✓ | ✓ |
-| $34.99 | **$11.90** | ✓ | ✓ |
-| $39.99 | **$13.60** | ✓ | ✓ |
-| $44.99 | **$15.30** | ✓ | ✓ |
-| $49.99 | **$17.00** | ✓ | ✓ |
-| $54.99 | **$18.70** | ✓ | ✓ |
-| $59.99 | **$20.40** | ✓ | ✓ |
-
-### Profil COSTUMES — retours 15 % (structurel)
-
-Formule adaptée : G = 5% D, H = 15% D → contribution min = D − C − 0.20D. Pour tenir ≥ 45 % contribution : **C ≤ 0.35 × D**.
-
-| Retail | Coût rendu MAX (15% retours) | Contribution résiduelle |
-|---|---|---|
-| $44.99 | **$15.75** | 45.0 % ✓ |
-| $49.99 | **$17.50** | 45.0 % ✓ |
-| $54.99 | **$19.25** | 45.0 % ✓ |
-| $59.99 | **$20.99** | 45.0 % ✓ |
-| $69.99 | **$24.50** | 45.0 % ✓ |
-
-**Règle survie** : un costume qui n'atteint pas ≥ 55 % contribution à 6 % de retours est éliminé — il ne survit pas au passage à 15 %.
-
-### Profil AOV (bundle-only, cross-sell, jamais paid cold) — retours 6 %
-
-| Retail | Coût rendu MAX | Profit ≥ $10 | Marge ≥ 45 % |
-|---|---|---|---|
-| $19.99 | $8.00 | limite ($8.79) | 43.9 % |
-| $22.99 | $10.00 | ✓ ($10.46) | 45.5 % |
-| $24.99 | $10.00 | ✓ ($12.24) | 49.0 % |
-| $27.99 | $12.00 | ✓ ($12.91) | 46.1 % |
-
-**Contrainte port CJ** : shipping US fixe ~$4-7 même sur produit à $2. Pour un coût rendu bas, il faut un produit à $1-4 supplier + port. Vérifier ce ratio sur chaque candidat.
-
-### Test "The Manor" — appliqué systématiquement
-
-Rejetés automatiquement :
-- Plastique criard visible sur photos (verts fluo, oranges plastiques)
-- Sang dégoulinant, cerveau à découvert, effets de tripes
-- Humour potache, textes rigolos type "gimme candy"
-- Costumes carnavalesques génériques (clowns colorés, pirates cheap tricolores)
-
-La question à se poser : *"est-ce que ce produit peut figurer dans la même photo de campagne que le fantôme 11.8ft sans détonner ?"*
+> **Format Session 8** : chaque candidat est livré comme une **fiche produit COMPLÈTE prête à copier-coller dans Shopify DRAFT** — titre affiché, meta title, description structurée, tags, metafields, meta description, guide tailles (costumes), avertissements. En tête de description, un commentaire interne HTML liste ce qui doit être confirmé avant publication. Chaque fiche est doublée d'une checklist CJ (search terms, prix cible, coût rendu max, stock mini, mensurations à demander).
+>
+> **⚠️ Actions Shopify en attente** : création DRAFT des 10 produits ci-dessous **dès reconnexion MCP**. Chacun tagué `internal:awaiting-supplier-verification` + `season:halloween-2026`, sans image (bloc image vide), prix cible saisi. À la validation supplier : coller SKU + prix réel + images = **5 minutes par produit** au lieu d'1 heure.
+>
+> **Contexte** : WebSearch était en rate-limit weekly jusqu'au 24 août — intelligence marché de cette section compilée depuis Rounds 1-3 + connaissance générale catégorie wearable Halloween. Fondamentaux catégorie confiance élevée. Signaux TikTok/Meta Ad Library de la semaine confiance abaissée.
 
 ---
 
-## 🎭 CATÉGORIE 1 · MASQUES · priorité maximale
+## Seuils économiques (rappels)
 
-Meilleur profil du lot : pas de taille, retours faibles (< 5 %), léger, peu cher, valeur perçue élevée, filmabilité maximale.
+### HÉROS d'impulsion — retours 6 %
 
-### 🥇 #1 — Antique Leather-Look Plague Doctor Beak Mask (PU)
+Coût rendu max = 34 % du retail pour marge contribution ≥ 55 % :
+- Retail $29.99 → C max $10.20
+- Retail $34.99 → C max $11.90
+- Retail $39.99 → C max $13.60
+- Retail $44.99 → C max $15.30
+- Retail $49.99 → C max $17.00
+- Retail $54.99 → C max $18.70
+- Retail $59.99 → C max $20.40
 
-- **Rôle visé** : **HÉROS d'impulsion**
-- **Search terms CJ** : `plague doctor mask leather look adult` · `plague doctor beak mask halloween` · `leather bird plague mask steampunk`
-- **Prix marché US** : $29-59 (Etsy $40-70, Amazon $25-45)
-- **Prix vente cible** : **$39.99**
-- **Coût rendu MAX** : **$13.60**
-- **Fourchette supplier CJ probable** : $8-11 produit + $4-5 port = $12-16 landed
-- **Stock US mini** : **250**
-- **Confiance demande** : ÉLEVÉE — evergreen depuis 2020, TikTok #plaguedoctor cumule des dizaines de millions de vues, revend chaque octobre
-- **Manor coherence** : ✓✓ (steampunk-victoriana pur)
-- **Conformité** : masque intégral face → mention **champ de vision réduit, retirer avant conduire, supervision requise pour enfants** obligatoire ; **latex allergy warning si PU synthétique substitué à cuir**
-- **Pourquoi #1** : format signature qui se photographie sans avoir besoin de costume complet. Ticket $40 tolère ~$12 CAC. Filmable profil = transformation photo/vidéo instantanée.
+### COSTUMES — retours 15 %
 
-### 🥈 #2 — Silver Filigree Metal Masquerade Half-Mask
+Coût rendu max = 35 % du retail pour marge contribution ≥ 45 % :
+- Retail $44.99 → C max $15.75
+- Retail $49.99 → C max $17.50
+- Retail $54.99 → C max $19.25
+- Retail $59.99 → C max $20.99
 
-- **Rôle visé** : **HÉROS d'impulsion**
-- **Search terms CJ** : `metal filigree masquerade mask silver` · `venetian masquerade mask metal half face` · `filigree lace masquerade mask gothic`
-- **Prix marché US** : $18-42
+**Règle survie** : un costume qui n'atteint pas ≥ 55 % à 6 % retours ne survit pas à 15 %.
+
+### AOV — retours 6 %
+
+Coût rendu max pour profit ≥ $10 et marge ≥ 45 % :
+- Retail $22.99 → C max $10 (profit $10.46, marge 45.5 %)
+- Retail $24.99 → C max $10 (profit $12.24, marge 49.0 %)
+- Retail $27.99 → C max $12 (profit $12.91, marge 46.1 %)
+
+---
+
+# 🎭 MASQUES ET ACCESSOIRES — 6 fiches prêtes
+
+## FICHE #1 — Draped Lace Mourning Veil
+
+### Bloc à copier-coller dans Shopify
+
+**Titre affiché** : `Draped Lace Mourning Veil — 60 × 30 Inch`
+
+**Meta title SEO** (60 char) : `Halloween Black Lace Mourning Veil · Widow Costume Accessory`
+
+**Meta description SEO** (154 char) : *Long black lace veil for Halloween costumes and dark bridal looks. 60 × 30 inch draped Victorian mourning veil. Ships from US in 3–8 days.*
+
+**Handle** : `draped-lace-mourning-veil`
+
+**Description HTML** :
+```html
+<!-- INTERNAL — CONFIRM BEFORE PUBLICATION:
+     · Supplier SKU (search terms in checklist below)
+     · Exact fabric composition (100% polyester lace assumed)
+     · Weight (< 200 g assumed)
+     · US warehouse confirmation, stock ≥ 300
+     · At least one lifestyle image (draped over head, portrait 4:5)
+-->
+<p>Sixty inches of black lace, meant to fall from a comb, a headpiece, or hair pinned back. The one accessory that transforms a black dress into a costume without asking for a full outfit.</p>
+<h3>What makes it work</h3>
+<ul>
+  <li>Draped Victorian mourning cut, 60 × 30 inches — long enough to reach mid-back</li>
+  <li>Real openwork lace, black, no shine — reads gothic in photos, matte on camera</li>
+  <li>Fastens to a comb, a headband, or bobby pins — you provide the anchor</li>
+  <li>Cross-usage: Halloween, dark wedding events, Day of the Dead, All Souls' Day rituals</li>
+  <li>Ships from US warehouse in 3–8 business days</li>
+</ul>
+<h3>The details</h3>
+<ul>
+  <li><strong>Dimensions:</strong> 60 in L × 30 in W (152 × 76 cm)</li>
+  <li><strong>Material:</strong> 100% polyester openwork lace, matte finish</li>
+  <li><strong>Weight:</strong> lightweight (under 200 g)</li>
+  <li><strong>Anchor:</strong> not included — style with a comb, headband, or bobby pins</li>
+  <li><strong>Care:</strong> spot clean or gentle hand wash cold, air dry flat, do not iron</li>
+</ul>
+<h3>Who it's for</h3>
+<p>The adult that wants Halloween without a costume. The dark bride. The person hosting a gothic dinner and wanting one signature piece. The photographer building a portrait shoot.</p>
+<h3>How to wear</h3>
+<ol>
+  <li>Anchor a small comb or hair grip at the crown of the head</li>
+  <li>Drape the veil forward over the face for the mourning look, or backward for a train</li>
+  <li>Adjust to fall symmetrically</li>
+</ol>
+```
+
+**Tags** : `role:hero, place:worn, vibe:gothic, vibe:vintage, who:adults, season:halloween-christmas, internal:awaiting-supplier-verification, role_economic:hero-impulse, filmable:high, warning:supervise-children`
+
+**Metafields (custom namespace)** :
+- `dimensions` : `60 in L × 30 in W (152 × 76 cm)`
+- `material` : `100% polyester openwork lace, matte finish`
+- `care_instructions` : `Spot clean or gentle hand wash cold. Air dry flat. Do not iron.`
+- `shipping_lead_time_days` : `3-8`
+- `safety_notice` : `Supervise children under 5 when handling. Do not sleep with veil on.`
+
+### Checklist CJ
+
+- **Rôle** : HÉROS d'impulsion — filmable, signature identitaire Manor
+- **Search terms CJ** : `black lace mourning veil adult long halloween` · `victorian widow veil lace halloween adult` · `gothic wedding veil black long lace`
+- **Prix marché US** : $18-38 (Etsy $30-50, Amazon $20-32)
 - **Prix vente cible** : **$29.99**
 - **Coût rendu MAX** : **$10.20**
-- **Fourchette supplier** : $2-4 + $4 port = $6-8 landed → **marge très confortable**
+- **Fourchette supplier plausible** : $3-5 produit + $4 port = $7-9 landed
 - **Stock US mini** : **300**
-- **Confiance** : ÉLEVÉE (catégorie mature, achat récurrent événements + Halloween)
-- **Manor coherence** : ✓✓ (venetian gothic exact)
-- **Conformité** : bords métalliques → vérifier finition non-coupante ; élastiques sécurisés ; **champ vision partiel**
-- **Pourquoi #2** : marge la plus saine du lot masques. Angle Manor : "The Ball" — accessoire élégant pour la soirée. Cross-market wedding photography aussi.
+- **Confiance demande** : ÉLEVÉE (dark bride TikTok trending, Etsy dominant)
+- **Manor coherence** : ✓✓✓ (probablement le produit le plus Manor du catalogue)
+- **Conformité** : aucune spécifique — mention "supervise children" recommandée dans description
 
-### 🥉 #3 — Sculpted Ram/Bull Horn Skull Mask (occult)
+---
 
-- **Rôle visé** : **HÉROS d'impulsion**
-- **Search terms CJ** : `horned skull mask halloween adult occult` · `ram horn skull mask latex halloween` · `bull skull mask cosplay halloween`
-- **Prix marché US** : $32-65
-- **Prix vente cible** : **$44.99**
-- **Coût rendu MAX** : **$15.30**
-- **Fourchette supplier** : $10-14 + $5 = $15-19 → **marge serrée, à négocier ≤ $10**
-- **Stock US mini** : **200**
-- **Confiance** : ÉLEVÉE (aesthetic witchy en 3e année d'ascension)
-- **Manor coherence** : ✓✓ (occulte élégant, pas gore)
-- **Conformité** : cornes rigides → **fixation solide, warning "not for crowded spaces"** ; **champ vision + respiration** ; supervision enfants
-- **Pourquoi #3** : le shot Instagram/TikTok immédiat. Signature "witch of the house" — se marie visuellement avec le fantôme 11.8ft en campagne mixte.
+## FICHE #2 — Krampus Bronze Devil Half-Mask
 
-### #4 — Full-Head Skull Latex Mask (jaw articulé)
+### Bloc à copier-coller
 
-- **Rôle visé** : HÉROS d'impulsion
-- **Search terms CJ** : `full head skull mask latex adult articulated jaw` · `realistic skull mask latex halloween moving jaw`
-- **Prix marché US** : $28-55
-- **Prix vente cible** : **$39.99**
-- **Coût rendu MAX** : **$13.60**
-- **Fourchette supplier** : $9-13 + $5 = $14-18 → **marge à négocier**
-- **Stock US mini** : **200**
-- **Confiance** : ÉLEVÉE (catégorie evergreen)
-- **Manor coherence** : ✓ (borderline — préférer **matte finish**, pas glossy)
-- **Conformité** : full-head → **champ vision réduit + respiration**, mention obligatoire ; **latex → allergie**, warning obligatoire ; supervision enfants
-- **Note** : format iconique, latex full-head restreint le confort. Ticket $40 justifié seulement si finition premium.
+**Titre affiché** : `Krampus Bronze Devil Half-Mask — Antique Finish`
 
-### #5 — LED Light-Up Purge-Style Ghost Face Mask
+**Meta title SEO** (58 char) : `Halloween Krampus Devil Half Mask · Bronze Adult Costume`
 
-- **Rôle visé** : HÉROS d'impulsion — MAIS test Manor ⚠️
-- **Search terms CJ** : `led halloween mask ghost face purge style adult` · `light up scary mask led halloween usb battery`
-- **Prix marché US** : $19-39
-- **Prix vente cible** : **$29.99**
-- **Coût rendu MAX** : **$10.20**
-- **Fourchette supplier** : $6-9 + $4 = $10-13 → **marge tenue de justesse**
-- **Stock US mini** : **300**
-- **Confiance demande** : ÉLEVÉE (TikTok viral récurrent)
-- **Manor coherence** : ⚠️ **Borderline** — LED = Halloween-only, ne bascule pas Noël. Si retenu, tag `season:halloween-2026` strict. Éviter modèles multicolores : uniquement **mono blanc / rouge / violet raffiné**.
-- **Conformité** : batteries button-cell → warning small parts age 3+ ; port LED sur visage → warning heat & discomfort ; **respiration + champ vision** ; supervision enfants
-- **Note** : à retenir seulement si Manor accepte l'écart pour capter le volume TikTok. Sinon écarté.
+**Meta description SEO** (153 char) : *Antique bronze Krampus half-mask for adult Halloween. Rigid resin, weathered finish. Halloween + Krampusnacht December ready. Ships from US.*
 
-### #6 — Antique Bronze Devil Face Mask (Krampus-style, half-face)
+**Handle** : `krampus-bronze-devil-half-mask`
 
-- **Rôle visé** : HÉROS d'impulsion
+**Description HTML** :
+```html
+<!-- INTERNAL — CONFIRM BEFORE PUBLICATION:
+     · Supplier SKU (search terms in checklist)
+     · Exact material (rigid resin OR PU, not soft rubber)
+     · Weight
+     · Interior padding presence (comfort)
+     · US warehouse, stock ≥ 200
+     · Elastic strap included and adjustable
+     · At least one profile image showing the mask worn
+-->
+<p>Antique bronze half-mask sculpted from resin — Krampus, the folkloric horned figure that walks Alpine villages on the 6th of December. The one Halloween accessory that keeps working through the winter holidays.</p>
+<h3>What makes it work</h3>
+<ul>
+  <li>Rigid resin, weathered bronze finish — not glossy plastic, not soft rubber</li>
+  <li>Half-mask covers forehead and eyes, leaves mouth free — you can eat, drink, speak</li>
+  <li>Adjustable elastic strap fits most adult head sizes</li>
+  <li><strong>Cross-holiday</strong>: Halloween in October + Krampusnacht in December (folklore Alpine celebration)</li>
+  <li>Handles like an heirloom, packs flat</li>
+</ul>
+<h3>The details</h3>
+<ul>
+  <li><strong>Material:</strong> rigid resin with antique bronze finish</li>
+  <li><strong>Coverage:</strong> forehead, eyes, brow ridge — leaves nose and mouth free</li>
+  <li><strong>Attachment:</strong> adjustable elastic strap</li>
+  <li><strong>Weight:</strong> lightweight (under 300 g)</li>
+  <li><strong>Ships from:</strong> US warehouse, 3–8 business days</li>
+</ul>
+<h3>Who it's for</h3>
+<p>The adult that wants a costume signature without wearing a full outfit. Krampus enthusiasts. Anyone building a Halloween-through-Christmas costume rotation.</p>
+<h3>⚠️ Safety notice</h3>
+<p><strong>Reduces peripheral vision.</strong> Do not wear while driving. Supervise children if handled. Rigid — do not use in crowded moshing spaces.</p>
+```
+
+**Tags** : `role:hero, place:worn, vibe:gothic, vibe:krampus, who:adults, season:halloween-christmas, internal:awaiting-supplier-verification, role_economic:hero-impulse, warning:reduced-vision, warning:supervise-children`
+
+**Metafields** :
+- `material` : `Rigid resin with antique bronze finish`
+- `coverage` : `Forehead, eyes, brow ridge — leaves nose and mouth free`
+- `attachment` : `Adjustable elastic strap`
+- `care_instructions` : `Wipe clean with damp cloth. Do not submerge.`
+- `safety_notice` : `Reduces peripheral vision. Do not wear while driving. Supervise children.`
+- `shipping_lead_time_days` : `3-8`
+
+### Checklist CJ
+
+- **Rôle** : HÉROS d'impulsion (seule bascule Halloween → Christmas explicite)
 - **Search terms CJ** : `krampus mask devil half face halloween` · `bronze devil mask halloween adult antique` · `demon half mask halloween cosplay adult`
 - **Prix marché US** : $24-45
 - **Prix vente cible** : **$34.99**
 - **Coût rendu MAX** : **$11.90**
-- **Fourchette supplier** : $5-9 + $4 = $9-13
+- **Fourchette supplier plausible** : $5-9 + $4 port = $9-13 landed
 - **Stock US mini** : **200**
-- **Confiance** : MOYENNE-ÉLEVÉE (Krampus in vogue depuis 2023)
-- **Manor coherence** : ✓✓ (**bascule Décembre via Krampus folklore** — vrai atout, 6 décembre = Krampusnacht Alps)
-- **Conformité** : rigid resin → warning "handle with care" ; **champ vision + respiration** ; supervision enfants
-- **Pourquoi ici** : le SEUL candidat qui **transite explicitement de Halloween à Noël**. Aligne parfaitement le brief "identité qui tient octobre → décembre".
+- **Confiance** : MOYENNE-ÉLEVÉE
+- **Manor coherence** : ✓✓ (bascule Décembre = atout unique)
 
 ---
 
-## 👑 CATÉGORIE 2 · ACCESSOIRES PORTABLES · sans taille
+## FICHE #3 — Antique Leather-Look Plague Doctor Beak Mask
 
-### 🥇 #7 — Gothic Antler / Coronet Crown (matte black or antique gold metal)
+### Bloc à copier-coller
 
-- **Rôle visé** : **HÉROS d'impulsion**
+**Titre affiché** : `Plague Doctor Beak Mask — Antique Leather-Look`
+
+**Meta title SEO** (56 char) : `Halloween Plague Doctor Beak Mask · Adult Steampunk`
+
+**Meta description SEO** (150 char) : *Steampunk plague doctor beak mask for adult Halloween. Antique leather-look PU, full face coverage. Ships from US warehouse in 3–8 days.*
+
+**Handle** : `plague-doctor-beak-mask-antique-leather`
+
+**Description HTML** :
+```html
+<!-- INTERNAL — CONFIRM BEFORE PUBLICATION:
+     · Supplier SKU (search terms in checklist)
+     · Exact material (PU leather-look preferred, avoid glossy plastic)
+     · Full face coverage confirmed
+     · Weight
+     · Adjustable strap
+     · US warehouse, stock ≥ 250
+-->
+<p>Antique leather-look plague doctor beak mask — the silhouette that made 16th-century apothecaries recognizable a block away. Six seconds on TikTok and everyone knows the reference.</p>
+<h3>What makes it work</h3>
+<ul>
+  <li>Long-beak sculpted plague doctor form, full face coverage</li>
+  <li>Antique leather-look PU finish, no glossy shine</li>
+  <li>Adjustable elastic strap fits most adult head sizes</li>
+  <li>Eye openings positioned for reasonable field of vision at eye level</li>
+  <li>Iconic silhouette — reads from behind, sideways, in low light</li>
+</ul>
+<h3>The details</h3>
+<ul>
+  <li><strong>Material:</strong> PU (leather-look), antique finish</li>
+  <li><strong>Coverage:</strong> full face — forehead to below chin</li>
+  <li><strong>Beak length:</strong> approximately 8 inches / 20 cm (typical plague doctor proportion)</li>
+  <li><strong>Attachment:</strong> adjustable elastic strap</li>
+  <li><strong>Ships from:</strong> US warehouse, 3–8 business days</li>
+</ul>
+<h3>Who it's for</h3>
+<p>The adult that wants a filmable silhouette. Steampunk hosts. Halloween performers. Anyone whose Halloween image needs a photo that reads in a phone thumbnail.</p>
+<h3>⚠️ Safety notice</h3>
+<p><strong>Reduces peripheral vision and airflow.</strong> Do not wear while driving. Remove during cardio activity. Supervise children under 12. Not suitable for those with breathing difficulties.</p>
+```
+
+**Tags** : `role:hero, place:worn, vibe:steampunk, vibe:gothic, who:adults, season:halloween-2026, internal:awaiting-supplier-verification, role_economic:hero-impulse, filmable:high, warning:reduced-vision, warning:supervise-children, warning:breathing-restriction`
+
+**Metafields** :
+- `material` : `PU (leather-look), antique finish`
+- `coverage` : `Full face — forehead to below chin`
+- `beak_length` : `~8 in (20 cm)`
+- `attachment` : `Adjustable elastic strap`
+- `care_instructions` : `Wipe clean with damp cloth. Do not submerge.`
+- `safety_notice` : `Reduces peripheral vision and airflow. Do not wear while driving. Not suitable for those with breathing difficulties. Supervise children under 12.`
+- `shipping_lead_time_days` : `3-8`
+
+### Checklist CJ
+
+- **Search terms CJ** : `plague doctor mask leather look adult` · `plague doctor beak mask halloween` · `leather bird plague mask steampunk`
+- **Prix marché US** : $29-59
+- **Prix vente cible** : **$39.99**
+- **Coût rendu MAX** : **$13.60**
+- **Fourchette supplier plausible** : $8-11 + $4-5 = $12-16 landed
+- **Stock US mini** : **250**
+- **Confiance** : ÉLEVÉE (evergreen depuis 2020, TikTok #plaguedoctor massif)
+- **Manor coherence** : ✓✓
+
+---
+
+## FICHE #4 — Gothic Antler Coronet Crown
+
+### Bloc à copier-coller
+
+**Titre affiché** : `Gothic Antler Coronet — Matte Metal`
+
+**Meta title SEO** (56 char) : `Halloween Antler Crown Coronet · Gothic Dark Queen Adult`
+
+**Meta description SEO** (150 char) : *Matte metal antler coronet for adult Halloween. Dark queen aesthetic. One-size adjustable. Ships from US in 3–8 days.*
+
+**Handle** : `gothic-antler-coronet-crown`
+
+**Description HTML** :
+```html
+<!-- INTERNAL — CONFIRM BEFORE PUBLICATION:
+     · Supplier SKU (search terms below)
+     · Metal type (galvanized wire OR cast alloy)
+     · Matte finish confirmed, not glossy
+     · Weight (< 300 g)
+     · US warehouse, stock ≥ 250
+     · Interior comfort padding
+-->
+<p>An antler coronet in matte metal. Sits low on the crown, curves upward. The one accessory that turns a black dress into a costume, then holds through a wedding, a Halloween party, and a New Year's Eve gathering.</p>
+<h3>What makes it work</h3>
+<ul>
+  <li>Sculpted antler branches, matte black or antique gold — no glare in photos</li>
+  <li>Adjustable base fits most adult head sizes</li>
+  <li>Cross-usage: Halloween, dark fairy tale weddings, New Year's Eve, cosplay conventions</li>
+  <li>Lightweight — under 300 g, comfortable for several hours</li>
+  <li>Packs flat between wearings</li>
+</ul>
+<h3>The details</h3>
+<ul>
+  <li><strong>Material:</strong> matte metal (galvanized wire or cast alloy)</li>
+  <li><strong>Sizing:</strong> one-size, adjustable base</li>
+  <li><strong>Weight:</strong> approximately 200–300 g</li>
+  <li><strong>Finish:</strong> matte black or antique gold — refuse glossy</li>
+  <li><strong>Ships from:</strong> US warehouse, 3–8 business days</li>
+</ul>
+<h3>Who it's for</h3>
+<p>The adult that wants a costume signature without wearing an outfit. The dark queen host. Anyone with a photoshoot planned.</p>
+```
+
+**Tags** : `role:hero, place:worn, vibe:gothic, vibe:dark-fairy-tale, who:adults, season:halloween-christmas, internal:awaiting-supplier-verification, role_economic:hero-impulse, filmable:high`
+
+**Metafields** :
+- `material` : `Matte metal (galvanized wire or cast alloy)`
+- `sizing` : `One-size, adjustable base — fits most adult head sizes`
+- `finish` : `Matte black or antique gold (avoid glossy)`
+- `care_instructions` : `Wipe clean with dry cloth. Store flat.`
+- `shipping_lead_time_days` : `3-8`
+
+### Checklist CJ
+
 - **Search terms CJ** : `gothic antler crown adult halloween metal` · `dark queen coronet crown halloween` · `witch antler crown metal adult`
 - **Prix marché US** : $22-45
 - **Prix vente cible** : **$34.99**
 - **Coût rendu MAX** : **$11.90**
-- **Fourchette supplier** : $4-7 + $4 = $8-11 → **marge très saine**
+- **Fourchette supplier plausible** : $4-7 + $4 = $8-11 landed
 - **Stock US mini** : **250**
-- **Confiance** : ÉLEVÉE (dark academia + witchy year-round, revend Noël en "queen of winter")
+- **Confiance** : ÉLEVÉE (dark academia + witchy year-round)
 - **Manor coherence** : ✓✓
-- **Conformité** : bords métal → finition non-coupante
-- **Pourquoi #7** : ticket accessible, filmable évident, cross-season Halloween → Halloween ball → New Year's Eve.
 
-### 🥈 #8 — Draped Lace Mourning Veil (adult, 60"×30")
+---
 
-- **Rôle visé** : **HÉROS d'impulsion**
-- **Search terms CJ** : `black lace mourning veil adult long halloween` · `victorian widow veil lace halloween adult` · `gothic wedding veil black long lace`
-- **Prix marché US** : $18-38
+## FICHE #5 — Silver Filigree Metal Masquerade Half-Mask
+
+### Bloc à copier-coller
+
+**Titre affiché** : `Silver Filigree Masquerade Half-Mask — Metal`
+
+**Meta title SEO** (57 char) : `Halloween Filigree Masquerade Half Mask · Silver Metal`
+
+**Meta description SEO** (151 char) : *Silver filigree metal masquerade half-mask for Halloween and gala events. Venetian gothic style. Ships from US warehouse in 3–8 days.*
+
+**Handle** : `silver-filigree-masquerade-half-mask`
+
+**Description HTML** :
+```html
+<!-- INTERNAL — CONFIRM BEFORE PUBLICATION:
+     · Supplier SKU
+     · Metal filigree confirmed (not plastic look-alike)
+     · Non-cutting edge finish
+     · Elastic strap OR side tie ribbons
+     · US warehouse, stock ≥ 300
+-->
+<p>A half-mask in silver filigree metal — the venetian carnival tradition, adapted to modern gothic. Covers eyes and forehead, leaves mouth free.</p>
+<h3>What makes it work</h3>
+<ul>
+  <li>Real metal filigree lacework, silver finish — reads jewelry, not costume</li>
+  <li>Half-mask coverage — you can eat, drink, kiss, breathe freely</li>
+  <li>Cross-usage: Halloween, masquerade balls, wedding events, gala fundraisers</li>
+  <li>Edge finished non-cutting, safe against skin</li>
+  <li>Lightweight — comfortable for a full evening</li>
+</ul>
+<h3>The details</h3>
+<ul>
+  <li><strong>Material:</strong> metal filigree, silver finish</li>
+  <li><strong>Coverage:</strong> forehead, eyes, brow ridge — leaves nose and mouth free</li>
+  <li><strong>Attachment:</strong> elastic strap or ribbon ties (varies)</li>
+  <li><strong>Weight:</strong> under 150 g</li>
+  <li><strong>Ships from:</strong> US warehouse, 3–8 business days</li>
+</ul>
+<h3>Who it's for</h3>
+<p>The adult that wants a costume accessory readable as jewelry. Wedding photographers. Masquerade ball hosts. The person who wants Halloween that reads as fashion, not costume.</p>
+```
+
+**Tags** : `role:hero, place:worn, vibe:venetian, vibe:gothic, who:adults, season:halloween-christmas, internal:awaiting-supplier-verification, role_economic:hero-impulse`
+
+**Metafields** :
+- `material` : `Metal filigree, silver finish`
+- `coverage` : `Forehead, eyes, brow ridge`
+- `attachment` : `Elastic strap or ribbon ties`
+- `care_instructions` : `Wipe clean with dry cloth. Store in soft pouch.`
+- `shipping_lead_time_days` : `3-8`
+
+### Checklist CJ
+
+- **Search terms CJ** : `metal filigree masquerade mask silver` · `venetian masquerade mask metal half face` · `filigree lace masquerade mask gothic`
+- **Prix marché US** : $18-42
 - **Prix vente cible** : **$29.99**
 - **Coût rendu MAX** : **$10.20**
-- **Fourchette supplier** : $3-5 + $4 = $7-9 → **marge excellente**
+- **Fourchette supplier plausible** : $2-4 + $4 = $6-8 landed → **marge très saine**
 - **Stock US mini** : **300**
-- **Confiance** : ÉLEVÉE (dark bride TikTok trending, Etsy dominant)
-- **Manor coherence** : ✓✓✓ (**probablement le produit le plus Manor du catalogue entier** — voix éditoriale évidente : *"Widowed for the season."*)
-- **Conformité** : aucune spécifique ; lace textile classe 1 CPSC OK
-- **Pourquoi #8** : produit signature identitaire. Filmable en portrait 4:5, se met en 3 secondes, transforme n'importe quelle tenue noire.
+- **Confiance** : ÉLEVÉE
 
-### 🥉 #9 — Black Feathered Capelet (adult, one-size, elastic collar)
+---
 
-- **Rôle visé** : HÉROS d'impulsion
+## FICHE #6 — Black Feathered Capelet (Corvid)
+
+### Bloc à copier-coller
+
+**Titre affiché** : `The Corvid — Black Feathered Capelet`
+
+**Meta title SEO** (56 char) : `Halloween Black Feather Capelet · Corvid Adult Costume`
+
+**Meta description SEO** (152 char) : *Black feather shoulder capelet for adult Halloween. Corvid, raven, dark angel looks. Elastic collar, one-size. Ships from US in 3–8 days.*
+
+**Handle** : `the-corvid-black-feather-capelet`
+
+**Description HTML** :
+```html
+<!-- INTERNAL — CONFIRM BEFORE PUBLICATION:
+     · Supplier SKU
+     · Feather type (polyester feathers preferred vs natural feathers = allergen)
+     · Elastic collar comfort
+     · Weight
+     · US warehouse, stock ≥ 200
+-->
+<p>A short black feather capelet, cut for the shoulders. Drops over any black outfit and reads Corvid. Reads dark angel. Reads raven witch. Reads whatever the wearer wants it to.</p>
+<h3>What makes it work</h3>
+<ul>
+  <li>Layered polyester feathers, matte black — no shine, no fluff</li>
+  <li>Elastic collar, one-size — pulls over the head, sits at collarbone</li>
+  <li>Length reaches mid-shoulder blade — full coverage without hiding an outfit</li>
+  <li>Cross-usage: Halloween, gothic weddings, dark fashion shoots</li>
+  <li>Packs flat between wearings</li>
+</ul>
+<h3>The details</h3>
+<ul>
+  <li><strong>Material:</strong> polyester feathers on knit backing</li>
+  <li><strong>Sizing:</strong> one-size, elastic collar fits most adults</li>
+  <li><strong>Length:</strong> approximately 12 in shoulder-to-hem (30 cm)</li>
+  <li><strong>Weight:</strong> under 400 g</li>
+  <li><strong>Care:</strong> spot clean only — do not machine wash</li>
+</ul>
+<h3>Who it's for</h3>
+<p>The Corvid. The dark angel. The witchcraft-adjacent adult. Halloween party hosts. Dark fashion editorials.</p>
+<h3>⚠️ Safety notice</h3>
+<p><strong>Feathers are flammable.</strong> Keep away from open flames — candles, torches, fire pits. Feathers may shed initially; shake outdoors before first wear. May cause discomfort in those with feather sensitivity.</p>
+```
+
+**Tags** : `role:hero, place:worn, vibe:gothic, vibe:corvid, who:adults, season:halloween-christmas, internal:awaiting-supplier-verification, role_economic:hero-impulse, warning:flammable-feathers, warning:allergen-feathers`
+
+**Metafields** :
+- `material` : `Polyester feathers on knit backing`
+- `sizing` : `One-size, elastic collar`
+- `length` : `~12 in shoulder-to-hem (30 cm)`
+- `care_instructions` : `Spot clean only. Do not machine wash. Shake outdoors before first wear.`
+- `safety_notice` : `Feathers flammable — keep from open flames. May cause discomfort in those with feather sensitivity.`
+- `shipping_lead_time_days` : `3-8`
+
+### Checklist CJ
+
 - **Search terms CJ** : `black feather capelet adult halloween one size` · `raven feather cape shoulder wrap halloween` · `feather shrug black halloween adult one size`
 - **Prix marché US** : $28-55
 - **Prix vente cible** : **$39.99**
 - **Coût rendu MAX** : **$13.60**
-- **Fourchette supplier** : $7-11 + $5 = $12-16 → **marge à valider**
+- **Fourchette supplier plausible** : $7-11 + $5 = $12-16 landed
 - **Stock US mini** : **200**
 - **Confiance** : MOYENNE-ÉLEVÉE
-- **Manor coherence** : ✓✓ (Corvid / raven aesthetic, cross-Bridgerton dark)
-- **Conformité** : plumes → warning "keep from open flame" (bougies) ; possible allergie plumes → mention
-- **Pourquoi ici** : ticket $40 tolère CAC $12. Angle campagne : *"The Corvid."*
-
-### #10 — Sculpted Devil Horns Headband (matte resin, black or bronze)
-
-- **Rôle visé** : AOV (ticket trop bas pour héros)
-- **Search terms CJ** : `devil horns headband adult resin matte black` · `demon horns halloween headband cosplay adult`
-- **Prix marché US** : $12-25
-- **Prix vente cible** : **$19.99**
-- **Coût rendu MAX** : **$8.00**
-- **Fourchette supplier** : $2-4 + $3 = $5-7 → OK
-- **Stock US mini** : **300**
-- **Confiance** : ÉLEVÉE
-- **Manor coherence** : ✓ (à condition **matte**, refuser glossy)
-- **Conformité** : cornes rigides — warning "not for crowded spaces"
-- **Rôle éco** : upsell +$20 sur cart page, jamais paid cold.
-
-### #11 — Long Vintage Lace Gloves (adult, elbow-length)
-
-- **Rôle visé** : AOV
-- **Search terms CJ** : `black lace gloves long elbow halloween adult` · `victorian lace gloves black elbow length`
-- **Prix marché US** : $10-22
-- **Prix vente cible** : **$19.99**
-- **Coût rendu MAX** : **$8.00**
-- **Fourchette supplier** : $1-3 + $3 = $4-6 → **marge excellente**
-- **Stock US mini** : **300**
-- **Confiance** : ÉLEVÉE (evergreen bal costumé + Halloween + weddings)
-- **Manor coherence** : ✓✓✓
-- **Conformité** : aucune
-- **Rôle éco** : cross-sell parfait avec Veil #8 → bundle naturel "The Widow"
-
-### #12 — Skeleton Hand Statement Necklace (blackened metal)
-
-- **Rôle visé** : AOV
-- **Search terms CJ** : `skeleton hand necklace pendant black adult gothic` · `bone hand necklace black adult`
-- **Prix marché US** : $14-30
-- **Prix vente cible** : **$24.99**
-- **Coût rendu MAX** : **$10.00**
-- **Fourchette supplier** : $2-4 + $3 = $5-7 → excellent
-- **Stock US mini** : **250**
-- **Confiance** : MOYENNE-ÉLEVÉE
-- **Manor coherence** : ✓
-- **Conformité** : **nickel-free obligatoire US** (allergies) ; mention "may contain small parts" si chaîne délicate
+- **Manor coherence** : ✓✓
 
 ---
 
-## 🕴️ CATÉGORIE 3 · COSTUMES ADULTES · règles taille spécifiques
+# 🕴️ COSTUMES ADULTES — 4 fiches prêtes
 
-**Rappel critique** : adultes uniquement. AUCUN costume enfant (CPSC 16 CFR 1610 inflammability écarté). Zone sûre domaine public : sorcière, vampire, fantôme, squelette, zombie, pirate, momie, Dracula, Frankenstein (le monstre, pas la bride Universal), masquerade, démon générique, ange.
+## FICHE #7 — Grim Reaper Robe with Hood (one-size unisex)
 
-**Répartition 70/30** appliquée :
-- **70 % intemporel** : Grim Reaper, Vampire Cape, Witch Cloak, Skeleton Bodysuit
-- **30 % tendance 2026** : Mourning/Widow Bride (vague Nosferatu 2024 + dark bride TikTok), Fallen Angel
+### Bloc à copier-coller
 
-### 🥇 COSTUME #13 — Full Grim Reaper Robe with Hood (adult, one-size unisex)
+**Titre affiché** : `Grim Reaper Robe with Hood — Adult, One-Size Unisex`
 
-- **Rôle visé** : HÉROS d'impulsion secondaire
+**Meta title SEO** (58 char) : `Halloween Grim Reaper Robe Adult One-Size · Black Hooded`
+
+**Meta description SEO** (150 char) : *Black hooded reaper robe for adult Halloween. One-size unisex, floor length. Polyester. Ships from US warehouse in 3–8 business days.*
+
+**Handle** : `grim-reaper-robe-hooded-adult-one-size`
+
+**Description HTML** :
+```html
+<!-- INTERNAL — CONFIRM BEFORE PUBLICATION:
+     · Supplier SKU
+     · Confirm ONE-SIZE (avoid multi-size to reduce SKU sprawl)
+     · Measurements: total length shoulder-to-hem, chest circumference (drop max), hood height/opening
+     · Fabric: polyester (16 CFR 1610 friendly)
+     · US warehouse, stock ≥ 200 one-size
+-->
+<p>The reaper silhouette in one piece. Hood up, sleeves long, floor length. Pull it on over black jeans or a black dress, done in thirty seconds.</p>
+<h3>What makes it work</h3>
+<ul>
+  <li>One-size unisex — pulls on over any base layer</li>
+  <li>Full-length floor cut with pointed hood — the classic reaper silhouette</li>
+  <li>Long draping sleeves — hides hands or holds a prop (sold separately)</li>
+  <li>Polyester — safer with flammability regulations than untreated cotton</li>
+  <li>Packs into a shoebox between seasons</li>
+</ul>
+<h3>Sizing (adult only)</h3>
+<ul>
+  <li><strong>Total length (shoulder to hem):</strong> approximately 58 in / 148 cm</li>
+  <li><strong>Sleeve length:</strong> approximately 26 in / 66 cm</li>
+  <li><strong>Chest circumference (max):</strong> approximately 60 in / 152 cm (drapes loose)</li>
+  <li><strong>Hood opening:</strong> approximately 12 in / 30 cm</li>
+  <li>Recommended for adults 5'2" – 6'2" (158–188 cm)</li>
+</ul>
+<h3>The details</h3>
+<ul>
+  <li><strong>Fabric:</strong> 100% polyester</li>
+  <li><strong>Care:</strong> machine wash cold on gentle cycle, hang dry, cool iron if needed</li>
+  <li><strong>Ships from:</strong> US warehouse, 3–8 business days</li>
+</ul>
+<h3>Who it's for</h3>
+<p>The adult that wants a full costume in one purchase. Halloween party hosts. Anyone doing the death-and-lantern porch scene.</p>
+<h3>⚠️ Safety notice — adult sizing only</h3>
+<p><strong>Adult sizing only.</strong> Not designed or tested for children. Keep hood clear of eyes and mouth. Keep away from open flames — polyester will melt and stick. Supervise children in vicinity when wearing.</p>
+```
+
+**Tags** : `role:hero-secondary, place:worn, vibe:scary, vibe:classic, who:adults, season:halloween-2026, internal:awaiting-supplier-verification, role_economic:hero-impulse, sizing:one-size, warning:adult-only, warning:flammable-polyester`
+
+**Metafields** :
+- `sizing_type` : `One-size unisex (adult)`
+- `measurements` : `Total length ~58 in, sleeve ~26 in, chest max ~60 in, hood opening ~12 in`
+- `recommended_height` : `Adults 5'2" - 6'2" (158-188 cm)`
+- `fabric` : `100% polyester`
+- `care_instructions` : `Machine wash cold on gentle cycle. Hang dry. Cool iron if needed.`
+- `safety_notice` : `Adult sizing only. Keep hood clear of eyes and mouth. Keep away from open flames.`
+- `shipping_lead_time_days` : `3-8`
+
+### Checklist CJ
+
 - **Search terms CJ** : `grim reaper robe hood adult one size unisex` · `black hooded death robe halloween adult` · `reaper cloak hood halloween adult one size`
 - **Prix marché US** : $32-65
 - **Prix vente cible** : **$49.99**
-- **Coût rendu MAX à 6 % retours** : **$17.00** (survie test)
 - **Coût rendu MAX à 15 % retours** : **$17.50**
-- **Fourchette supplier** : $8-12 + $6 = $14-18 → **passe**
+- **Fourchette supplier plausible** : $8-12 + $6 = $14-18 landed
 - **Stock US mini** : **200 unités one-size**
-- **Confiance** : ÉLEVÉE (evergreen top 5 costumes homme US)
-- **Manor coherence** : ✓✓ (silhouette pure, sans gimmick)
-- **Test 15 % survie** : à C $15 landed, D $49.99 → E=$34.99, G=$2.50, H=$7.50, I=$24.99, J=**50.0 % ✓** (marge saine même sous 15 % retours)
-- **Mensurations à demander** : longueur totale (épaule → sol), largeur épaules, tour hanches (drop max), capuche hauteur + ouverture
-- **One-size = SKU discipline** : réduit erreurs & retours de 60 %.
-- **Conformité** : polyester préféré (flammability), coton non-traité risqué ; care instructions obligatoires
+- **Marge à 15 % retours (C $15 landed)** : contribution $24.99 = **50.0 %** ✓
+- **Manor coherence** : ✓✓
+- **Sizing** : one-size = SKU discipline
 
-### 🥈 COSTUME #14 — Victorian Vampire Cape with Stand-Up Collar (adult, one-size unisex)
+---
 
-- **Rôle visé** : HÉROS d'impulsion
+## FICHE #8 — Victorian Vampire Cape with Stand-Up Collar (one-size unisex)
+
+### Bloc à copier-coller
+
+**Titre affiché** : `Victorian Vampire Cape — Stand-Up Collar, Adult One-Size`
+
+**Meta title SEO** (58 char) : `Halloween Vampire Cape Adult · Victorian Stand-Up Collar`
+
+**Meta description SEO** (152 char) : *Black velvet vampire cape with stand-up collar for adult Halloween. One-size unisex, floor length. Polyester velvet. Ships from US.*
+
+**Handle** : `victorian-vampire-cape-stand-up-collar-adult`
+
+**Description HTML** :
+```html
+<!-- INTERNAL — CONFIRM BEFORE PUBLICATION:
+     · Supplier SKU
+     · ONE-SIZE confirmed
+     · Fabric: polyester velvet (not thin nylon)
+     · Collar height (12 in / 30 cm typical)
+     · Ties or clasp closure
+     · US warehouse, stock ≥ 200
+-->
+<p>A black velvet cape with a stand-up collar that frames the neck. Nosferatu 2024 boosted the format. Drop it over black clothes and you're a vampire without ever looking like a Halloween store.</p>
+<h3>What makes it work</h3>
+<ul>
+  <li>Polyester velvet, matte finish — reads costume, not costume-store</li>
+  <li>Stand-up collar (approximately 12 in / 30 cm) — the vampire silhouette signature</li>
+  <li>Full-length floor cut, one-size unisex</li>
+  <li>Neck closure with ties or clasp</li>
+  <li>Cross-usage: Halloween, vampire-themed weddings, dark academia photoshoots</li>
+</ul>
+<h3>Sizing (adult only)</h3>
+<ul>
+  <li><strong>Cape length (collar to hem):</strong> approximately 55 in / 140 cm</li>
+  <li><strong>Shoulder width max:</strong> approximately 20 in / 51 cm</li>
+  <li><strong>Collar height:</strong> approximately 12 in / 30 cm</li>
+  <li><strong>Neck circumference (closure):</strong> approximately 15-18 in / 38-46 cm adjustable</li>
+  <li>Recommended for adults 5'0" – 6'2" (152–188 cm)</li>
+</ul>
+<h3>The details</h3>
+<ul>
+  <li><strong>Fabric:</strong> polyester velvet, matte finish</li>
+  <li><strong>Care:</strong> spot clean or dry clean only. Do not machine wash — velvet loses nap.</li>
+  <li><strong>Ships from:</strong> US warehouse, 3–8 business days</li>
+</ul>
+<h3>Who it's for</h3>
+<p>The adult that wants "vampire" without a full costume. Nosferatu enthusiasts. Halloween party hosts.</p>
+<h3>⚠️ Safety notice — adult sizing only</h3>
+<p><strong>Adult sizing only.</strong> Keep cape clear of feet — trip hazard on stairs. Keep away from open flames. Supervise children in vicinity when wearing.</p>
+```
+
+**Tags** : `role:hero-secondary, place:worn, vibe:gothic, vibe:vampire, who:adults, season:halloween-2026, internal:awaiting-supplier-verification, role_economic:hero-impulse, sizing:one-size, warning:adult-only, warning:trip-hazard, warning:flammable-polyester`
+
+**Metafields** :
+- `sizing_type` : `One-size unisex (adult)`
+- `measurements` : `Length ~55 in, collar height ~12 in, neck circumference 15-18 in adjustable`
+- `recommended_height` : `Adults 5'0" - 6'2" (152-188 cm)`
+- `fabric` : `Polyester velvet, matte finish`
+- `care_instructions` : `Spot clean or dry clean only. Do not machine wash.`
+- `safety_notice` : `Adult sizing only. Keep cape clear of feet — trip hazard on stairs.`
+- `shipping_lead_time_days` : `3-8`
+
+### Checklist CJ
+
 - **Search terms CJ** : `victorian vampire cape stand up collar adult one size` · `black velvet cape halloween vampire adult` · `dracula cape halloween adult one size long`
 - **Prix marché US** : $38-75
 - **Prix vente cible** : **$54.99**
-- **Coût rendu MAX à 6 %** : **$18.70** (survie test)
-- **Coût rendu MAX à 15 %** : **$19.25**
-- **Fourchette supplier** : $10-14 + $6 = $16-20 → **marge tenable si négocié ≤$12 supplier**
+- **Coût rendu MAX à 15 % retours** : **$19.25**
+- **Fourchette supplier plausible** : $10-14 + $6 = $16-20 landed
 - **Stock US mini** : **200 unités one-size**
-- **Confiance** : ÉLEVÉE (evergreen Dracula format ; Nosferatu 2024 a re-boosté la category)
-- **Manor coherence** : ✓✓✓ (**c'est LE produit Manor du catégorie costume**)
-- **Test 15 % survie** : à C $16 landed, D $54.99 → E=$38.99, G=$2.75, H=$8.25, I=$27.99, J=**50.9 % ✓**
-- **Mensurations à demander** : longueur cape (col → sol), largeur épaules, hauteur du collet stand-up, circonférence encolure
-- **Conformité** : CPSC 16 CFR 1610 ; velvet OK ; care instructions "spot clean" seulement
-- **Pourquoi ici** : capture le mid-adult qui veut "vampire" sans full costume. Peut se porter par-dessus tenue noire quotidienne.
+- **Marge à 15 % retours (C $16 landed)** : contribution $27.99 = **50.9 %** ✓
+- **Manor coherence** : ✓✓✓ (LE produit Manor de la catégorie costume)
 
-### 🥉 COSTUME #15 — Full Skeleton Bodysuit / Jumpsuit (adult, multi-taille)
+---
 
-- **Rôle visé** : Second acquisition costume
+## FICHE #9 — Full Skeleton Bodysuit / Jumpsuit (multi-size)
+
+### Bloc à copier-coller
+
+**Titre affiché** : `Full Skeleton Bodysuit — Adult, Multi-Size`
+
+**Meta title SEO** (58 char) : `Halloween Skeleton Bodysuit Adult Multi Size · Unisex`
+
+**Meta description SEO** (154 char) : *Full skeleton print bodysuit for adult Halloween. Adult multi-size with real inch measurements. Runs small — check chart. Ships from US.*
+
+**Handle** : `full-skeleton-bodysuit-adult`
+
+**Description HTML** :
+```html
+<!-- INTERNAL — CONFIRM BEFORE PUBLICATION:
+     · Supplier SKU
+     · Measurements in inches: chest, waist, hips, total height (shoulder to ankle), arm length, arm circumference
+     · Convert Asian → US sizing (Chinese "L" often = US "M")
+     · US warehouse stock PER SIZE ≥ 50 on M, L, XL (eliminatory)
+     · Fabric: polyester spandex
+     · Print quality confirmed (white/cream on matte black, no glow-in-dark neon green)
+-->
+<p>Skeleton anatomy printed on a stretch bodysuit — the top-3 evergreen costume in adult Halloween sales, year after year. This is the family matching purchase. This is the couple's costume. This is the fits-in-a-cocktail-shaker packable option.</p>
+<h3>What makes it work</h3>
+<ul>
+  <li>Full-body coverage: bones printed on chest, ribs, arms, legs — head separate (see hood details)</li>
+  <li>4-way stretch polyester spandex — moves with you</li>
+  <li>Anatomical print in white/cream on matte black — not glow-in-dark neon</li>
+  <li>Multi-size range: S, M, L, XL, XXL — inch measurements below</li>
+  <li>Ships from US warehouse in 3–8 business days</li>
+</ul>
+<h3>⚠️ Size guide — runs small</h3>
+<p><strong>Chinese sizing often runs 1–2 sizes below US. A Chinese "L" is typically a US "M". Check the measurements below and order the size that fits your chest measurement, not the letter you'd normally wear.</strong></p>
+<table>
+  <thead><tr><th>US Size</th><th>Chest (in)</th><th>Waist (in)</th><th>Hip (in)</th><th>Height range</th></tr></thead>
+  <tbody>
+    <tr><td>S</td><td>34–36</td><td>28–30</td><td>34–36</td><td>5'2"–5'5"</td></tr>
+    <tr><td>M</td><td>36–38</td><td>30–32</td><td>36–38</td><td>5'4"–5'8"</td></tr>
+    <tr><td>L</td><td>38–41</td><td>32–34</td><td>38–41</td><td>5'6"–5'10"</td></tr>
+    <tr><td>XL</td><td>41–44</td><td>34–37</td><td>41–44</td><td>5'8"–6'0"</td></tr>
+    <tr><td>XXL</td><td>44–47</td><td>37–40</td><td>44–47</td><td>5'10"–6'2"</td></tr>
+  </tbody>
+</table>
+<p><strong>When in doubt, size up.</strong> Bodysuit stretches but does not compress well over that range.</p>
+<h3>The details</h3>
+<ul>
+  <li><strong>Fabric:</strong> 90 % polyester / 10 % spandex (4-way stretch)</li>
+  <li><strong>Care:</strong> machine wash cold, inside out, hang dry. Do not iron on print.</li>
+  <li><strong>Ships from:</strong> US warehouse, 3–8 business days</li>
+</ul>
+<h3>Who it's for</h3>
+<p>Couples matching for Halloween. Family group shots. The adult that wants full costume without piecing together an outfit.</p>
+<h3>⚠️ Safety notice — adult sizing only</h3>
+<p><strong>Adult sizing only.</strong> Not designed or tested for children. Keep away from open flames. Do not wear during high-heat activity (poor breathability).</p>
+```
+
+**Tags** : `role:core, place:worn, vibe:classic, vibe:scary, who:adults, who:couples, season:halloween-2026, internal:awaiting-supplier-verification, role_economic:core, sizing:multi-size, warning:adult-only, warning:runs-small, warning:flammable-polyester`
+
+**Metafields** :
+- `sizing_type` : `Multi-size (S, M, L, XL, XXL adult only)`
+- `measurements_S` : `Chest 34-36 in, waist 28-30 in, hips 34-36 in, height 5'2"-5'5"`
+- `measurements_M` : `Chest 36-38 in, waist 30-32 in, hips 36-38 in, height 5'4"-5'8"`
+- `measurements_L` : `Chest 38-41 in, waist 32-34 in, hips 38-41 in, height 5'6"-5'10"`
+- `measurements_XL` : `Chest 41-44 in, waist 34-37 in, hips 41-44 in, height 5'8"-6'0"`
+- `measurements_XXL` : `Chest 44-47 in, waist 37-40 in, hips 44-47 in, height 5'10"-6'2"`
+- `sizing_notice` : `Runs small — Chinese sizes 1-2 below US. Order by chest measurement, not letter.`
+- `fabric` : `90% polyester / 10% spandex, 4-way stretch`
+- `care_instructions` : `Machine wash cold inside out. Hang dry. Do not iron on print.`
+- `shipping_lead_time_days` : `3-8`
+
+### Checklist CJ
+
 - **Search terms CJ** : `adult skeleton bodysuit jumpsuit halloween multi size` · `adult skeleton catsuit halloween unisex sizing chart` · `skeleton print jumpsuit adult halloween unisex`
 - **Prix marché US** : $32-60
 - **Prix vente cible** : **$44.99**
-- **Coût rendu MAX à 6 %** : **$15.30**
-- **Coût rendu MAX à 15 %** : **$15.75**
-- **Fourchette supplier** : $9-13 + $5 = $14-18 → **serré à 15 %, à négocier ≤$10 supplier**
-- **Stock US mini requis PAR TAILLE** :
-  - S : ≥ 30
-  - M : ≥ **50** (taille centrale, éliminatoire)
-  - L : ≥ **50** (taille centrale, éliminatoire)
-  - XL : ≥ **50** (taille centrale, éliminatoire)
-  - XXL : ≥ 30
-- **Mensurations à demander** (obligatoires en pouces) : poitrine, taille, hanches, hauteur totale (épaule → cheville), tour bras, longueur bras
-- **Conversion tailles asiatiques → US** : demander tableau supplier, comparer à Bella+Canvas 3001 (référence US unisex). Si supplier "L" < 40" chest → étiqueter comme "M (fits chest 38-40")" côté Shopify. **Ne JAMAIS reprendre la lettre supplier telle quelle.**
-- **Note obligatoire fiche** : "Runs small — please check measurements before ordering. Chinese 'L' typically corresponds to US 'M'."
-- **Confiance** : ÉLEVÉE (top 3 costume adult US année après année, familles couples matching)
-- **Manor coherence** : ✓ (borderline — refuser modèles glow-in-dark verts fluo, exiger print blanc-crème sur noir mat)
-- **Test 15 % survie** : à C $14 landed, D $44.99 → E=$30.99, G=$2.25, H=$6.75, I=$21.99, J=**48.9 % ✓**
-- **Conformité** : polyester spandex ; care wash cold ; **flammability polyester 16 CFR 1610 OK** ; label taille + measurements côté package
+- **Coût rendu MAX à 15 % retours** : **$15.75**
+- **Fourchette supplier plausible** : $9-13 + $5 = $14-18 landed → **serré à 15 %, à négocier ≤ $10 supplier**
+- **Stock US mini PAR TAILLE** :
+  - S : ≥ 30 | **M : ≥ 50** ÉLIMINATOIRE | **L : ≥ 50** ÉLIMINATOIRE | **XL : ≥ 50** ÉLIMINATOIRE | XXL : ≥ 30
+- **Marge à 15 % retours (C $14 landed)** : contribution $21.99 = **48.9 %** ✓ (limite)
+- **Mensurations à demander** : poitrine, taille, hanches, hauteur totale, tour bras, longueur bras (en pouces)
+- **Conversion tailles asiatiques → US** : demander tableau supplier, comparer à Bella+Canvas 3001 (référence US unisex). Si "L" supplier < 40" chest → étiqueter "M (fits 38-40")"
+- **Manor coherence** : ✓ (borderline — refuser glow-in-dark vert fluo, exiger print blanc/crème sur noir mat)
 
-### COSTUME #16 — Hooded Witch Cloak (adult, one-size unisex)
+---
 
-- **Rôle visé** : Costume intemporel #3
-- **Search terms CJ** : `hooded witch cloak adult one size halloween black` · `witch cape long hooded adult halloween` · `black hooded cape adult witch pagan halloween`
-- **Prix marché US** : $28-52
-- **Prix vente cible** : **$49.99**
-- **Coût rendu MAX à 6 %** : **$17.00**
-- **Coût rendu MAX à 15 %** : **$17.50**
-- **Fourchette supplier** : $7-11 + $5 = $12-16 → **passe**
-- **Stock US mini** : **200 unités one-size**
-- **Confiance** : ÉLEVÉE
-- **Manor coherence** : ✓✓ (silhouette pure)
-- **Test 15 % survie** : à C $14 landed → E=$35.99, G=$2.50, H=$7.50, I=$25.99, J=**52.0 % ✓**
-- **Mensurations à demander** : longueur totale, hauteur capuche, tour ouverture capuche
-- **Conformité** : polyester préféré ; refuser velvet crushed cheap
+## FICHE #10 — Widow Bride Dress (multi-size, 30% trend)
 
-### COSTUME #17 — Victorian Mourning/Widow Bride Dress (adult, multi-taille) — **30% trend**
+### Bloc à copier-coller
 
-- **Rôle visé** : Costume tendance 2026 (dark bride wave TikTok + Nosferatu remake)
-- **Search terms CJ** : `victorian mourning bride dress adult multi size black lace` · `corpse bride style dress adult halloween black lace multi size` · `gothic widow bride dress adult halloween`
+**Titre affiché** : `The Widow Bride — Victorian Mourning Dress, Adult Multi-Size`
+
+**Meta title SEO** (57 char) : `Halloween Widow Bride Dress Adult · Victorian Mourning`
+
+**Meta description SEO** (152 char) : *Long black lace Victorian mourning bride dress for adult Halloween. Adult multi-size with real inch chart. Runs small. Ships from US.*
+
+**Handle** : `widow-bride-victorian-mourning-dress-adult`
+
+**Description HTML** :
+```html
+<!-- INTERNAL — CONFIRM BEFORE PUBLICATION:
+     · Supplier SKU
+     · Measurements in inches per size
+     · Convert Asian → US sizing
+     · US warehouse stock PER SIZE ≥ 50 on M, L, XL (eliminatory)
+     · Fabric: polyester + lace overlay
+     · DO NOT name "Corpse Bride" (Warner IP) — use "Widow Bride" or "Victorian Mourning"
+-->
+<p>Long black lace over black polyester — the Victorian widow silhouette. The dark bride cinema wave (Nosferatu 2024, ongoing) has made this the fastest-rising adult costume format of the season. This is the piece you buy once and keep for three Halloweens.</p>
+<h3>What makes it work</h3>
+<ul>
+  <li>Full-length floor cut, long sleeves — the Victorian bride silhouette</li>
+  <li>Layered: polyester base + black lace overlay</li>
+  <li>Multi-size range S–XXL with real inch measurements</li>
+  <li>Cross-usage: Halloween, dark weddings (as guest), gothic photoshoots</li>
+  <li>Ships from US warehouse in 3–8 business days</li>
+</ul>
+<h3>⚠️ Size guide — runs small</h3>
+<p><strong>Chinese sizing often runs 1–2 sizes below US. A Chinese "L" is typically a US "M". Check measurements below and order by your body dimensions, not the letter.</strong></p>
+<table>
+  <thead><tr><th>US Size</th><th>Bust (in)</th><th>Waist (in)</th><th>Hip (in)</th><th>Length (shoulder to hem)</th></tr></thead>
+  <tbody>
+    <tr><td>S</td><td>34–36</td><td>27–29</td><td>36–38</td><td>~58 in</td></tr>
+    <tr><td>M</td><td>36–38</td><td>29–31</td><td>38–40</td><td>~59 in</td></tr>
+    <tr><td>L</td><td>38–41</td><td>31–34</td><td>40–43</td><td>~60 in</td></tr>
+    <tr><td>XL</td><td>41–44</td><td>34–37</td><td>43–46</td><td>~61 in</td></tr>
+    <tr><td>XXL</td><td>44–47</td><td>37–40</td><td>46–49</td><td>~62 in</td></tr>
+  </tbody>
+</table>
+<p><strong>When in doubt, size up.</strong> Structured bodice does not stretch.</p>
+<h3>The details</h3>
+<ul>
+  <li><strong>Fabric:</strong> polyester body with polyester lace overlay</li>
+  <li><strong>Care:</strong> spot clean or gentle hand wash cold. Hang dry. Do not iron on lace.</li>
+  <li><strong>Ships from:</strong> US warehouse, 3–8 business days</li>
+</ul>
+<h3>Who it's for</h3>
+<p>The dark bride. The gothic photoshoot. The Halloween party host that wants one dress for the whole evening. The Nosferatu enthusiast.</p>
+<h3>⚠️ Safety notice — adult sizing only</h3>
+<p><strong>Adult sizing only.</strong> Keep dress clear of feet — trip hazard on stairs and near open flames. Polyester lace flammable — keep from candles and torches.</p>
+```
+
+**Tags** : `role:core, place:worn, vibe:gothic, vibe:dark-bride, who:adults, season:halloween-2026, internal:awaiting-supplier-verification, role_economic:core, sizing:multi-size, warning:adult-only, warning:runs-small, warning:trip-hazard, warning:flammable-polyester, trend:2026-dark-bride`
+
+**Metafields** :
+- `sizing_type` : `Multi-size (S, M, L, XL, XXL adult only)`
+- `measurements_S` : `Bust 34-36 in, waist 27-29 in, hips 36-38 in, length ~58 in`
+- `measurements_M` : `Bust 36-38 in, waist 29-31 in, hips 38-40 in, length ~59 in`
+- `measurements_L` : `Bust 38-41 in, waist 31-34 in, hips 40-43 in, length ~60 in`
+- `measurements_XL` : `Bust 41-44 in, waist 34-37 in, hips 43-46 in, length ~61 in`
+- `measurements_XXL` : `Bust 44-47 in, waist 37-40 in, hips 46-49 in, length ~62 in`
+- `sizing_notice` : `Runs small — Chinese sizes 1-2 below US. Order by body measurements, not letter. Structured bodice does not stretch.`
+- `fabric` : `Polyester body with polyester lace overlay`
+- `care_instructions` : `Spot clean or gentle hand wash cold. Hang dry. Do not iron on lace.`
+- `safety_notice` : `Adult sizing only. Trip hazard — keep clear of feet on stairs. Lace flammable — keep from candles.`
+- `shipping_lead_time_days` : `3-8`
+
+### Checklist CJ
+
+- **Search terms CJ** : `victorian mourning bride dress adult multi size black lace` · `black lace bride dress adult halloween multi size` · `gothic widow bride dress adult halloween`
 - **Prix marché US** : $42-85
 - **Prix vente cible** : **$59.99**
-- **Coût rendu MAX à 6 %** : **$20.40** (survie test)
-- **Coût rendu MAX à 15 %** : **$20.99**
-- **Fourchette supplier** : $13-18 + $6 = $19-24 → **passe si supplier ≤ $15**
-- **Stock US mini PAR TAILLE** : S ≥30, M ≥50, L ≥50, XL ≥50, XXL ≥30 (**critères éliminatoires sur M/L/XL**)
-- **Mensurations à demander** : poitrine, taille, hanches, longueur robe (épaule → ourlet), longueur manche, encolure
-- **Note fiche** : "Runs small — check measurements. Chinese 'L' typically = US 'M'."
-- **Confiance** : MOYENNE-ÉLEVÉE (trend Nosferatu 2024 + dark bride sustained 2024-2025)
-- **Manor coherence** : ✓✓✓ (aligne parfaitement avec Veil #8, bundle "The Widow" évident)
-- **Test 15 % survie** : à C $18 landed, D $59.99 → E=$41.99, G=$3.00, H=$9.00, I=$29.99, J=**50.0 % ✓**
-- **Conformité** : polyester + lace ; care instructions strict ; **INTERDIT nommer "corpse bride"** dans le titre (Warner IP Tim Burton). Utiliser "Victorian Mourning Bride" ou "The Widow Bride" — dénominations descriptives génériques.
-- **Nom interne suggéré** : *The Widow Bride*
-
-### COSTUME BONUS #18 — Fallen Angel with Wings (adult, one-size unisex) — **30% trend**
-
-- **Rôle visé** : Costume tendance 2026 (dark angel wave)
-- **Search terms CJ** : `fallen angel costume adult unisex one size wings included` · `dark angel costume adult halloween wings black feather` · `black angel costume adult unisex halloween wings feathers`
-- **Prix marché US** : $38-72
-- **Prix vente cible** : **$54.99**
-- **Coût rendu MAX à 6 %** : **$18.70** (survie test)
-- **Coût rendu MAX à 15 %** : **$19.25**
-- **Fourchette supplier** : $11-15 + $6 = $17-21 → **passe si supplier ≤ $13**
-- **Stock US mini** : **200 unités one-size** (wings modulaires réduisent besoin sizing)
-- **Confiance** : MOYENNE (émergent, moins evergreen que Reaper/Vampire)
-- **Manor coherence** : ✓ (à condition **plumes noires mates**, refuser fluffy blanc/argent kitsch)
-- **Test 15 % survie** : à C $17 landed, D $54.99 → E=$37.99, G=$2.75, H=$8.25, I=$26.99, J=**49.1 % ✓**
-- **Conformité** : plumes → warning open flame ; possible allergie ; polyester body
-
-### ❌ Costumes ÉCARTÉS après test 15 % retours
-
-Pour référence — analysés puis rejetés :
-
-- **Zombie prom outfit multi-size (D $54.99, supplier ~$18)** : à 15 %, I = $23.24, J = **42.3 %** (sous seuil 45 %). Écarté.
-- **Pirate captain multi-size (D $49.99, supplier ~$16)** : à 15 %, I = $19.24, J = **38.5 %**. Écarté.
-- **Sexy nurse / sexy nun genre** : test Manor **ECHEC** — kitsch, humour potache, cible différente.
+- **Coût rendu MAX à 15 % retours** : **$20.99**
+- **Fourchette supplier plausible** : $13-18 + $6 = $19-24 landed → **passe si supplier ≤ $15**
+- **Stock US mini PAR TAILLE** : S ≥ 30, **M ≥ 50, L ≥ 50, XL ≥ 50 éliminatoire**, XXL ≥ 30
+- **Marge à 15 % retours (C $18 landed)** : contribution $29.99 = **50.0 %** ✓
+- **Mensurations à demander** : bust, waist, hips, length shoulder-to-hem, sleeve length (en pouces)
+- **⚠️ INTERDIT** : nommer "Corpse Bride" (IP Warner Tim Burton). Utiliser **"Widow Bride"** ou **"Victorian Mourning"** — noms descriptifs génériques du domaine public.
+- **Manor coherence** : ✓✓✓ (bundle "The Widow" évident avec Veil #1 + Lace Gloves)
 
 ---
 
-## 🎁 CATÉGORIE 4 · CADEAU / EMPORTABLE · AOV
+# ❌ Costumes écartés (référence honnête)
 
-### #19 — Skull-Shaped Glass Whiskey Chalice Set of 2
+Analysés puis rejetés au test 15 % retours :
 
-- **Rôle visé** : AOV (cadeau)
-- **Search terms CJ** : `skull glass whiskey chalice set 2 halloween` · `crystal skull glass tumbler set gothic` · `skull chalice glass whiskey gift set`
-- **Prix marché US** : $22-45 pour paire
-- **Prix vente cible** : **$29.99** (paire)
-- **Coût rendu MAX** : **$12.00** (ou monter à **$34.99** si supplier > $10)
-- **Fourchette supplier** : $6-9 + $5 = $11-14 → **serré, monter prix conseillé**
-- **Stock US mini** : **200 paires**
-- **Confiance** : MOYENNE-ÉLEVÉE (cadeau host)
-- **Manor coherence** : ✓✓
-- **Conformité** : verre **lead-free food-grade cert obligatoire** (US FDA CPG 7117.06/07), demander cert supplier ; warning breakable
-
-### #20 — Halloween Scented Soy Candle — "Black Fig & Smoke" (8oz, matte black jar)
-
-- **Rôle visé** : AOV (cadeau) — potentiel héros si supplier ≤ $6
-- **Search terms CJ** : `halloween scented soy candle black jar 8oz` · `dark fig smoke soy candle halloween` · `halloween candle black glass jar 8oz autumn`
-- **Prix marché US** : $18-38
-- **Prix vente cible** : **$24.99**
-- **Coût rendu MAX** : **$10.00**
-- **Fourchette supplier** : $4-6 + $4 = $8-10 → **marge saine, potentiel héros**
-- **Stock US mini** : **300**
-- **Confiance** : ÉLEVÉE (candle category evergreen, cross-Christmas transparent)
-- **Manor coherence** : ✓✓✓ (**bascule Halloween → Christmas la plus élégante du catalogue**)
-- **Conformité** : **liquide inflammable** — vérifier CPSC ASTM F2417 fire safety cert supplier (mèche self-extinguishing, jar warning label). Note : shipping OK par voie terrestre US, ne pas croiser air freight sans hazmat.
-
-### #21 — Halloween Insulated Stainless Tumbler 20oz (matte black, etched design)
-
-- **Rôle visé** : AOV (cadeau + daily-use)
-- **Search terms CJ** : `halloween stainless tumbler 20oz matte black etched` · `halloween coffee tumbler stainless insulated black`
-- **Prix marché US** : $18-32
-- **Prix vente cible** : **$24.99**
-- **Coût rendu MAX** : **$10.00**
-- **Fourchette supplier** : $5-7 + $4 = $9-11
-- **Stock US mini** : **250**
-- **Confiance** : ÉLEVÉE
-- **Manor coherence** : ✓ (matte + etched required; refuser glossy printed)
-- **Conformité** : food-grade 304/316 stainless, BPA-free lid — cert supplier requise
-
-### #22 — Silver Skull Ring Set of 3 (adjustable, statement)
-
-- **Rôle visé** : AOV
-- **Search terms CJ** : `silver skull ring set 3 adjustable halloween adult` · `statement skull ring set gothic adjustable`
-- **Prix marché US** : $12-25
-- **Prix vente cible** : **$19.99**
-- **Coût rendu MAX** : **$8.00**
-- **Fourchette supplier** : $1-3 + $3 = $4-6 → excellent
-- **Stock US mini** : **300**
-- **Confiance** : MOYENNE (marché saturé)
-- **Manor coherence** : ✓ (matte silver only)
-- **Conformité** : **nickel-free + lead-free US mandatory** ; mention "adjustable, may not fit ring size <5 or >10"
-
-### #23 — Halloween Enamel Pin Set of 5 (bat, moon, hand, eye, skull)
-
-- **Rôle visé** : AOV (cadeau + tip-in gratuit possible)
-- **Search terms CJ** : `halloween enamel pin set 5 gothic icons` · `gothic enamel pin pack bat moon skull hand eye`
-- **Prix marché US** : $8-22
-- **Prix vente cible** : **$16.99**
-- **Coût rendu MAX** : **$6.50** (bundle-only, small margin)
-- **Fourchette supplier** : $1-3 + $3 = $4-6 → OK
-- **Stock US mini** : **400 sets**
-- **Confiance** : MOYENNE
-- **Manor coherence** : ✓
-- **Conformité** : petites pièces + backing pin sharp → **warning small parts age 3+, keep from children**
-- **Rôle stratégique** : peut servir de **tip-in gratuit** ("free gift over $150") plus qu'un standalone SKU. À considérer.
-
-### #24 — Wax-Dipped Antique Taper Candles Set of 6 (dripped effect, matte black)
-
-- **Rôle visé** : AOV
-- **Search terms CJ** : `antique wax dripped taper candle black set 6 gothic` · `gothic dripping taper candle black 10 inch set 6`
-- **Prix marché US** : $16-32 pour 6
-- **Prix vente cible** : **$24.99**
-- **Coût rendu MAX** : **$10.00**
-- **Fourchette supplier** : $4-6 + $4 = $8-10
-- **Stock US mini** : **250 sets**
-- **Confiance** : ÉLEVÉE (aesthetic gothique + Advent cross-usage)
-- **Manor coherence** : ✓✓✓ (probablement le meilleur "à emporter" du lot pour l'identité)
-- **Conformité** : flame safety — mention "unattended flame kills" + jar/holder recommandé
+| Candidat | Retail | C landed | Contribution 15 % | Verdict |
+|---|---|---|---|---|
+| Zombie prom outfit multi-size | $54.99 | $18 | $23.24 = **42.3 %** | Écarté — sous seuil 45 % |
+| Pirate captain multi-size | $49.99 | $16 | $19.24 = **38.5 %** | Écarté — sous seuil 45 % |
+| Sexy nurse / sexy nun genre | — | — | — | Écarté — test Manor ÉCHEC (kitsch, humour potache, cible différente) |
 
 ---
 
-## Section supplier CJ 5-étoiles · référence unique
+# 🎁 CATÉGORIE 4 · CADEAU / EMPORTABLE (documenté Round 3 — pas ré-écrit ici)
 
-*Placeholder — remplir avec la réponse du fournisseur.*
-
-L'user a un supplier 5⭐ qui fabrique 2 gonflables déjà catalogue (Ghost 11.8ft + Cairn 9ft). Question posée : *"Do you have other Halloween products in your US warehouse?"*.
-
-**Quand la réponse arrive, ajouter ici** :
-- Liste des SKUs proposés + coûts rendus si communiqués
-- Prioriser les 3 candidats supplier au-dessus de tous les autres (un interlocuteur unique = MOQ potentielle négociable, packaging cohérent, un seul contact SAV, un seul flux d'expédition)
-- Marquer dans la sélection finale les SKUs "single-supplier consolidation" avec un tag `supplier:trusted-primary` pour tracking
-
-**Règle** : si le supplier propose 3+ SKUs Round 4 acceptables → sélection finale = 100 % supplier unique. Sinon → mix.
+Cf. `docs/halloween-2026/SOURCING-ROUND-3.md` pour Skull Chalice, Scented Candle, Insulated Tumbler, Skull Ring Set, Enamel Pin Set, Wax-Dipped Tapers — 6 candidats AOV avec checklist CJ complète, à intégrer au moment opportun.
 
 ---
 
-## Structure d'accueil Shopify · collection "Vestments"
+# 📋 Section supplier CJ 5-étoiles (placeholder)
 
-Cf. `docs/SEO-GOOGLE-PLAN.md` §Collections #4 — collection **Vestments** créée avec :
-- Handle : `vestments`
-- Smart rule : `TAG EQUALS place:worn`
-- Meta title + description + intro 100 mots documentés dans SEO-GOOGLE-PLAN.
+*Remplir avec la réponse du fournisseur confirmé (fabrique déjà Ghost + Cairn).*
 
-Tous les 24 candidats retenus doivent porter le tag `place:worn` en plus de leurs autres tags. L'auto-routing fonctionnera dès l'import.
+Question posée : *"Do you have other Halloween products in your US warehouse, particularly masks, wearable accessories, or adult costumes?"*.
 
-**Alternatives de nom envisagées + rejetées** :
-- "The Wardrobe" — trop grand-public, dilue Manor
-- "Worn" — trop minimaliste, manque personnalité
-- "Costumes & Masks" — trop générique, aligne avec 100 000 sites
-
-**Vestments** garde le ton ecclésiastique/rituel signature Manor.
+**Règle** : si le supplier propose 3+ SKUs Round 4 acceptables → sélection finale = 100 % single-supplier consolidation.
 
 ---
 
-## Priorité de vérification CJ
+# Structure Shopify d'accueil · collection "Vestments"
 
-Trier par : test Manor ✓✓✓ > profil héros > marge saine > confiance demande
+Cf. `docs/SEO-GOOGLE-PLAN.md` §Collections #4 pour la collection **Vestments** — handle `vestments`, smart rule `TAG EQUALS place:worn`, meta title/description + intro 100 mots prête. **À créer côté Shopify dès que ≥ 5 des 10 candidats ci-dessus sont importés.**
 
-1. **Draped Lace Mourning Veil #8** — identité, marge, ticket bas facile à vendre
-2. **Antique Bronze Krampus Devil Mask #6** — SEUL avec bascule Halloween→Christmas explicite
-3. **Antique Leather-Look Plague Doctor Mask #1** — filmable, héros iconique
-4. **Gothic Antler Crown #7** — marge la plus saine des héros
-5. **Silver Filigree Masquerade Half-Mask #2** — marge excellente + cross-market
-6. **Victorian Vampire Cape #14** — one-size = SKU discipline, ticket haut, Manor pur
-7. **Halloween Scented Soy Candle #20** — bascule Christmas + potentiel héros
-8. **Full Grim Reaper Robe #13** — one-size, evergreen top 5 US
-9. **Ram Horn Skull Mask #3** — bet #1 witchy adjacent
-10. **Feather Capelet #9** — signature Corvid
-11. **Full Skeleton Bodysuit #15** — sizing risqué mais top 3 evergreen ; **stock M/L/XL ≥ 50 obligatoire**
-12. **Widow Bride Dress #17** — sizing risqué mais tendance Nosferatu forte ; **stock M/L/XL ≥ 50 obligatoire**
-13. **Wax-Dipped Taper Candles #24** — identity Manor + cross-Advent
-14. **Hooded Witch Cloak #16** — one-size, evergreen
-15+. Vérifier les autres si besoin d'élargir.
-
-**Objectif final** : retenir **4-6 masques/accessoires** + **3-5 costumes** = 7-11 SKUs. Dont **au moins 3 dans le profil héros**.
+Tous les 10 candidats ci-dessus portent le tag `place:worn` — l'auto-routing fonctionne dès l'import.
 
 ---
 
-## Impact projeté sur le catalogue
+# Priorité de création draft Shopify (ordre suggéré)
+
+1. Draped Lace Mourning Veil (Manor ✓✓✓, marge saine)
+2. Krampus Bronze Half-Mask (Manor ✓✓, seul avec bascule Christmas)
+3. Plague Doctor Beak Mask (Manor ✓✓, filmable iconique)
+4. Gothic Antler Coronet (Manor ✓✓, marge saine)
+5. Silver Filigree Masquerade (marge très saine, cross-wedding market)
+6. Grim Reaper Robe (evergreen top 5 US, one-size discipline)
+7. Vampire Cape (Manor ✓✓✓, LE costume Manor, Nosferatu boost)
+8. Feather Capelet (Manor ✓✓, Corvid angle)
+9. Skeleton Bodysuit (multi-size — sizing risque, mais top 3 evergreen)
+10. Widow Bride Dress (multi-size, trend 30 %, Manor ✓✓✓ bundle avec Veil)
+
+**Objectif final validé après vérif CJ** : **4-6 masques/accessoires + 3-4 costumes = 7-10 SKUs** en Vestments.
+
+---
+
+# Impact projeté
 
 Une fois 8-10 wearables intégrés :
-- Catalogue passe de 14 SKUs à 22-24 SKUs
+- Catalogue passe de 5 à 13-15 SKUs
 - **3-4 nouveaux produits d'acquisition** (héros wearables) → capacité de test ad passe de 2 (Ghost + Banner) à 5-6
-- Nouveau **levier organique TikTok** : produits filmables sur soi. C'est ce qui manquait au catalogue déco pur.
-- **AOV projeté révisé** (mix hypothétique 8 wearables intégrés) :
-  - 20 % mono wearable héros ($30-55 moy $40)
-  - 15 % mono gonflable ($90-120 moy $107)
-  - 15 % mono POD/accessoire ($25-40 moy $32)
-  - 20 % wearable + AOV item ($55-70 moy $62)
-  - 15 % gonflable + wearable ($150 moy)
-  - 15 % Bundle ($67-280 moy $130)
-
-**AOV projeté = 0.20×40 + 0.15×107 + 0.15×32 + 0.20×62 + 0.15×150 + 0.15×130 = $75.60**
-
-Le seuil $65 free ship devient bien **au-dessous du panier moyen** → maximum de leverage sur incentive.
-
----
-
-## Bundles wearables potentiels (à composer après validation SKUs)
-
-Suggestions Round 5 une fois composants achetés :
-- **"The Widow"** : Veil + Lace Gloves + Skeleton Hand Necklace ± Widow Bride Dress → $64.99 (sans dress) ou $109.99 (avec) — Manor pur
-- **"The Ball"** : Filigree Mask + Antler Crown + Feather Capelet → $99.99 (indiv $114.97, save $15) — party host complet
-- **"The Whiskey Table"** : Skull Chalice Set + Wax Taper Candles + Scented Candle → $69.99 (indiv $79.97, save $10) — host gift ready
+- **Nouveau levier organique TikTok** : produits filmables sur soi. C'est ce qui manque au catalogue déco pur.
+- **AOV projeté** post-wearables : **~$75** — au-dessus du seuil $65 free ship.
+- **Collections ré-ouvrables** : Indoor Decor (via Mantel + masques indoor-worn) + Vestments (dès 5 wearables) + Trick or Treat (dès 4 party favors Round 3).

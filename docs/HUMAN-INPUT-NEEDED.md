@@ -1,6 +1,62 @@
 # Wicked Hollow — Human input needed
 
-> Sortie de nuit du 21–22 août 2026. Ce qui doit venir de toi avant que la boutique puisse aller vivre.
+> Sortie de nuit du 21–22 août 2026, mis à jour Session 8 (24-25 août). Ce qui doit venir de toi avant que la boutique puisse aller vivre.
+
+---
+
+## Actions Shopify en attente (MCP offline au moment de la Session 8)
+
+À exécuter dès reconnexion MCP Shopify. Le code est prêt.
+
+### A. Supprimer 2 collections (brief 1.2)
+
+```graphql
+mutation cleanCollections {
+  del1: collectionDelete(input: {id: "gid://shopify/Collection/581517541642"}) { deletedCollectionId userErrors { message } }
+  del2: collectionDelete(input: {id: "gid://shopify/Collection/581517574410"}) { deletedCollectionId userErrors { message } }
+}
+```
+- `581517541642` = Indoor Decor (à re-créer plus tard avec rule `TAG EQUALS place:indoor` quand ≥3 produits indoor)
+- `581517574410` = Trick or Treat (à re-créer avec `TAG EQUALS collection:trick-or-treat` quand ≥4 party favors)
+
+### B. Créer 10 produits DRAFT masques/costumes
+
+Depuis `docs/halloween-2026/SOURCING-ROUND-4.md`. Chaque fiche = ready-to-paste : titre, meta title, description HTML, tags, metafields, meta description, guide tailles.
+
+**Règles création** :
+- Status = `DRAFT`
+- Tags obligatoires : `internal:awaiting-supplier-verification` + `season:halloween-2026`
+- Aucune image (bloc image vide — attente supplier)
+- Prix cible saisi (sera confirmé validation supplier)
+- Vendor = `Wicked Hollow`
+
+**Liste ordonnée** :
+1. Draped Lace Mourning Veil — $29.99
+2. Krampus Bronze Half-Mask — $34.99
+3. Plague Doctor Beak Mask — $39.99
+4. Gothic Antler Coronet — $34.99
+5. Silver Filigree Masquerade — $29.99
+6. Black Feather Capelet — $39.99
+7. Grim Reaper Robe (one-size) — $49.99
+8. Vampire Cape (one-size) — $54.99
+9. Skeleton Bodysuit (multi-size S/M/L/XL) — $44.99
+10. Widow Bride Dress (multi-size S/M/L/XL) — $59.99
+
+Après création, garder liste en attente supplier — ne pas basculer en ACTIVE avant réception échantillons + validation dimensions/matériaux.
+
+---
+
+## Tri manuel des images (brief 1.3)
+
+Je n'ai pas de capacité vision pour identifier les collages promo dans les 31 images CJ importées. La liste complète par produit / position / nom fichier / mediaId Shopify est dans `docs/BUILD_LOG.md` §CORRECTIONS BRIEF 1 → #3.
+
+**Suspicion élevée à trier prioritairement** :
+- Banner positions 5, 6, 7, 9, 10 (probablement collages "QUICK INFLATION!" / "Ours VS Other" / badges)
+- Cairn positions 3, 5, 6 (probablement collages)
+
+**Recommandation forte** : wipe complet des 31 images CJ dès arrivée des visuels 2000×2500 demain. Pas la peine de trier si remplacement total.
+
+Si les visuels arrivent partiels (ex : seulement Ghost + Cairn), trier au moins les positions 5-10 du Banner pour retirer les collages avant le go-live.
 
 ---
 
