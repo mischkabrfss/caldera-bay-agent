@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wicked Hollow · Preview · Homepage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../theme/assets/wh-tokens.css">
+  <link rel="stylesheet" href="../theme/assets/wh-primitives.css">
+  <link rel="stylesheet" href="../theme/assets/wh-homepage.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--wh-font-body); background: var(--wh-surface-page); color: var(--wh-ink-default); margin:0; }
+    .wh-preview-banner { background: var(--wh-charcoal-950); color: var(--wh-bone-50); padding: 8px 16px; font-size: 12px; text-align:center; letter-spacing: 0.06em; text-transform: uppercase; font-family: var(--wh-font-body); }
+    .wh-tile-ph { background: linear-gradient(160deg, var(--wh-charcoal-900), var(--wh-charcoal-800)); color: var(--wh-bone-300); display:flex; align-items:center; justify-content:center; font-family: var(--wh-font-display); font-style: italic; font-size: 13px; padding: 40px; text-align:center; aspect-ratio: 4/5; }
+    .wh-hero { min-height: 78vh; background: linear-gradient(160deg, var(--wh-charcoal-950), var(--wh-charcoal-800)); position:relative; display:flex; align-items:center; color: var(--wh-bone-50); padding-block: var(--wh-space-16); }
+    .wh-hero__inner { position: relative; max-width: 720px; }
+    .wh-hero__eyebrow { color: var(--wh-brick-400); }
+    .wh-hero-title { font-family: var(--wh-font-display); font-weight: 400; font-size: var(--wh-fs-hero); line-height: 1.05; letter-spacing: -0.01em; margin: 16px 0; }
+    .wh-hero-title em { font-style: italic; color: var(--wh-brick-400); }
+    .wh-hero__lede { color: var(--wh-bone-100); max-width: 52ch; font-size: var(--wh-fs-body-lg); line-height: 1.5; }
+    .wh-hero__cta { display: flex; gap: 12px; margin-top: 32px; flex-wrap: wrap; }
+    .wh-eyebrow { text-transform: uppercase; letter-spacing: var(--wh-tracking-eyebrow); font-size: var(--wh-fs-eyebrow); color: var(--wh-ink-muted); font-weight: 500; }
+    .wh-btn { display: inline-flex; align-items:center; justify-content:center; padding: 12px 24px; font-family: var(--wh-font-body); font-weight: 500; font-size: var(--wh-fs-body); text-decoration: none; border: 1.5px solid transparent; border-radius: 0; cursor: pointer; letter-spacing: 0.02em; transition: all var(--wh-duration-base) var(--wh-ease-out); }
+    .wh-btn--lg { padding: 16px 32px; font-size: var(--wh-fs-body-lg); }
+    .wh-btn--primary { background: var(--wh-brick-500); color: var(--wh-bone-50); border-color: var(--wh-brick-500); }
+    .wh-btn--outline-inverse { background: transparent; color: var(--wh-bone-50); border-color: var(--wh-bone-50); }
+    .wh-btn--outline { background: transparent; color: var(--wh-ink-strong); border-color: var(--wh-ink-strong); }
+    .wh-announcement { background: var(--wh-charcoal-950); color: var(--wh-bone-50); padding: 10px 16px; text-align:center; font-size: var(--wh-fs-body-sm); }
+    .wh-announcement a { color: var(--wh-brick-400); text-decoration: underline; }
+    .wh-header { background: var(--wh-surface-page); border-bottom: 1px solid var(--wh-border-subtle); padding: 16px 0; }
+    .wh-header__inner { display: flex; align-items: center; justify-content: space-between; }
+    .wh-brand { font-family: var(--wh-font-display); font-weight: 600; font-size: 20px; color: var(--wh-ink-strong); letter-spacing: -0.01em; text-decoration: none; }
+    .wh-nav { display: flex; gap: 24px; }
+    .wh-nav a { color: var(--wh-ink-default); text-decoration: none; font-size: var(--wh-fs-body); }
+    @media (max-width: 640px) { .wh-nav { display: none; } }
+    .wh-section-title { font-family: var(--wh-font-display); font-weight: 400; font-size: var(--wh-fs-h2); line-height: 1.15; letter-spacing: -0.01em; color: var(--wh-ink-strong); }
+    .wh-section-title em { font-style: italic; color: var(--wh-brick-500); }
+    .wh-section-intro { font-size: var(--wh-fs-body-lg); color: var(--wh-ink-muted); max-width: 62ch; margin-top: 12px; line-height: 1.55; }
+    .wh-cat-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 40px; }
+    @media (min-width: 768px) { .wh-cat-grid { grid-template-columns: 1fr 1fr; } }
+    .wh-cat-card { position: relative; display: block; text-decoration: none; color: var(--wh-ink-strong); }
+    .wh-cat-card__label { display: flex; align-items: baseline; justify-content: space-between; margin-top: 16px; }
+    .wh-cat-card__title { font-family: var(--wh-font-display); font-size: var(--wh-fs-h3); color: var(--wh-ink-strong); font-weight: 500; }
+    .wh-cat-card__meta { font-size: var(--wh-fs-body-sm); color: var(--wh-ink-muted); }
+    .wh-editorial { background: var(--wh-surface-panel); }
+    .wh-editorial__grid { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center; }
+    @media (min-width: 768px) { .wh-editorial__grid { grid-template-columns: 1fr 1fr; gap: 64px; } }
+    .wh-editorial__title { font-family: var(--wh-font-display); font-size: var(--wh-fs-h1); line-height: 1.1; letter-spacing: -0.01em; margin: 0 0 20px; color: var(--wh-ink-strong); font-weight: 400; }
+    .wh-editorial__title em { font-style: italic; color: var(--wh-brick-500); }
+    .wh-editorial__body p { font-size: var(--wh-fs-body-lg); line-height: 1.65; color: var(--wh-ink-default); margin: 0 0 16px; }
+    .wh-showcase__grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 40px; }
+    @media (min-width: 640px) { .wh-showcase__grid { grid-template-columns: 1fr 1fr; } }
+    @media (min-width: 1024px) { .wh-showcase__grid { grid-template-columns: repeat(4, 1fr); } }
+    .wh-prod-card { }
+    .wh-prod-card__title { font-family: var(--wh-font-display); font-size: var(--wh-fs-h4); margin: 16px 0 4px; color: var(--wh-ink-strong); font-weight: 500; }
+    .wh-prod-card__price { color: var(--wh-brick-500); font-weight: 600; font-size: var(--wh-fs-body-lg); }
+    .wh-bundle-grid { display: grid; grid-template-columns: 1fr; gap: 32px; margin-top: 40px; }
+    @media (min-width: 768px) { .wh-bundle-grid { grid-template-columns: repeat(3, 1fr); } }
+    .wh-bundle-card { background: var(--wh-surface-panel); padding: 32px; display: flex; flex-direction: column; gap: 16px; }
+    .wh-bundle-card__title { font-family: var(--wh-font-display); font-size: var(--wh-fs-h3); color: var(--wh-ink-strong); font-weight: 500; }
+    .wh-bundle-card__save { display: inline-block; background: var(--wh-brick-100); color: var(--wh-brick-600); padding: 4px 10px; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
+    .wh-reassurance { background: var(--wh-charcoal-950); color: var(--wh-bone-50); }
+    .wh-reassurance__grid { display: grid; grid-template-columns: 1fr; gap: 32px; }
+    @media (min-width: 768px) { .wh-reassurance__grid { grid-template-columns: repeat(3, 1fr); } }
+    .wh-reassurance__item { border-left: 2px solid var(--wh-brick-500); padding-left: 20px; }
+    .wh-reassurance__item h3 { font-family: var(--wh-font-display); font-size: var(--wh-fs-h4); margin: 0 0 8px; font-weight: 500; }
+    .wh-reassurance__item p { color: var(--wh-bone-100); line-height: 1.6; margin: 0; font-size: var(--wh-fs-body); }
+    .wh-countdown { text-align:center; background: var(--wh-charcoal-900); color: var(--wh-bone-50); padding-block: 64px; }
+    .wh-countdown__label { font-family: var(--wh-font-body); text-transform: uppercase; letter-spacing: var(--wh-tracking-eyebrow); font-size: 12px; color: var(--wh-brick-400); }
+    .wh-countdown__grid { display: inline-flex; gap: 24px; margin-top: 24px; }
+    .wh-countdown__cell { min-width: 80px; }
+    .wh-countdown__num { font-family: var(--wh-font-display); font-size: 48px; font-weight: 300; display: block; color: var(--wh-bone-50); }
+    .wh-countdown__unit { font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--wh-bone-300); }
+    .wh-capture { background: var(--wh-brick-500); color: var(--wh-bone-50); text-align: center; padding-block: 80px; }
+    .wh-capture h2 { font-family: var(--wh-font-display); font-size: var(--wh-fs-h2); font-weight: 400; margin: 0 0 12px; }
+    .wh-capture form { display: inline-flex; gap: 8px; margin-top: 24px; max-width: 480px; width: 100%; }
+    .wh-capture input { flex: 1; padding: 14px 16px; border: 0; font-family: var(--wh-font-body); font-size: var(--wh-fs-body); min-height: 48px; }
+    .wh-capture button { padding: 14px 24px; background: var(--wh-charcoal-950); color: var(--wh-bone-50); border: 0; font-family: var(--wh-font-body); font-weight: 500; cursor: pointer; }
+    .wh-footer { background: var(--wh-charcoal-950); color: var(--wh-bone-100); padding-block: 64px 40px; }
+    .wh-footer__grid { display: grid; grid-template-columns: 1fr; gap: 40px; }
+    @media (min-width: 768px) { .wh-footer__grid { grid-template-columns: 2fr 1fr 1fr 1fr; } }
+    .wh-footer h4 { font-family: var(--wh-font-display); font-size: var(--wh-fs-h4); color: var(--wh-bone-50); margin: 0 0 16px; font-weight: 500; }
+    .wh-footer a { color: var(--wh-bone-100); text-decoration: none; font-size: var(--wh-fs-body); display: block; padding: 4px 0; }
+    .wh-footer__brand p { color: var(--wh-bone-300); font-size: var(--wh-fs-body-sm); line-height: 1.6; max-width: 44ch; }
+    .wh-footer__legal { border-top: 1px solid var(--wh-charcoal-800); margin-top: 40px; padding-top: 24px; color: var(--wh-bone-300); font-size: var(--wh-fs-body-sm); text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="wh-preview-banner">Preview · not shopify · css tokens rendered · demo content</div>
+
+  <div class="wh-announcement">Free shipping over $65 · Ships from US warehouses · <a href="#">Order by Oct 21 for Halloween →</a></div>
+
+  <header class="wh-header">
+    <div class="wh-container wh-header__inner">
+      <a href="#" class="wh-brand">Wicked Hollow</a>
+      <nav class="wh-nav">
+        <a href="#">Giant Inflatables</a>
+        <a href="#">Porch &amp; Yard</a>
+        <a href="#">The Manor</a>
+        <a href="#">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="wh-hero">
+    <div class="wh-container wh-hero__inner">
+      <p class="wh-eyebrow wh-hero__eyebrow">The Manor · 2026 season</p>
+      <h1 class="wh-hero-title">Objects and atmospheres for the seasons <em>when the light gets low</em>.</h1>
+      <p class="wh-hero__lede">A small catalogue of decor made to greet October, stay through November, and belong in the room long after the pumpkins go.</p>
+      <div class="wh-hero__cta">
+        <a href="#" class="wh-btn wh-btn--primary wh-btn--lg">Enter The Manor</a>
+        <a href="#" class="wh-btn wh-btn--outline-inverse wh-btn--lg">See the yard</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wh-section">
+    <div class="wh-container">
+      <p class="wh-eyebrow">By place</p>
+      <h2 class="wh-section-title">Where the season <em>begins</em>.</h2>
+      <div class="wh-cat-grid">
+        <a class="wh-cat-card" href="#">
+          <div class="wh-tile-ph">Outdoor scene — Yard with giant inflatables at dusk</div>
+          <div class="wh-cat-card__label"><span class="wh-cat-card__title">Porch &amp; Yard</span><span class="wh-cat-card__meta">4 pieces · from $24.99</span></div>
+        </a>
+        <a class="wh-cat-card" href="#">
+          <div class="wh-tile-ph">Indoor scene — Mantel with cobweb lace + candles</div>
+          <div class="wh-cat-card__label"><span class="wh-cat-card__title">The Manor Indoors</span><span class="wh-cat-card__meta">Coming soon</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wh-section wh-editorial">
+    <div class="wh-container">
+      <div class="wh-editorial__grid">
+        <div class="wh-editorial__body">
+          <p class="wh-eyebrow">The Manor</p>
+          <h2 class="wh-editorial__title">Halloween belongs to <em>the light in October</em>.</h2>
+          <p>We stock the objects that carry the low-light months. Not the disposable stuff — the pieces that fold back into their bag and come out in 2027, 2028, 2029. Everything ships from US warehouses in two to eight business days.</p>
+          <p>The 12-foot ghost that reads from three houses away. The Victorian mourning veil that turns a black dress into a costume. The cobweb lace runner that transitions from Halloween to Christmas. Pieces with a rotation.</p>
+          <a href="#" class="wh-btn wh-btn--outline">Read more about the Manor</a>
+        </div>
+        <div class="wh-tile-ph" style="aspect-ratio: 3/4;">Editorial image — hand holding a black candle in low light</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wh-section">
+    <div class="wh-container">
+      <p class="wh-eyebrow">Giant Inflatables</p>
+      <h2 class="wh-section-title">Reads from <em>three houses away</em>.</h2>
+      <div class="wh-showcase__grid">
+        <div class="wh-prod-card">
+          <div class="wh-tile-ph">11.8ft Ghost — LED eyes, flame effect</div>
+          <p class="wh-prod-card__title">The Watcher — 11.8ft Ghost</p>
+          <p class="wh-prod-card__price">$119.99</p>
+        </div>
+        <div class="wh-prod-card">
+          <div class="wh-tile-ph">9.6ft Skeleton Banner — dual indoor/outdoor</div>
+          <p class="wh-prod-card__title">The Welcoming Committee</p>
+          <p class="wh-prod-card__price">$109.99</p>
+        </div>
+        <div class="wh-prod-card">
+          <div class="wh-tile-ph">9ft Stacked Pumpkins — six LED faces</div>
+          <p class="wh-prod-card__title">The Cairn — 9ft Pumpkins</p>
+          <p class="wh-prod-card__price">$89.99</p>
+        </div>
+        <div class="wh-prod-card">
+          <div class="wh-tile-ph">96&quot; Cobweb Lace Mantel Scarf</div>
+          <p class="wh-prod-card__title">Cobweb Lace Mantel Scarf</p>
+          <p class="wh-prod-card__price">$24.99</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wh-section wh-editorial">
+    <div class="wh-container">
+      <p class="wh-eyebrow">Bundle offers</p>
+      <h2 class="wh-section-title">The whole scene in <em>one order</em>.</h2>
+      <div class="wh-bundle-grid">
+        <div class="wh-bundle-card">
+          <span class="wh-bundle-card__save">Save $40</span>
+          <h3 class="wh-bundle-card__title">Complete Yard Kit</h3>
+          <p>Ghost 11.8ft + Skeleton Banner 9.6ft + Stacked Pumpkins 9ft. The whole yard in one order.</p>
+          <p class="wh-prod-card__price">$279.99 <span style="text-decoration:line-through; color:var(--wh-ink-muted); font-size: 14px;">$319.97</span></p>
+          <a href="#" class="wh-btn wh-btn--primary">Add the kit</a>
+        </div>
+        <div class="wh-bundle-card">
+          <span class="wh-bundle-card__save">Save $30</span>
+          <h3 class="wh-bundle-card__title">Haunted Threshold</h3>
+          <p>Ghost + coir doormat + pillow. Everything for the porch.</p>
+          <p class="wh-prod-card__price">$179.99 <span style="text-decoration:line-through; color:var(--wh-ink-muted); font-size: 14px;">$209.97</span></p>
+          <a href="#" class="wh-btn wh-btn--primary">Add the porch</a>
+        </div>
+        <div class="wh-bundle-card">
+          <span class="wh-bundle-card__save">Save $40</span>
+          <h3 class="wh-bundle-card__title">The Full Haunt</h3>
+          <p>Outdoor ghost + cozy blanket + disco ghost pillow. Inside and out.</p>
+          <p class="wh-prod-card__price">$229.99 <span style="text-decoration:line-through; color:var(--wh-ink-muted); font-size: 14px;">$269.97</span></p>
+          <a href="#" class="wh-btn wh-btn--primary">Add the haunt</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wh-countdown">
+    <div class="wh-container">
+      <p class="wh-countdown__label">Halloween 2026 · Order by Oct 21</p>
+      <div class="wh-countdown__grid">
+        <div class="wh-countdown__cell"><span class="wh-countdown__num">67</span><span class="wh-countdown__unit">days</span></div>
+        <div class="wh-countdown__cell"><span class="wh-countdown__num">14</span><span class="wh-countdown__unit">hours</span></div>
+        <div class="wh-countdown__cell"><span class="wh-countdown__num">22</span><span class="wh-countdown__unit">minutes</span></div>
+        <div class="wh-countdown__cell"><span class="wh-countdown__num">05</span><span class="wh-countdown__unit">seconds</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wh-section wh-reassurance">
+    <div class="wh-container">
+      <div class="wh-reassurance__grid">
+        <div class="wh-reassurance__item">
+          <h3>Free shipping over $65</h3>
+          <p>Ships from US warehouses in 2–8 business days. Order by Oct 21 for Halloween delivery.</p>
+        </div>
+        <div class="wh-reassurance__item">
+          <h3>30-day returns</h3>
+          <p>Unopened and unworn items refunded to your card within 30 days of delivery.</p>
+        </div>
+        <div class="wh-reassurance__item">
+          <h3>UL Listed power</h3>
+          <p>Every inflatable ships with UL Listed Class 2 low-voltage power supply. Safe outdoors.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wh-capture">
+    <div class="wh-container">
+      <p class="wh-eyebrow" style="color: var(--wh-bone-100);">Stay in the season</p>
+      <h2>Objects and atmospheres, when they land.</h2>
+      <p style="max-width: 44ch; margin-inline:auto;">Occasional letters when new pieces arrive or the season shifts. No spam.</p>
+      <form onsubmit="return false;">
+        <input type="email" placeholder="you@domain.com" required>
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="wh-footer">
+    <div class="wh-container">
+      <div class="wh-footer__grid">
+        <div class="wh-footer__brand">
+          <h4>Wicked Hollow</h4>
+          <p>Objects and atmospheres for the seasons when the light gets low. Ships from US warehouses in 2–8 business days.</p>
+        </div>
+        <div>
+          <h4>Shop</h4>
+          <a href="#">Giant Inflatables</a>
+          <a href="#">Porch &amp; Yard</a>
+          <a href="#">The Manor</a>
+        </div>
+        <div>
+          <h4>Help</h4>
+          <a href="#">Shipping</a>
+          <a href="#">Returns</a>
+          <a href="#">FAQ</a>
+          <a href="#">Contact</a>
+        </div>
+        <div>
+          <h4>The Manor</h4>
+          <a href="#">About</a>
+          <a href="#">Season Notes</a>
+        </div>
+      </div>
+      <div class="wh-footer__legal">© 2026 Wicked Hollow. Halloween isn't a costume — it's a season.</div>
+    </div>
+  </footer>
+</body>
+</html>

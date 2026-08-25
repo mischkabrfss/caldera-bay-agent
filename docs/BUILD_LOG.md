@@ -4,6 +4,82 @@
 
 ---
 
+## Session 10 — 25 août 2026 · CJ-check + site + créas Banner + bundles V5
+
+Deux briefs stackés : (1) livrer `docs/CJ-CHECK.md` compact mobile pour trier les 10 fiches en 30 min, (2) avancer le site pendant que la vérification supplier tourne.
+
+### 1. Livraison prioritaire — `docs/CJ-CHECK.md`
+
+Document autonome, mobile-friendly, ~2 min par fiche. En tête : rappel des 3 règles éliminatoires (entrepôt US, IP, conformité). Puis 10 blocs uniformes : 3 termes de recherche CJ (par largeur croissante), coût rendu MAX, stock minimum (par taille pour costumes), 2-3 vérifications spécifiques, signaux d'écart. URLs CJ non fournies (le format du moteur change trop) — termes à coller dans la barre après avoir activé le filtre "US Warehouse". En fin : rappel pricing/marge côte à côte + procédure post-validation.
+
+### 2. Site — chantier A : 5 pages statiques créées côté Shopify + Contact updaté
+
+Toutes créées via `pageCreate` / mise à jour via `pageUpdate` du Contact existant. Voix Manor (anglais US natif). Zéro valeur inventée : politiques strictement alignées avec ce qui a été confirmé (US ≥$65 free / $6.95 flat / 2-8 j, US only, 30 j returns standard, order by Oct 21 = 8 j ouvrés avant 31 oct calc).
+
+| Handle | Page ID | Contenu clé |
+|---|---|---|
+| `/pages/shipping` | 164579148042 | Free ≥$65, Flat $6.95, 2-8 j US, cut-off Oct 21, US 48 states + DC only |
+| `/pages/returns` | 164579180810 | 30 j calendar, unused + original packaging, refund original method, worn costumes non-returnable, defective = we pay return |
+| `/pages/faq` | 164579213578 | 10 vraies objections : delivery, size sizing chart, UL power, weather, adult-only, response 24 business hrs |
+| `/pages/about` | 164579279114 | Positionnement Manor sans mythologie inventée : 3 questions produit + ce qu'on ne fait pas |
+| `/pages/contact` | 164560568586 (update) | 4 motifs contact, response 24 business hrs Mon-Fri CT |
+
+**404 non créé côté Shopify** — c'est un template thème (`templates/404.liquid`), pas une page. Documenté pour intégration dans le thème.
+
+### 3. Site — chantier B : Thème rendu (preview static + screenshots)
+
+Le container n'a pas Shopify CLI (pas d'accès `shopify theme dev`), l'API `themeCreate` exige un ZIP validé Shopify. **Chemin alternatif emprunté** : construire un preview HTML static qui inline les 3 CSS files du thème + reconstitue les sections en HTML représentatif, puis screenshot via Playwright + Chromium local (déjà installé /opt/pw-browsers/chromium-1194).
+
+**Livrables** :
+- `theme-preview/preview.html` — homepage complète : announcement + header + hero + categories 2-col + editorial + product showcase 4-col + bundles 3-col + countdown + reassurance + email capture + footer. Utilise les vrais tokens CSS + les vraies polices Fraunces + Inter Tight via Google Fonts.
+- `theme-preview/screenshot.py` — Playwright async, itère sur 3 viewports.
+- `theme-preview/wh-preview-390.png` (mobile) — 749 KB, full page.
+- `theme-preview/wh-preview-768.png` (tablet) — 807 KB.
+- `theme-preview/wh-preview-1440.png` (desktop) — 1090 KB.
+
+**Ce que ça valide** : tokens de couleur (bone/charcoal/brick harmonieux), hiérarchie typo (Fraunces italic sur "when the light gets low" en accent brick, Inter Tight body), spacing 8px scale, breakpoints (grid → 2 col à 768 → 4 col à 1024), contrastes AA respectés visuellement, dark sections (charcoal + brick left-border) lisibles.
+
+**Ce que ça ne valide pas** : rendu réel dans le contexte Horizon (base.css d'Horizon peut interférer avec les `.wh-*` classes malgré le scoping), interactions JS (countdown live, form Shopify), performance Lighthouse, images produit réelles (placeholders italic charbon utilisés). Pour le rendu final, il faut installer côté Shopify (Option A CLI local user, ou B ZIP upload, ou C GitHub integration — cf `HUMAN-INPUT-NEEDED.md`).
+
+**Observations visuelles** :
+- 390 : hero title tient sur 3 lignes fluid, italic accent brick lisible, CTA primary brick + secondary outline visibles, cards produits stackées verticalement OK.
+- 768 : nav apparaît, grids 2-col hero/categories/showcase, bundles 3-col, footer 4-col.
+- 1440 : showcase produit passe à 4 col, tuiles categories dominent le rythme, hero inner max-width 720px correctement contained.
+
+Aucune casse identifiée. Design système cohérent.
+
+### 4. Site — chantier C : 5 créas Banner (V5 héros pic)
+
+`docs/halloween-2026/AD-BANNER-CREATIVES.md` livré. 5 concepts vidéo verticale 9:16, 6-10s, exploitables à partir des 10 images CJ + 7 shots 2000×2500 attendus :
+
+- **Créa I** — "The whole scene in ten feet" (silhouette révélation, 8s)
+- **Créa J** — "Reads from three houses away" (POV trottoir, 7s)
+- **Créa K** — "Inside or outside" (dual-use jump cut, 6s) — angle différenciateur unique
+- **Créa L** — "Two-minute setup" (anti-friction, 10s)
+- **Créa M** — "The kids know" (émotion trick-or-treat POV enfant, 9s) — pour pic 18-25 oct
+
+Priorité lancement : I + J + L en A/B/C Phase 2 (11 sept – 12 oct), + K et M en Phase 3 pic.
+
+### 5. Site — chantier D : Bundles V5 avec / sans Ghost
+
+`docs/halloween-2026/BUNDLES-V5.md` — 2 scénarios :
+
+**Scénario A (Ghost-in, 25 août – ~2 oct)** :
+- A1 Complete Yard Kit (3 gonflables) — $279.99 · contribution $151.17 (54.0 %) ✓
+- A2 Haunted Threshold (Ghost + Mantel + Rings) — $149.99 · contribution $85.43 (57.0 %) ✓
+- A3 Yard Duo (Ghost + Cairn) — $189.99 · contribution $103.67 (54.6 %) ✓
+
+**Scénario B (Ghost-out, ~2 oct – 28 oct)** :
+- B1 The Yard That Welcomes (Banner + Cairn + Rings) — $199.99 · contribution $112.23 (56.1 %) ✓
+- B2 Inside Out (Banner + Mantel) — $119.99 · contribution $67.99 (56.7 %) ✓
+- B3 Party Host Kit (Banner + Rings) — $124.99 · contribution $74.74 (59.8 %) ✓
+
+Tous > 50 % contribution après fees. Bascule A → B à préparer en DRAFT côté Shopify vers 30 septembre.
+
+**Gap connu** : coûts landed Banner, Mantel, Rings sont des estimations (Session 3-7 les avait laissés en placeholder). À confirmer supplier avant lancement ad-boosted.
+
+---
+
 ## Session 9 — 25 août 2026 · MCP reconnecté · actions + arbitrage héros
 
 **MCP Shopify reconnecté.** Toutes les actions en attente de Session 8 exécutées + arbitrage stratégique majeur.

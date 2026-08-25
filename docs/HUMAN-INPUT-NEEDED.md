@@ -1,6 +1,45 @@
 # Wicked Hollow — Human input needed
 
-> Sortie de nuit du 21–22 août 2026, mis à jour Session 8 (24-25 août). Ce qui doit venir de toi avant que la boutique puisse aller vivre.
+> Sortie de nuit du 21–22 août 2026, mis à jour Sessions 8/9/10 (24-25 août). Ce qui doit venir de toi avant que la boutique puisse aller vivre.
+
+---
+
+## Confirmations demandées après Session 10
+
+### A. Politiques boutique — validations avant publication
+
+Les 5 pages statiques ont été créées côté Shopify avec des valeurs plausibles standard. Confirme (ou corrige) :
+
+| Décision | Valeur inscrite | À confirmer |
+|---|---|---|
+| Free shipping seuil | ≥ $65 | ✓ déjà confirmé Session 7 |
+| Flat rate below | $6.95 | ✓ déjà confirmé |
+| Zones desservies | US 48 states + DC only | À confirmer : ok exclure AK/HI/territoires ? |
+| Delivery window | 2-8 business days | ✓ confirmé (CJ warehouse US) |
+| Halloween cut-off | Order by October 21, 2026 | Calcul 8 j ouvrés — ok ou moins conservateur ? |
+| Returns window | 30 calendar days | Standard e-com US — ok ou 14/60 ? |
+| Who pays return | Nous si défectueux, client si change of mind | Standard — ok ? |
+| Worn costumes non-returnable | Oui (hygiène) | Standard costume — ok ? |
+| Support response time | 24 business hours | À confirmer selon ta capacité réelle |
+| Support hours | Mon-Fri 9AM-5PM CT, closed weekends + US federal holidays | À confirmer |
+
+Si tu changes ces valeurs, retouche directement dans admin Shopify → Pages → chaque page. Puis mets à jour ce fichier avec les valeurs définitives.
+
+### B. Coûts landed à confirmer supplier (bundles V5)
+
+3 coûts fournisseur non confirmés bloquent la précision des bundles :
+- **Banner Welcoming Committee** — estimation $38 landed, à valider
+- **Cobweb Lace Mantel Scarf** — estimation $8 landed, à valider
+- **Glow Rings 50-pack** — estimation $6 landed, à valider
+
+Sans ces confirmations, les marges bundles restent des projections ±5 pts. Utilisable pour test, insuffisant pour scaler.
+
+### C. Aperçu thème — rendu preview livré
+
+`theme-preview/wh-preview-{390,768,1440}.png` : 3 screenshots du rendu static preview HTML (pas Shopify — voir BUILD_LOG Session 10 pour le pourquoi). Regarde et me dire ce qui doit changer avant d'investir dans l'install Shopify réel. Le vrai rendu final passera par :
+- **Option A recommandée** : `shopify theme push --unpublished` depuis ta machine avec Shopify CLI
+- **Option B** : GitHub integration dans admin Shopify → Themes → Add from GitHub → cible `claude/theme-wicked-hollow-night`, dossier `theme/`
+- **Option C** : ZIP upload manuel via admin
 
 ---
 
