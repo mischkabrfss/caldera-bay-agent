@@ -1,6 +1,34 @@
 # Wicked Hollow — Human input needed
 
-> Sortie de nuit du 21–22 août 2026, mis à jour Sessions 8/9/10 (24-25 août). Ce qui doit venir de toi avant que la boutique puisse aller vivre.
+> Mis à jour Session 11 (25 août 2026). Ce qui doit venir de toi avant que la boutique puisse aller vivre.
+
+---
+
+## État après Session 11 · pivot catalogue + DTC rebuild
+
+### Catalogue verrouillé — 5 SKUs
+
+1. The Watcher — 11.8ft Ghost — **$119.99** — role:acquisition-september (Ghost bascule septembre pixel-builder)
+2. The Welcoming Committee — 9.6ft Skeleton Banner — **$109.99** — role:hero (V5 héros pic Halloween)
+3. The Cairn — 9ft Stacked Pumpkins — **$89.99** — assortment:no-ads
+4. Cobweb Lace Mantel Scarf — **$24.99**
+5. Glow Rings 50-pack — **$27.99** (bumpé, article d'appoint, jamais home)
+
+10 fiches masques/costumes **parkées** avec tag `internal:parked-no-us-warehouse` — textes préservés, hors collection, à réactiver si fournisseur US warehouse portable apparaît.
+
+### Collections finales — 2 max
+
+1. **Halloween at Home** (id 581561319690) — narrative unique, 5 SKUs, rule `TAG EQUALS catalog:live-2026`
+2. **Giant Inflatables** (id 581517476106) — SEO différenciant, 3 giants
+3. Home page (frontpage natif) — 5 SKUs fallback
+
+Deleted : Indoor Decor, Trick or Treat (Session 9), Porch & Yard (Session 11).
+
+### Preview homepage à regarder
+
+`theme-preview/wh-preview-{320,390,430,768,1440}.png` — homepage rebuild DTC-grade avec SVG silhouettes (cdn.shopify.com bloqué par le proxy sandbox, donc pas de photos supplier dans le preview). Regarde à 390 en priorité (le trafic viendra de TikTok mobile) et dis-moi ce qui doit bouger avant l'install thème.
+
+---
 
 ---
 

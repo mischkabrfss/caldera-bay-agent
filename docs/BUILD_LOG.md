@@ -4,6 +4,89 @@
 
 ---
 
+## Session 11 — 25 août 2026 · pivot catalogue + repositionnement DTC
+
+Décision structurelle : après vérification manuelle CJ (masques US warehouse = contrefaçons IP Valak/The Nun, génériques = Chine 5-11j), la piste masques/costumes est abandonnée. Catalogue final = 5 SKUs. Boutique repositionnée narrativement autour de "LA MAISON ENTIÈRE LE SOIR D'HALLOWEEN" avec promesse "la maison dont les gens parleront le lendemain". Puis pivot vers standard DTC premium avec passe rendu preview mobile-first à 5 largeurs.
+
+### 1. Cleanup — 10 fiches parkées
+
+10 produits masques/costumes retagués via `productUpdate` batch :
+- Tag `internal:awaiting-supplier-verification` remplacé par `internal:parked-no-us-warehouse` + `status:parked-2026-08-25`
+- Textes descriptions préservés (resservira si fournisseur portable US warehouse apparaît)
+- Aucune fiche supprimée
+- Aucune collection Vestments à nettoyer (jamais créée — les 10 taggées `place:worn` ne populaient rien)
+
+### 2. Repositionnement collections (5 SKUs)
+
+- **Delete Porch & Yard** (id 581517508874) — diluait le focus, 4 items sans identité claire
+- **Halloween at Home créée** (id 581561319690) — collection éditoriale unique, rule `TAG EQUALS catalog:live-2026`, description narrative 4 étapes (yard / porch / mantel / candy bowl), 5 SKUs auto-populated
+- **Giant Inflatables gardée** (id 581517476106) — collection SEO différenciante, 3 giants seulement
+- Les 5 SKUs live retagués avec `catalog:live-2026` + place:yard/porch/mantel/candy-bowl narrative tags
+- Rings tagué `display:never-hero` (règle : jamais mis en avant sur homepage, présent bundle + panier + product recs)
+
+### 3. Prix Rings ajusté
+
+Rings 50-pack : $24.99 → **$27.99** via `productVariantsBulkUpdate` (seuil AOV $12 impulsion validé Session 2). Bundles V5 recalculés automatiquement.
+
+### 4. Homepage rebuild DTC-grade (theme-preview + index.wicked.json)
+
+`theme/templates/index.wicked.json` refondu selon narrative jardin→porche→intérieur, section Bundles pointant Complete Yard Kit + Yard Duo + Inside Out (bundles V5), footer nettoyé des liens vers collections supprimées.
+
+`theme-preview/preview.html` rebuild complet niveau DTC :
+- **Règle 3 secondes appliquée** : hero avec image scène plein cadre (SVG silhouette ghost + moon + house + porch light + fog), titre commercial "The house they'll still be talking about the next morning" (italic accent brick), CTA primary dominant "Shop the Yard →", CTA secondary "See The Watcher — 11.8ft", ligne réassurance "From $24.99 · Complete Yard Kit $279.99 · Free ship over $65 · Ships in 5 days" (répond aux 3 questions : quoi / combien / où cliquer above the fold)
+- **Product rail avant fin premier écran de scroll** : 4 cards 4:5 hiérarchie descriptif-first ("9.6ft Inflatable Skeleton Banner" gros, "The Welcoming Committee" italic petit dessous), badge "Hero of the pic" sur Banner (V5 héros), prix tabulaires, ligne shipping
+- **House tour 3 stops** (yard/porch/inside) — Rings absent de la home per règle user
+- **Bundle Complete Yard Kit** section pleine largeur avec économie $39.98 affichée, prix $279.99 vs $319.97, CTA "Add the whole yard to cart"
+- **Éditorial Why Wicked Hollow** — cadrage 4 steps
+- **Reassurance 4 items** (Shipping / Returns 30d / UL Class 2 / Support US-hours)
+- **Reviews module neutral state honest** : "Reviews open with our first shipment. We won't fake ratings or '1000+ sold' counters" — pas de fausse preuve sociale
+- **Countdown honnête** vers 31 oct avec cut-off Oct 21
+- **Email capture** brick background
+- **Final CTA** "Set the yard now. Be the talk of the block in October."
+- **Sticky mobile CTA** apparaît après scroll hors hero, respecte env(safe-area-inset-bottom), IntersectionObserver
+- **Motion** : transitions transform/opacity uniquement, backdrop-filter sur header, hover crossfade cards, boutons translateY(-1) sur hover, reduced-motion honoré via tokens
+
+### 5. Rendu à 5 largeurs (mobile-first)
+
+Screenshots générés via Playwright + Chromium local à `/opt/pw-browsers/chromium-1194` :
+- `wh-preview-320.png` — 687 KB, mobile étroit
+- `wh-preview-390.png` — 732 KB, iPhone standard
+- `wh-preview-430.png` — 765 KB, iPhone Plus
+- `wh-preview-768.png` — 1001 KB, tablette
+- `wh-preview-1440.png` — 1253 KB, desktop
+
+**Régression importante** : le proxy sandbox bloque `cdn.shopify.com` (test Bash curl + Chromium goto = tunnel 403). Impossible de screenshot avec les vraies photos produit. **Pivot** : construit 5 SVG silhouettes stylisées inline (ghost + LED eyes + flame, pumpkin tower 4 stacks, 2 skeletons + banner rouge "Happy Halloween", mantel lace pattern + bougies, rings cluster couleurs), + une SVG hero yard scene (ghost + moon + house silhouette + porch glow + fog). Self-contained, cohérent design system, respecte "pas de blocs vides", chaque contenu porte "PHOTO PENDING" en credit line = honnête sur son statut.
+
+### 6. FAQ rebuild — vraies objections
+
+`/pages/faq` (Shopify) mis à jour avec 13 questions dans 4 sections utilisant `<details><summary>` accordion natif :
+- Delivery & timing : when will I get it, Halloween cut-off, international
+- Size & fit in the yard : how big 12ft in real life, will it fit my yard (with footprint math)
+- Weather & power : rain, all night plugged, electrically safe (UL formulation strict "Class 2 power supply included")
+- Setup & storage : setup time 2-3 min, 1 person OK, storage folded
+- If something goes wrong : damage on arrival, how to return, Mantel/Rings hygiene exclusions
+
+### 7. Fiche extension template
+
+`docs/halloween-2026/INFLATABLE-FICHE-TEMPLATE.md` — template ready-to-fill pour 2 gonflables supplémentaires du même fournisseur : titre Manor, meta SEO, description HTML complète (accroche, what makes it work, details, in the box, setup en 4 étapes, weather & care, safety), tags, metafields, checklist CJ pré-création, formule prix (retail × 0.45 = coût rendu max), 6 pistes suggérées (3 giants scary/family + 3 accessoires indoor premium).
+
+### 8. Reste bloquant + points faibles honnêtes
+
+**Points faibles identifiés (Passe 2 CD)** :
+1. **Preview utilise SVG silhouettes, pas photos réelles** — imposé par le proxy bloquant cdn.shopify.com. Le vrai rendu avec photos supplier arrive à l'install thème côté user (CLI ou GitHub integration).
+2. **Product page + galerie + sticky mobile CTA non buildés côté theme Liquid** — seulement en preview HTML. Le user va d'abord valider l'homepage puis on itère sur PDP.
+3. **Reviews neutral state design correct mais non connecté** à un fournisseur reviews (Judge.me/Loox/Yotpo à trancher).
+
+**Reste bloquant publication** :
+- Photos 2000×2500 pour les 5 SKUs (attente demain)
+- Install thème Shopify (CLI ou GitHub integration — 3 options doc dans HUMAN-INPUT)
+- Password protection à activer admin (non-API)
+- Payment methods à vérifier admin (non-API)
+- Certif UL Ghost adapter à confirmer réception (probable Rico équivalent)
+- Réappro supplier Ghost + Cairn urgent
+
+---
+
 ## Session 10 — 25 août 2026 · CJ-check + site + créas Banner + bundles V5
 
 Deux briefs stackés : (1) livrer `docs/CJ-CHECK.md` compact mobile pour trier les 10 fiches en 30 min, (2) avancer le site pendant que la vérification supplier tourne.

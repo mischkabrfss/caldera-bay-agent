@@ -2,283 +2,735 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Wicked Hollow · Preview · Homepage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Wicked Hollow · Halloween at Home</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../theme/assets/wh-tokens.css">
-  <link rel="stylesheet" href="../theme/assets/wh-primitives.css">
-  <link rel="stylesheet" href="../theme/assets/wh-homepage.css">
   <style>
-    html { scroll-behavior: smooth; }
-    body { font-family: var(--wh-font-body); background: var(--wh-surface-page); color: var(--wh-ink-default); margin:0; }
-    .wh-preview-banner { background: var(--wh-charcoal-950); color: var(--wh-bone-50); padding: 8px 16px; font-size: 12px; text-align:center; letter-spacing: 0.06em; text-transform: uppercase; font-family: var(--wh-font-body); }
-    .wh-tile-ph { background: linear-gradient(160deg, var(--wh-charcoal-900), var(--wh-charcoal-800)); color: var(--wh-bone-300); display:flex; align-items:center; justify-content:center; font-family: var(--wh-font-display); font-style: italic; font-size: 13px; padding: 40px; text-align:center; aspect-ratio: 4/5; }
-    .wh-hero { min-height: 78vh; background: linear-gradient(160deg, var(--wh-charcoal-950), var(--wh-charcoal-800)); position:relative; display:flex; align-items:center; color: var(--wh-bone-50); padding-block: var(--wh-space-16); }
-    .wh-hero__inner { position: relative; max-width: 720px; }
-    .wh-hero__eyebrow { color: var(--wh-brick-400); }
-    .wh-hero-title { font-family: var(--wh-font-display); font-weight: 400; font-size: var(--wh-fs-hero); line-height: 1.05; letter-spacing: -0.01em; margin: 16px 0; }
-    .wh-hero-title em { font-style: italic; color: var(--wh-brick-400); }
-    .wh-hero__lede { color: var(--wh-bone-100); max-width: 52ch; font-size: var(--wh-fs-body-lg); line-height: 1.5; }
-    .wh-hero__cta { display: flex; gap: 12px; margin-top: 32px; flex-wrap: wrap; }
-    .wh-eyebrow { text-transform: uppercase; letter-spacing: var(--wh-tracking-eyebrow); font-size: var(--wh-fs-eyebrow); color: var(--wh-ink-muted); font-weight: 500; }
-    .wh-btn { display: inline-flex; align-items:center; justify-content:center; padding: 12px 24px; font-family: var(--wh-font-body); font-weight: 500; font-size: var(--wh-fs-body); text-decoration: none; border: 1.5px solid transparent; border-radius: 0; cursor: pointer; letter-spacing: 0.02em; transition: all var(--wh-duration-base) var(--wh-ease-out); }
-    .wh-btn--lg { padding: 16px 32px; font-size: var(--wh-fs-body-lg); }
-    .wh-btn--primary { background: var(--wh-brick-500); color: var(--wh-bone-50); border-color: var(--wh-brick-500); }
-    .wh-btn--outline-inverse { background: transparent; color: var(--wh-bone-50); border-color: var(--wh-bone-50); }
-    .wh-btn--outline { background: transparent; color: var(--wh-ink-strong); border-color: var(--wh-ink-strong); }
-    .wh-announcement { background: var(--wh-charcoal-950); color: var(--wh-bone-50); padding: 10px 16px; text-align:center; font-size: var(--wh-fs-body-sm); }
-    .wh-announcement a { color: var(--wh-brick-400); text-decoration: underline; }
-    .wh-header { background: var(--wh-surface-page); border-bottom: 1px solid var(--wh-border-subtle); padding: 16px 0; }
-    .wh-header__inner { display: flex; align-items: center; justify-content: space-between; }
-    .wh-brand { font-family: var(--wh-font-display); font-weight: 600; font-size: 20px; color: var(--wh-ink-strong); letter-spacing: -0.01em; text-decoration: none; }
-    .wh-nav { display: flex; gap: 24px; }
-    .wh-nav a { color: var(--wh-ink-default); text-decoration: none; font-size: var(--wh-fs-body); }
-    @media (max-width: 640px) { .wh-nav { display: none; } }
-    .wh-section-title { font-family: var(--wh-font-display); font-weight: 400; font-size: var(--wh-fs-h2); line-height: 1.15; letter-spacing: -0.01em; color: var(--wh-ink-strong); }
-    .wh-section-title em { font-style: italic; color: var(--wh-brick-500); }
-    .wh-section-intro { font-size: var(--wh-fs-body-lg); color: var(--wh-ink-muted); max-width: 62ch; margin-top: 12px; line-height: 1.55; }
-    .wh-cat-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 40px; }
-    @media (min-width: 768px) { .wh-cat-grid { grid-template-columns: 1fr 1fr; } }
-    .wh-cat-card { position: relative; display: block; text-decoration: none; color: var(--wh-ink-strong); }
-    .wh-cat-card__label { display: flex; align-items: baseline; justify-content: space-between; margin-top: 16px; }
-    .wh-cat-card__title { font-family: var(--wh-font-display); font-size: var(--wh-fs-h3); color: var(--wh-ink-strong); font-weight: 500; }
-    .wh-cat-card__meta { font-size: var(--wh-fs-body-sm); color: var(--wh-ink-muted); }
-    .wh-editorial { background: var(--wh-surface-panel); }
-    .wh-editorial__grid { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center; }
-    @media (min-width: 768px) { .wh-editorial__grid { grid-template-columns: 1fr 1fr; gap: 64px; } }
-    .wh-editorial__title { font-family: var(--wh-font-display); font-size: var(--wh-fs-h1); line-height: 1.1; letter-spacing: -0.01em; margin: 0 0 20px; color: var(--wh-ink-strong); font-weight: 400; }
-    .wh-editorial__title em { font-style: italic; color: var(--wh-brick-500); }
-    .wh-editorial__body p { font-size: var(--wh-fs-body-lg); line-height: 1.65; color: var(--wh-ink-default); margin: 0 0 16px; }
-    .wh-showcase__grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 40px; }
-    @media (min-width: 640px) { .wh-showcase__grid { grid-template-columns: 1fr 1fr; } }
-    @media (min-width: 1024px) { .wh-showcase__grid { grid-template-columns: repeat(4, 1fr); } }
-    .wh-prod-card { }
-    .wh-prod-card__title { font-family: var(--wh-font-display); font-size: var(--wh-fs-h4); margin: 16px 0 4px; color: var(--wh-ink-strong); font-weight: 500; }
-    .wh-prod-card__price { color: var(--wh-brick-500); font-weight: 600; font-size: var(--wh-fs-body-lg); }
-    .wh-bundle-grid { display: grid; grid-template-columns: 1fr; gap: 32px; margin-top: 40px; }
-    @media (min-width: 768px) { .wh-bundle-grid { grid-template-columns: repeat(3, 1fr); } }
-    .wh-bundle-card { background: var(--wh-surface-panel); padding: 32px; display: flex; flex-direction: column; gap: 16px; }
-    .wh-bundle-card__title { font-family: var(--wh-font-display); font-size: var(--wh-fs-h3); color: var(--wh-ink-strong); font-weight: 500; }
-    .wh-bundle-card__save { display: inline-block; background: var(--wh-brick-100); color: var(--wh-brick-600); padding: 4px 10px; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
-    .wh-reassurance { background: var(--wh-charcoal-950); color: var(--wh-bone-50); }
-    .wh-reassurance__grid { display: grid; grid-template-columns: 1fr; gap: 32px; }
-    @media (min-width: 768px) { .wh-reassurance__grid { grid-template-columns: repeat(3, 1fr); } }
-    .wh-reassurance__item { border-left: 2px solid var(--wh-brick-500); padding-left: 20px; }
-    .wh-reassurance__item h3 { font-family: var(--wh-font-display); font-size: var(--wh-fs-h4); margin: 0 0 8px; font-weight: 500; }
-    .wh-reassurance__item p { color: var(--wh-bone-100); line-height: 1.6; margin: 0; font-size: var(--wh-fs-body); }
-    .wh-countdown { text-align:center; background: var(--wh-charcoal-900); color: var(--wh-bone-50); padding-block: 64px; }
-    .wh-countdown__label { font-family: var(--wh-font-body); text-transform: uppercase; letter-spacing: var(--wh-tracking-eyebrow); font-size: 12px; color: var(--wh-brick-400); }
-    .wh-countdown__grid { display: inline-flex; gap: 24px; margin-top: 24px; }
-    .wh-countdown__cell { min-width: 80px; }
-    .wh-countdown__num { font-family: var(--wh-font-display); font-size: 48px; font-weight: 300; display: block; color: var(--wh-bone-50); }
-    .wh-countdown__unit { font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--wh-bone-300); }
-    .wh-capture { background: var(--wh-brick-500); color: var(--wh-bone-50); text-align: center; padding-block: 80px; }
-    .wh-capture h2 { font-family: var(--wh-font-display); font-size: var(--wh-fs-h2); font-weight: 400; margin: 0 0 12px; }
-    .wh-capture form { display: inline-flex; gap: 8px; margin-top: 24px; max-width: 480px; width: 100%; }
-    .wh-capture input { flex: 1; padding: 14px 16px; border: 0; font-family: var(--wh-font-body); font-size: var(--wh-fs-body); min-height: 48px; }
-    .wh-capture button { padding: 14px 24px; background: var(--wh-charcoal-950); color: var(--wh-bone-50); border: 0; font-family: var(--wh-font-body); font-weight: 500; cursor: pointer; }
-    .wh-footer { background: var(--wh-charcoal-950); color: var(--wh-bone-100); padding-block: 64px 40px; }
-    .wh-footer__grid { display: grid; grid-template-columns: 1fr; gap: 40px; }
-    @media (min-width: 768px) { .wh-footer__grid { grid-template-columns: 2fr 1fr 1fr 1fr; } }
-    .wh-footer h4 { font-family: var(--wh-font-display); font-size: var(--wh-fs-h4); color: var(--wh-bone-50); margin: 0 0 16px; font-weight: 500; }
-    .wh-footer a { color: var(--wh-bone-100); text-decoration: none; font-size: var(--wh-fs-body); display: block; padding: 4px 0; }
-    .wh-footer__brand p { color: var(--wh-bone-300); font-size: var(--wh-fs-body-sm); line-height: 1.6; max-width: 44ch; }
-    .wh-footer__legal { border-top: 1px solid var(--wh-charcoal-800); margin-top: 40px; padding-top: 24px; color: var(--wh-bone-300); font-size: var(--wh-fs-body-sm); text-align: center; }
+    /* RESET */
+    *,*::before,*::after{box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%}
+    body{margin:0;font-family:var(--wh-font-body);background:var(--wh-surface-page);color:var(--wh-ink-default);font-size:var(--wh-fs-body);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    img,svg{max-width:100%;height:auto;display:block}
+    a{color:inherit;text-decoration:none}
+    button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+    :focus-visible{outline:2px solid var(--wh-brick-500);outline-offset:2px}
+    .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+    /* CONTAINER */
+    .c{width:100%;max-width:1360px;margin-inline:auto;padding-inline:clamp(16px,4vw,32px)}
+    .c-narrow{max-width:960px}
+
+    /* ANNOUNCEMENT */
+    .anno{background:var(--wh-charcoal-950);color:var(--wh-bone-50);padding:9px 16px;text-align:center;font-size:13px;letter-spacing:.01em}
+    .anno a{color:var(--wh-brick-400);text-decoration:underline;text-underline-offset:2px}
+
+    /* HEADER */
+    .hdr{position:sticky;top:0;z-index:10;background:rgba(244,239,228,.94);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--wh-border-subtle)}
+    .hdr__row{display:flex;align-items:center;justify-content:space-between;height:var(--wh-header-height-mobile);gap:16px}
+    .brand{font-family:var(--wh-font-display);font-weight:600;font-size:19px;letter-spacing:-.01em;color:var(--wh-ink-strong)}
+    .brand span{color:var(--wh-brick-500)}
+    .nav{display:none;gap:28px;font-size:14px;font-weight:500}
+    .nav a{color:var(--wh-ink-default);position:relative;padding:6px 0}
+    .nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .24s cubic-bezier(.16,1,.3,1)}
+    .nav a:hover::after{transform:scaleX(1)}
+    .hdr__actions{display:flex;gap:6px;align-items:center}
+    .icon-btn{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;color:var(--wh-ink-strong);transition:background .18s;position:relative}
+    .icon-btn:hover{background:var(--wh-bone-100)}
+    .icon-btn svg{width:20px;height:20px}
+    .cart-count{position:absolute;top:6px;right:4px;background:var(--wh-brick-500);color:var(--wh-bone-50);font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;padding:0 4px}
+    @media(min-width:900px){.hdr__row{height:var(--wh-header-height-desktop)} .nav{display:flex}}
+
+    /* SVG PLACEHOLDER SHARED STYLES */
+    .ph{position:absolute;inset:0;width:100%;height:100%;display:block}
+    .ph rect{fill:url(#bg)}
+    .ph .glow{filter:blur(24px);opacity:.6}
+    .ph text{font-family:'Fraunces',serif;font-style:italic;font-weight:300;fill:rgba(244,239,228,.62);text-anchor:middle}
+    .ph--sm text{font-size:16px}
+    .ph--md text{font-size:20px}
+    .ph--lg text{font-size:28px}
+    .ph .credit{font-size:9px;letter-spacing:.16em;text-transform:uppercase;font-family:'Inter Tight',sans-serif;font-style:normal;font-weight:600;fill:rgba(244,239,228,.28)}
+
+    /* HERO */
+    .hero{position:relative;min-height:min(760px,calc(100vh - 34px - 56px));display:flex;align-items:flex-end;color:var(--wh-bone-50);overflow:hidden;isolation:isolate;padding-bottom:clamp(40px,7vw,80px);padding-top:clamp(48px,10vh,120px)}
+    @media(min-width:900px){.hero{min-height:min(820px,calc(100vh - 34px - 76px));padding-top:clamp(80px,15vh,180px)}}
+    .hero__bg{position:absolute;inset:0;z-index:-2}
+    .hero__bg svg{width:100%;height:100%;display:block}
+    .hero__grain{position:absolute;inset:0;z-index:-1;opacity:.05;mix-blend-mode:overlay;pointer-events:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence baseFrequency='0.9' seed='4'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+    .hero__eye{font-family:var(--wh-font-body);font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:var(--wh-brick-400);font-weight:700;margin:0 0 14px}
+    .hero__title{font-family:var(--wh-font-display);font-weight:400;font-size:clamp(2.35rem,1.6rem+4.2vw,4.4rem);line-height:1.02;letter-spacing:-.02em;margin:0 0 18px;max-width:14ch}
+    .hero__title em{font-style:italic;font-weight:300;color:var(--wh-brick-400)}
+    .hero__sub{font-family:var(--wh-font-display);font-style:italic;font-weight:300;font-size:clamp(1.05rem,.9rem+.7vw,1.35rem);line-height:1.4;color:var(--wh-bone-100);max-width:38ch;margin:0 0 30px}
+    .hero__ctas{display:flex;flex-direction:column;gap:12px;align-items:stretch}
+    @media(min-width:520px){.hero__ctas{flex-direction:row;align-items:center}}
+    .hero__reassure{margin-top:22px;font-size:13px;color:var(--wh-bone-200);display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+    .hero__reassure b{color:var(--wh-bone-50);font-weight:600}
+    .hero__reassure .dot{width:3px;height:3px;background:currentColor;border-radius:50%;opacity:.5}
+
+    /* BUTTONS */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 28px;font-family:var(--wh-font-body);font-weight:600;font-size:15px;letter-spacing:.02em;border:1.5px solid transparent;border-radius:0;transition:transform .18s cubic-bezier(.16,1,.3,1),background .18s,color .18s,border-color .18s;min-height:52px;text-align:center;cursor:pointer}
+    .btn:hover{transform:translateY(-1px)}
+    .btn:active{transform:translateY(0)}
+    .btn--primary{background:var(--wh-brick-500);color:var(--wh-bone-50);border-color:var(--wh-brick-500);box-shadow:0 2px 0 var(--wh-brick-600),0 8px 24px rgba(150,67,45,.28)}
+    .btn--primary:hover{background:var(--wh-brick-400);border-color:var(--wh-brick-400)}
+    .btn--ghost-light{background:transparent;color:var(--wh-bone-50);border-color:rgba(244,239,228,.42)}
+    .btn--ghost-light:hover{border-color:var(--wh-bone-50);background:rgba(244,239,228,.06)}
+    .btn--link{padding:0;background:none;color:var(--wh-ink-brand);font-weight:600;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px;min-height:auto}
+
+    /* SECTIONS */
+    .section{padding-block:clamp(56px,9vw,112px)}
+    .section--tight{padding-block:clamp(40px,6vw,72px)}
+    .section--dark{background:var(--wh-charcoal-950);color:var(--wh-bone-50)}
+    .section--dark2{background:var(--wh-charcoal-900);color:var(--wh-bone-50)}
+    .section--panel{background:var(--wh-surface-panel)}
+    .kicker{font-family:var(--wh-font-body);font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:var(--wh-ink-muted);font-weight:700;margin:0 0 12px}
+    .section--dark .kicker,.section--dark2 .kicker{color:var(--wh-brick-400)}
+    .h2{font-family:var(--wh-font-display);font-weight:400;font-size:clamp(1.85rem,1.35rem+2.2vw,3rem);line-height:1.08;letter-spacing:-.015em;margin:0;color:var(--wh-ink-strong);max-width:22ch}
+    .h2 em{font-style:italic;color:var(--wh-brick-500)}
+    .section--dark .h2,.section--dark2 .h2{color:var(--wh-bone-50)}
+    .section--dark .h2 em,.section--dark2 .h2 em{color:var(--wh-brick-400)}
+    .sub-lead{font-family:var(--wh-font-body);font-size:clamp(15px,.9rem+.3vw,17px);color:var(--wh-ink-muted);max-width:52ch;margin:12px 0 0;line-height:1.6}
+    .section--dark .sub-lead,.section--dark2 .sub-lead{color:var(--wh-bone-200)}
+    .section__head{margin-bottom:clamp(32px,5vw,56px);display:flex;flex-direction:column;gap:4px}
+    .section__head--split{display:flex;flex-direction:column;gap:16px;align-items:flex-start;justify-content:space-between}
+    @media(min-width:768px){.section__head--split{flex-direction:row;align-items:flex-end}}
+
+    /* PRODUCT RAIL */
+    .rail{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 12px}
+    @media(min-width:640px){.rail{gap:24px}}
+    @media(min-width:1024px){.rail{grid-template-columns:repeat(4,1fr);gap:28px}}
+    .card{display:block;color:inherit;position:relative}
+    .card__media{position:relative;aspect-ratio:4/5;background:var(--wh-charcoal-900);overflow:hidden;isolation:isolate}
+    .card__media svg{position:absolute;inset:0;width:100%;height:100%;transition:transform .8s cubic-bezier(.16,1,.3,1)}
+    .card:hover .card__media svg{transform:scale(1.04)}
+    .card__badge{position:absolute;top:12px;left:12px;background:var(--wh-charcoal-950);color:var(--wh-bone-50);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:6px 10px;z-index:2}
+    .card__meta{padding:14px 0 4px;display:flex;flex-direction:column;gap:3px}
+    .card__desc{font-family:var(--wh-font-body);font-size:15px;font-weight:600;color:var(--wh-ink-strong);line-height:1.3;letter-spacing:-.005em}
+    .card__name{font-family:var(--wh-font-display);font-style:italic;font-weight:400;font-size:13px;color:var(--wh-ink-muted);line-height:1.3}
+    .card__price{margin-top:6px;font-family:var(--wh-font-body);font-size:15px;font-weight:600;color:var(--wh-ink-strong);letter-spacing:-.005em;font-variant-numeric:tabular-nums}
+    .card__ship{font-size:12px;color:var(--wh-ink-muted);margin-top:2px}
+
+    /* HOUSE TOUR */
+    .tour{display:grid;grid-template-columns:1fr;gap:16px}
+    @media(min-width:640px){.tour{grid-template-columns:repeat(3,1fr);gap:20px}}
+    .tour__card{position:relative;display:flex;flex-direction:column;background:var(--wh-charcoal-900);color:var(--wh-bone-50);overflow:hidden;min-height:360px;isolation:isolate}
+    .tour__card svg{position:absolute;inset:0;width:100%;height:100%;z-index:-2}
+    .tour__card::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(15,14,13,.25) 0,rgba(15,14,13,.88) 92%)}
+    .tour__body{margin-top:auto;padding:24px}
+    .tour__idx{font-family:var(--wh-font-display);font-style:italic;font-weight:300;font-size:14px;color:var(--wh-brick-400);margin:0 0 6px}
+    .tour__title{font-family:var(--wh-font-display);font-weight:500;font-size:24px;margin:0 0 8px;letter-spacing:-.01em;line-height:1.15;color:var(--wh-bone-50)}
+    .tour__hint{font-size:14px;color:var(--wh-bone-100);line-height:1.55;margin:0 0 14px;max-width:32ch}
+    .tour__cta{font-size:13px;font-weight:600;color:var(--wh-bone-50);letter-spacing:.02em;border-bottom:1px solid var(--wh-brick-400);padding-bottom:2px;display:inline-block}
+
+    /* BUNDLE HERO */
+    .bundle{display:grid;grid-template-columns:1fr;gap:32px;align-items:center}
+    @media(min-width:900px){.bundle{grid-template-columns:1.1fr 1fr;gap:72px}}
+    .bundle__media{position:relative;aspect-ratio:4/5;background:var(--wh-charcoal-950);overflow:hidden}
+    .bundle__media svg{position:absolute;inset:0;width:100%;height:100%}
+    .bundle__badge{display:inline-block;background:var(--wh-brick-100);color:var(--wh-brick-600);padding:6px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.16em;margin-bottom:16px}
+    .bundle__title{font-family:var(--wh-font-display);font-weight:400;font-size:clamp(1.9rem,1.4rem+1.5vw,2.5rem);line-height:1.1;letter-spacing:-.015em;margin:0 0 14px}
+    .bundle__title em{font-style:italic;color:var(--wh-brick-400)}
+    .bundle__items{margin:20px 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+    .bundle__items li{display:flex;align-items:baseline;gap:12px;font-size:15px;color:var(--wh-bone-100)}
+    .bundle__items li::before{content:"";width:6px;height:6px;background:var(--wh-brick-500);display:inline-block;flex-shrink:0;transform:translateY(-2px)}
+    .bundle__price{display:flex;align-items:baseline;gap:12px;margin:8px 0 24px;flex-wrap:wrap}
+    .bundle__now{font-family:var(--wh-font-display);font-weight:400;font-size:34px;color:var(--wh-bone-50);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+    .bundle__was{font-size:16px;color:var(--wh-bone-300);text-decoration:line-through;font-variant-numeric:tabular-nums}
+    .bundle__save{background:var(--wh-brick-500);color:var(--wh-bone-50);font-size:11px;font-weight:700;padding:4px 10px;text-transform:uppercase;letter-spacing:.14em}
+
+    /* EDITORIAL */
+    .edito{display:grid;grid-template-columns:1fr;gap:40px;align-items:center}
+    @media(min-width:900px){.edito{grid-template-columns:1fr 1.15fr;gap:80px}}
+    .edito__img{position:relative;aspect-ratio:3/4;background:var(--wh-charcoal-950);overflow:hidden}
+    .edito__img svg{position:absolute;inset:0;width:100%;height:100%}
+    .edito__body h2{font-family:var(--wh-font-display);font-weight:400;font-size:clamp(1.95rem,1.4rem+2vw,3rem);line-height:1.05;letter-spacing:-.02em;margin:12px 0 20px;color:var(--wh-ink-strong)}
+    .edito__body h2 em{font-style:italic;color:var(--wh-brick-500)}
+    .edito__body p{font-size:17px;line-height:1.65;color:var(--wh-ink-default);margin:0 0 16px;max-width:46ch}
+    .edito__body p:last-of-type{margin-bottom:24px}
+
+    /* REASSURANCE */
+    .reas{display:grid;grid-template-columns:1fr;gap:20px}
+    @media(min-width:640px){.reas{grid-template-columns:repeat(2,1fr)}}
+    @media(min-width:900px){.reas{grid-template-columns:repeat(4,1fr)}}
+    .reas__item{padding:24px;background:var(--wh-charcoal-900);color:var(--wh-bone-50);border-left:3px solid var(--wh-brick-500)}
+    .reas__lbl{font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--wh-brick-400);font-weight:700;margin:0 0 8px}
+    .reas__val{font-family:var(--wh-font-display);font-size:20px;font-weight:500;margin:0 0 6px;line-height:1.2}
+    .reas__det{font-size:13px;color:var(--wh-bone-200);line-height:1.55;margin:0}
+
+    /* REVIEWS neutral */
+    .reviews{background:var(--wh-surface-panel)}
+    .rev-empty{max-width:520px;margin:0 auto;text-align:center;padding-block:24px}
+    .rev-empty__stars{display:inline-flex;gap:5px;margin-bottom:18px;color:var(--wh-bone-300)}
+    .rev-empty__stars svg{width:20px;height:20px;fill:currentColor}
+    .rev-empty__h{font-family:var(--wh-font-display);font-size:22px;font-weight:500;margin:0 0 10px;color:var(--wh-ink-strong);letter-spacing:-.01em}
+    .rev-empty__p{font-size:14px;color:var(--wh-ink-muted);margin:0;line-height:1.55}
+
+    /* COUNTDOWN */
+    .count{background:var(--wh-charcoal-950);color:var(--wh-bone-50);padding-block:clamp(52px,7vw,84px);text-align:center;position:relative;overflow:hidden}
+    .count::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 60% at 50% 100%,rgba(181,88,63,.14),transparent 70%);pointer-events:none}
+    .count>*{position:relative}
+    .count__kicker{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--wh-brick-400);font-weight:700;margin:0 0 14px}
+    .count__title{font-family:var(--wh-font-display);font-weight:400;font-size:clamp(1.55rem,1.15rem+1.5vw,2.3rem);line-height:1.15;letter-spacing:-.01em;margin:0 0 28px;max-width:22ch;margin-inline:auto}
+    .count__title em{font-style:italic;color:var(--wh-brick-400)}
+    .count__grid{display:inline-flex;gap:8px;align-items:stretch;flex-wrap:wrap;justify-content:center}
+    .count__cell{background:rgba(244,239,228,.04);padding:18px 22px;min-width:82px;border:1px solid rgba(244,239,228,.09)}
+    .count__n{font-family:var(--wh-font-display);font-weight:300;font-size:38px;line-height:1;display:block;color:var(--wh-bone-50);font-variant-numeric:tabular-nums}
+    .count__u{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--wh-bone-300);margin-top:6px;display:block}
+    .count__note{margin-top:24px;font-size:13px;color:var(--wh-bone-200);max-width:44ch;margin-inline:auto;line-height:1.55}
+
+    /* CAPTURE */
+    .cap{background:var(--wh-brick-500);color:var(--wh-bone-50);padding-block:clamp(56px,8vw,96px);text-align:center;position:relative;overflow:hidden}
+    .cap::before{content:"";position:absolute;inset:0;background:radial-gradient(80% 60% at 50% 0%,rgba(150,67,45,.4),transparent 70%);pointer-events:none}
+    .cap>*{position:relative}
+    .cap__title{font-family:var(--wh-font-display);font-weight:400;font-size:clamp(1.75rem,1.3rem+1.8vw,2.5rem);line-height:1.1;letter-spacing:-.015em;margin:0 0 12px;color:var(--wh-bone-50)}
+    .cap__title em{font-style:italic;color:rgba(244,239,228,.72)}
+    .cap__lede{font-size:15px;color:rgba(244,239,228,.85);max-width:44ch;margin:0 auto 28px;line-height:1.55}
+    .cap__form{display:flex;flex-direction:column;gap:8px;max-width:460px;margin:0 auto}
+    @media(min-width:520px){.cap__form{flex-direction:row}}
+    .cap__input{flex:1;padding:15px 18px;background:rgba(15,14,13,.18);border:1.5px solid rgba(244,239,228,.4);color:var(--wh-bone-50);font-family:var(--wh-font-body);font-size:16px;min-height:52px}
+    .cap__input::placeholder{color:rgba(244,239,228,.55)}
+    .cap__input:focus{border-color:var(--wh-bone-50);outline:none;background:rgba(15,14,13,.28)}
+    .cap__btn{padding:15px 24px;background:var(--wh-charcoal-950);color:var(--wh-bone-50);font-weight:600;font-size:15px;min-height:52px}
+    .cap__legal{margin-top:14px;font-size:12px;color:rgba(244,239,228,.7)}
+
+    /* FINAL CTA */
+    .finale{background:var(--wh-charcoal-950);color:var(--wh-bone-50);padding-block:clamp(72px,10vw,124px);text-align:center;position:relative;overflow:hidden}
+    .finale::before{content:"";position:absolute;inset:0;background:radial-gradient(70% 70% at 50% 50%,rgba(181,88,63,.12),transparent 65%);pointer-events:none}
+    .finale>*{position:relative}
+    .finale__eye{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--wh-brick-400);font-weight:700;margin:0 0 20px}
+    .finale__title{font-family:var(--wh-font-display);font-weight:400;font-size:clamp(2.2rem,1.6rem+2.5vw,3.5rem);line-height:1.05;letter-spacing:-.02em;margin:0 auto 32px;max-width:18ch}
+    .finale__title em{font-style:italic;color:var(--wh-brick-400)}
+
+    /* FOOTER */
+    .foot{background:var(--wh-charcoal-950);color:var(--wh-bone-100);padding-block:64px 32px;border-top:1px solid var(--wh-charcoal-800)}
+    .foot__grid{display:grid;grid-template-columns:1fr;gap:40px}
+    @media(min-width:640px){.foot__grid{grid-template-columns:2fr 1fr 1fr 1fr}}
+    .foot__brand{font-family:var(--wh-font-display);font-weight:600;font-size:22px;color:var(--wh-bone-50);margin:0 0 12px}
+    .foot__brand span{color:var(--wh-brick-500)}
+    .foot__tag{font-size:14px;color:var(--wh-bone-200);line-height:1.6;max-width:38ch;margin:0}
+    .foot h4{font-family:var(--wh-font-body);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.16em;color:var(--wh-bone-50);margin:0 0 16px}
+    .foot ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+    .foot ul a{font-size:14px;color:var(--wh-bone-200);transition:color .18s}
+    .foot ul a:hover{color:var(--wh-bone-50)}
+    .foot__legal{margin-top:48px;padding-top:24px;border-top:1px solid var(--wh-charcoal-800);display:flex;flex-direction:column;gap:12px;font-size:12px;color:var(--wh-bone-300);align-items:center;text-align:center}
+    @media(min-width:640px){.foot__legal{flex-direction:row;justify-content:space-between;text-align:left}}
+    .foot__pay{display:inline-flex;gap:8px;opacity:.75}
+    .foot__pay span{font-size:10px;letter-spacing:.14em;padding:4px 8px;border:1px solid var(--wh-charcoal-700);font-weight:600}
+
+    /* STICKY MOBILE CTA */
+    .sticky{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--wh-charcoal-950);color:var(--wh-bone-50);padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:none;align-items:center;gap:12px;box-shadow:0 -8px 24px rgba(0,0,0,.35);border-top:1px solid var(--wh-charcoal-800)}
+    .sticky__thumb{width:44px;height:44px;background:var(--wh-charcoal-800);flex-shrink:0;position:relative;overflow:hidden}
+    .sticky__thumb svg{width:100%;height:100%}
+    .sticky__meta{flex:1;min-width:0;display:flex;flex-direction:column}
+    .sticky__t{font-size:12px;color:var(--wh-bone-200);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sticky__p{font-size:15px;font-weight:600;color:var(--wh-bone-50);font-variant-numeric:tabular-nums}
+    .sticky__btn{padding:12px 18px;background:var(--wh-brick-500);color:var(--wh-bone-50);font-weight:600;font-size:14px;min-height:44px;flex-shrink:0}
+
+    /* PREVIEW BADGE */
+    .pv-badge{position:fixed;top:8px;right:8px;background:var(--wh-charcoal-950);color:var(--wh-bone-100);padding:6px 10px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;z-index:100;opacity:.9}
   </style>
 </head>
 <body>
-  <div class="wh-preview-banner">Preview · not shopify · css tokens rendered · demo content</div>
+  <!-- Shared SVG DEFS for placeholder gradients + silhouettes -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#252220"/>
+        <stop offset="100%" stop-color="#0F0E0D"/>
+      </linearGradient>
+      <linearGradient id="bg-warm" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3A3632"/>
+        <stop offset="60%" stop-color="#1A1815"/>
+        <stop offset="100%" stop-color="#0F0E0D"/>
+      </linearGradient>
+      <radialGradient id="glow-brick" cx="50%" cy="60%" r="55%">
+        <stop offset="0%" stop-color="#B5583F" stop-opacity=".55"/>
+        <stop offset="100%" stop-color="#B5583F" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="glow-warm" cx="50%" cy="70%" r="55%">
+        <stop offset="0%" stop-color="#C4903E" stop-opacity=".55"/>
+        <stop offset="100%" stop-color="#C4903E" stop-opacity="0"/>
+      </radialGradient>
+      <!-- Ghost silhouette -->
+      <symbol id="s-ghost" viewBox="0 0 800 1000">
+        <rect width="800" height="1000" fill="url(#bg-warm)"/>
+        <ellipse cx="400" cy="920" rx="380" ry="60" fill="url(#glow-brick)"/>
+        <path d="M400 180 C 250 180 210 320 220 480 C 226 620 200 780 190 900 C 240 850 300 900 340 860 C 380 900 420 860 460 900 C 500 860 560 900 610 900 C 600 780 574 620 580 480 C 590 320 550 180 400 180 Z" fill="#F4EFE4" opacity=".92"/>
+        <circle cx="345" cy="380" r="14" fill="#D9302B"/>
+        <circle cx="455" cy="380" r="14" fill="#D9302B"/>
+        <path d="M370 480 Q 400 520 430 480 Q 420 540 400 550 Q 380 540 370 480 Z" fill="#C4903E"/>
+        <text x="400" y="978" font-size="14" letter-spacing="4" fill="rgba(244,239,228,.35)" font-family="Inter Tight,sans-serif" font-weight="600" text-anchor="middle" font-style="normal">THE WATCHER · 11.8FT · PHOTO PENDING</text>
+      </symbol>
+      <!-- Pumpkin tower -->
+      <symbol id="s-pumpkins" viewBox="0 0 800 1000">
+        <rect width="800" height="1000" fill="url(#bg)"/>
+        <ellipse cx="400" cy="940" rx="340" ry="50" fill="url(#glow-warm)"/>
+        <g fill="#C4903E">
+          <ellipse cx="400" cy="760" rx="180" ry="130"/>
+          <ellipse cx="400" cy="530" rx="150" ry="115"/>
+          <ellipse cx="400" cy="340" rx="120" ry="95"/>
+          <ellipse cx="400" cy="190" rx="90" ry="72"/>
+        </g>
+        <g fill="#0F0E0D">
+          <path d="M340 750 L360 720 L380 750 Z M420 750 L440 720 L460 750 Z M370 800 Q 400 830 430 800 L 400 780 Z"/>
+          <path d="M355 520 L 375 495 L 395 520 Z M405 520 L 425 495 L 445 520 Z M385 560 Q 400 580 415 560 L 400 545 Z"/>
+          <path d="M370 330 L 385 310 L 400 330 Z M400 330 L 415 310 L 430 330 Z M385 360 Q 400 375 415 360 Z"/>
+        </g>
+        <path d="M380 100 Q 400 60 420 100 Q 415 130 400 118 Q 385 130 380 100" fill="#4B5F4D"/>
+        <text x="400" y="978" font-size="14" letter-spacing="4" fill="rgba(244,239,228,.35)" font-family="Inter Tight,sans-serif" font-weight="600" text-anchor="middle">THE CAIRN · 9FT PUMPKIN TOWER · PHOTO PENDING</text>
+      </symbol>
+      <!-- Skeleton banner -->
+      <symbol id="s-banner" viewBox="0 0 800 1000">
+        <rect width="800" height="1000" fill="url(#bg-warm)"/>
+        <ellipse cx="400" cy="920" rx="380" ry="60" fill="url(#glow-warm)"/>
+        <!-- left skeleton -->
+        <g fill="#F4EFE4" opacity=".9">
+          <circle cx="180" cy="380" r="60"/>
+          <rect x="145" y="440" width="70" height="120"/>
+          <rect x="130" y="440" width="18" height="200"/>
+          <rect x="212" y="440" width="18" height="200"/>
+          <rect x="150" y="640" width="14" height="180"/>
+          <rect x="196" y="640" width="14" height="180"/>
+        </g>
+        <!-- right skeleton -->
+        <g fill="#F4EFE4" opacity=".9">
+          <circle cx="620" cy="380" r="60"/>
+          <rect x="585" y="440" width="70" height="120"/>
+          <rect x="570" y="440" width="18" height="200"/>
+          <rect x="652" y="440" width="18" height="200"/>
+          <rect x="590" y="640" width="14" height="180"/>
+          <rect x="636" y="640" width="14" height="180"/>
+        </g>
+        <!-- witch hats -->
+        <g fill="#0F0E0D">
+          <polygon points="140,340 220,340 180,240"/>
+          <polygon points="580,340 660,340 620,240"/>
+          <rect x="130" y="336" width="100" height="10"/>
+          <rect x="570" y="336" width="100" height="10"/>
+        </g>
+        <!-- banner -->
+        <path d="M230 480 Q 400 440 570 480 L 570 620 Q 400 580 230 620 Z" fill="#B5583F"/>
+        <text x="400" y="560" font-family="Fraunces,serif" font-style="italic" font-size="46" font-weight="500" text-anchor="middle" fill="#F4EFE4">Happy Halloween</text>
+        <text x="400" y="978" font-size="14" letter-spacing="4" fill="rgba(244,239,228,.35)" font-family="Inter Tight,sans-serif" font-weight="600" text-anchor="middle" font-style="normal">THE WELCOMING COMMITTEE · 9.6FT · PHOTO PENDING</text>
+      </symbol>
+      <!-- Mantel lace -->
+      <symbol id="s-mantel" viewBox="0 0 800 1000">
+        <rect width="800" height="1000" fill="url(#bg)"/>
+        <rect x="0" y="420" width="800" height="180" fill="#1A1815"/>
+        <!-- lace scarf -->
+        <g fill="#0F0E0D" opacity=".95">
+          <path d="M60 420 L 740 420 L 740 540 Q 720 580 700 555 Q 680 590 660 555 Q 640 590 620 555 Q 600 590 580 555 Q 560 590 540 555 Q 520 590 500 555 Q 480 590 460 555 Q 440 590 420 555 Q 400 590 380 555 Q 360 590 340 555 Q 320 590 300 555 Q 280 590 260 555 Q 240 590 220 555 Q 200 590 180 555 Q 160 590 140 555 Q 120 590 100 555 Q 80 580 60 540 Z"/>
+        </g>
+        <!-- lace texture holes -->
+        <g fill="none" stroke="#B8B0A0" stroke-width="1" opacity=".4">
+          <circle cx="200" cy="475" r="14"/><circle cx="280" cy="475" r="14"/><circle cx="360" cy="475" r="14"/>
+          <circle cx="440" cy="475" r="14"/><circle cx="520" cy="475" r="14"/><circle cx="600" cy="475" r="14"/>
+          <circle cx="240" cy="510" r="10"/><circle cx="320" cy="510" r="10"/><circle cx="400" cy="510" r="10"/>
+          <circle cx="480" cy="510" r="10"/><circle cx="560" cy="510" r="10"/>
+        </g>
+        <!-- candles -->
+        <g fill="#B5583F">
+          <rect x="240" y="330" width="14" height="90"/>
+          <rect x="380" y="310" width="14" height="110"/>
+          <rect x="546" y="335" width="14" height="85"/>
+        </g>
+        <g fill="#C4903E">
+          <ellipse cx="247" cy="322" rx="7" ry="12"/>
+          <ellipse cx="387" cy="302" rx="7" ry="14"/>
+          <ellipse cx="553" cy="327" rx="7" ry="11"/>
+        </g>
+        <text x="400" y="978" font-size="14" letter-spacing="4" fill="rgba(244,239,228,.35)" font-family="Inter Tight,sans-serif" font-weight="600" text-anchor="middle">COBWEB LACE MANTEL SCARF · 96IN · PHOTO PENDING</text>
+      </symbol>
+      <!-- Rings cluster -->
+      <symbol id="s-rings" viewBox="0 0 800 1000">
+        <rect width="800" height="1000" fill="url(#bg)"/>
+        <g fill="none" stroke-width="8">
+          <circle cx="280" cy="380" r="55" stroke="#B5583F" opacity=".9"/>
+          <circle cx="420" cy="360" r="55" stroke="#4B7A4E" opacity=".9"/>
+          <circle cx="560" cy="400" r="55" stroke="#C4903E" opacity=".9"/>
+          <circle cx="340" cy="520" r="55" stroke="#4B5F4D" opacity=".9"/>
+          <circle cx="500" cy="540" r="55" stroke="#B5583F" opacity=".9"/>
+          <circle cx="410" cy="670" r="55" stroke="#C4903E" opacity=".9"/>
+        </g>
+        <text x="400" y="978" font-size="14" letter-spacing="4" fill="rgba(244,239,228,.35)" font-family="Inter Tight,sans-serif" font-weight="600" text-anchor="middle">GLOW RINGS 50-PACK · PHOTO PENDING</text>
+      </symbol>
+      <!-- Hero yard scene -->
+      <symbol id="s-hero" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1A1815"/>
+            <stop offset="60%" stop-color="#0F0E0D"/>
+            <stop offset="100%" stop-color="#000000"/>
+          </linearGradient>
+        </defs>
+        <rect width="1600" height="900" fill="url(#sky)"/>
+        <!-- moon -->
+        <circle cx="1240" cy="220" r="90" fill="#F4EFE4" opacity=".85"/>
+        <circle cx="1240" cy="220" r="140" fill="url(#glow-warm)" opacity=".5"/>
+        <!-- house silhouette -->
+        <g fill="#0F0E0D">
+          <polygon points="180,900 180,540 380,410 580,540 580,900"/>
+          <rect x="230" y="620" width="70" height="180"/>
+          <rect x="440" y="620" width="70" height="180"/>
+          <rect x="320" y="700" width="60" height="90"/>
+        </g>
+        <!-- porch light -->
+        <circle cx="380" cy="695" r="80" fill="url(#glow-warm)"/>
+        <!-- trees right -->
+        <g fill="#0F0E0D" opacity=".9">
+          <path d="M1200 900 L 1220 620 L 1240 900 Z"/>
+          <path d="M1240 900 L 1260 500 L 1290 900 Z"/>
+          <path d="M1320 900 L 1350 640 L 1380 900 Z"/>
+        </g>
+        <!-- large ghost -->
+        <g transform="translate(760,340) scale(1.3)">
+          <path d="M0 -60 C -110 -60 -145 60 -140 200 C -136 300 -155 420 -160 520 C -120 480 -80 520 -50 490 C -20 520 20 480 50 520 C 90 480 130 520 170 520 C 160 420 143 300 148 200 C 152 60 110 -60 0 -60 Z" fill="#F4EFE4" opacity=".95" transform="translate(0,0)"/>
+          <ellipse cx="-32" cy="100" rx="12" ry="14" fill="#D9302B"/>
+          <ellipse cx="32" cy="100" rx="12" ry="14" fill="#D9302B"/>
+          <path d="M-24 180 Q 0 220 24 180 Q 20 250 0 260 Q -20 250 -24 180 Z" fill="#C4903E"/>
+        </g>
+        <!-- ghost glow -->
+        <ellipse cx="760" cy="800" rx="380" ry="30" fill="url(#glow-brick)"/>
+        <!-- ground -->
+        <rect y="850" width="1600" height="50" fill="#000"/>
+        <!-- fog layers -->
+        <ellipse cx="800" cy="880" rx="900" ry="60" fill="#F4EFE4" opacity=".08"/>
+        <ellipse cx="600" cy="900" rx="700" ry="40" fill="#F4EFE4" opacity=".05"/>
+      </symbol>
+    </defs>
+  </svg>
 
-  <div class="wh-announcement">Free shipping over $65 · Ships from US warehouses · <a href="#">Order by Oct 21 for Halloween →</a></div>
+  <div class="pv-badge">Preview · not live</div>
 
-  <header class="wh-header">
-    <div class="wh-container wh-header__inner">
-      <a href="#" class="wh-brand">Wicked Hollow</a>
-      <nav class="wh-nav">
+  <div class="anno">Free US shipping over $65 · <a href="#">Order by Oct 21 for Halloween delivery</a></div>
+
+  <header class="hdr">
+    <div class="c hdr__row">
+      <a href="#" class="brand">Wicked<span>·</span>Hollow</a>
+      <nav class="nav" aria-label="Primary">
+        <a href="#">Halloween at Home</a>
         <a href="#">Giant Inflatables</a>
-        <a href="#">Porch &amp; Yard</a>
-        <a href="#">The Manor</a>
-        <a href="#">About</a>
+        <a href="#">Bundles</a>
+        <a href="#">Journal</a>
       </nav>
+      <div class="hdr__actions">
+        <button class="icon-btn" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></button>
+        <button class="icon-btn" aria-label="Account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></button>
+        <button class="icon-btn" aria-label="Cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16l-2 12H6L4 6z"/><path d="M9 6a3 3 0 0 1 6 0"/></svg><span class="cart-count" aria-hidden="true">0</span></button>
+      </div>
     </div>
   </header>
 
-  <section class="wh-hero">
-    <div class="wh-container wh-hero__inner">
-      <p class="wh-eyebrow wh-hero__eyebrow">The Manor · 2026 season</p>
-      <h1 class="wh-hero-title">Objects and atmospheres for the seasons <em>when the light gets low</em>.</h1>
-      <p class="wh-hero__lede">A small catalogue of decor made to greet October, stay through November, and belong in the room long after the pumpkins go.</p>
-      <div class="wh-hero__cta">
-        <a href="#" class="wh-btn wh-btn--primary wh-btn--lg">Enter The Manor</a>
-        <a href="#" class="wh-btn wh-btn--outline-inverse wh-btn--lg">See the yard</a>
+  <!-- HERO -->
+  <section class="hero" aria-label="Wicked Hollow · Halloween 2026">
+    <div class="hero__bg" aria-hidden="true"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"><use href="#s-hero"/></svg></div>
+    <div class="hero__grain" aria-hidden="true"></div>
+    <div class="c">
+      <p class="hero__eye">Halloween 2026 · Wicked Hollow</p>
+      <h1 class="hero__title">The house they'll <em>still be talking about</em> the next morning.</h1>
+      <p class="hero__sub">Yard, porch, mantel, candy bowl — a five-piece catalogue built for the American house on the night of October 31.</p>
+      <div class="hero__ctas">
+        <a href="#giants" class="btn btn--primary">Shop the Yard →</a>
+        <a href="#ghost" class="btn btn--ghost-light">See The Watcher — 11.8ft</a>
       </div>
+      <p class="hero__reassure"><b>From $24.99</b><span class="dot"></span>Complete Yard Kit $279.99<span class="dot"></span>Free ship over $65<span class="dot"></span>Ships in 5 days</p>
     </div>
   </section>
 
-  <section class="wh-section">
-    <div class="wh-container">
-      <p class="wh-eyebrow">By place</p>
-      <h2 class="wh-section-title">Where the season <em>begins</em>.</h2>
-      <div class="wh-cat-grid">
-        <a class="wh-cat-card" href="#">
-          <div class="wh-tile-ph">Outdoor scene — Yard with giant inflatables at dusk</div>
-          <div class="wh-cat-card__label"><span class="wh-cat-card__title">Porch &amp; Yard</span><span class="wh-cat-card__meta">4 pieces · from $24.99</span></div>
+  <!-- PRODUCT RAIL -->
+  <section class="section" id="giants">
+    <div class="c">
+      <div class="section__head section__head--split">
+        <div>
+          <p class="kicker">The Giants + Mantel</p>
+          <h2 class="h2">Reads from <em>three houses away</em>.</h2>
+        </div>
+        <a href="#" class="btn--link">See the whole catalogue →</a>
+      </div>
+      <div class="rail">
+        <a href="#" class="card">
+          <div class="card__media">
+            <span class="card__badge">Hero of the pic</span>
+            <svg viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice"><use href="#s-banner"/></svg>
+          </div>
+          <div class="card__meta">
+            <p class="card__desc">9.6ft Inflatable Skeleton Banner</p>
+            <p class="card__name">The Welcoming Committee</p>
+            <p class="card__price">$109.99</p>
+            <p class="card__ship">Free ship · dual indoor + outdoor</p>
+          </div>
         </a>
-        <a class="wh-cat-card" href="#">
-          <div class="wh-tile-ph">Indoor scene — Mantel with cobweb lace + candles</div>
-          <div class="wh-cat-card__label"><span class="wh-cat-card__title">The Manor Indoors</span><span class="wh-cat-card__meta">Coming soon</span></div>
+        <a href="#ghost" class="card">
+          <div class="card__media">
+            <svg viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice"><use href="#s-ghost"/></svg>
+          </div>
+          <div class="card__meta">
+            <p class="card__desc">11.8ft Giant Ghost · LED Eyes + Flames</p>
+            <p class="card__name">The Watcher</p>
+            <p class="card__price">$119.99</p>
+            <p class="card__ship">Free ship · stakes + blower included</p>
+          </div>
+        </a>
+        <a href="#" class="card">
+          <div class="card__media">
+            <svg viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice"><use href="#s-pumpkins"/></svg>
+          </div>
+          <div class="card__meta">
+            <p class="card__desc">9ft Stacked Pumpkins · Six LED Faces</p>
+            <p class="card__name">The Cairn</p>
+            <p class="card__price">$89.99</p>
+            <p class="card__ship">Free ship · family-friendly warm glow</p>
+          </div>
+        </a>
+        <a href="#" class="card">
+          <div class="card__media">
+            <svg viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice"><use href="#s-mantel"/></svg>
+          </div>
+          <div class="card__meta">
+            <p class="card__desc">96&quot; Cobweb Lace Mantel Scarf</p>
+            <p class="card__name">The Mantel</p>
+            <p class="card__price">$24.99</p>
+            <p class="card__ship">Halloween → Christmas · indoor</p>
+          </div>
         </a>
       </div>
     </div>
   </section>
 
-  <section class="wh-section wh-editorial">
-    <div class="wh-container">
-      <div class="wh-editorial__grid">
-        <div class="wh-editorial__body">
-          <p class="wh-eyebrow">The Manor</p>
-          <h2 class="wh-editorial__title">Halloween belongs to <em>the light in October</em>.</h2>
-          <p>We stock the objects that carry the low-light months. Not the disposable stuff — the pieces that fold back into their bag and come out in 2027, 2028, 2029. Everything ships from US warehouses in two to eight business days.</p>
-          <p>The 12-foot ghost that reads from three houses away. The Victorian mourning veil that turns a black dress into a costume. The cobweb lace runner that transitions from Halloween to Christmas. Pieces with a rotation.</p>
-          <a href="#" class="wh-btn wh-btn--outline">Read more about the Manor</a>
-        </div>
-        <div class="wh-tile-ph" style="aspect-ratio: 3/4;">Editorial image — hand holding a black candle in low light</div>
+  <!-- HOUSE TOUR -->
+  <section class="section section--panel">
+    <div class="c">
+      <div class="section__head">
+        <p class="kicker">The tour</p>
+        <h2 class="h2">Four stops in one <em>Halloween story</em>.</h2>
+        <p class="sub-lead">From the corner of the street to the candle on the mantel — Wicked Hollow is built around the American house on the night of October 31.</p>
       </div>
-    </div>
-  </section>
-
-  <section class="wh-section">
-    <div class="wh-container">
-      <p class="wh-eyebrow">Giant Inflatables</p>
-      <h2 class="wh-section-title">Reads from <em>three houses away</em>.</h2>
-      <div class="wh-showcase__grid">
-        <div class="wh-prod-card">
-          <div class="wh-tile-ph">11.8ft Ghost — LED eyes, flame effect</div>
-          <p class="wh-prod-card__title">The Watcher — 11.8ft Ghost</p>
-          <p class="wh-prod-card__price">$119.99</p>
+      <div class="tour">
+        <div class="tour__card">
+          <svg viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice"><use href="#s-pumpkins"/></svg>
+          <div class="tour__body">
+            <p class="tour__idx"><em>One.</em></p>
+            <h3 class="tour__title">The yard</h3>
+            <p class="tour__hint">The 11.8-foot ghost and the 9-foot pumpkin tower that stop the neighbors from three houses away.</p>
+            <a href="#" class="tour__cta">Shop yard giants →</a>
+          </div>
         </div>
-        <div class="wh-prod-card">
-          <div class="wh-tile-ph">9.6ft Skeleton Banner — dual indoor/outdoor</div>
-          <p class="wh-prod-card__title">The Welcoming Committee</p>
-          <p class="wh-prod-card__price">$109.99</p>
+        <div class="tour__card">
+          <svg viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice"><use href="#s-banner"/></svg>
+          <div class="tour__body">
+            <p class="tour__idx"><em>Two.</em></p>
+            <h3 class="tour__title">The porch</h3>
+            <p class="tour__hint">The 9.6-foot skeleton banner that greets every trick-or-treater climbing the walk. Also works inside.</p>
+            <a href="#" class="tour__cta">Shop the porch →</a>
+          </div>
         </div>
-        <div class="wh-prod-card">
-          <div class="wh-tile-ph">9ft Stacked Pumpkins — six LED faces</div>
-          <p class="wh-prod-card__title">The Cairn — 9ft Pumpkins</p>
-          <p class="wh-prod-card__price">$89.99</p>
-        </div>
-        <div class="wh-prod-card">
-          <div class="wh-tile-ph">96&quot; Cobweb Lace Mantel Scarf</div>
-          <p class="wh-prod-card__title">Cobweb Lace Mantel Scarf</p>
-          <p class="wh-prod-card__price">$24.99</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="wh-section wh-editorial">
-    <div class="wh-container">
-      <p class="wh-eyebrow">Bundle offers</p>
-      <h2 class="wh-section-title">The whole scene in <em>one order</em>.</h2>
-      <div class="wh-bundle-grid">
-        <div class="wh-bundle-card">
-          <span class="wh-bundle-card__save">Save $40</span>
-          <h3 class="wh-bundle-card__title">Complete Yard Kit</h3>
-          <p>Ghost 11.8ft + Skeleton Banner 9.6ft + Stacked Pumpkins 9ft. The whole yard in one order.</p>
-          <p class="wh-prod-card__price">$279.99 <span style="text-decoration:line-through; color:var(--wh-ink-muted); font-size: 14px;">$319.97</span></p>
-          <a href="#" class="wh-btn wh-btn--primary">Add the kit</a>
-        </div>
-        <div class="wh-bundle-card">
-          <span class="wh-bundle-card__save">Save $30</span>
-          <h3 class="wh-bundle-card__title">Haunted Threshold</h3>
-          <p>Ghost + coir doormat + pillow. Everything for the porch.</p>
-          <p class="wh-prod-card__price">$179.99 <span style="text-decoration:line-through; color:var(--wh-ink-muted); font-size: 14px;">$209.97</span></p>
-          <a href="#" class="wh-btn wh-btn--primary">Add the porch</a>
-        </div>
-        <div class="wh-bundle-card">
-          <span class="wh-bundle-card__save">Save $40</span>
-          <h3 class="wh-bundle-card__title">The Full Haunt</h3>
-          <p>Outdoor ghost + cozy blanket + disco ghost pillow. Inside and out.</p>
-          <p class="wh-prod-card__price">$229.99 <span style="text-decoration:line-through; color:var(--wh-ink-muted); font-size: 14px;">$269.97</span></p>
-          <a href="#" class="wh-btn wh-btn--primary">Add the haunt</a>
+        <div class="tour__card">
+          <svg viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice"><use href="#s-mantel"/></svg>
+          <div class="tour__body">
+            <p class="tour__idx"><em>Three.</em></p>
+            <h3 class="tour__title">Inside</h3>
+            <p class="tour__hint">Cobweb lace over the fireplace — the one piece that carries from October through Christmas without a fight.</p>
+            <a href="#" class="tour__cta">Shop the mantel →</a>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="wh-countdown">
-    <div class="wh-container">
-      <p class="wh-countdown__label">Halloween 2026 · Order by Oct 21</p>
-      <div class="wh-countdown__grid">
-        <div class="wh-countdown__cell"><span class="wh-countdown__num">67</span><span class="wh-countdown__unit">days</span></div>
-        <div class="wh-countdown__cell"><span class="wh-countdown__num">14</span><span class="wh-countdown__unit">hours</span></div>
-        <div class="wh-countdown__cell"><span class="wh-countdown__num">22</span><span class="wh-countdown__unit">minutes</span></div>
-        <div class="wh-countdown__cell"><span class="wh-countdown__num">05</span><span class="wh-countdown__unit">seconds</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="wh-section wh-reassurance">
-    <div class="wh-container">
-      <div class="wh-reassurance__grid">
-        <div class="wh-reassurance__item">
-          <h3>Free shipping over $65</h3>
-          <p>Ships from US warehouses in 2–8 business days. Order by Oct 21 for Halloween delivery.</p>
-        </div>
-        <div class="wh-reassurance__item">
-          <h3>30-day returns</h3>
-          <p>Unopened and unworn items refunded to your card within 30 days of delivery.</p>
-        </div>
-        <div class="wh-reassurance__item">
-          <h3>UL Listed power</h3>
-          <p>Every inflatable ships with UL Listed Class 2 low-voltage power supply. Safe outdoors.</p>
+  <!-- BUNDLE HERO -->
+  <section class="section section--dark2">
+    <div class="c">
+      <div class="bundle">
+        <div class="bundle__media"><svg viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice"><use href="#s-ghost"/></svg></div>
+        <div>
+          <span class="bundle__badge">The whole yard · Save $39.98</span>
+          <h2 class="bundle__title">Complete Yard Kit — <em>three giants</em>, one order.</h2>
+          <p style="color:var(--wh-bone-200);max-width:40ch;font-size:16px;line-height:1.6;margin:0">The Watcher, the Welcoming Committee, the Cairn. The whole scene from the street, priced $39.98 under the sum of the parts.</p>
+          <ul class="bundle__items">
+            <li>The Watcher — 11.8ft Giant Ghost</li>
+            <li>The Welcoming Committee — 9.6ft Skeleton Banner</li>
+            <li>The Cairn — 9ft Stacked Pumpkin Tower</li>
+          </ul>
+          <div class="bundle__price">
+            <span class="bundle__now">$279.99</span>
+            <span class="bundle__was">$319.97</span>
+            <span class="bundle__save">Save $39.98</span>
+          </div>
+          <a href="#" class="btn btn--primary" style="min-width:220px">Add the whole yard to cart</a>
+          <p style="margin-top:14px;font-size:13px;color:var(--wh-bone-300)">Ships from US warehouses in 3–8 business days.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="wh-capture">
-    <div class="wh-container">
-      <p class="wh-eyebrow" style="color: var(--wh-bone-100);">Stay in the season</p>
-      <h2>Objects and atmospheres, when they land.</h2>
-      <p style="max-width: 44ch; margin-inline:auto;">Occasional letters when new pieces arrive or the season shifts. No spam.</p>
-      <form onsubmit="return false;">
-        <input type="email" placeholder="you@domain.com" required>
-        <button type="submit">Subscribe</button>
+  <!-- EDITORIAL -->
+  <section class="section">
+    <div class="c">
+      <div class="edito">
+        <div class="edito__img"><svg viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice"><use href="#s-mantel"/></svg></div>
+        <div class="edito__body">
+          <p class="kicker">Why Wicked Hollow</p>
+          <h2>One house. Four steps. <em>One story worth telling.</em></h2>
+          <p>Anyone can sell a Halloween inflatable. Very few think about the whole night as one scene — the ghost in the yard, the banner on the porch, the lace on the mantel, the fifty rings for the kids who ring the bell.</p>
+          <p>The same discipline holds through November and into December. The lace stays. The banner comes inside. The ghost folds back into its bag until next October. Nothing here was designed to be thrown out on November 1st.</p>
+          <a href="#" class="btn--link">Read the season notes →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REASSURANCE -->
+  <section class="section--tight section--dark">
+    <div class="c">
+      <div class="reas">
+        <div class="reas__item">
+          <p class="reas__lbl">Shipping</p>
+          <p class="reas__val">Free over $65</p>
+          <p class="reas__det">Ships from US warehouses in 5 days. Standard $6.95 below. Order by October 21 for Halloween delivery.</p>
+        </div>
+        <div class="reas__item">
+          <p class="reas__lbl">Returns</p>
+          <p class="reas__val">30-day, easy</p>
+          <p class="reas__det">Send it back unused within 30 days. Refund lands on your original payment method within 5–10 business days.</p>
+        </div>
+        <div class="reas__item">
+          <p class="reas__lbl">Power</p>
+          <p class="reas__val">UL Listed Class 2</p>
+          <p class="reas__det">Every inflatable ships with UL Listed Class 2 power supply. Low-voltage 12V, cool to the touch, safe outdoors.</p>
+        </div>
+        <div class="reas__item">
+          <p class="reas__lbl">Support</p>
+          <p class="reas__val">US-hours, human</p>
+          <p class="reas__det">Reply within one business day, Monday to Friday. Contact form, no bots, no chat popups.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS neutral -->
+  <section class="section section--tight reviews" aria-label="Customer reviews">
+    <div class="c c-narrow">
+      <p class="kicker" style="text-align:center">Customer reviews</p>
+      <div class="rev-empty">
+        <div class="rev-empty__stars" aria-label="No reviews yet">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .8-5.2 4.8L18 22l-6-3.6L6 22l1.2-7.4L2 9.8 9 9z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .8-5.2 4.8L18 22l-6-3.6L6 22l1.2-7.4L2 9.8 9 9z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .8-5.2 4.8L18 22l-6-3.6L6 22l1.2-7.4L2 9.8 9 9z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .8-5.2 4.8L18 22l-6-3.6L6 22l1.2-7.4L2 9.8 9 9z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .8-5.2 4.8L18 22l-6-3.6L6 22l1.2-7.4L2 9.8 9 9z"/></svg>
+        </div>
+        <h3 class="rev-empty__h">Reviews open with our first shipment.</h3>
+        <p class="rev-empty__p">This is a new store. We won't fake ratings, badges, or "1000+ sold" counters. Reviews will show here when real customers write them.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUNTDOWN -->
+  <section class="count" aria-label="Halloween countdown">
+    <div class="c">
+      <p class="count__kicker">Time until October 31</p>
+      <h2 class="count__title">Order by <em>October 21</em> to set up in time.</h2>
+      <div class="count__grid" role="timer" aria-live="off">
+        <div class="count__cell"><span class="count__n" data-cd="d">67</span><span class="count__u">days</span></div>
+        <div class="count__cell"><span class="count__n" data-cd="h">14</span><span class="count__u">hours</span></div>
+        <div class="count__cell"><span class="count__n" data-cd="m">22</span><span class="count__u">minutes</span></div>
+        <div class="count__cell"><span class="count__n" data-cd="s">05</span><span class="count__u">seconds</span></div>
+      </div>
+      <p class="count__note">Eight business days from order to porch, shipped from US warehouses. Later orders may still arrive in time — no guarantee, no refund on late arrivals.</p>
+    </div>
+  </section>
+
+  <!-- CAPTURE -->
+  <section class="cap" aria-label="Email signup">
+    <div class="c">
+      <p class="kicker" style="color:rgba(244,239,228,.75)">The list</p>
+      <h2 class="cap__title">New pieces, when <em>the season shifts</em>.</h2>
+      <p class="cap__lede">Occasional letters — new arrivals, a mood, early access to seasonal drops. No spam, no daily bulletins.</p>
+      <form class="cap__form" onsubmit="return false;">
+        <label class="sr" for="email">Email</label>
+        <input class="cap__input" id="email" type="email" placeholder="you@domain.com" autocomplete="email" required>
+        <button type="submit" class="cap__btn">Get on the list</button>
       </form>
+      <p class="cap__legal">Unsubscribe any time. We never sell your address.</p>
     </div>
   </section>
 
-  <footer class="wh-footer">
-    <div class="wh-container">
-      <div class="wh-footer__grid">
-        <div class="wh-footer__brand">
-          <h4>Wicked Hollow</h4>
-          <p>Objects and atmospheres for the seasons when the light gets low. Ships from US warehouses in 2–8 business days.</p>
+  <!-- FINAL CTA -->
+  <section class="finale">
+    <div class="c">
+      <p class="finale__eye">Halloween 2026 · Wicked Hollow</p>
+      <h2 class="finale__title">Set the yard now. Be the <em>talk of the block</em> in October.</h2>
+      <a href="#" class="btn btn--primary" style="min-width:240px">Shop Halloween at Home</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="foot">
+    <div class="c">
+      <div class="foot__grid">
+        <div>
+          <p class="foot__brand">Wicked<span>·</span>Hollow</p>
+          <p class="foot__tag">The house they'll still be talking about the next morning. A small catalogue built for the American house on the night of October 31 — shipped from US warehouses, made to keep across seasons.</p>
         </div>
         <div>
           <h4>Shop</h4>
-          <a href="#">Giant Inflatables</a>
-          <a href="#">Porch &amp; Yard</a>
-          <a href="#">The Manor</a>
+          <ul>
+            <li><a href="#">Halloween at Home</a></li>
+            <li><a href="#">Giant Inflatables</a></li>
+            <li><a href="#">Bundles</a></li>
+          </ul>
         </div>
         <div>
           <h4>Help</h4>
-          <a href="#">Shipping</a>
-          <a href="#">Returns</a>
-          <a href="#">FAQ</a>
-          <a href="#">Contact</a>
+          <ul>
+            <li><a href="#">Shipping</a></li>
+            <li><a href="#">Returns</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
         </div>
         <div>
           <h4>The Manor</h4>
-          <a href="#">About</a>
-          <a href="#">Season Notes</a>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Journal</a></li>
+            <li><a href="#">Season notes</a></li>
+          </ul>
         </div>
       </div>
-      <div class="wh-footer__legal">© 2026 Wicked Hollow. Halloween isn't a costume — it's a season.</div>
+      <div class="foot__legal">
+        <p>© 2026 Wicked Hollow · Halloween isn't a costume, it's a season.</p>
+        <span class="foot__pay"><span>VISA</span><span>MC</span><span>AMEX</span><span>PAYPAL</span><span>SHOP&nbsp;PAY</span></span>
+      </div>
     </div>
   </footer>
+
+  <!-- STICKY MOBILE CTA -->
+  <div class="sticky" id="sticky" role="region" aria-label="Quick add">
+    <div class="sticky__thumb"><svg viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice"><use href="#s-ghost"/></svg></div>
+    <div class="sticky__meta">
+      <span class="sticky__t">The Watcher — 11.8ft Ghost</span>
+      <span class="sticky__p">$119.99 · Free ship</span>
+    </div>
+    <a href="#" class="sticky__btn">Add</a>
+  </div>
+
+  <script>
+    // Sticky mobile CTA
+    (function(){
+      const s = document.getElementById('sticky');
+      const hero = document.querySelector('.hero');
+      if(!s||!hero||!('IntersectionObserver'in window))return;
+      const isMobile = () => matchMedia('(max-width: 899px)').matches;
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          s.style.display = (!e.isIntersecting && isMobile()) ? 'flex' : 'none';
+        });
+      },{threshold:0.05});
+      io.observe(hero);
+    })();
+  </script>
 </body>
 </html>

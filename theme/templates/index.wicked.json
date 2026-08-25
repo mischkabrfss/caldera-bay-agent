@@ -3,116 +3,127 @@
     "announcement": {
       "type": "wh-announcement",
       "settings": {
-        "message": "Free US shipping on orders $65+ · Order by Oct 24 to arrive before Halloween",
-        "link_url": ""
+        "message": "Free US shipping over $65 · Order by October 21 for Halloween delivery",
+        "link_url": "/pages/shipping"
       }
     },
     "hero": {
       "type": "wh-hero",
       "settings": {
-        "eyebrow": "The Manor · 2026 season",
-        "title": "<p>Objects and atmospheres for the seasons <em>when the light gets low</em>.</p>",
-        "lede": "A small catalogue of decor made to greet October, stay through November, and belong in the room long after the pumpkins go.",
-        "cta_primary_label": "Enter The Manor",
-        "cta_primary_url": "/collections/all",
-        "cta_secondary_label": "See the yard",
-        "cta_secondary_url": "/collections/porch-yard"
-      }
-    },
-    "showcase_signature": {
-      "type": "wh-showcase",
-      "settings": {
-        "eyebrow": "The signature pieces",
-        "title": "<p>What the yard reads from the sidewalk.</p>",
-        "collection": "porch-yard",
-        "max_items": 6,
-        "view_all_label": "See the yard collection",
-        "view_all_url": "/collections/porch-yard"
+        "eyebrow": "Halloween 2026 · Wicked Hollow",
+        "title": "<p>The house they'll still be <em>talking about</em> the next morning.</p>",
+        "lede": "A small catalogue built around one scene: the American house on the night of October 31. From the yard to the candy bowl at the door — four steps in one story. Ships from US warehouses in two to eight business days.",
+        "cta_primary_label": "Shop Halloween at Home",
+        "cta_primary_url": "/collections/halloween-at-home",
+        "cta_secondary_label": "Just the giants",
+        "cta_secondary_url": "/collections/giant-inflatables"
       }
     },
     "categories": {
       "type": "wh-categories",
       "settings": {
-        "eyebrow": "Two rooms of the season",
-        "title": "<p>The yard and the parlor. Everything else is optional.</p>"
+        "eyebrow": "The tour",
+        "title": "<p>From the sidewalk to the <em>candle on the mantel</em>.</p>"
       },
       "blocks": {
-        "outdoor": {
+        "yard": {
           "type": "category",
           "settings": {
-            "eyebrow": "Outdoor",
-            "title": "Porch & Yard",
-            "hint": "Inflatables that read from three houses away, coir underfoot, string lights on the porch.",
-            "link": "/collections/porch-yard"
+            "eyebrow": "The yard",
+            "title": "The scene from the street",
+            "hint": "The 11.8-foot ghost that reads from three houses away. The 9-foot pumpkin tower with six carved LED faces. This is what stops the car.",
+            "link": "/collections/giant-inflatables"
+          }
+        },
+        "porch": {
+          "type": "category",
+          "settings": {
+            "eyebrow": "The porch",
+            "title": "The welcome",
+            "hint": "The 9.6-foot skeleton banner that greets everyone climbing the walk. The only inflatable that also works inside for the party.",
+            "link": "/products/the-welcoming-committee-skeleton-banner-inflatable"
           }
         },
         "indoor": {
           "type": "category",
           "settings": {
-            "eyebrow": "Indoor",
-            "title": "Indoor Decor",
-            "hint": "Pillows, blankets, lace, small ceremonies for the parlor.",
-            "link": "/collections/indoor-decor"
+            "eyebrow": "Inside",
+            "title": "The mantel",
+            "hint": "Cobweb lace over the fireplace, October through Christmas. The one piece that transitions between seasons without a fight.",
+            "link": "/products/cobweb-lace-mantel-scarf"
           }
         }
       },
-      "block_order": ["outdoor", "indoor"]
+      "block_order": ["yard", "porch", "indoor"]
+    },
+    "showcase_giants": {
+      "type": "wh-showcase",
+      "settings": {
+        "eyebrow": "The Giants",
+        "title": "<p>Reads from <em>three houses away</em>.</p>",
+        "collection": "giant-inflatables",
+        "max_items": 3,
+        "view_all_label": "See all giants",
+        "view_all_url": "/collections/giant-inflatables"
+      }
     },
     "editorial": {
       "type": "wh-editorial",
       "settings": {
-        "eyebrow": "A note from The Manor",
-        "title": "<p>Halloween is not the point. <em>The season is.</em></p>",
-        "body": "<p>We built this catalogue for the months when the light gets low and the house asks for attention. October gets the loudest costume — a 12-foot ghost, a skeleton banner, a tower of glowing pumpkins. November keeps the pillows and the coir. December inherits the lace, the tapers, the quiet.</p><p>Nothing here was designed to be thrown out on November 1st.</p>",
+        "eyebrow": "Why we built this",
+        "title": "<p>One house. <em>Four steps.</em> One story worth telling.</p>",
+        "body": "<p>Everyone sells a Halloween inflatable. Very few think about the whole night as one scene — the ghost in the yard, the banner on the porch, the lace on the mantel, the fifty rings for the kids who ring the bell. That's the difference. We stock the small catalogue that makes the American house a landmark on the night of October 31.</p><p>The same discipline holds through November and into December. The lace stays. The banner comes inside. The ghost folds back into its bag until next October. Nothing here was designed to be thrown out.</p>",
+        "cta_label": "Shop the whole scene",
+        "cta_url": "/collections/halloween-at-home",
         "placeholder_caption": "Editorial photograph pending"
       }
     },
     "bundles": {
       "type": "wh-bundles",
       "settings": {
-        "eyebrow": "Bundled and priced to move",
-        "title": "<p>Three ways in.</p>",
-        "lede": "The yard on its own is enough. The living room is enough. Or the whole scene, priced under the sum of its parts."
+        "eyebrow": "Bundle the scene",
+        "title": "<p>Priced under the sum of <em>the parts</em>.</p>",
+        "lede": "The whole yard, the porch-to-mantel pair, or every giant at once. Three ways in, all priced with the free-ship threshold cleared."
       },
       "blocks": {
-        "threshold": {
-          "type": "bundle",
-          "settings": {
-            "badge": "Outdoor",
-            "title": "Haunted Threshold",
-            "items": "The Watcher — 12ft Ghost\nCoir doormat (your choice)\nVintage Bat Swarm Pillow",
-            "product_handle": "haunted-threshold-ghost-doormat-pillow-bundle",
-            "price_display": "$179.99",
-            "compare_display": "$209.97",
-            "save_display": "$30"
-          }
-        },
-        "full_haunt": {
-          "type": "bundle",
-          "settings": {
-            "badge": "Indoor + Outdoor",
-            "title": "The Full Haunt",
-            "items": "The Watcher — 12ft Ghost\nCursed Comfort Sherpa Blanket\nDisco Ghost Throw Pillow",
-            "product_handle": "the-full-haunt-ghost-blanket-pillow-bundle",
-            "price_display": "$229.99",
-            "compare_display": "$269.97",
-            "save_display": "$40"
-          }
-        },
         "yard_kit": {
           "type": "bundle",
           "settings": {
-            "badge": "Outdoor · signature",
+            "badge": "The whole yard · Save $40",
             "title": "Complete Yard Kit",
-            "items": "The Watcher — 12ft Ghost\nThe Welcoming Committee — 9.6ft Banner\nThe Cairn — 9ft Pumpkin Tower",
+            "items": "The Watcher — 11.8ft Ghost\nThe Welcoming Committee — 9.6ft Banner\nThe Cairn — 9ft Pumpkin Tower",
             "product_handle": "complete-yard-kit-3-giant-inflatables-bundle",
             "price_display": "$279.99",
             "compare_display": "$319.97",
             "save_display": "$40"
           }
+        },
+        "yard_duo": {
+          "type": "bundle",
+          "settings": {
+            "badge": "Two giants · Save $20",
+            "title": "Yard Duo",
+            "items": "The Watcher — 11.8ft Ghost\nThe Cairn — 9ft Pumpkin Tower",
+            "product_handle": "yard-duo-ghost-cairn-bundle",
+            "price_display": "$189.99",
+            "compare_display": "$209.98",
+            "save_display": "$20"
+          }
+        },
+        "inside_out": {
+          "type": "bundle",
+          "settings": {
+            "badge": "Porch to mantel · Save $15",
+            "title": "Inside Out",
+            "items": "The Welcoming Committee — 9.6ft Banner\nCobweb Lace 96\" Mantel Scarf",
+            "product_handle": "inside-out-banner-mantel-bundle",
+            "price_display": "$119.99",
+            "compare_display": "$134.98",
+            "save_display": "$15"
+          }
         }
       },
-      "block_order": ["threshold", "full_haunt", "yard_kit"]
+      "block_order": ["yard_kit", "yard_duo", "inside_out"]
     },
     "reassurance": {
       "type": "wh-reassurance",
@@ -122,43 +133,43 @@
           "settings": {
             "label": "Shipping",
             "value": "Free over $65",
-            "detail": "Standard $6.95 below. All orders ship from US warehouses in 2–8 business days."
+            "detail": "Standard $6.95 below. Every order ships from US warehouses in 2–8 business days. Order by Oct 21 for Halloween delivery."
           }
         },
         "returns": {
           "type": "item",
           "settings": {
             "label": "Returns",
-            "value": "30 days, no notes",
-            "detail": "Send it back within 30 days if the room disagreed. Refund goes to the card, not the store."
+            "value": "30 days",
+            "detail": "New and unused, in original packaging, refunded to your original payment method. Worn costumes and opened multipacks are hygiene-excluded."
           }
         },
-        "support": {
+        "ul": {
           "type": "item",
           "settings": {
-            "label": "Support",
-            "value": "Real people, real fast",
-            "detail": "Email replies within one business day, always from someone who knows the catalogue."
+            "label": "UL power",
+            "value": "Listed Class 2",
+            "detail": "Every inflatable ships with a UL Listed Class 2 low-voltage power supply. Blower, ropes, stakes and adapter included in every box."
           }
         }
       },
-      "block_order": ["shipping", "returns", "support"]
+      "block_order": ["shipping", "returns", "ul"]
     },
     "countdown": {
       "type": "wh-countdown",
       "settings": {
-        "eyebrow": "Time on the porch",
-        "title": "<p>Halloween is coming. Order early to get it up in time.</p>",
+        "eyebrow": "Time until October 31",
+        "title": "<p>Order by October 21 to <em>set up in time</em>.</p>",
         "target_iso": "2026-10-31T04:00:00Z",
-        "note": "Order by Oct 24 to receive before Halloween. Bundles ship from US warehouses in 3–8 business days."
+        "note": "Eight business days from order to your porch, shipped from US warehouses. Late orders may still arrive in time — no guarantee, no refund on late arrivals."
       }
     },
     "capture": {
       "type": "wh-capture",
       "settings": {
         "eyebrow": "The list",
-        "title": "<p>Get on the list. <em>Nothing else.</em></p>",
-        "lede": "One quiet email each month with new arrivals, a mood, and access to seasonal drops before they open publicly.",
+        "title": "<p>New pieces, when the <em>season shifts</em>.</p>",
+        "lede": "Occasional letters when new arrivals land or a new season opens. No spam, no daily bulletins.",
         "input_placeholder": "your@email.com",
         "cta_label": "Get on the list",
         "success_message": "Welcome. Look for a note within a few minutes.",
@@ -168,21 +179,21 @@
     "footer": {
       "type": "wh-footer",
       "settings": {
-        "tagline": "Objects and atmospheres for the seasons when the light gets low. Shipped from the US, made to keep."
+        "tagline": "The house they'll still be talking about the next morning. Shipped from US warehouses, made to keep across seasons."
       },
       "blocks": {
         "col1": {
           "type": "column",
           "settings": {
-            "heading": "Catalogue",
-            "links": "Porch & Yard | /collections/porch-yard\nIndoor Decor | /collections/indoor-decor\nBundles | /collections/bundles\nTrick or Treat | /collections/trick-or-treat"
+            "heading": "Shop",
+            "links": "Halloween at Home | /collections/halloween-at-home\nGiant Inflatables | /collections/giant-inflatables"
           }
         },
         "col2": {
           "type": "column",
           "settings": {
             "heading": "The Manor",
-            "links": "Season notes | /pages/season-notes\nAbout | /pages/about\nContact | /pages/contact"
+            "links": "About | /pages/about\nContact | /pages/contact"
           }
         },
         "col3": {
@@ -199,8 +210,8 @@
   "order": [
     "announcement",
     "hero",
-    "showcase_signature",
     "categories",
+    "showcase_giants",
     "editorial",
     "bundles",
     "reassurance",
