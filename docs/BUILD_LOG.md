@@ -4,6 +4,87 @@
 
 ---
 
+## Session 9 — 25 août 2026 · MCP reconnecté · actions + arbitrage héros
+
+**MCP Shopify reconnecté.** Toutes les actions en attente de Session 8 exécutées + arbitrage stratégique majeur.
+
+### 1. Actions Shopify exécutées
+
+- **2 collections supprimées** via `collectionDelete` : Indoor Decor (581517541642) et Trick or Treat (581517574410). Rules smart documentées pour ré-ouverture ultérieure.
+- **10 fiches masques/costumes créées en DRAFT** via `productCreate` — tag `internal:awaiting-supplier-verification` + `season:halloween-2026` (ou `halloween-christmas` pour ceux à bascule) + prix cible appliqué via `productVariantsBulkUpdate` :
+
+| # | Titre | Handle | Product ID | Variant ID | Prix |
+|---|---|---|---|---|---|
+| 1 | Draped Lace Mourning Veil | draped-lace-mourning-veil | 10600303853834 | 53563401568522 | $29.99 |
+| 2 | Krampus Bronze Devil Half-Mask | krampus-bronze-devil-half-mask | 10600305426698 | 53563409465610 | $34.99 |
+| 3 | Plague Doctor Beak Mask | plague-doctor-beak-mask-antique-leather | 10600306082058 | 53563412611338 | $39.99 |
+| 4 | Gothic Antler Coronet | gothic-antler-coronet-crown | 10600306376970 | 53563412906250 | $34.99 |
+| 5 | Silver Filigree Masquerade | silver-filigree-masquerade-half-mask | 10600306802954 | 53563414708490 | $29.99 |
+| 6 | Black Feather Capelet | black-feather-capelet-shoulder-shawl | 10600307917066 | 53563416183050 | $39.99 |
+| 7 | Grim Reaper Robe (one-size) | grim-reaper-robe-hooded-adult-one-size | 10600309424394 | 53563419197706 | $49.99 |
+| 8 | Victorian Vampire Cape (one-size) | victorian-vampire-cape-stand-up-collar-adult | 10600309817610 | 53563419623690 | $54.99 |
+| 9 | Full Skeleton Bodysuit (multi-size pending) | full-skeleton-bodysuit-adult | 10600311390474 | 53563422998794 | $44.99 |
+| 10 | The Widow Bride Dress (multi-size pending) | widow-bride-victorian-mourning-dress-adult | 10600311980298 | 53563424112906 | $59.99 |
+
+**Note multi-size** : Skeleton Bodysuit et Widow Bride créés avec un default variant + tag `sizing:multi-size-pending-supplier`. Le split en 5 variants (S/M/L/XL/XXL) se fait à la validation supplier avec les vrais SKUs par taille.
+
+**Note collection Vestments** : les 10 sont taggés `place:worn` — la collection Vestments s'auto-populera dès sa création (rule `TAG EQUALS place:worn`). Reportée : à créer après validation supplier de ≥5 SKUs pour ne pas exposer une collection pleine de fantômes DRAFT.
+
+### 2. Vérification double titrage — 15 fiches
+
+Contrôle sur les 5 fiches existantes + 10 nouvelles :
+
+**5 existantes (Ghost, Banner, Cairn, Mantel, Rings)** : meta titles déjà en langage de recherche réel (`Giant Halloween Inflatable Ghost 11.8ft`, `Halloween Skeleton Banner 9.6ft Inflatable`, `9ft Halloween Stacked Pumpkins Inflatable`, `Halloween Cobweb Lace Mantel Scarf 96"`, `50-Pack LED Halloween Rings`) — aucune correction requise.
+
+**10 nouvelles** : 9 sur 10 déjà écrites en langage de recherche (`Halloween Black Lace Mourning Veil`, `Halloween Krampus Devil Half Mask`, `Halloween Plague Doctor Beak Mask`, etc.). Une correction appliquée :
+
+| Fiche | Ancien meta title | Nouveau meta title | Raison |
+|---|---|---|---|
+| #6 Capelet | `Halloween Black Feather Capelet · Corvid Adult Costume` | `Halloween Black Feather Capelet Shawl · Adult Gothic` | "Corvid" est le nom Manor (0 volume search). "Shawl" + "Gothic" captent l'intention réelle |
+
+Aucune autre fiche ne reprenait "simplement le nom poétique" — la doctrine double-titrage était déjà appliquée.
+
+### 3. Arbitrage stratégique — inversion héros (V5)
+
+Le rapport Session 8 est explicite : **le Ghost ne survit pas au pic Halloween** (rupture 23 sept – 12 oct, coupure ad 16 sept – 2 oct). Le pic US = 10-28 octobre. Le héros doit tenir.
+
+**Bascule appliquée via `productUpdate`** :
+
+| Produit | Tags avant | Tags après | Rôle nouveau |
+|---|---|---|---|
+| **The Watcher (Ghost)** | `role:hero`, `assortment:acquisition-primary` | `role:acquisition-september`, `assortment:acquisition-september` | Pixel-builder Phase 1 (25 août – 10 sept), coupure programmée avant rupture |
+| **The Welcoming Committee (Banner)** | `role:acquisition-secondary`, `role:core` | `role:hero`, `assortment:acquisition-primary` | Héros du pic (11 sept – 28 oct), stock 801 tient jusqu'à mi-novembre |
+
+**Séquence budget V5** :
+- Phase 1 (25 août – 10 sept, 16 j) : 60 % budget sur Ghost (~$324) pour construire le pixel Meta et LAL 1 % conversion
+- Phase 2 (11 sept – 12 oct) : Banner prend le budget principal (25-100 % selon rupture Ghost) + résiduel Ghost jusqu'à ~27 sept
+- Phase 3 (13-28 oct) : 100 % Banner pour le pic, bundles recomposés sans Ghost après rupture
+
+**Fichiers mis à jour** :
+- `docs/halloween-2026/AD-TEST-PLAN.md` refondu V5 : sections "Bascule V5", Phase 1 pixel-builder Ghost, Phase 2 bascule Banner, Phase 3 pic Banner. Bundles ajustés pour retirer Ghost après rupture.
+- `docs/halloween-2026/MEDIA-SHOTLIST.md` : Banner remonté en PRIORITÉ 1 (+ 2 shots supplémentaires trick-treat + indoor-party). Ghost passe en Priorité 1.5 avec fenêtre courte (5 shots suffisent, deadline 10 septembre).
+
+### 4. Vérification IP Krampus
+
+Fiche #2 vérifiée. Formulation strictement folklorique :
+- Description : *"inspired by the Alpine folklore figure of Krampus — the horned character from Central European winter tradition, said to walk villages on the eve of the 6th of December"*
+- **Aucune référence** au film Michael Dougherty 2015 (Universal/Legendary Pictures), à ses personnages, à sa marque, à son affiche, à ses citations
+- **Aucune référence** aux jeux vidéo Krampus copyrightés
+- Tags : `vibe:folklore` (ajouté), retiré `vibe:krampus` (ambigu)
+- Meta description reformulée : *"Halloween + December folklore ready"* — pas "Krampusnacht movie style"
+
+Le mot "Krampus" seul est libre (nom folklorique domaine public depuis siècles). L'ambiguïté vient toujours du contexte visuel/textuel — ici tout est verrouillé sur le folklore historique.
+
+### 5. Reste bloquant
+
+- **Visuels 2000×2500** : livraison prévue demain (Banner en tête maintenant)
+- **Split multi-size** des 2 costumes : dépend de la réponse supplier avec SKUs par taille
+- **Certification UL Ghost** : à confirmer à réception exemplaire test
+- **Password protection + payment methods** : action admin manuelle
+- **Réappro supplier Ghost + Cairn** : escalade urgente
+
+---
+
 ## Session 8 — 24-25 août 2026 · nuit · corrections + A→G
 
 **⚠️ Shopify MCP offline au démarrage de cette session.** Tous les changements Shopify Session 7 sont préservés. Les nouvelles actions Shopify (supprimer 2 collections, créer 7-11 fiches draft masques/costumes) sont **documentées prêtes à exécuter** dès reconnexion — cohérent avec garde-fou "si un chantier échoue, tu le documentes et tu passes au suivant".

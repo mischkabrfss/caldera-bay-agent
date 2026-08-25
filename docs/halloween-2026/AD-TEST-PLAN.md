@@ -1,15 +1,28 @@
-# Wicked Hollow — Halloween 2026 · Ad Test Plan (V4 — deux angles)
+# Wicked Hollow — Halloween 2026 · Ad Test Plan (V5 — inversion héros stock-driven)
 
 **Budget total : 500 €** (~$540 USD stable) · **Horizon : 25 août → 28 octobre** · **Plateforme : Meta (Instagram + Facebook)** · **Payment fees : 5 %**.
 
-## Décision structurelle V4
+## ⚠️ Bascule V5 (Session 9 — 25 août)
 
-**Deux produits d'acquisition testés en parallèle** dans des registres émotionnels distincts :
+**Stock CJ warehouse actualisé** : Ghost 451 unités seulement. Rupture projetée **23 septembre – 12 octobre** selon scénario. Coupure ad forcée **16 septembre – 2 octobre**. Le Ghost NE SURVIT PAS au pic US (10-28 octobre).
 
-1. **The Watcher — 12ft Ghost** ($119.99) → angle **scary / block-stopper**. Cible : households qui vont hard sur Halloween, corner lots, TikTok-native.
-2. **The Cairn — 9ft Stacked Pumpkins** ($89.99) → angle **friendly / family-forward**. Cible : familles avec jeunes enfants, ticket d'entrée plus bas ($30 sous le ghost), moins effrayant.
+**Banner 801 unités**. Safe jusqu'à mi-novembre en scénario haut. Il porte octobre.
 
-Le second gonflable (Welcoming Committee Banner $109.99) reste **produit d'assortiment sans ad dédié en Phase 1-2**. Il apparaît dans le Complete Yard Kit Bundle et sera potentiellement testé en Phase 3 si budget permet.
+### Nouvelle doctrine héros
+
+1. **The Welcoming Committee — Banner** ($109.99) devient **HÉROS du pic** (role:hero). Budget publicitaire principal du 15 septembre au 28 octobre. Angle : festif universel, indoor+outdoor, lisible depuis le trottoir, Manor jamais brutal.
+2. **The Watcher — Ghost** ($119.99) devient **produit d'acquisition-septembre** (role:acquisition-september). Rôle : construire le pixel Meta pendant que les CPM sont bas (~$8-12 avant 15 sept vs ~$20-30 au pic), tester les créas, générer les premiers avis, alimenter les lookalikes de conversion. Coupure prévue autour du **10 septembre** (avant rupture) pour transférer les audiences apprises au Banner.
+3. **The Cairn — Stacked Pumpkins** ($89.99) reste **assortiment sans ad dédié**. Stock 216, rupture 2-8 septembre, incompatible avec toute campagne payée.
+
+### Séquence budget V5
+
+| Période | Ghost (acquisition-sept) | Banner (héros) | Cairn |
+|---|---|---|---|
+| 25 août → 10 sept (16 j) | **60 % ($324)** — pixel builder | Testing organique + collectes UGC | — |
+| 11 sept → 27 sept | 15 % ($81) résiduel jusqu'à rupture | **25 % ($135)** montée en puissance | — |
+| 28 sept → 28 oct | 0 % (rupture) | **100 % du budget restant (~$100)** pic | — |
+
+Rationale de l'inversion : construire de la data Meta sur un produit qu'on peut sacrifier (Ghost) pour armer le produit qui tiendra le pic (Banner). Sans cette bascule, on brûle le budget sur un stock qui sera à zéro avant Halloween.
 
 ## Économie des 2 produits testés
 
@@ -69,17 +82,18 @@ Format 9:16 vertical Reels, durée 6-12s. Ton chaleureux/festif — contraste av
 
 ---
 
-## Phase 1 — Test avant-saison (25 août → 15 septembre)
+## Phase 1 — Pixel-builder Ghost (25 août → 10 septembre)
 
-**Budget : 180 € (~$195)** — 36 % du total.
+**Budget : 180 € (~$195)** — 36 % du total. **V5 : le Ghost n'est plus le héros — c'est le sacrifiable qui arme le pixel Meta avant que le Banner prenne le relais.**
 
-Bloqué tant que : (a) UL/ETL confirmé sur les 3 gonflables, (b) créas A/B/C + F/G livrées, (c) product pages Watcher + Cairn complètes avec vraies photos lifestyle.
+Bloqué tant que : (a) UL/ETL confirmé sur les 3 gonflables, (b) créas A/B/C livrées, (c) product page Watcher complète avec vraies photos lifestyle 2000×2500 et product page Banner prête à recevoir le budget.
 
-- **Structure Meta** : 2 CBO campaigns (une par produit acquisition) 
-  - **Campaign Watcher** : 3 ad sets (A/B/C) · 14 €/adset/jour × 9j = $115
-  - **Campaign Cairn** : 2 ad sets (F/G) · 9 €/adset/jour × 9j = $80
-- **Audience** : Advantage+ audience broad (US)
+- **Structure Meta** : 1 CBO campaign focus **Watcher (acquisition-september)**
+  - 3 ad sets (A/B/C) · 20 €/adset/jour × 9j = $180
+- **Audience** : Advantage+ audience broad (US) — l'objectif est le SIGNAL, pas la performance immédiate
 - **Placement** : Reels prioritaire, Feed secondaire
+- **KPI d'objectif V5** : pas ROAS — **volume ATC + conversion pixel event fires**. Un Ghost à ROAS 1.4 qui envoie 300 événements de qualité au pixel = win. On construit la lookalike qui armera le Banner en Phase 2.
+- **Coupure programmée** : ~10 septembre (avant rupture stock) — les audiences apprises basculent sur le Banner.
 
 ### Seuils Phase 1 (J+7 puis J+14)
 
@@ -99,18 +113,18 @@ Par ad set :
 
 ---
 
-## Phase 2 — Confirmation début octobre (28 septembre → 12 octobre)
+## Phase 2 — Bascule Banner (11 septembre → 12 octobre)
 
-**Budget : 200 € (~$216)** — 40 % du total.
+**Budget : 200 € (~$216)** — 40 % du total. **V5 : le Banner prend 100 % du budget acquisition ; le Ghost tourne en résiduel jusqu'à rupture.**
 
-**Objectif** : dépasser ROAS 2.0 sur au moins un produit, activer les 3 bundles.
+**Objectif** : dépasser ROAS 2.0 sur le Banner, activer les 3 bundles avec le Banner en produit d'ancrage.
 
 - **Structure** :
-  - Winner Watcher Phase 1 → 3 audiences (broad + interests halloween + LAL 1 % buyers), 15 €/j
-  - Winner Cairn Phase 1 → 2 audiences (broad + LAL 1 % buyers), 12 €/j
+  - **Winner Banner** → 3 audiences (broad + interests halloween + LAL 1 % du pixel Ghost Phase 1), 20 €/j
+  - Résiduel Watcher Phase 1 → 1 audience seulement (broad + retargeting 30j), 8 €/j **jusqu'à ~27 septembre puis coupure définitive**
 - **Bundles activés** :
-  - Haunted Threshold ($179.99) et Full Haunt ($229.99) en cross-sell sur Watcher product page
-  - **Complete Yard Kit ($279.99)** en hero cross-sell sur Watcher + Cairn pages : "Get the whole yard for $40 off"
+  - **Complete Yard Kit ($279.99)** — hero cross-sell sur toutes les pages, ancrage Banner : "Get the whole yard for $40 off"
+  - Haunted Threshold ($179.99) et Full Haunt ($229.99) en cross-sell secondaire
 
 ### Seuils Phase 2 (J+7)
 
@@ -125,16 +139,16 @@ Par ad set :
 
 ---
 
-## Phase 3 — Montée au pic (13 octobre → 28 octobre)
+## Phase 3 — Pic Banner (13 octobre → 28 octobre)
 
-**Budget : 160 € (~$173)** — 24 % du total, **concentré 18-25 octobre**.
+**Budget : 100 € (~$108)** — 20 % du total, **concentré 18-25 octobre**. Ghost déjà rupturé (~2 oct). Cairn jamais en ad.
 
-**Objectif** : max volume + retargeting agressif + urgency messaging + **potentiel test 3e produit acquisition** (Skeleton Banner à $109.99) si budget résiduel.
+**Objectif** : max volume Banner + retargeting agressif + urgency messaging.
 
 - **Structure** :
-  - Winners Phase 2 (Watcher + Cairn) maintenus, budget +30 % si ROAS ≥ 2.5
-  - Nouveau ad set Complete Yard Kit Bundle en angle "everything you need for Oct 31, save $40"
-  - Retargeting 30j (product page + ATC non convertis) avec urgency "Order by Oct 24 for Halloween delivery"
+  - **Winner Banner Phase 2** → +30 % budget si ROAS ≥ 2.5
+  - Ad set Complete Yard Kit Bundle en angle "everything you need for Oct 31, save $40" — mais **sans Ghost** dans le bundle après rupture (bundle recomposé Banner + Cairn si stocks OK, sinon retiré)
+  - Retargeting 30j (product page Banner + ATC non convertis) avec urgency "Order by Oct 24 for Halloween delivery"
 
 ### Seuils Phase 3 quotidiens
 

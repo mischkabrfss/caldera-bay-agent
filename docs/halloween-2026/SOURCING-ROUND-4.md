@@ -387,7 +387,7 @@ Coût rendu max pour profit ≥ $10 et marge ≥ 45 % :
 
 **Titre affiché** : `The Corvid — Black Feathered Capelet`
 
-**Meta title SEO** (56 char) : `Halloween Black Feather Capelet · Corvid Adult Costume`
+**Meta title SEO** (55 char) : `Halloween Black Feather Capelet Shawl · Adult Gothic`
 
 **Meta description SEO** (152 char) : *Black feather shoulder capelet for adult Halloween. Corvid, raven, dark angel looks. Elastic collar, one-size. Ships from US in 3–8 days.*
 

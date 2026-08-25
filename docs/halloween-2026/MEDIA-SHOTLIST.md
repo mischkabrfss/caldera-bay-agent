@@ -6,21 +6,11 @@ Convention nommage : `<handle>-XX-<type>.jpg`.
 
 ---
 
-## PRIORITÉ 1 — Les 3 gonflables (produits d'acquisition)
+## PRIORITÉ 1 — Le Banner (héros du pic V5)
 
-Ce sont eux qui reçoivent le budget publicitaire de 500 €. Visuels absolument critiques.
+**Bascule V5 (Session 9 — 25 août)** : le Banner devient le héros publicitaire du pic octobre parce que son stock (801) tient jusqu'à mi-novembre alors que le Ghost (451) sera rupturé entre le 23 septembre et le 12 octobre. Priorité absolue de génération visuelle.
 
-### The Watcher (12ft Ghost) · SKU CJDP30526200001
-
-| Fichier | Description | Higgsfield feasibility |
-|---|---|---|
-| `the-watcher-12ft-01-hero.jpg` | Packshot fond neutre gradient sombre, fantôme déployé, LED yeux + flames actives | **OUI** — Higgsfield depuis photos fournisseur CJ + éclairage nuit synthé |
-| `the-watcher-12ft-02-hero-yard-night.jpg` | Devant maison typique US, crépuscule bleuté, LED actives | **OUI** — refs "US suburban porch at dusk" + fantôme composé |
-| `the-watcher-12ft-03-detail-face.jpg` | Close-up yeux + flames bouche | **PARTIEL** — risque dégradation LED, alternative shot manuel |
-| `the-watcher-12ft-04-scale-human.jpg` | Silhouette adulte 5'10" à côté pour échelle | **OUI** — mannequin numérique |
-| `the-watcher-12ft-05-package-compact.jpg` | Colis + sac + 7 stakes + 3 ropes + blower + adapter | **NON** — nécessite photo réelle réception |
-
-### The Welcoming Committee (9.6ft Skeleton Banner) · SKU CJHD254437201AZ
+### The Welcoming Committee (9.6ft Skeleton Banner) · SKU CJHD254437201AZ · **HÉROS**
 
 | Fichier | Description | Higgsfield feasibility |
 |---|---|---|
@@ -29,6 +19,22 @@ Ce sont eux qui reçoivent le budget publicitaire de 500 €. Visuels absolument
 | `welcoming-committee-03-detail-banner.jpg` | Close-up sur le lettrage "Happy Halloween" + skeleton hands | **OUI** — zoom depuis packshot |
 | `welcoming-committee-04-scale.jpg` | Personne debout devant la bannière (9.6 ft large = ~2 personnes de bras à bras) | **OUI** — silhouette composée |
 | `welcoming-committee-05-package.jpg` | Colis fermé + contenu étalé | **NON** — shot manuel réception |
+| `welcoming-committee-06-trick-treat.jpg` | Bannière avec silhouettes de trick-or-treaters passant devant, family-friendly warm-white LEDs | **OUI** — angle universel pic 18-25 oct |
+| `welcoming-committee-07-indoor-party.jpg` | Bannière indoor pour party — le seul gonflable dual-use du catalogue | **OUI** — angle unique différenciant |
+
+**Deadline critique** : les 5 premiers shots (hero, yard-dusk, detail, scale, trick-treat) doivent être livrés d'ici le **10 septembre** pour armer la Phase 2 (bascule ad). Sans eux, retarder la bascule Banner et laisser le Ghost tourner en résiduel plus longtemps.
+
+### The Watcher (11.8ft Ghost) · SKU CJDP30526200001 · **ACQUISITION-SEPTEMBER**
+
+Rôle V5 : pixel-builder pendant 15 jours de Phase 1 (25 août – 10 septembre). Visuels toujours nécessaires mais fenêtre courte — inutile de sur-produire.
+
+| Fichier | Description | Higgsfield feasibility |
+|---|---|---|
+| `the-watcher-12ft-01-hero.jpg` | Packshot fond neutre gradient sombre, fantôme déployé, LED yeux + flames actives | **OUI** — Higgsfield depuis photos fournisseur CJ + éclairage nuit synthé |
+| `the-watcher-12ft-02-hero-yard-night.jpg` | Devant maison typique US, crépuscule bleuté, LED actives | **OUI** — refs "US suburban porch at dusk" + fantôme composé |
+| `the-watcher-12ft-03-detail-face.jpg` | Close-up yeux + flames bouche | **PARTIEL** — risque dégradation LED, alternative shot manuel |
+| `the-watcher-12ft-04-scale-human.jpg` | Silhouette adulte 5'10" à côté pour échelle | **OUI** — mannequin numérique |
+| `the-watcher-12ft-05-package-compact.jpg` | Colis + sac + 7 stakes + 3 ropes + blower + adapter | **NON** — nécessite photo réelle réception |
 
 ### The Cairn (9ft Stacked Pumpkins) · SKU CJDP30549140001
 
