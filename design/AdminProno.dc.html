@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap">
+  <style>
+    body { margin: 0; font-family: Manrope, "Segoe UI", sans-serif; background: #05100a; color: #f4f7f4; -webkit-font-smoothing: antialiased; }
+    a { color: #f0c53c; text-decoration: none; } a:hover { color: #f0cd6d; }
+    * { box-sizing: border-box; }
+    .disp { font-family: "Bebas Neue", "Haettenschweiler", Impact, sans-serif; font-weight: 400; letter-spacing: 0.02em; }
+  </style>
+</helmet>
+<div style="width: 390px; background: #05100a; padding-bottom: 40px">
+  <div style="display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid rgba(240,197,60,0.14)">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#eaf2ec" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    <div class="disp" style="font-size: 20px; color: #ffffff">AJOUTER UN PRONOSTIC</div>
+  </div>
+
+  <div style="padding: 18px">
+    <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a">CATÉGORIE</div>
+    <div style="display: flex; gap: 8px; margin-top: 8px">
+      <div style="flex-grow: 1; height: 46px; border-radius: 12px; background: #f0c53c; color: #06170e; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center">Safe</div>
+      <div style="flex-grow: 1; height: 46px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); color: #cfe0d5; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center">Premium</div>
+      <div style="flex-grow: 1; height: 46px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); color: #cfe0d5; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center">Grosse cote</div>
+    </div>
+
+    <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a; margin-top: 18px">TYPE</div>
+    <div style="height: 50px; margin-top: 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: space-between; padding: 0 14px; font-size: 14px; color: #ffffff">
+      Safe du jour
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7f9b8a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 14px">
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a">DATE</div>
+        <div style="height: 50px; margin-top: 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); display: flex; align-items: center; padding: 0 14px; font-size: 14px; color: #ffffff">26/08/2026</div>
+      </div>
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a">HEURE</div>
+        <div style="height: 50px; margin-top: 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); display: flex; align-items: center; padding: 0 14px; font-size: 14px; color: #ffffff">21:00</div>
+      </div>
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a">SPORT</div>
+        <div style="height: 50px; margin-top: 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); display: flex; align-items: center; padding: 0 14px; font-size: 14px; color: #ffffff">Football</div>
+      </div>
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a">COMPÉTITION</div>
+        <div style="height: 50px; margin-top: 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); display: flex; align-items: center; padding: 0 14px; font-size: 14px; color: #ffffff">Liga</div>
+      </div>
+    </div>
+
+    <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a; margin-top: 14px">MATCH</div>
+    <div style="height: 50px; margin-top: 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); display: flex; align-items: center; padding: 0 14px; font-size: 14px; color: #ffffff">FC Séville — Real Betis</div>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-top: 14px">
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a">PARI</div>
+        <div style="height: 50px; margin-top: 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); display: flex; align-items: center; padding: 0 14px; font-size: 14px; color: #ffffff">Plus de 1,5 but</div>
+      </div>
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a">COTE</div>
+        <div style="height: 50px; margin-top: 8px; border-radius: 12px; border: 1px solid rgba(240,197,60,0.45); background: rgba(240,197,60,0.08); display: flex; align-items: center; padding: 0 14px; font-size: 15px; color: #f0c53c; font-weight: 800">1.32</div>
+      </div>
+    </div>
+
+    <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a; margin-top: 14px">JOUEUR (SI BUTEUR)</div>
+    <div style="height: 50px; margin-top: 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.02); display: flex; align-items: center; padding: 0 14px; font-size: 14px; color: #5d7568">Optionnel</div>
+
+    <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a; margin-top: 14px">NIVEAU DE CONFIANCE</div>
+    <div style="display: flex; gap: 6px; margin-top: 10px">
+      <div style="flex-grow: 1; height: 44px; border-radius: 12px; background: rgba(240,197,60,0.85); display: flex; align-items: center; justify-content: center; color: #06170e; font-weight: 800; font-size: 14px">1</div>
+      <div style="flex-grow: 1; height: 44px; border-radius: 12px; background: rgba(240,197,60,0.85); display: flex; align-items: center; justify-content: center; color: #06170e; font-weight: 800; font-size: 14px">2</div>
+      <div style="flex-grow: 1; height: 44px; border-radius: 12px; background: rgba(240,197,60,0.85); display: flex; align-items: center; justify-content: center; color: #06170e; font-weight: 800; font-size: 14px">3</div>
+      <div style="flex-grow: 1; height: 44px; border-radius: 12px; background: rgba(240,197,60,0.85); display: flex; align-items: center; justify-content: center; color: #06170e; font-weight: 800; font-size: 14px">4</div>
+      <div style="flex-grow: 1; height: 44px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; color: #7f9b8a; font-weight: 700; font-size: 14px">5</div>
+    </div>
+
+    <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a; margin-top: 14px">ANALYSE</div>
+    <div style="min-height: 96px; margin-top: 8px; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); font-size: 13px; line-height: 1.55; color: #cfe0d5">Les deux équipes marquent sur 8 des 10 derniers derbys andalous…</div>
+
+    <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a; margin-top: 14px">STATUT</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px">
+      <div style="height: 40px; padding: 0 14px; border-radius: 999px; background: #f0c53c; color: #06170e; font-size: 13px; font-weight: 800; display: flex; align-items: center">À venir</div>
+      <div style="height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); color: #cfe0d5; font-size: 13px; display: flex; align-items: center">Gagné</div>
+      <div style="height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); color: #cfe0d5; font-size: 13px; display: flex; align-items: center">Perdu</div>
+      <div style="height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); color: #cfe0d5; font-size: 13px; display: flex; align-items: center">Annulé</div>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-top: 22px">
+      <div style="flex-grow: 1; height: 54px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.16); color: #eaf2ec; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center">Brouillon</div>
+      <div style="flex-grow: 1; height: 54px; border-radius: 14px; background: linear-gradient(180deg, #ffd84d 0%, #dfa714 100%); color: #06170e; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 28px rgba(223,167,20,0.25)">Publier</div>
+    </div>
+    <div style="font-size: 11px; color: #5d7568; margin-top: 12px; line-height: 1.5; text-align: center">Publié → visible immédiatement par les abonnés VIP Safe actifs.</div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

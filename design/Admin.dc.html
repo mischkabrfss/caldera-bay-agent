@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap">
+  <style>
+    body { margin: 0; font-family: Manrope, "Segoe UI", sans-serif; background: #05100a; color: #f4f7f4; -webkit-font-smoothing: antialiased; }
+    a { color: #f0c53c; text-decoration: none; } a:hover { color: #f0cd6d; }
+    * { box-sizing: border-box; }
+    .disp { font-family: "Bebas Neue", "Haettenschweiler", Impact, sans-serif; font-weight: 400; letter-spacing: 0.02em; }
+  </style>
+</helmet>
+<div style="width: 390px; background: #05100a; padding-bottom: 40px">
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid rgba(240,197,60,0.14)">
+    <div class="disp" style="font-size: 22px; color: #ffffff">ADMINISTRATION</div>
+    <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.08em; color: #f0c53c; border: 1px solid rgba(240,197,60,0.4); padding: 5px 9px; border-radius: 999px">ADMIN</div>
+  </div>
+
+  <div style="padding: 18px">
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+      <div style="padding: 16px; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08)">
+        <div style="font-size: 11px; color: #8fa89a">Utilisateurs</div>
+        <div class="disp" style="font-size: 30px; color: #ffffff; line-height: 1.15">312</div>
+      </div>
+      <div style="padding: 16px; border-radius: 16px; background: rgba(63,217,127,0.07); border: 1px solid rgba(63,217,127,0.25)">
+        <div style="font-size: 11px; color: #8fa89a">Abonnements actifs</div>
+        <div class="disp" style="font-size: 30px; color: #3fd97f; line-height: 1.15">147</div>
+      </div>
+      <div style="padding: 16px; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08)">
+        <div style="font-size: 11px; color: #8fa89a">Expirés</div>
+        <div class="disp" style="font-size: 30px; color: #a9c0b3; line-height: 1.15">38</div>
+      </div>
+      <div style="padding: 16px; border-radius: 16px; background: rgba(240,197,60,0.09); border: 1px solid rgba(240,197,60,0.3)">
+        <div style="font-size: 11px; color: #8fa89a">CA du mois</div>
+        <div class="disp" style="font-size: 30px; color: #f0c53c; line-height: 1.15">18 420 €</div>
+      </div>
+    </div>
+
+    <div style="height: 56px; margin-top: 16px; border-radius: 16px; background: linear-gradient(180deg, #ffd84d 0%, #dfa714 100%); color: #06170e; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 12px 30px rgba(223,167,20,0.28)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#06170e" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      Ajouter un pronostic
+    </div>
+
+    <div class="disp" style="font-size: 20px; color: #ffffff; margin-top: 24px">DERNIERS PAIEMENTS</div>
+    <div style="margin-top: 10px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); overflow: hidden">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06)">
+        <div>
+          <div style="font-size: 14px; color: #ffffff; font-weight: 700">karim.b@mail.com</div>
+          <div style="font-size: 11px; color: #7f9b8a; margin-top: 2px">VIP Safe · mensuel · pi_3PkQ…7fA</div>
+        </div>
+        <div style="text-align: right">
+          <div class="disp" style="font-size: 19px; color: #f0c53c">199,99 €</div>
+          <div style="font-size: 10px; color: #3fd97f; font-weight: 700">PAYÉ</div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06)">
+        <div>
+          <div style="font-size: 14px; color: #ffffff; font-weight: 700">sofia.m@mail.com</div>
+          <div style="font-size: 11px; color: #7f9b8a; margin-top: 2px">VIP Premium · à vie · pi_3PkR…2bC</div>
+        </div>
+        <div style="text-align: right">
+          <div class="disp" style="font-size: 19px; color: #f0c53c">449,99 €</div>
+          <div style="font-size: 10px; color: #3fd97f; font-weight: 700">PAYÉ</div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px">
+        <div>
+          <div style="font-size: 14px; color: #ffffff; font-weight: 700">t.leroy@mail.com</div>
+          <div style="font-size: 11px; color: #7f9b8a; margin-top: 2px">VIP Grosse Cote · mensuel · pi_3PkS…9dE</div>
+        </div>
+        <div style="text-align: right">
+          <div class="disp" style="font-size: 19px; color: #f0c53c">299,89 €</div>
+          <div style="font-size: 10px; color: #d98a86; font-weight: 700">ÉCHOUÉ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="disp" style="font-size: 20px; color: #ffffff; margin-top: 24px">PRONOSTICS PUBLIÉS</div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 10px">
+      <div style="padding: 14px 10px; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); text-align: center">
+        <div class="disp" style="font-size: 22px; color: #ffffff">6</div>
+        <div style="font-size: 10px; color: #8fa89a; margin-top: 2px">Aujourd'hui</div>
+      </div>
+      <div style="padding: 14px 10px; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); text-align: center">
+        <div class="disp" style="font-size: 22px; color: #ffffff">128</div>
+        <div style="font-size: 10px; color: #8fa89a; margin-top: 2px">Ce mois</div>
+      </div>
+      <div style="padding: 14px 10px; border-radius: 14px; background: rgba(240,197,60,0.08); border: 1px solid rgba(240,197,60,0.25); text-align: center">
+        <div class="disp" style="font-size: 22px; color: #f0c53c">2</div>
+        <div style="font-size: 10px; color: #8fa89a; margin-top: 2px">Brouillons</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

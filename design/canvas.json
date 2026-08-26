@@ -1,0 +1,22 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 390, "h": 1560, "title": "Accueil" },
+    { "file": "Offres.dc.html", "x": 510, "y": 0, "w": 390, "h": 1560, "title": "Nos VIP" },
+    { "file": "Inscription.dc.html", "x": 1020, "y": 0, "w": 390, "h": 1160, "title": "Compte + paiement Stripe" },
+    { "file": "Dashboard.dc.html", "x": 1530, "y": 0, "w": 390, "h": 1160, "title": "Espace membre" },
+    { "file": "VipSafe.dc.html", "x": 2040, "y": 0, "w": 390, "h": 1560, "title": "VIP Safe" },
+    { "file": "VipPremium.dc.html", "x": 0, "y": 1720, "w": 390, "h": 1320, "title": "VIP Premium" },
+    { "file": "GrosseCote.dc.html", "x": 510, "y": 1720, "w": 390, "h": 1080, "title": "VIP Grosse Cote" },
+    { "file": "Historique.dc.html", "x": 1020, "y": 1720, "w": 390, "h": 1060, "title": "Historique + stats" },
+    { "file": "Admin.dc.html", "x": 1530, "y": 1720, "w": 390, "h": 1080, "title": "Admin — tableau de bord" },
+    { "file": "AdminProno.dc.html", "x": 2040, "y": 1720, "w": 390, "h": 1520, "title": "Admin — ajouter un prono" },
+    { "file": "Contact.dc.html", "x": 2550, "y": 0, "w": 390, "h": 1180, "title": "Contactez-nous" }
+  ],
+  "annotations": [
+    { "id": "parcours", "x": 0, "y": -180, "w": 500, "text": "PARCOURS CLIENT (mobile 390px)\nAccueil → Nos VIP → Compte + paiement Stripe → Espace membre → l'espace VIP correspondant se déverrouille." },
+    { "id": "acces", "x": 2040, "y": -180, "w": 440, "text": "Accès VIP : chaque espace n'affiche que le contenu de la formule payée. Les autres restent verrouillés (à vérifier côté serveur, pas seulement à l'écran)." },
+    { "id": "admin-note", "x": 1530, "y": 1540, "w": 460, "text": "Côté admin : ajout / modification d'un pronostic sans toucher au code. Publier le rend visible immédiatement aux abonnés de la bonne catégorie." },
+    { "id": "logo-note", "x": 0, "y": 3120, "w": 500, "text": "Le logo est pour l'instant un écusson dessiné (placeholder). Dépose le vrai fichier dans le repo et je le remplace partout." }
+  ],
+  "launch": { "view": "canvas" }
+}

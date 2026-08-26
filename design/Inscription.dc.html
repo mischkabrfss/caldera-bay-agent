@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap">
+  <style>
+    body { margin: 0; font-family: Manrope, "Segoe UI", sans-serif; background: #05100a; color: #f4f7f4; -webkit-font-smoothing: antialiased; }
+    a { color: #f0c53c; text-decoration: none; } a:hover { color: #f0cd6d; }
+    * { box-sizing: border-box; }
+    .disp { font-family: "Bebas Neue", "Haettenschweiler", Impact, sans-serif; font-weight: 400; letter-spacing: 0.02em; }
+  </style>
+</helmet>
+<div style="width: 390px; background: #05100a; padding-bottom: 40px">
+  <div style="display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid rgba(240,197,60,0.14)">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#eaf2ec" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    <div class="disp" style="font-size: 20px; color: #ffffff">CRÉER MON COMPTE</div>
+  </div>
+
+  <div style="padding: 18px">
+    <div style="display: flex; align-items: center; gap: 10px; padding: 14px; border-radius: 16px; background: linear-gradient(160deg, #143f27 0%, #0a2415 100%); border: 1px solid rgba(240,197,60,0.35)">
+      <div style="flex-grow: 1">
+        <div style="font-size: 11px; color: #8fa89a">Formule choisie</div>
+        <div class="disp" style="font-size: 22px; color: #ffffff; line-height: 1.15">VIP PREMIUM · MENSUEL</div>
+      </div>
+      <div class="disp" style="font-size: 26px; color: #f0c53c">49,99 €</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 20px">
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a">PRÉNOM OU PSEUDO</div>
+        <div style="height: 52px; margin-top: 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); display: flex; align-items: center; padding: 0 14px; font-size: 15px; color: #ffffff">Karim</div>
+      </div>
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a">EMAIL</div>
+        <div style="height: 52px; margin-top: 8px; border-radius: 12px; border: 1px solid rgba(240,197,60,0.45); background: rgba(240,197,60,0.06); display: flex; align-items: center; padding: 0 14px; font-size: 15px; color: #ffffff">karim.b@mail.com</div>
+      </div>
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a">MOT DE PASSE</div>
+        <div style="height: 52px; margin-top: 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: space-between; padding: 0 14px; font-size: 15px; color: #cfe0d5; letter-spacing: 0.2em">
+          ••••••••
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7f9b8a" stroke-width="1.8"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="2.6"/></svg>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.12em; color: #7f9b8a">CONFIRMATION</div>
+        <div style="height: 52px; margin-top: 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); display: flex; align-items: center; padding: 0 14px; font-size: 15px; color: #cfe0d5; letter-spacing: 0.2em">••••••••</div>
+      </div>
+
+      <div style="display: flex; gap: 12px; align-items: flex-start; margin-top: 2px">
+        <div style="width: 24px; height: 24px; border-radius: 7px; background: #f0c53c; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#06170e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg>
+        </div>
+        <div style="font-size: 12px; line-height: 1.5; color: #a9c0b3">J'accepte les conditions générales et je confirme être majeur.</div>
+      </div>
+    </div>
+
+    <div style="height: 56px; margin-top: 20px; border-radius: 14px; background: linear-gradient(180deg, #ffd84d 0%, #dfa714 100%); color: #06170e; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 12px 30px rgba(223,167,20,0.28)">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#06170e" stroke-width="2.1" stroke-linecap="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+      Payer 49,99 € avec Stripe
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; font-size: 11px; color: #7f9b8a">
+      Paiement chiffré · aucune donnée bancaire stockée sur le site
+    </div>
+
+    <div style="margin-top: 22px; padding: 16px; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08)">
+      <div style="font-size: 12px; letter-spacing: 0.1em; color: #7f9b8a">APRÈS LE PAIEMENT</div>
+      <div style="display: flex; gap: 12px; margin-top: 12px">
+        <div style="width: 22px; height: 22px; border-radius: 50%; background: rgba(63,217,127,0.15); border: 1px solid rgba(63,217,127,0.45); color: #3fd97f; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">1</div>
+        <div style="font-size: 13px; color: #cfe0d5; line-height: 1.45">Stripe confirme le paiement au serveur (webhook).</div>
+      </div>
+      <div style="display: flex; gap: 12px; margin-top: 10px">
+        <div style="width: 22px; height: 22px; border-radius: 50%; background: rgba(63,217,127,0.15); border: 1px solid rgba(63,217,127,0.45); color: #3fd97f; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">2</div>
+        <div style="font-size: 13px; color: #cfe0d5; line-height: 1.45">L'abonnement est créé en base avec sa date d'expiration.</div>
+      </div>
+      <div style="display: flex; gap: 12px; margin-top: 10px">
+        <div style="width: 22px; height: 22px; border-radius: 50%; background: rgba(240,197,60,0.15); border: 1px solid rgba(240,197,60,0.5); color: #f0c53c; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">3</div>
+        <div style="font-size: 13px; color: #cfe0d5; line-height: 1.45">L'espace VIP Premium se déverrouille automatiquement.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
