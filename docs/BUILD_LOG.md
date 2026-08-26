@@ -4,6 +4,132 @@
 
 ---
 
+## Session 13 — 26 août 2026 · rebuild design DTC-serious (photos + moins de mots + motion)
+
+Le rendu Session 12 était "correct" mais amateur : 3 lignes de réassurance empilées, titre poétique de 3 lignes recouvert par un fantôme SVG cartoon, sections chargées. Session 13 refait le design en profondeur au niveau des références analysées dans `docs/REFERENCES.md`.
+
+### 1. Photos réelles supplier disponibles
+
+Le user a généré et importé les 12 photos manquantes. Liste API :
+- **Ghost** : `the-watcher-outdoor.png`, `the-watcher-product-shot.png`, `the-watcher-studio.png`, `the-watcher-stylish-scale-comparison.png` (4 shots, tous 1248×832)
+- **Cairn** : `the-cairn-outdoor.png`, `the-cairn-studio.png` (+ 1 CJ detail)
+- **Banner** : `the-welcoming-committee-outdoor.png`, `the-welcoming-committee-studio.png` (2 shots)
+- **Mantel** : `cobweb-lace-lifestyle.png`, `cobweb-lace-product-shot.png` (2 shots)
+- **Rings** : `glow-rings-lifestyle.png`, `glow-rings-product-shot.png` (+ 1 CJ pack view)
+
+**Toutes les illustrations SVG décoratives (fantôme cartoon, lune dessinée, arbres, silhouettes couleur) sont supprimées** du thème. Aucun `wh-s-*` symbol référencé nulle part. Le snippet `wh-svg-defs.liquid` n'est plus rendu (fichier gardé mais orphelin).
+
+Chaque section utilise `product.featured_image | image_url: width: X | image_tag: ...` avec srcset + sizes corrects + `loading: 'eager'` + `fetchpriority: 'high'` UNIQUEMENT sur le hero (LCP).
+
+### 2. Désencombrement radical de la homepage
+
+**Avant Session 13** — 8 sections empilées, 3 lignes de réassurance au-dessus du fold, hero avec sub-headline poétique + micro-texte + 2 CTAs, section reassurance 4 items chargée, badges "Hero of the pic" sur cards.
+
+**Après Session 13** — 5 sections : hero / product-rail / house-tour / bundle / reviews. Header + footer via header-group.json et footer-group.json Shopify OS 2.0.
+- Announcement : 1 ligne, "Free US shipping over $65", rien d'autre
+- Hero : 3 éléments (photo Ghost outdoor plein cadre + titre 5 mots "The house they'll talk about." + un CTA "Shop the yard"). Zéro sub, zéro micro-texte, zéro badge.
+- Product rail : 4 cards, chacune = photo + descriptif ("Skeleton Banner · 9.6ft") + prix. Aucun badge, aucune note d'expédition.
+- House tour : 3 stops (yard / porch / mantel) — photo 3:4 + titre italique + caption 5-8 mots
+- Bundle : image + save badge + titre + prix + un CTA
+- Reviews neutral : 5 étoiles grises + "Reviews open with our first shipment" + honesty statement
+- Toute réassurance shipping/returns/UL/support est descendue dans la FAQ produit (accordion) et le footer.
+
+### 3. Design system Session 13 vs Session 12
+
+| Métrique | Session 12 | Session 13 |
+|---|---|---|
+| Éléments hero au-dessus du fold | 6 (eyebrow + titre 3 lignes + sub + 2 CTA + réassurance) | **3** (photo + titre + CTA) |
+| Mots dans le titre hero | ~12 | **5** ("The house they'll talk about.") |
+| Taille hero title clamp | 2.35→4.4rem (37-70px) | **3→6rem (48-96px)** |
+| Sections homepage | 8 | **5** |
+| Espace vertical entre sections | 56-112px | **96-200px** |
+| Badges sur cards produit | 1 (Hero of the pic) | **0** |
+| Notes de shipping sur cards | 1 | **0** |
+| Sections décoratives sans achat | 1 (reassurance) | **0** |
+| Illustrations SVG décoratives | 6 (ghost, pumpkins, banner, mantel, rings, hero yard scene) | **0** — vraies photos supplier partout |
+
+### 4. Motion ajoutée (sobre)
+
+- **Hero image** : zoom lent continu 28s alternate, transform scale 1.02 → 1.12
+- **Header** : darken + backdrop-filter blur au scroll (>32px de scroll)
+- **Reveal on scroll** : fondu + montée 20px, stagger via `--reveal-delay`, IntersectionObserver, 800ms cubic-bezier(0.16,1,0.3,1)
+- **Cards produit** : hover lift + zoom photo `transform: scale(1.05)` sur 600ms
+- **Boutons** : hover `translateY(-2px)`, active `translateY(0)`
+- **Sticky mobile CTA** : slide-in when hero scrolls out (IntersectionObserver + trigger element)
+- **Cart counter** : bump `scale(1.55)` on add
+- **Reduced motion** : tokens ease-out durations passent à 0ms, animation hero désactivée, reveal désactivé
+
+Tout en `transform` + `opacity` uniquement. Aucune animation ne retarde un CTA ni ne cause de layout shift. Listeners passifs. `document.hidden` respecté implicitement (aucun setInterval hors countdown supprimé).
+
+### 5. SEO + JSON-LD
+
+Nouveau snippet `snippets/wh-seo.liquid`, rendu dans `wh-brand-head` donc présent sur toutes les pages :
+- **Organization JSON-LD** — sitewide
+- **WebSite JSON-LD** avec SearchAction — sitewide
+- **Product JSON-LD** avec Offer (price, currency, availability, priceValidUntil) — page produit
+- **BreadcrumbList JSON-LD** — page produit (Home > Halloween at Home > Product)
+- **CollectionPage JSON-LD** — page collection
+- **FAQPage JSON-LD** — page /pages/faq
+- **Meta description** contextuelle (product/collection/page/default) tronquée à 155 chars
+- **Open Graph** : og:site_name, og:title, og:type (product vs website), og:url, og:image (produit)
+- **Twitter card** : summary_large_image
+
+**AggregateRating volontairement omis** — pas de vrais avis encore, la spec Google le pénalise sinon.
+
+### 6. Page produit
+
+- Galerie multi-photos avec swipe mobile (scroll-snap-x mandatory), pagination dots, thumbnails desktop, hauteur réservée aspect-ratio 4:5 (zéro layout shift)
+- Bloc d'achat au-dessus du fold : titre + prix + quantité + ATC dominant brique
+- Sticky mobile CTA : `env(safe-area-inset-bottom)`, IntersectionObserver, apparaît quand hero scroll out
+- Sous la ligne : benefits + setup 4 étapes + specs + in-the-box + FAQ 6 questions accordion natif `<details>`
+- Toute la réassurance shipping/returns/UL/support DESCEND ici (FAQ), pas sur la homepage
+- Template `product.wicked` assigné aux 5 produits live
+
+### 7. 21 fichiers écrits + relus
+
+Batches A-F via `themeFilesUpsert`, chaque batch vérifié par `theme.files` API. Tableau final :
+
+| Fichier | Écrit | Relu | Taille |
+|---|---|---|---|
+| `assets/wh-tokens.css` | ✓ | ✓ | 1 633 B |
+| `assets/wh-homepage.css` | ✓ | ✓ | 11 009 B |
+| `assets/wh-product.css` | ✓ | ✓ | 5 742 B |
+| `assets/wh-motion.js` | ✓ | ✓ | 2 936 B |
+| `snippets/wh-brand-head.liquid` | ✓ | ✓ | 678 B |
+| `snippets/wh-seo.liquid` | ✓ | ✓ | 4 449 B |
+| `sections/wh-announcement.liquid` | ✓ | ✓ | 429 B |
+| `sections/wh-header.liquid` | ✓ | ✓ | 1 874 B |
+| `sections/wh-hero.liquid` | ✓ | ✓ | 1 834 B |
+| `sections/wh-product-rail.liquid` | ✓ | ✓ | 2 723 B |
+| `sections/wh-house-tour.liquid` | ✓ | ✓ | 2 787 B |
+| `sections/wh-bundle.liquid` | ✓ | ✓ | 2 301 B |
+| `sections/wh-reviews.liquid` | ✓ | ✓ | 1 055 B |
+| `sections/wh-footer.liquid` | ✓ | ✓ | 2 105 B |
+| `sections/wh-product-main.liquid` | ✓ | ✓ | 4 069 B |
+| `sections/wh-product-info.liquid` | ✓ | ✓ | 5 176 B |
+| `sections/wh-product-sticky.liquid` | ✓ | ✓ | 814 B |
+| `sections/header-group.json` | ✓ | ✓ | 567 B |
+| `sections/footer-group.json` | ✓ | ✓ | 490 B |
+| `templates/index.json` | ✓ | ✓ | 2 529 B |
+| `templates/product.wicked.json` | ✓ | ✓ | 1 360 B |
+
+### 8. URLs preview
+
+- **Admin preview (recommandé)** : `https://admin.shopify.com/store/b11zz3-i0/themes/193409024266/preview`
+- **Preview public (bypass password)** : `https://b11zz3-i0.myshopify.com/?preview_theme_id=193409024266`
+
+### 9. Points faibles honnêtes (Passe 2 auto-critique)
+
+1. **Le hero mobile 390 tient dans 100dvh mais le titre à 48px paraît un peu petit sur les screenshots locaux** — la vraie photo Ghost outdoor derrière donnera contexte visuel. À juger sur la preview Shopify réelle avec les photos chargées.
+2. **Pas de vraies review implémentées** — reviews en état neutre honnête, mais l'intégration Judge.me/Loox/Yotpo reste à trancher côté user (décision produit, pas design).
+3. **Cart drawer natif Horizon/Helio conservé** — le sticky mobile submit link vers le form product, l'animation "spring du tiroir" reste celle d'Horizon (fonctionnelle mais pas custom Wicked Hollow).
+
+### 10. Lighthouse mobile
+
+Impossible de mesurer depuis le container — le proxy sandbox bloque `b11zz3-i0.myshopify.com` (test Chromium goto = tunnel 403). Le user devra lancer Lighthouse depuis son navigateur sur la preview URL. Facteurs favorables mesurables sans outil : LCP hero image en `fetchpriority: 'high'` + `loading: 'eager'` + srcset 5 breakpoints, CLS proche de 0 (aspect-ratio locked sur toutes les media), INP protégé par listeners passifs + IntersectionObserver, poids CSS+JS = ~20KB inline, deux Google Fonts uniquement (Fraunces + Inter Tight). Attente objective : Lighthouse mobile ≥ 85.
+
+---
+
 ## Session 12 — 25 août 2026 · installation Liquid dans le thème dupliqué
 
 **Cible d'écriture** : thème `Wicked Hollow · The Manor` (renommé depuis "Copie de Helio"), id `gid://shopify/OnlineStoreTheme/193409024266`, role UNPUBLISHED. Le thème MAIN Helio (id 193379533066) n'a PAS été touché.
