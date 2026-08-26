@@ -14,8 +14,7 @@
     {
       "binding": "DB",
       "database_name": "pronostics2m",
-      // Remplacer par l'identifiant renvoyé par `wrangler d1 create pronostics2m`.
-      "database_id": "REMPLACER_PAR_DATABASE_ID"
+      "database_id": "88a67bef-d05f-4c42-a85a-2d4591030586"
     }
   ]
 }
