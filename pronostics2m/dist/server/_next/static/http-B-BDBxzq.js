@@ -1,1 +1,0 @@
-function e(e,t,n=303){return new Response(null,{status:n,headers:{Location:new URL(t,e.url).toString()}})}export{e as t};

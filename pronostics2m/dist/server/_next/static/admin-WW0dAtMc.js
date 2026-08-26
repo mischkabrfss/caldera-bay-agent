@@ -1,1 +1,0 @@
-import{r as e}from"./navigation-errors-BGVhZgnB.js";import"./navigation.react-server-DHZWcrRD.js";import{i as t}from"./auth-C0ViCi4H.js";async function n(){let n=await t();return n||e(`/connexion`),n.role!==`admin`&&e(`/compte`),n}async function r(){return(await t())?.role===`admin`}export{n,r as t};

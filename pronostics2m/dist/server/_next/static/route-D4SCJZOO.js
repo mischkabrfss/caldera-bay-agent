@@ -1,1 +1,0 @@
-import{n as e}from"./auth-C0ViCi4H.js";import{t}from"./http-B-BDBxzq.js";async function n(n){return await e(),t(n,`/`)}export{n as POST};
