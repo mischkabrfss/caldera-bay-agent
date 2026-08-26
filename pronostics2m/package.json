@@ -10,7 +10,7 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "vinext start",
-    "deploy": "vinext-cloudflare deploy",
+    "deploy": "vinext build && wrangler deploy -c dist/server/wrangler.json",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
   },
   "dependencies": {
@@ -30,7 +30,6 @@
     "typescript": "5.9.3",
     "vinext": "1.0.0-beta.3",
     "vite": "8.0.13",
-    "wrangler": "4.92.0",
-    "@vinext/cloudflare": "1.0.0-beta.6"
+    "wrangler": "4.92.0"
   }
 }
