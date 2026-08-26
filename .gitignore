@@ -1,5 +1,5 @@
 # dependencies
-/node_modules
+node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -9,12 +9,12 @@
 !.yarn/versions
 
 # testing
-/coverage
+coverage/
 
 # next.js
 .next/
 .vinext/
-/out/
+out/
 
 # misc
 .DS_Store
