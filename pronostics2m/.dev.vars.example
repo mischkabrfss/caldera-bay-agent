@@ -1,0 +1,6 @@
+SESSION_SECRET=chaine-longue-et-aleatoire
+ADMIN_EMAIL=admin@exemple.com
+ADMIN_PASSWORD=motdepasse-solide
+PUBLIC_SITE_URL=http://localhost:5173
+# STRIPE_SECRET_KEY=sk_test_...
+# STRIPE_WEBHOOK_SECRET=whsec_...

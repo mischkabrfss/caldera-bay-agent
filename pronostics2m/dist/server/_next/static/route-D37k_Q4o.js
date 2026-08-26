@@ -1,0 +1,7 @@
+import{n as e}from"./db-zsJZwJDG.js";import{t}from"./admin-WW0dAtMc.js";import{t as n}from"./http-B-BDBxzq.js";import{t as r}from"./predictionInput-u-rVLYEq.js";async function i(i){if(!await t())return n(i,`/connexion`);let a=r(await i.formData());if(`error`in a)return n(i,`/admin/pronostics/nouveau?erreur=${encodeURIComponent(a.error)}`);let o=await e(),s=await o.prepare(`INSERT INTO predictions
+        (vip_type, prediction_type, match_date, sport, competition, match_label, kick_off,
+         bet, player, odds, confidence, analysis, status, published_at)
+       VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13,
+         CASE WHEN ?13 = 'draft' THEN NULL ELSE datetime('now') END)
+       RETURNING id`).bind(a.vip_type,a.prediction_type,a.match_date,a.sport,a.competition,a.match_label,a.kick_off,a.bet,a.player,a.odds,a.confidence,a.analysis,a.status).first();if(s&&a.legs.length>0)for(let[e,t]of a.legs.entries())await o.prepare(`INSERT INTO prediction_legs (prediction_id, position, match_label, bet, odds, status)
+           VALUES (?1, ?2, ?3, ?4, ?5, ?6)`).bind(s.id,e+1,t.match_label,t.bet,t.odds,t.status).run();let c=a.status===`draft`?`Brouillon enregistré.`:`Pronostic publié — il est visible par les abonnés concernés.`;return n(i,`/admin/pronostics?ok=${encodeURIComponent(c)}`)}export{i as POST};
