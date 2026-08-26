@@ -1,8 +1,10 @@
 packages:
   - 'pronostics2m'
 
-allowBuilds:
-  esbuild: set this to true or false
-  sharp: set this to true or false
-  unrs-resolver: set this to true or false
-  workerd: set this to true or false
+# Ces paquets ont besoin d'exécuter leur script d'installation
+# (binaires natifs : esbuild, le runtime workerd de Cloudflare, etc.).
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - unrs-resolver
+  - workerd
