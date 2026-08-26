@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { offerBySlug } from '@/lib/offers';
@@ -80,7 +79,7 @@ export default async function RegisterPage({
           <label className="check">
             <input type="checkbox" name="terms" value="1" required />
             <span>
-              J’accepte les <Link href="/conditions">conditions générales</Link> et je confirme
+              J’accepte les <a href="/conditions">conditions générales</a> et je confirme
               être majeur.
             </span>
           </label>
@@ -91,7 +90,7 @@ export default async function RegisterPage({
         </form>
 
         <p className="small center muted">
-          Déjà inscrit ? <Link href="/connexion">Se connecter</Link>
+          Déjà inscrit ? <a href="/connexion">Se connecter</a>
         </p>
       </div>
     </section>

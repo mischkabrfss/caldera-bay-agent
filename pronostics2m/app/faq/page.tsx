@@ -1,4 +1,3 @@
-import Link from 'next/link';
 
 const QUESTIONS = [
   [
@@ -50,9 +49,9 @@ export default function FaqPage() {
           ))}
         </div>
 
-        <Link href="/contact" className="btn-line btn-block mt-8">
+        <a href="/contact" className="btn-line btn-block mt-8">
           Une autre question ? Contactez-nous
-        </Link>
+        </a>
       </div>
     </section>
   );

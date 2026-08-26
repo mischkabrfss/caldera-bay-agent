@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { IconBall, IconHome, IconList, IconUser } from '@/components/icons';
 
 const tabs = [
@@ -10,16 +9,20 @@ const tabs = [
 
 export function MemberTabs({ active }: { active: string }) {
   return (
-    <nav className="p2m-tabbar">
+    <>
+      {/* Laisse la place à la barre fixe pour ne rien masquer en bas de page. */}
+      <div aria-hidden style={{ height: 24 }} />
+      <nav className="p2m-tabbar">
       {tabs.map(({ href, label, Icon }) => {
         const on = href === active;
         return (
-          <Link key={href} href={href} className={on ? 'on' : ''}>
+          <a key={href} href={href} className={on ? 'on' : ''}>
             <Icon size={20} color={on ? '#f0c53c' : '#7f9b8a'} />
             <span>{label}</span>
-          </Link>
+          </a>
         );
       })}
-    </nav>
+      </nav>
+    </>
   );
 }

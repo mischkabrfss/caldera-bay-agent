@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import type { PredictionWithLegs } from '@/lib/predictions';
 import { today } from '@/lib/format';
 
@@ -222,9 +221,9 @@ export function PredictionForm({ prediction }: { prediction?: PredictionWithLegs
         Publié → visible immédiatement par les abonnés de la catégorie choisie.
       </p>
 
-      <Link href="/admin/pronostics" className="small center">
+      <a href="/admin/pronostics" className="small center">
         Retour à la liste
-      </Link>
+      </a>
     </form>
   );
 }

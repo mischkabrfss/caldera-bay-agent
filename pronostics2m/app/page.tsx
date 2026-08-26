@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { OFFERS } from '@/lib/offers';
 import { euros } from '@/lib/format';
 import { getCurrentUser } from '@/lib/auth';
@@ -32,12 +31,12 @@ export default async function HomePage() {
           </p>
 
           <div className="stack gap-10 mt-8">
-            <Link href="/vip" className="btn btn-block">
+            <a href="/vip" className="btn btn-block">
               Découvrir les VIP
-            </Link>
-            <Link href={user ? '/compte' : '/connexion'} className="btn-ghost btn-block">
+            </a>
+            <a href={user ? '/compte' : '/connexion'} className="btn-ghost btn-block">
               {user ? 'Mon espace' : 'Se connecter'}
-            </Link>
+            </a>
           </div>
 
           <div className="grid-3 mt-16">
@@ -67,7 +66,7 @@ export default async function HomePage() {
 
           <div className="stack gap-12 mt-8">
             {OFFERS.map((offer) => (
-              <Link
+              <a
                 key={offer.slug}
                 href={`/vip#${offer.slug}`}
                 className={`card ${offer.highlight ? 'card-gold' : ''}`}
@@ -89,7 +88,7 @@ export default async function HomePage() {
                   <span className="odds odds-lg">{euros(offer.monthly)}</span>
                   <span className="small muted">/ mois · {euros(offer.lifetime)} à vie</span>
                 </div>
-              </Link>
+              </a>
             ))}
           </div>
 
@@ -159,9 +158,9 @@ export default async function HomePage() {
                 ),
               )}
             </ul>
-            <Link href="/vip" className="btn btn-block mt-8">
+            <a href="/vip" className="btn btn-block mt-8">
               Rejoindre le VIP
-            </Link>
+            </a>
           </div>
         </div>
       </section>

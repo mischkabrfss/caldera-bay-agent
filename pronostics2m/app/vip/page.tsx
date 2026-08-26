@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { OFFERS } from '@/lib/offers';
 import { OfferCard } from '@/components/p2m/OfferCard';
 import { getCurrentUser } from '@/lib/auth';
@@ -44,20 +43,20 @@ export default async function VipPage({
             gap: 0,
           }}
         >
-          <Link
+          <a
             href="/vip?plan=monthly"
             className={`chip grow ${plan === 'monthly' ? 'chip-on' : ''}`}
             style={{ justifyContent: 'center', border: 0 }}
           >
             Mensuel
-          </Link>
-          <Link
+          </a>
+          <a
             href="/vip?plan=lifetime"
             className={`chip grow ${plan === 'lifetime' ? 'chip-on' : ''}`}
             style={{ justifyContent: 'center', border: 0 }}
           >
             À vie
-          </Link>
+          </a>
         </div>
 
         <div className="grid-cards mt-8">
@@ -71,7 +70,7 @@ export default async function VipPage({
         {!user ? (
           <p className="small center" style={{ color: 'var(--muted-2)' }}>
             Vous serez invité à créer votre compte avant le paiement.{' '}
-            <Link href="/connexion">J’ai déjà un compte</Link>
+            <a href="/connexion">J’ai déjà un compte</a>
           </p>
         ) : null}
       </div>

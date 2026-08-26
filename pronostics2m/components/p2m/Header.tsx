@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { Logo } from '@/components/Logo';
 import type { User } from '@/lib/auth';
 
@@ -15,7 +14,7 @@ export function Header({ user }: { user: User | null }) {
     <header className="p2m-header">
       <div className="wrap">
         <div className="bar">
-          <Link href="/" className="brand">
+          <a href="/" className="brand">
             <Logo />
             <span>
               <span className="disp brand-name">
@@ -25,24 +24,24 @@ export function Header({ user }: { user: User | null }) {
                 CLUB VIP
               </span>
             </span>
-          </Link>
+          </a>
 
           <nav className="desk-nav">
             {links.map((link) => (
-              <Link key={link.href} href={link.href}>
+              <a key={link.href} href={link.href}>
                 {link.label}
-              </Link>
+              </a>
             ))}
             {user ? (
-              <Link href="/compte" className="btn btn-sm">
+              <a href="/compte" className="btn btn-sm">
                 Mon espace
-              </Link>
+              </a>
             ) : (
               <>
-                <Link href="/connexion">Connexion</Link>
-                <Link href="/vip" className="btn btn-sm">
+                <a href="/connexion">Connexion</a>
+                <a href="/vip" className="btn btn-sm">
                   Rejoindre le VIP
-                </Link>
+                </a>
               </>
             )}
           </nav>
@@ -55,18 +54,18 @@ export function Header({ user }: { user: User | null }) {
             </summary>
             <nav className="mobile-nav">
               {links.map((link) => (
-                <Link key={link.href} href={link.href}>
+                <a key={link.href} href={link.href}>
                   {link.label}
-                </Link>
+                </a>
               ))}
               {user ? (
-                <Link href="/compte">Mon espace</Link>
+                <a href="/compte">Mon espace</a>
               ) : (
-                <Link href="/connexion">Connexion</Link>
+                <a href="/connexion">Connexion</a>
               )}
-              <Link href="/vip" className="btn btn-block mt-8">
+              <a href="/vip" className="btn btn-block mt-8">
                 Rejoindre le VIP
-              </Link>
+              </a>
             </nav>
           </details>
         </div>

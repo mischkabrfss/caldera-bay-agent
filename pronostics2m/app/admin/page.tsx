@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { requireAdmin } from '@/lib/admin';
 import { getDb, tryDb } from '@/lib/db';
 import { euros, frenchDate } from '@/lib/format';
@@ -117,10 +116,10 @@ export default async function AdminHome() {
 
         <p className="xs dim">Chiffre d’affaires total encaissé : {euros(revenue?.total ?? 0)}.</p>
 
-        <Link href="/admin/pronostics/nouveau" className="btn btn-block">
+        <a href="/admin/pronostics/nouveau" className="btn btn-block">
           <IconPlus size={20} color="#06170e" />
           Ajouter un pronostic
-        </Link>
+        </a>
 
         <h2 className="disp mt-16" style={{ fontSize: 20 }}>
           PRONOSTICS PUBLIÉS

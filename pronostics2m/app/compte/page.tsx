@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { activeSubscriptions, listSubscriptions, VIP_LABELS, VIP_SLUGS, VIP_TYPES } from '@/lib/access';
@@ -104,7 +103,7 @@ export default async function AccountPage({
                   </button>
                 </form>
               ) : (
-                <Link href="/vip">Voir les VIP</Link>
+                <a href="/vip">Voir les VIP</a>
               )}
             </div>
           </div>
@@ -136,13 +135,13 @@ export default async function AccountPage({
                     </p>
                   </div>
                   {unlocked ? (
-                    <Link href={`/vip/${VIP_SLUGS[type]}`} className="btn btn-sm">
+                    <a href={`/vip/${VIP_SLUGS[type]}`} className="btn btn-sm">
                       Ouvrir
-                    </Link>
+                    </a>
                   ) : (
-                    <Link href={`/vip#${offer.slug}`} className="btn-line btn-sm">
+                    <a href={`/vip#${offer.slug}`} className="btn-line btn-sm">
                       Débloquer
-                    </Link>
+                    </a>
                   )}
                 </div>
               );
@@ -179,9 +178,9 @@ export default async function AccountPage({
               <p className="small muted">
                 Vos statistiques apparaîtront ici dès votre premier abonnement actif.
               </p>
-              <Link href="/vip" className="btn btn-block mt-16">
+              <a href="/vip" className="btn btn-block mt-16">
                 Choisir un VIP
-              </Link>
+              </a>
             </div>
           )}
 
@@ -220,9 +219,9 @@ export default async function AccountPage({
           ) : null}
 
           {OFFERS.length && activeTypes.length < 3 ? (
-            <Link href="/vip" className="btn-line btn-block mt-8">
+            <a href="/vip" className="btn-line btn-block mt-8">
               Ajouter une autre formule
-            </Link>
+            </a>
           ) : null}
         </div>
       </section>

@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 
@@ -45,11 +44,11 @@ export default async function LoginPage({
         </form>
 
         <p className="small center muted">
-          Mot de passe oublié ? <Link href="/contact">Contactez-nous</Link> pour une
+          Mot de passe oublié ? <a href="/contact">Contactez-nous</a> pour une
           réinitialisation.
         </p>
         <p className="small center muted">
-          Pas encore de compte ? <Link href="/inscription">Créer un compte</Link>
+          Pas encore de compte ? <a href="/inscription">Créer un compte</a>
         </p>
       </div>
     </section>

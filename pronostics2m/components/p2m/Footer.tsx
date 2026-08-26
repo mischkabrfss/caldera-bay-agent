@@ -1,15 +1,14 @@
-import Link from 'next/link';
 
 export function Footer() {
   return (
     <footer className="p2m-footer">
       <div className="wrap stack gap-12">
         <div className="row gap-18" style={{ flexWrap: 'wrap' }}>
-          <Link href="/vip">Nos VIP</Link>
-          <Link href="/historique">Résultats</Link>
-          <Link href="/faq">FAQ</Link>
-          <Link href="/contact">Contact</Link>
-          <Link href="/conditions">Conditions générales</Link>
+          <a href="/vip">Nos VIP</a>
+          <a href="/historique">Résultats</a>
+          <a href="/faq">FAQ</a>
+          <a href="/contact">Contact</a>
+          <a href="/conditions">Conditions générales</a>
         </div>
         <p>
           PRONOSTICS 2M — service d’analyse et de pronostics sportifs par abonnement. Les paris

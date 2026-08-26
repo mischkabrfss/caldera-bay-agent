@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { grantedVipTypes, VIP_LABELS, VIP_SLUGS, VIP_TYPES, vipTypeFromSlug } from '@/lib/access';
@@ -72,36 +71,36 @@ export default async function HistoryPage({
                 L’historique est réservé aux abonnés. Il reprend tous les pronostics publiés dans vos
                 espaces, avec leur résultat.
               </p>
-              <Link href="/vip" className="btn btn-block mt-16">
+              <a href="/vip" className="btn btn-block mt-16">
                 Choisir un VIP
-              </Link>
+              </a>
             </div>
           ) : (
             <>
               <div className="chips">
-                <Link href={query({ vip: undefined })} className={`chip ${!selected ? 'chip-on' : ''}`}>
+                <a href={query({ vip: undefined })} className={`chip ${!selected ? 'chip-on' : ''}`}>
                   Tous mes VIP
-                </Link>
+                </a>
                 {granted.map((type) => (
-                  <Link
+                  <a
                     key={type}
                     href={query({ vip: VIP_SLUGS[type] })}
                     className={`chip ${selected === type ? 'chip-on' : ''}`}
                   >
                     {VIP_LABELS[type]}
-                  </Link>
+                  </a>
                 ))}
               </div>
 
               <div className="chips">
                 {STATUS_FILTERS.map((filter) => (
-                  <Link
+                  <a
                     key={filter.value || 'all'}
                     href={query({ statut: filter.value || undefined })}
                     className={`chip ${(params.statut ?? '') === filter.value ? 'chip-on' : ''}`}
                   >
                     {filter.label}
-                  </Link>
+                  </a>
                 ))}
               </div>
 

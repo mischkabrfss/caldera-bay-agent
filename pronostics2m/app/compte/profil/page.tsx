@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { getDb, tryDb } from '@/lib/db';
@@ -130,9 +129,9 @@ export default async function ProfilePage({
             </button>
           </form>
 
-          <Link href="/compte" className="small center">
+          <a href="/compte" className="small center">
             Retour au tableau de bord
-          </Link>
+          </a>
         </div>
       </section>
       <MemberTabs active="/compte/profil" />

@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { requireAdmin } from '@/lib/admin';
 import { tryDb } from '@/lib/db';
 import { adminPredictions, STATUS_LABELS, TYPE_LABELS } from '@/lib/predictions';
@@ -34,10 +33,10 @@ export default async function AdminPredictions({
           </div>
         ) : null}
 
-        <Link href="/admin/pronostics/nouveau" className="btn btn-block">
+        <a href="/admin/pronostics/nouveau" className="btn btn-block">
           <IconPlus size={20} color="#06170e" />
           Ajouter un pronostic
-        </Link>
+        </a>
 
         <div className="stack gap-10">
           {rows.length === 0 && db ? (
@@ -47,7 +46,7 @@ export default async function AdminPredictions({
           ) : null}
 
           {rows.map((row) => (
-            <Link
+            <a
               key={row.id}
               href={`/admin/pronostics/${row.id}`}
               className={`list-row ${row.status}`}
@@ -70,7 +69,7 @@ export default async function AdminPredictions({
                 </span>
                 <span className="odds odds-sm">{fmtOdds(row.total_odds)}</span>
               </div>
-            </Link>
+            </a>
           ))}
         </div>
       </div>

@@ -1,4 +1,3 @@
-import Link from 'next/link';
 
 const links = [
   { href: '/admin', label: 'Tableau de bord' },
@@ -12,9 +11,9 @@ export function AdminNav({ active }: { active: string }) {
   return (
     <div className="chips">
       {links.map((link) => (
-        <Link key={link.href} href={link.href} className={`chip ${active === link.href ? 'chip-on' : ''}`}>
+        <a key={link.href} href={link.href} className={`chip ${active === link.href ? 'chip-on' : ''}`}>
           {link.label}
-        </Link>
+        </a>
       ))}
     </div>
   );

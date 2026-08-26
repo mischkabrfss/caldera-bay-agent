@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { requireVip, VIP_LABELS, VIP_SLUGS, vipTypeFromSlug } from '@/lib/access';
@@ -72,12 +71,12 @@ export default async function VipAreaPage({
               Cet espace est réservé aux abonnés {VIP_LABELS[vipType]}. Votre accès s’ouvre
               automatiquement dès que le paiement est confirmé par Stripe.
             </p>
-            <Link href={`/vip#${offer.slug}`} className="btn btn-block mt-8">
+            <a href={`/vip#${offer.slug}`} className="btn btn-block mt-8">
               Débloquer {VIP_LABELS[vipType]}
-            </Link>
-            <Link href="/compte" className="small">
+            </a>
+            <a href="/compte" className="small">
               Retour à mon espace
-            </Link>
+            </a>
           </div>
         </div>
         <MemberTabs active="/vip" />
@@ -149,12 +148,12 @@ export default async function VipAreaPage({
           })()}
 
           <div className="stack gap-10 mt-16">
-            <Link href={`/historique?vip=${VIP_SLUGS[vipType]}`} className="btn-line btn-block">
+            <a href={`/historique?vip=${VIP_SLUGS[vipType]}`} className="btn-line btn-block">
               Historique {VIP_LABELS[vipType]}
-            </Link>
-            <Link href="/compte" className="btn-ghost btn-block">
+            </a>
+            <a href="/compte" className="btn-ghost btn-block">
               Retour à mon espace
-            </Link>
+            </a>
           </div>
         </div>
       </section>
