@@ -161,12 +161,23 @@ def cut_clip_9x16(source: Path, clip: Clip, out_dir: Path, index: int) -> Path:
     return out
 
 
-def run_pipeline(youtube_url: str, n_clips: int = 6, do_cut: bool = True) -> dict:
+def run_pipeline(
+    youtube_url: str | None = None,
+    source_path: Path | None = None,
+    n_clips: int = 6,
+    do_cut: bool = True,
+) -> dict:
+    if not youtube_url and not source_path:
+        raise ValueError("youtube_url or source_path required")
+
     job_id = uuid.uuid4().hex[:12]
     job_dir = WORK_DIR / job_id
     job_dir.mkdir(parents=True, exist_ok=True)
 
-    source = download_youtube(youtube_url, job_dir)
+    if source_path:
+        source = source_path
+    else:
+        source = download_youtube(youtube_url, job_dir)  # type: ignore[arg-type]
     segments = transcribe(source)
     clips = score_with_claude(segments, n_clips=n_clips)
 
@@ -178,8 +189,13 @@ def run_pipeline(youtube_url: str, n_clips: int = 6, do_cut: bool = True) -> dic
             except subprocess.CalledProcessError:
                 clip.file = None
 
+    try:
+        source_rel = str(source.relative_to(WORK_DIR))
+    except ValueError:
+        source_rel = str(source)
+
     return {
         "job_id": job_id,
-        "source": str(source.relative_to(WORK_DIR)),
+        "source": source_rel,
         "clips": [asdict(c) for c in clips],
     }

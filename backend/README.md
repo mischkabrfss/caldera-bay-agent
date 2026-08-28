@@ -28,14 +28,30 @@ python main.py
 
 ## Utilisation
 
+### A. Depuis un lien YouTube
+
 ```bash
-# 1. Lancer l'analyse
 curl -X POST http://localhost:8000/api/analyze \
   -H "Content-Type: application/json" \
   -d '{"youtube_url": "https://youtube.com/watch?v=XXXX", "n_clips": 6}'
 # -> { "job_id": "abc123..." }
+```
 
-# 2. Poller le statut
+### B. Depuis un fichier local (upload multipart)
+
+```bash
+curl -X POST http://localhost:8000/api/upload \
+  -F "file=@ma_video.mp4" \
+  -F "n_clips=6" \
+  -F "cut=true"
+# -> { "job_id": "abc123...", "filename": "ma_video.mp4", "bytes": 524288000 }
+```
+
+Extensions acceptées : `.mp4 .mov .mkv .webm .m4v` — taille max 8 Go (configurable via `MAX_UPLOAD_BYTES`).
+
+### Poller le statut (identique pour les deux)
+
+```bash
 curl http://localhost:8000/api/jobs/abc123...
 # -> { "status": "running" | "done" | "error", "clips": [...] }
 ```

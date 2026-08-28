@@ -1,14 +1,15 @@
-"""Clipwave API — POST a YouTube URL, get scored viral clips back."""
+"""Clipwave API — POST a YouTube URL or upload a file, get scored viral clips back."""
 
 from __future__ import annotations
 
 import os
+import shutil
 import threading
 import uuid
 from pathlib import Path
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, HttpUrl
@@ -17,7 +18,10 @@ from pipeline import WORK_DIR, run_pipeline
 
 load_dotenv()
 
-app = FastAPI(title="Clipwave API", version="0.1.0")
+MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_BYTES", str(8 * 1024**3)))  # 8 GB
+ALLOWED_EXTS = {".mp4", ".mov", ".mkv", ".webm", ".m4v"}
+
+app = FastAPI(title="Clipwave API", version="0.2.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -34,10 +38,16 @@ class AnalyzeRequest(BaseModel):
     cut: bool = True
 
 
-def _run_job(job_id: str, req: AnalyzeRequest) -> None:
-    JOBS[job_id] = {"status": "running", "progress": "downloading"}
+def _run_job(job_id: str, *, youtube_url: str | None, source_path: Path | None,
+             n_clips: int, cut: bool) -> None:
+    JOBS[job_id] = {"status": "running", "progress": "processing"}
     try:
-        result = run_pipeline(str(req.youtube_url), n_clips=req.n_clips, do_cut=req.cut)
+        result = run_pipeline(
+            youtube_url=youtube_url,
+            source_path=source_path,
+            n_clips=n_clips,
+            do_cut=cut,
+        )
         JOBS[job_id] = {"status": "done", **result}
     except Exception as e:
         JOBS[job_id] = {"status": "error", "error": str(e)}
@@ -49,8 +59,56 @@ def analyze(req: AnalyzeRequest) -> dict:
         raise HTTPException(500, "ANTHROPIC_API_KEY not set")
     job_id = uuid.uuid4().hex[:12]
     JOBS[job_id] = {"status": "queued"}
-    threading.Thread(target=_run_job, args=(job_id, req), daemon=True).start()
+    threading.Thread(
+        target=_run_job,
+        kwargs={"job_id": job_id, "youtube_url": str(req.youtube_url),
+                "source_path": None, "n_clips": req.n_clips, "cut": req.cut},
+        daemon=True,
+    ).start()
     return {"job_id": job_id}
+
+
+@app.post("/api/upload")
+async def upload(
+    file: UploadFile = File(...),
+    n_clips: int = Form(6),
+    cut: bool = Form(True),
+) -> dict:
+    """Upload a video file and start the pipeline on it."""
+    if not os.getenv("ANTHROPIC_API_KEY"):
+        raise HTTPException(500, "ANTHROPIC_API_KEY not set")
+
+    ext = Path(file.filename or "").suffix.lower()
+    if ext not in ALLOWED_EXTS:
+        raise HTTPException(400, f"extension {ext!r} not allowed; use {sorted(ALLOWED_EXTS)}")
+
+    job_id = uuid.uuid4().hex[:12]
+    job_dir = WORK_DIR / job_id
+    job_dir.mkdir(parents=True, exist_ok=True)
+    dest = job_dir / f"source{ext}"
+
+    # Stream to disk with a size guard.
+    written = 0
+    with dest.open("wb") as out:
+        while True:
+            chunk = await file.read(1024 * 1024)
+            if not chunk:
+                break
+            written += len(chunk)
+            if written > MAX_UPLOAD_BYTES:
+                out.close()
+                shutil.rmtree(job_dir, ignore_errors=True)
+                raise HTTPException(413, f"file exceeds {MAX_UPLOAD_BYTES} bytes")
+            out.write(chunk)
+
+    JOBS[job_id] = {"status": "queued", "filename": file.filename, "bytes": written}
+    threading.Thread(
+        target=_run_job,
+        kwargs={"job_id": job_id, "youtube_url": None,
+                "source_path": dest, "n_clips": n_clips, "cut": cut},
+        daemon=True,
+    ).start()
+    return {"job_id": job_id, "filename": file.filename, "bytes": written}
 
 
 @app.get("/api/jobs/{job_id}")
