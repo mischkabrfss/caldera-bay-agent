@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap');
 
+html { scroll-behavior: smooth; }
+
 .p2m {
+  -webkit-tap-highlight-color: transparent;
   --bg: #05100a;
   --bg-soft: #071a10;
   --panel: #0c2418;
@@ -169,5 +172,75 @@
 .p2m tr:last-child td { border-bottom: 0; }
 
 .p2m-footer { margin-top: auto; padding: 28px 0 36px; border-top: 1px solid var(--line); color: var(--dim); font-size: 11px; line-height: 1.7; }
+
+/* ---------- motion: fluid entrances + tactile feedback ---------- */
+@keyframes p2mFadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes p2mFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes p2mPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(63, 217, 127, 0.55); }
+  70% { box-shadow: 0 0 0 7px rgba(63, 217, 127, 0); }
+}
+@keyframes p2mShimmerIn {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes p2mSlideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.p2m .dot-live {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--green); display: block;
+  animation: p2mPulse 1.8s ease-out infinite;
+}
+
+/* Every interactive surface eases instead of snapping. */
+.p2m a, .p2m button, .p2m .btn, .p2m .btn-line, .p2m .btn-ghost, .p2m .chip,
+.p2m .card, .p2m .card-gold, .p2m .card-flat, .p2m .tile, .p2m .vip-row,
+.p2m .list-row, .p2m summary, .p2m .input, .p2m .select, .p2m .textarea,
+.p2m .confidence i, .p2m-tabbar a {
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease,
+    border-color 0.16s ease, color 0.16s ease, opacity 0.16s ease;
+}
+
+/* Tactile press feedback — the whole point of a touch-first site. */
+.p2m .btn:active, .p2m .btn-line:active, .p2m .btn-ghost:active, .p2m .chip:active,
+.p2m .vip-row a:active, .p2m .mobile-nav a:active {
+  transform: scale(0.97);
+}
+.p2m a.card:active, .p2m .list-row:active, .p2m .vip-row:active {
+  transform: scale(0.985);
+}
+.p2m .btn:hover { box-shadow: 0 16px 34px rgba(223, 167, 20, 0.32); }
+.p2m a.card:hover, .p2m .card-gold:hover { border-color: rgba(240, 197, 60, 0.4); }
+
+/* Entrance: sections and cards ease into place instead of popping in. */
+.p2m .hero, .p2m .section > .wrap > * { animation: p2mFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.p2m .card, .p2m .card-gold, .p2m .card-flat, .p2m .tile, .p2m .vip-row, .p2m .list-row {
+  animation: p2mFadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.p2m .grid-cards > *:nth-child(1) .card, .p2m .grid-cards > *:nth-child(1) .card-gold { animation-delay: 0.03s; }
+.p2m .grid-cards > *:nth-child(2) .card, .p2m .grid-cards > *:nth-child(2) .card-gold { animation-delay: 0.1s; }
+.p2m .grid-cards > *:nth-child(3) .card, .p2m .grid-cards > *:nth-child(3) .card-gold { animation-delay: 0.17s; }
+.p2m .stack.gap-10 > *:nth-child(1), .p2m .stack.gap-12 > *:nth-child(1) { animation-delay: 0.02s; }
+.p2m .stack.gap-10 > *:nth-child(2), .p2m .stack.gap-12 > *:nth-child(2) { animation-delay: 0.07s; }
+.p2m .stack.gap-10 > *:nth-child(3), .p2m .stack.gap-12 > *:nth-child(3) { animation-delay: 0.12s; }
+.p2m .stack.gap-10 > *:nth-child(4), .p2m .stack.gap-12 > *:nth-child(4) { animation-delay: 0.17s; }
+.p2m .stack.gap-10 > *:nth-child(n+5), .p2m .stack.gap-12 > *:nth-child(n+5) { animation-delay: 0.2s; }
+
+.p2m .locked-veil { animation: p2mFadeIn 0.4s ease both; }
+.p2m .confidence i.on { transform-origin: left; animation: p2mShimmerIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.p2m .mobile-nav { animation: p2mSlideDown 0.2s ease both; }
+
+/* Progress / bar fills grow into place rather than appearing pre-filled. */
+.p2m .bar-split > div, .p2m .card-flat > div[style*='linear-gradient(90deg'] {
+  transform-origin: left; animation: p2mShimmerIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
 
 @media (prefers-reduced-motion: reduce) { .p2m * { animation: none !important; transition: none !important; } }

@@ -11,9 +11,7 @@ export default async function HomePage() {
       <section className="hero">
         <div className="wrap stack gap-14">
           <span className="badge badge-green" style={{ alignSelf: 'flex-start' }}>
-            <span
-              style={{ width: 6, height: 6, borderRadius: '50%', background: '#3fd97f', display: 'block' }}
-            />
+            <span className="dot-live" />
             PRONOS DU JOUR PUBLIÉS
           </span>
 
