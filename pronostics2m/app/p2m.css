@@ -2,13 +2,6 @@
 
 html { scroll-behavior: smooth; }
 
-/* Fluid page-to-page transitions (native browser support, no JS). */
-@view-transition { navigation: auto; }
-::view-transition-old(root) { animation: p2mLeaveFade 0.22s ease both; }
-::view-transition-new(root) { animation: p2mEnterFade 0.32s cubic-bezier(0.16, 1, 0.3, 1) both; }
-@keyframes p2mEnterFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes p2mLeaveFade { from { opacity: 1; } to { opacity: 0; } }
-
 .p2m {
   -webkit-tap-highlight-color: transparent;
   --bg: #05100a;
@@ -245,10 +238,10 @@ html { scroll-behavior: smooth; }
 .p2m a.card:hover, .p2m .card-gold:hover { border-color: rgba(240, 197, 60, 0.4); }
 
 /* Entrance: sections and cards ease into place instead of popping in. */
-.p2m .hero { animation: p2mHeroIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.p2m .section > .wrap > * { animation: p2mFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.p2m .hero { animation: p2mHeroIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+.p2m .section > .wrap > * { animation: p2mFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
 .p2m .card, .p2m .card-gold, .p2m .card-flat, .p2m .tile, .p2m .vip-row, .p2m .list-row {
-  animation: p2mFadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: p2mFadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 .p2m .grid-cards > *:nth-child(1) .card, .p2m .grid-cards > *:nth-child(1) .card-gold { animation-delay: 0.03s; }
 .p2m .grid-cards > *:nth-child(2) .card, .p2m .grid-cards > *:nth-child(2) .card-gold { animation-delay: 0.1s; }
@@ -259,13 +252,13 @@ html { scroll-behavior: smooth; }
 .p2m .stack.gap-10 > *:nth-child(4), .p2m .stack.gap-12 > *:nth-child(4) { animation-delay: 0.17s; }
 .p2m .stack.gap-10 > *:nth-child(n+5), .p2m .stack.gap-12 > *:nth-child(n+5) { animation-delay: 0.2s; }
 
-.p2m .locked-veil { animation: p2mFadeIn 0.4s ease both; }
-.p2m .confidence i.on { transform-origin: left; animation: p2mShimmerIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.p2m .mobile-nav { animation: p2mSlideDown 0.2s ease both; }
+.p2m .locked-veil { animation: p2mFadeIn 0.4s ease backwards; }
+.p2m .confidence i.on { transform-origin: left; animation: p2mShimmerIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+.p2m .mobile-nav { animation: p2mSlideDown 0.2s ease backwards; }
 
 /* Progress / bar fills grow into place rather than appearing pre-filled. */
 .p2m .bar-split > div, .p2m .card-flat > div[style*='linear-gradient(90deg'] {
-  transform-origin: left; animation: p2mShimmerIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  transform-origin: left; animation: p2mShimmerIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
 }
 
 /* ---------- tablette et ordinateur ----------
