@@ -2,6 +2,13 @@
 
 html { scroll-behavior: smooth; }
 
+/* Fluid page-to-page transitions (native browser support, no JS). */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: p2mLeaveFade 0.22s ease both; }
+::view-transition-new(root) { animation: p2mEnterFade 0.32s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes p2mEnterFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes p2mLeaveFade { from { opacity: 1; } to { opacity: 0; } }
+
 .p2m {
   -webkit-tap-highlight-color: transparent;
   --bg: #05100a;
@@ -175,8 +182,12 @@ html { scroll-behavior: smooth; }
 
 /* ---------- motion: fluid entrances + tactile feedback ---------- */
 @keyframes p2mFadeUp {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(22px); }
   to { opacity: 1; transform: translateY(0); }
+}
+@keyframes p2mHeroIn {
+  from { opacity: 0; transform: translateY(26px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 @keyframes p2mFadeIn {
   from { opacity: 0; }
@@ -221,9 +232,10 @@ html { scroll-behavior: smooth; }
 .p2m a.card:hover, .p2m .card-gold:hover { border-color: rgba(240, 197, 60, 0.4); }
 
 /* Entrance: sections and cards ease into place instead of popping in. */
-.p2m .hero, .p2m .section > .wrap > * { animation: p2mFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.p2m .hero { animation: p2mHeroIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.p2m .section > .wrap > * { animation: p2mFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
 .p2m .card, .p2m .card-gold, .p2m .card-flat, .p2m .tile, .p2m .vip-row, .p2m .list-row {
-  animation: p2mFadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: p2mFadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 .p2m .grid-cards > *:nth-child(1) .card, .p2m .grid-cards > *:nth-child(1) .card-gold { animation-delay: 0.03s; }
 .p2m .grid-cards > *:nth-child(2) .card, .p2m .grid-cards > *:nth-child(2) .card-gold { animation-delay: 0.1s; }
