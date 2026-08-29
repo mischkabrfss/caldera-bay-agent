@@ -28,7 +28,7 @@ export default async function HomePage() {
             personnel.
           </p>
 
-          <div className="stack gap-10 mt-8">
+          <div className="stack gap-10 mt-8 hero-actions">
             <a href="/vip" className="btn btn-block">
               Découvrir les VIP
             </a>
@@ -62,7 +62,7 @@ export default async function HomePage() {
             paiement.
           </p>
 
-          <div className="stack gap-12 mt-8">
+          <div className="stack gap-12 mt-8 offer-teasers">
             {OFFERS.map((offer) => (
               <a
                 key={offer.slug}
@@ -110,7 +110,7 @@ export default async function HomePage() {
       <section className="section">
         <div className="wrap stack gap-14">
           <h2 className="disp section-title">COMMENT ÇA MARCHE</h2>
-          <div className="stack gap-12">
+          <div className="stack gap-12 steps-grid">
             {[
               ['1', 'Créez votre compte', 'Prénom ou pseudo, email, mot de passe. Deux minutes.'],
               ['2', 'Choisissez votre VIP', 'Mensuel ou à vie, paiement sécurisé par Stripe.'],

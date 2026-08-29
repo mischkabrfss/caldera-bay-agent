@@ -73,9 +73,22 @@ html { scroll-behavior: smooth; }
 .p2m .desk-nav a:hover { color: #fff; }
 .p2m .menu > summary { display: grid; place-items: center; width: 46px; height: 46px; border: 1px solid rgba(240, 197, 60, 0.28); border-radius: 12px; cursor: pointer; list-style: none; }
 .p2m .menu > summary::-webkit-details-marker { display: none; }
-.p2m .mobile-nav { display: grid; gap: 6px; padding: 8px 0 18px; border-top: 1px solid var(--line); }
+/* Le panneau du menu se déplie sous l'en-tête, sur toute la largeur.
+   Sans ça il s'ouvrait dans la colonne du bouton, donc hors de l'écran. */
+.p2m .mobile-nav {
+  position: absolute; left: 0; right: 0; top: 100%;
+  display: grid; gap: 6px;
+  padding: 12px 18px calc(18px + env(safe-area-inset-bottom));
+  background: rgba(5, 16, 10, 0.985);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid rgba(240, 197, 60, 0.14);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.55);
+  max-height: calc(100dvh - 64px);
+  overflow-y: auto;
+  z-index: 60;
+}
 .p2m .mobile-nav a { display: flex; align-items: center; min-height: 50px; padding: 0 14px; border-radius: 12px; color: var(--text); font-weight: 600; }
-@media (min-width: 860px) { .p2m .desk-nav { display: flex; } .p2m .menu { display: none; } }
+/* La bascule entre menu ☰ et barre de navigation est décidée plus bas (1000px). */
 
 .p2m .btn, .p2m .btn-ghost, .p2m .btn-line {
   display: inline-flex; align-items: center; justify-content: center; gap: 9px;
@@ -253,6 +266,68 @@ html { scroll-behavior: smooth; }
 /* Progress / bar fills grow into place rather than appearing pre-filled. */
 .p2m .bar-split > div, .p2m .card-flat > div[style*='linear-gradient(90deg'] {
   transform-origin: left; animation: p2mShimmerIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+/* ---------- tablette et ordinateur ----------
+   En dessous, tout est pensé pour le téléphone. Au-dessus de 700px il faut
+   contraindre les largeurs, sinon les boutons et les lignes de texte
+   s'étirent sur toute la dalle et le site fait bricolé. */
+@media (min-width: 700px) {
+  .p2m .wrap { padding: 0 32px; }
+
+  /* Le hero : titre lisible, boutons côte à côte à leur taille naturelle. */
+  .p2m .hero { padding: 56px 0 44px; }
+  .p2m .hero h1 { font-size: clamp(52px, 7vw, 82px); max-width: 15ch; }
+  .p2m .hero .lead { max-width: 52ch; font-size: 17px; }
+  .p2m .hero-actions { flex-direction: row; flex-wrap: wrap; }
+  .p2m .hero-actions .btn-block { display: inline-flex; width: auto; min-width: 220px; }
+  .p2m .hero .grid-3 { max-width: 620px; }
+
+  /* Les titres et paragraphes de section gardent une longueur de ligne lisible. */
+  .p2m .section { padding: 48px 0; }
+  .p2m .section-title { font-size: clamp(34px, 4.4vw, 46px); }
+  .p2m .section .lead { max-width: 60ch; }
+
+  /* Les offres et les étapes passent en grille au lieu d'une colonne étirée. */
+  .p2m .offer-teasers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+  .p2m .steps-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .p2m .grid-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+  .p2m .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+  /* Une carte pleine largeur sur 1000px ne se lit pas : on la recentre. */
+  .p2m .card-gold.center, .p2m .section > .wrap > .card.center { max-width: 720px; margin: 0 auto; }
+  .p2m .card-gold.center .btn-block { display: inline-flex; width: auto; min-width: 260px; align-self: center; }
+
+  /* Formulaires et contenus de lecture : centrés, jamais pleine largeur. */
+  .p2m .section > .wrap[style*='max-width'] { margin: 0 auto; }
+
+  /* La barre d'onglets du bas est faite pour le pouce : on la recentre. */
+  .p2m-tabbar { justify-content: center; }
+  .p2m-tabbar a { flex-grow: 0; min-width: 132px; }
+
+  .p2m .page-title { font-size: clamp(30px, 3.6vw, 40px); }
+}
+
+@media (min-width: 700px) {
+  /* Les cartes d'offres en 3 colonnes sont étroites : on empile leur contenu. */
+  .p2m .offer-teasers .between { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .p2m .offer-teasers .row { flex-wrap: wrap; }
+}
+
+/* La barre de navigation complète n'apparaît que quand elle tient vraiment.
+   En dessous, le menu ☰ (qui s'ouvre en pleine largeur) reste plus lisible. */
+@media (min-width: 1000px) {
+  .p2m .desk-nav { display: flex; gap: 20px; }
+  .p2m .menu { display: none; }
+  .p2m .brand-name, .p2m .desk-nav a, .p2m .desk-nav .btn { white-space: nowrap; }
+  .p2m .brand { flex-shrink: 0; }
+  .p2m .desk-nav .btn { flex-shrink: 0; padding: 0 16px; }
+  .p2m .offer-teasers .between { flex-direction: row; align-items: center; }
+}
+
+@media (min-width: 1100px) {
+  .p2m .hero { padding: 72px 0 56px; }
+  .p2m .section { padding: 60px 0; }
 }
 
 @media (prefers-reduced-motion: reduce) { .p2m * { animation: none !important; transition: none !important; } }
