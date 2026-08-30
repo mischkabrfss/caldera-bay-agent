@@ -185,6 +185,9 @@ html { scroll-behavior: smooth; }
 .p2m tr:last-child td { border-bottom: 0; }
 
 .p2m-footer { margin-top: auto; padding: 28px 0 36px; border-top: 1px solid var(--line); color: var(--dim); font-size: 11px; line-height: 1.7; }
+/* Les liens du pied de page doivent aussi se toucher confortablement. */
+.p2m-footer .row a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 2px; }
+.p2m .brand { min-height: 44px; }
 
 /* ---------- motion: fluid entrances + tactile feedback ---------- */
 @keyframes p2mFadeUp {
