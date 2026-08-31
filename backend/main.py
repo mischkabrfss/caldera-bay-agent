@@ -20,8 +20,9 @@ load_dotenv()
 
 MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_BYTES", str(8 * 1024**3)))  # 8 GB
 ALLOWED_EXTS = {".mp4", ".mov", ".mkv", ".webm", ".m4v"}
+STATIC_DIR = Path(__file__).parent / "static"
 
-app = FastAPI(title="Clipwave API", version="0.2.0")
+app = FastAPI(title="Clipwave API", version="0.3.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -129,6 +130,12 @@ def get_clip(path: str) -> FileResponse:
 @app.get("/health")
 def health() -> dict:
     return {"ok": True}
+
+
+@app.get("/")
+def index() -> FileResponse:
+    """Serve the Clipwave UI so the frontend and API share an origin."""
+    return FileResponse(STATIC_DIR / "index.html", media_type="text/html")
 
 
 if __name__ == "__main__":

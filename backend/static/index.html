@@ -1,0 +1,1507 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  html { color-scheme: light dark; }
+  body { margin: 0; font: 14px system-ui, sans-serif; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>Clipwave</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<style>
+  :root {
+    --ground: #0B0420;
+    --ground-2: #140935;
+    --surface: rgba(30, 15, 70, 0.55);
+    --surface-solid: #1A0F3D;
+    --stroke: rgba(196, 181, 253, 0.14);
+    --stroke-strong: rgba(196, 181, 253, 0.28);
+    --violet: #A855F7;
+    --violet-bright: #C084FC;
+    --pink: #EC4899;
+    --magenta: #D946EF;
+    --halo: #7C3AED;
+    --cyan-accent: #67E8F9;
+    --text: #F5F0FF;
+    --text-muted: #A79BC9;
+    --text-dim: #6E5F94;
+    --good: #4ADE80;
+    --warn: #FBBF24;
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { overflow-x: hidden; }
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    color: var(--text);
+    background: var(--ground);
+    background-image:
+      radial-gradient(1200px 800px at 80% -10%, rgba(168, 85, 247, 0.35), transparent 60%),
+      radial-gradient(900px 700px at -10% 40%, rgba(236, 72, 153, 0.18), transparent 55%),
+      radial-gradient(1000px 900px at 50% 110%, rgba(124, 58, 237, 0.28), transparent 60%),
+      linear-gradient(180deg, #0B0420 0%, #0A0318 100%);
+    background-attachment: fixed;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- Layout scaffold ---------- */
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 32px; position: relative; }
+
+  /* ---------- Nav ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    background: linear-gradient(180deg, rgba(11,4,32,0.75), rgba(11,4,32,0.35));
+    border-bottom: 1px solid var(--stroke);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 0;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em;
+    font-size: 20px;
+  }
+  .logo-mark {
+    width: 30px; height: 30px; border-radius: 9px;
+    background:
+      radial-gradient(circle at 30% 30%, #F5D0FE, transparent 45%),
+      linear-gradient(135deg, var(--violet), var(--pink));
+    box-shadow: 0 0 20px rgba(168,85,247,0.55), inset 0 0 12px rgba(255,255,255,0.25);
+    position: relative;
+  }
+  .logo-mark::after {
+    content: ''; position: absolute; inset: 6px;
+    border-radius: 6px; border: 1px solid rgba(255,255,255,0.35);
+    mix-blend-mode: overlay;
+  }
+  .nav-links { display: flex; gap: 34px; font-size: 14px; color: var(--text-muted); }
+  .nav-links a { transition: color .2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    padding: 10px 18px; border-radius: 999px;
+    background: linear-gradient(135deg, var(--violet), var(--pink));
+    color: white; font-weight: 600; font-size: 14px;
+    box-shadow: 0 8px 24px -8px rgba(168,85,247,0.7);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 12px 30px -8px rgba(168,85,247,0.9); }
+
+  /* ---------- Hero ---------- */
+  .hero { position: relative; padding: 90px 0 120px; }
+  #starfield {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  }
+  .hero-inner { position: relative; z-index: 2; display: grid; grid-template-columns: 1.05fr 1fr; gap: 60px; align-items: center; }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 7px 14px; border-radius: 999px;
+    background: rgba(168,85,247,0.10);
+    border: 1px solid rgba(168,85,247,0.28);
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em;
+    color: #E9D5FF; text-transform: uppercase;
+  }
+  .eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--cyan-accent); box-shadow: 0 0 10px var(--cyan-accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+
+  h1.display {
+    font-family: var(--font-display);
+    font-size: clamp(44px, 6vw, 78px);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    margin: 24px 0 20px;
+    text-wrap: balance;
+  }
+  h1.display .grad {
+    background: linear-gradient(120deg, #F5D0FE 0%, #C084FC 40%, #F472B6 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    font-style: italic; font-weight: 500;
+  }
+  .hero p.lede {
+    font-size: 19px; color: var(--text-muted); max-width: 540px;
+    line-height: 1.6;
+  }
+
+  .cta-row { display: flex; gap: 14px; margin-top: 36px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 15px 24px; border-radius: 14px;
+    font-weight: 600; font-size: 15px; font-family: var(--font-body);
+    border: 1px solid transparent; cursor: pointer;
+    transition: transform .2s, box-shadow .2s, background .2s;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #A855F7 0%, #EC4899 100%);
+    color: white;
+    box-shadow: 0 20px 50px -12px rgba(168,85,247,0.7), inset 0 1px 0 rgba(255,255,255,0.2);
+    position: relative; overflow: hidden;
+  }
+  .btn-primary::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform .8s;
+  }
+  .btn-primary:hover::before { transform: translateX(100%); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 26px 60px -12px rgba(236,72,153,0.75); }
+  .btn-ghost {
+    background: rgba(255,255,255,0.04); color: var(--text);
+    border: 1px solid var(--stroke-strong);
+    backdrop-filter: blur(10px);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.08); }
+  .btn .play {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(168,85,247,0.25); display: grid; place-items: center;
+  }
+  .btn .play::after {
+    content: ''; width: 0; height: 0;
+    border-left: 6px solid var(--violet-bright); border-top: 4px solid transparent; border-bottom: 4px solid transparent;
+    margin-left: 2px;
+  }
+
+  .metrics {
+    display: flex; gap: 32px; margin-top: 48px; flex-wrap: wrap;
+    padding-top: 28px; border-top: 1px solid var(--stroke);
+  }
+  .metric-num {
+    font-family: var(--font-display); font-size: 26px; font-weight: 600;
+    letter-spacing: -0.02em;
+    background: linear-gradient(180deg, #FFF 0%, #C4B5FD 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .metric-lbl { font-size: 12px; color: var(--text-dim); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+
+  /* ---------- Hero 3D scene ---------- */
+  .scene {
+    position: relative; width: 100%; aspect-ratio: 1 / 1.05;
+    display: grid; place-items: center;
+  }
+  #orb-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  .float-card {
+    position: absolute; z-index: 3;
+    background: linear-gradient(160deg, rgba(45, 22, 92, 0.75), rgba(20, 9, 53, 0.55));
+    border: 1px solid var(--stroke-strong);
+    border-radius: 18px;
+    padding: 14px 16px;
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    box-shadow: 0 20px 50px -20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08);
+    animation: floaty 6s ease-in-out infinite;
+  }
+  @keyframes floaty {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .fc-1 { top: 6%; left: -4%; animation-delay: -1s; width: 210px; }
+  .fc-2 { top: 40%; right: -6%; animation-delay: -3s; width: 220px; }
+  .fc-3 { bottom: 4%; left: 8%; animation-delay: -5s; width: 240px; }
+
+  .fc-title { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); letter-spacing: 0.04em; }
+  .fc-title .badge-live { padding: 2px 7px; border-radius: 6px; background: rgba(74,222,128,0.12); color: var(--good); font-size: 10px; }
+  .fc-body { margin-top: 8px; font-family: var(--font-display); font-weight: 500; font-size: 15px; color: var(--text); }
+  .fc-bar { margin-top: 10px; height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+  .fc-bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--violet), var(--pink)); border-radius: 3px; }
+  .fc-tags { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+  .fc-tags span { font-size: 10px; padding: 3px 7px; border-radius: 999px; background: rgba(168,85,247,0.15); color: #E9D5FF; font-family: var(--font-mono); letter-spacing: 0.03em; }
+
+  /* ---------- Section base ---------- */
+  section { padding: 100px 0; position: relative; }
+  .sect-head { max-width: 720px; margin-bottom: 56px; }
+  .sect-eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--violet-bright); margin-bottom: 14px; display: block; }
+  h2 {
+    font-family: var(--font-display); font-weight: 500;
+    font-size: clamp(32px, 4vw, 46px); letter-spacing: -0.025em; line-height: 1.05;
+    margin: 0 0 18px; text-wrap: balance;
+  }
+  h2 em { font-style: italic; color: var(--violet-bright); font-weight: 500; }
+  .sect-lede { color: var(--text-muted); font-size: 17px; max-width: 620px; }
+
+  /* ---------- How it works ---------- */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .step {
+    position: relative; padding: 28px; border-radius: 22px;
+    background: linear-gradient(165deg, rgba(45, 22, 92, 0.5), rgba(20, 9, 53, 0.35));
+    border: 1px solid var(--stroke);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    overflow: hidden;
+    transition: transform .3s, border-color .3s;
+  }
+  .step:hover { transform: translateY(-4px); border-color: var(--stroke-strong); }
+  .step::before {
+    content: ''; position: absolute; top: -80px; right: -80px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(168,85,247,0.35), transparent 70%);
+    filter: blur(30px);
+  }
+  .step-n {
+    font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+  .step h3 { font-family: var(--font-display); font-weight: 500; font-size: 22px; margin: 14px 0 10px; letter-spacing: -0.015em; }
+  .step p { color: var(--text-muted); font-size: 14.5px; margin: 0; }
+  .step-icon {
+    width: 46px; height: 46px; border-radius: 14px; margin-top: 22px;
+    display: grid; place-items: center;
+    background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(236,72,153,0.12));
+    border: 1px solid var(--stroke-strong);
+    position: relative;
+  }
+  .step-icon svg { width: 22px; height: 22px; color: var(--violet-bright); }
+
+  /* ---------- Uploader ---------- */
+  .uploader-shell {
+    position: relative; padding: 4px; border-radius: 28px;
+    background: linear-gradient(135deg, rgba(168,85,247,0.5), rgba(236,72,153,0.35), rgba(103,232,249,0.25));
+    box-shadow: 0 40px 100px -30px rgba(168,85,247,0.5);
+  }
+  .uploader {
+    border-radius: 25px; padding: 40px;
+    background: rgba(12, 5, 34, 0.9);
+    backdrop-filter: blur(20px);
+  }
+  .up-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+  .up-tab {
+    padding: 10px 18px; border-radius: 12px;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--stroke);
+    font-size: 14px; color: var(--text-muted); cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .up-tab.active {
+    background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(236,72,153,0.15));
+    color: white; border-color: rgba(168,85,247,0.5);
+  }
+  .drop {
+    border: 1.5px dashed rgba(168,85,247,0.35);
+    border-radius: 18px;
+    padding: 56px 32px; text-align: center;
+    background: radial-gradient(600px 300px at 50% 0%, rgba(168,85,247,0.14), transparent 70%);
+    position: relative; overflow: hidden;
+  }
+  .drop-icon {
+    width: 64px; height: 64px; border-radius: 20px; margin: 0 auto 18px;
+    background: linear-gradient(135deg, var(--violet), var(--pink));
+    display: grid; place-items: center;
+    box-shadow: 0 20px 40px -12px rgba(168,85,247,0.6);
+    position: relative;
+  }
+  .drop-icon svg { width: 28px; height: 28px; color: white; }
+  .drop h4 { font-family: var(--font-display); font-weight: 500; font-size: 22px; margin: 0 0 6px; letter-spacing: -0.015em; }
+  .drop p { color: var(--text-muted); margin: 0 0 22px; font-size: 14.5px; }
+  .drop-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .yt-input {
+    display: flex; gap: 10px; padding: 6px 6px 6px 18px;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--stroke-strong);
+    border-radius: 14px; max-width: 520px; margin: 22px auto 0;
+    align-items: center;
+  }
+  .yt-input input {
+    flex: 1; background: none; border: none; outline: none; color: var(--text);
+    font-family: var(--font-mono); font-size: 13.5px; padding: 10px 0;
+  }
+  .yt-input input::placeholder { color: var(--text-dim); }
+  .yt-input button {
+    padding: 10px 18px; border-radius: 10px; border: 0;
+    background: linear-gradient(135deg, var(--violet), var(--pink));
+    color: white; font-weight: 600; font-size: 13px; cursor: pointer;
+  }
+
+  /* Analysis running strip */
+  .analysis {
+    margin-top: 28px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  }
+  .an-item {
+    padding: 16px; border-radius: 14px;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--stroke);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .an-item .k { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; }
+  .an-item .v { display: flex; align-items: baseline; gap: 6px; }
+  .an-item .v strong { font-family: var(--font-display); font-size: 22px; font-weight: 500; letter-spacing: -0.02em; }
+  .an-item .v span { font-size: 11px; color: var(--good); font-family: var(--font-mono); }
+  .an-item .track { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+  .an-item .track > i { display: block; height: 100%; background: linear-gradient(90deg, var(--violet), var(--pink)); animation: fill 2.4s ease-out infinite; }
+  @keyframes fill { 0% { width: 20%; } 100% { width: 95%; } }
+
+  /* ---------- Editor mockup ---------- */
+  .editor {
+    border-radius: 24px; overflow: hidden;
+    background: linear-gradient(180deg, #150932, #0C0524);
+    border: 1px solid var(--stroke-strong);
+    box-shadow: 0 60px 120px -40px rgba(0,0,0,0.8), 0 0 0 1px rgba(168,85,247,0.15) inset;
+  }
+  .ed-bar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 18px; border-bottom: 1px solid var(--stroke);
+    background: rgba(0,0,0,0.25);
+  }
+  .ed-dots { display: flex; gap: 6px; }
+  .ed-dots i { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.15); display: block; }
+  .ed-dots i:nth-child(1) { background: #F87171; }
+  .ed-dots i:nth-child(2) { background: #FBBF24; }
+  .ed-dots i:nth-child(3) { background: #4ADE80; }
+  .ed-title { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
+  .ed-title span { color: var(--violet-bright); }
+  .ed-actions { margin-left: auto; display: flex; gap: 8px; }
+  .ed-actions button {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--stroke);
+    padding: 6px 12px; border-radius: 8px; color: var(--text-muted);
+    font-size: 12px; cursor: pointer;
+  }
+  .ed-actions button.primary {
+    background: linear-gradient(135deg, var(--violet), var(--pink));
+    color: white; border-color: transparent;
+  }
+
+  .ed-body { display: grid; grid-template-columns: 1fr 320px; min-height: 480px; }
+  .ed-preview { padding: 24px; display: grid; place-items: center; position: relative;
+    background:
+      radial-gradient(400px 300px at 50% 30%, rgba(168,85,247,0.15), transparent 70%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 40px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 40px);
+  }
+  .phone {
+    width: 240px; aspect-ratio: 9/16; border-radius: 26px;
+    background: linear-gradient(180deg, #2E1065, #4C1D95, #831843);
+    position: relative; overflow: hidden;
+    border: 1px solid rgba(168,85,247,0.35);
+    box-shadow: 0 30px 80px -20px rgba(168,85,247,0.6), inset 0 0 0 2px rgba(0,0,0,0.4), inset 0 0 60px rgba(0,0,0,0.4);
+  }
+  .phone::before {
+    content: ''; position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+    width: 60px; height: 6px; border-radius: 4px; background: rgba(0,0,0,0.6);
+  }
+  .phone-face {
+    position: absolute; inset: 26px 10px 60px;
+    background:
+      radial-gradient(200px 140px at 60% 40%, rgba(236,72,153,0.5), transparent 70%),
+      linear-gradient(180deg, #1E1B4B, #0F172A);
+    border-radius: 16px;
+    display: flex; align-items: flex-end; justify-content: center;
+    padding: 20px 12px;
+  }
+  .caption {
+    font-family: var(--font-display); font-weight: 700; font-size: 15px; line-height: 1.15;
+    text-align: center; color: white;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.7);
+    letter-spacing: -0.01em;
+  }
+  .caption b { color: #FDE047; background: linear-gradient(180deg, transparent 60%, rgba(236,72,153,0.5) 60%); padding: 0 3px; }
+  .phone-play {
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,0.12); backdrop-filter: blur(10px);
+    display: grid; place-items: center; border: 1px solid rgba(255,255,255,0.2);
+  }
+  .phone-play::after { content: ''; width: 0; height: 0; border-left: 10px solid white; border-top: 6px solid transparent; border-bottom: 6px solid transparent; margin-left: 3px; }
+
+  .ed-side { border-left: 1px solid var(--stroke); padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  .side-h { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--stroke); font-size: 13px; }
+  .toggle { width: 34px; height: 20px; border-radius: 999px; background: linear-gradient(135deg, var(--violet), var(--pink)); position: relative; }
+  .toggle::after { content: ''; position: absolute; top: 2px; right: 2px; width: 16px; height: 16px; border-radius: 50%; background: white; }
+  .toggle.off { background: rgba(255,255,255,0.1); }
+  .toggle.off::after { right: auto; left: 2px; }
+  .format-row { display: flex; gap: 8px; }
+  .fmt {
+    flex: 1; padding: 10px; border-radius: 10px;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--stroke);
+    font-family: var(--font-mono); font-size: 12px; text-align: center; color: var(--text-muted);
+  }
+  .fmt.active { background: rgba(168,85,247,0.15); border-color: rgba(168,85,247,0.5); color: white; }
+  .caption-edit {
+    padding: 12px; border-radius: 10px; background: rgba(0,0,0,0.35); border: 1px solid var(--stroke);
+    font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); line-height: 1.5;
+  }
+  .caption-edit b { color: var(--violet-bright); font-weight: 500; }
+  .gen-subs {
+    padding: 12px 14px; border-radius: 12px;
+    background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(236,72,153,0.1));
+    border: 1px solid rgba(168,85,247,0.4);
+    font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 10px; cursor: pointer;
+    justify-content: center;
+  }
+  .gen-subs .spark { width: 14px; height: 14px; }
+
+  /* Timeline */
+  .timeline {
+    padding: 16px 18px 18px; border-top: 1px solid var(--stroke);
+    background: rgba(0,0,0,0.28);
+  }
+  .tl-head { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); margin-bottom: 10px; }
+  .tl-track { position: relative; height: 64px; border-radius: 10px; overflow: hidden;
+    background: repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 12px);
+    border: 1px solid var(--stroke);
+  }
+  .tl-clip {
+    position: absolute; top: 8px; bottom: 8px;
+    border-radius: 8px;
+    background: linear-gradient(180deg, rgba(168,85,247,0.75), rgba(236,72,153,0.6));
+    display: flex; align-items: center; padding: 0 10px;
+    font-family: var(--font-mono); font-size: 11px; color: white;
+    box-shadow: 0 6px 20px -8px rgba(168,85,247,0.7), inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+  .tl-clip.c1 { left: 4%; width: 22%; }
+  .tl-clip.c2 { left: 30%; width: 34%; background: linear-gradient(180deg, rgba(236,72,153,0.75), rgba(217,70,239,0.6)); }
+  .tl-clip.c3 { left: 68%; width: 24%; }
+  .tl-playhead { position: absolute; top: -4px; bottom: -4px; left: 42%; width: 2px; background: var(--cyan-accent); box-shadow: 0 0 8px var(--cyan-accent); }
+  .tl-playhead::before { content: ''; position: absolute; top: -2px; left: -5px; width: 12px; height: 12px; border-radius: 50%; background: var(--cyan-accent); box-shadow: 0 0 10px var(--cyan-accent); }
+
+  /* ---------- Clip / viral cards ---------- */
+  .clips-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .clip {
+    border-radius: 22px; overflow: hidden;
+    background: linear-gradient(165deg, rgba(45, 22, 92, 0.55), rgba(20, 9, 53, 0.4));
+    border: 1px solid var(--stroke);
+    backdrop-filter: blur(14px);
+    display: flex; flex-direction: column;
+    transition: transform .3s, border-color .3s, box-shadow .3s;
+  }
+  .clip:hover { transform: translateY(-6px); border-color: rgba(168,85,247,0.4); box-shadow: 0 30px 60px -20px rgba(168,85,247,0.35); }
+  .thumb {
+    aspect-ratio: 9/12; position: relative; overflow: hidden;
+  }
+  .thumb-1 { background: linear-gradient(160deg, #7C3AED, #DB2777 60%, #F97316); }
+  .thumb-2 { background: linear-gradient(160deg, #4C1D95, #A21CAF 60%, #F472B6); }
+  .thumb-3 { background: linear-gradient(160deg, #1E1B4B, #6D28D9 55%, #DB2777); }
+  .thumb::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(200px 140px at 30% 30%, rgba(255,255,255,0.25), transparent 60%),
+      radial-gradient(160px 120px at 80% 80%, rgba(0,0,0,0.5), transparent 60%);
+  }
+  .thumb-cap {
+    position: absolute; bottom: 14px; left: 12px; right: 12px;
+    text-align: center; font-family: var(--font-display); font-weight: 700; color: white;
+    font-size: 13px; text-shadow: 0 2px 8px rgba(0,0,0,0.7); line-height: 1.2;
+  }
+  .thumb-cap b { background: linear-gradient(180deg, transparent 55%, rgba(253,224,71,0.85) 55%); color: #1F0620; padding: 0 3px; }
+  .duration {
+    position: absolute; top: 12px; right: 12px;
+    padding: 4px 10px; border-radius: 6px;
+    background: rgba(0,0,0,0.55); backdrop-filter: blur(8px);
+    font-family: var(--font-mono); font-size: 11px; color: white;
+  }
+  .score-pill {
+    position: absolute; top: 12px; left: 12px;
+    padding: 5px 10px 5px 8px; border-radius: 999px;
+    background: rgba(0,0,0,0.55); backdrop-filter: blur(8px);
+    display: flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono); font-size: 12px; color: white;
+  }
+  .score-pill i {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--good); box-shadow: 0 0 8px var(--good);
+  }
+  .score-pill.warn i { background: var(--warn); box-shadow: 0 0 8px var(--warn); }
+
+  .clip-meta { padding: 18px 18px 20px; }
+  .clip-title { font-family: var(--font-display); font-weight: 500; font-size: 16px; letter-spacing: -0.01em; margin: 0 0 14px; text-wrap: balance; }
+  .breakdown { display: grid; gap: 8px; }
+  .bd-row { display: grid; grid-template-columns: 90px 1fr 34px; align-items: center; gap: 10px; font-size: 12px; }
+  .bd-row .lbl { color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; font-size: 10.5px; }
+  .bd-row .bar { height: 5px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+  .bd-row .bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--violet), var(--pink)); border-radius: 3px; }
+  .bd-row .n { font-family: var(--font-mono); text-align: right; color: white; }
+
+  .ai-note {
+    margin-top: 16px; padding: 12px 14px; border-radius: 12px;
+    background: linear-gradient(135deg, rgba(103,232,249,0.08), rgba(168,85,247,0.08));
+    border: 1px solid rgba(103,232,249,0.2);
+    font-size: 12.5px; color: #E0E7FF; line-height: 1.5;
+    display: flex; gap: 10px;
+  }
+  .ai-note .glyph {
+    flex: 0 0 20px; width: 20px; height: 20px; border-radius: 6px;
+    background: linear-gradient(135deg, var(--cyan-accent), var(--violet));
+    display: grid; place-items: center; color: #0B0420;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+  }
+
+  .clip-actions { display: flex; gap: 8px; margin-top: 16px; }
+  .clip-actions button {
+    flex: 1; padding: 10px; border-radius: 10px; font-size: 12.5px; font-weight: 500;
+    border: 1px solid var(--stroke); background: rgba(255,255,255,0.04); color: var(--text-muted); cursor: pointer;
+  }
+  .clip-actions .edit { background: linear-gradient(135deg, var(--violet), var(--pink)); color: white; border-color: transparent; }
+
+  /* ---------- Dashboard ---------- */
+  .dash {
+    border-radius: 26px;
+    background: linear-gradient(180deg, rgba(20, 9, 53, 0.6), rgba(12, 5, 34, 0.4));
+    border: 1px solid var(--stroke-strong);
+    backdrop-filter: blur(20px);
+    padding: 28px;
+    box-shadow: 0 40px 100px -30px rgba(0,0,0,0.7);
+  }
+  .dash-head { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
+  .avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--violet), var(--pink));
+    display: grid; place-items: center; color: white; font-weight: 600;
+    box-shadow: 0 0 20px rgba(168,85,247,0.4);
+  }
+  .dash-hello .h1 { font-family: var(--font-display); font-size: 20px; font-weight: 500; letter-spacing: -0.01em; }
+  .dash-hello .sub { font-size: 13px; color: var(--text-muted); }
+  .dash-cta { margin-left: auto; }
+
+  .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 26px; }
+  .stat {
+    padding: 18px; border-radius: 16px;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--stroke);
+    position: relative; overflow: hidden;
+  }
+  .stat .lbl { font-size: 11.5px; color: var(--text-muted); font-family: var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+  .stat .val { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; margin-top: 8px; }
+  .stat .delta { font-family: var(--font-mono); font-size: 11px; color: var(--good); margin-top: 4px; }
+  .stat.hero { grid-column: span 1; background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(236,72,153,0.12)); border-color: rgba(168,85,247,0.4); }
+  .stat .spark { position: absolute; right: 12px; bottom: 12px; opacity: 0.55; }
+
+  .storage {
+    padding: 18px; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--stroke);
+    display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 18px; margin-bottom: 26px;
+  }
+  .storage-bar { height: 8px; border-radius: 4px; background: rgba(255,255,255,0.06); overflow: hidden; margin-top: 8px; }
+  .storage-bar > i { display: block; height: 100%; width: 62%; background: linear-gradient(90deg, var(--violet), var(--pink)); border-radius: 4px; }
+  .storage .val { font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); }
+  .storage .val b { color: white; font-weight: 500; }
+
+  .recent-h { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+  .recent-h h3 { margin: 0; font-family: var(--font-display); font-size: 18px; font-weight: 500; }
+  .recent-h a { font-size: 12.5px; color: var(--violet-bright); font-family: var(--font-mono); }
+
+  .mini-clips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .mini {
+    border-radius: 14px; overflow: hidden;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--stroke);
+    display: flex; flex-direction: column;
+  }
+  .mini .mt { aspect-ratio: 9/12; position: relative; }
+  .mini .mb { padding: 10px 12px; }
+  .mini .row { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10.5px; color: var(--text-muted); }
+  .mini .row b { color: white; font-weight: 500; }
+  .mini .edit-btn { margin-top: 8px; width: 100%; padding: 7px; border-radius: 8px; font-size: 11.5px; background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.35); color: white; cursor: pointer; }
+
+  /* ---------- CTA ---------- */
+  .cta-final {
+    padding: 80px 60px; border-radius: 32px; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #4C1D95 0%, #831843 100%);
+    text-align: center;
+    box-shadow: 0 60px 140px -40px rgba(168,85,247,0.6);
+  }
+  .cta-final::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(600px 400px at 20% 20%, rgba(236,72,153,0.4), transparent 60%),
+      radial-gradient(500px 400px at 80% 80%, rgba(168,85,247,0.5), transparent 60%);
+    pointer-events: none;
+  }
+  .cta-final::after {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0);
+    background-size: 32px 32px;
+    opacity: 0.4; mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+  }
+  .cta-final > * { position: relative; z-index: 2; }
+  .cta-final h2 { font-size: clamp(36px, 5vw, 56px); margin-bottom: 14px; }
+  .cta-final p { color: rgba(245,240,255,0.85); font-size: 18px; margin: 0 auto 32px; max-width: 560px; }
+
+  /* ---------- Footer ---------- */
+  footer { padding: 60px 0 40px; border-top: 1px solid var(--stroke); margin-top: 60px; }
+  .foot { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+  .foot .copy { font-size: 13px; color: var(--text-dim); }
+  .foot .links { display: flex; gap: 24px; font-size: 13px; color: var(--text-muted); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 960px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .scene { aspect-ratio: 1/1; max-width: 480px; margin: 20px auto 0; }
+    .steps, .clips-grid { grid-template-columns: 1fr; }
+    .analysis { grid-template-columns: repeat(2, 1fr); }
+    .ed-body { grid-template-columns: 1fr; }
+    .ed-side { border-left: 0; border-top: 1px solid var(--stroke); }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .mini-clips { grid-template-columns: repeat(2, 1fr); }
+    .nav-links { display: none; }
+    section { padding: 70px 0; }
+    .cta-final { padding: 50px 24px; }
+    .uploader { padding: 24px; }
+    .wrap { padding: 0 20px; }
+  }
+  @media (max-width: 520px) {
+    .metrics { gap: 20px; }
+    .fc-1, .fc-2, .fc-3 { display: none; }
+  }
+
+  /* --- API config + job status --- */
+  .api-config {
+    display: flex; align-items: center; gap: 10px; margin-top: 14px;
+    max-width: 520px; margin-left: auto; margin-right: auto;
+    padding: 6px 6px 6px 14px; border-radius: 12px;
+    background: rgba(0,0,0,0.25); border: 1px dashed var(--stroke);
+  }
+  .api-config label { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; }
+  .api-config input { flex: 1; background: none; border: 0; outline: none; color: var(--text); font-family: var(--font-mono); font-size: 12px; padding: 8px 0; }
+  .job-status {
+    margin: 22px auto 0; max-width: 520px;
+    padding: 14px 16px; border-radius: 14px;
+    background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.28);
+  }
+  .js-row { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+  .js-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--violet-bright); box-shadow: 0 0 10px var(--violet-bright); animation: pulse 1.4s ease-in-out infinite; }
+  .js-id { margin-left: auto; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); }
+  .js-bar { height: 4px; margin-top: 10px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+  .js-bar > i { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, var(--violet), var(--pink)); transition: width .4s; border-radius: 3px; }
+  .job-status.err { background: rgba(248,113,113,0.08); border-color: rgba(248,113,113,0.35); }
+  .job-status.err .js-dot { background: #F87171; box-shadow: 0 0 10px #F87171; animation: none; }
+  .job-status.done .js-dot { background: var(--good); box-shadow: 0 0 10px var(--good); animation: none; }
+
+  .clip video { width: 100%; display: block; background: #000; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; transition: none !important; }
+  }
+</style>
+
+</head>
+<body>
+<nav>
+  <div class="wrap nav-inner">
+    <div class="logo">
+      <div class="logo-mark"></div>
+      Clipwave
+    </div>
+    <div class="nav-links">
+      <a href="#comment">Comment ça marche</a>
+      <a href="#editeur">Éditeur</a>
+      <a href="#viral">Score viral</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#tarifs">Tarifs</a>
+    </div>
+    <a href="#" class="nav-cta">Essayer gratuitement</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <canvas id="starfield"></canvas>
+  <div class="wrap hero-inner">
+    <div>
+      <span class="eyebrow"><span class="dot"></span> IA générative · Clips 30 s</span>
+      <h1 class="display">Transforme tes longues vidéos en <span class="grad">clips viraux.</span></h1>
+      <p class="lede">
+        Notre IA détecte automatiquement les meilleurs moments de tes vidéos et les transforme
+        en Shorts de 30 secondes prêts à publier sur TikTok, Reels et YouTube Shorts.
+      </p>
+      <div class="cta-row">
+        <button class="btn btn-primary">Créer mon premier clip <span>→</span></button>
+        <button class="btn btn-ghost"><span class="play"></span> Voir comment ça marche</button>
+      </div>
+      <div class="metrics">
+        <div>
+          <div class="metric-num">2,4 M</div>
+          <div class="metric-lbl">Clips générés</div>
+        </div>
+        <div>
+          <div class="metric-num">38 s</div>
+          <div class="metric-lbl">Temps d'analyse moyen</div>
+        </div>
+        <div>
+          <div class="metric-num">×7,2</div>
+          <div class="metric-lbl">Vues moyennes vs. natif</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <canvas id="orb-canvas"></canvas>
+
+      <div class="float-card fc-1">
+        <div class="fc-title">CLIP · 00:14 <span class="badge-live">LIVE</span></div>
+        <div class="fc-body">« Le vrai secret, c'est… »</div>
+        <div class="fc-bar"><i style="width:94%"></i></div>
+        <div class="fc-tags"><span>Hook +96</span><span>Curiosité</span></div>
+      </div>
+      <div class="float-card fc-2">
+        <div class="fc-title">ANALYSE IA</div>
+        <div class="fc-body">6 moments viraux détectés</div>
+        <div class="fc-tags"><span>Rire</span><span>Twist</span><span>Punchline</span></div>
+      </div>
+      <div class="float-card fc-3">
+        <div class="fc-title">EXPORT · 9:16</div>
+        <div class="fc-body">Sous-titres synchronisés · 1080p</div>
+        <div class="fc-bar"><i style="width:100%; background: linear-gradient(90deg, #4ADE80, #67E8F9);"></i></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="comment">
+  <div class="wrap">
+    <div class="sect-head">
+      <span class="sect-eyebrow">Comment ça marche</span>
+      <h2>De trois heures de rush à <em>dix Shorts prêts à publier</em>, en une minute.</h2>
+      <p class="sect-lede">L'IA regarde ta vidéo comme un monteur senior : elle repère les hooks, les punchlines, les moments d'émotion et coupe au bon endroit.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">01 — Import</div>
+        <h3>Dépose une vidéo ou colle un lien YouTube</h3>
+        <p>Jusqu'à 4 heures et 8 Go. Aucune installation. On accepte MP4, MOV, MKV et les liens YouTube publics.</p>
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v14M6 9l6-6 6 6M4 21h16"/></svg>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">02 — Analyse</div>
+        <h3>L'IA détecte les meilleurs moments</h3>
+        <p>Hook, rétention, émotion, potentiel de partage. Chaque passage reçoit un score viral basé sur 42 signaux.</p>
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">03 — Export</div>
+        <h3>Sous-titres, format 9:16, publish</h3>
+        <p>Recadrage intelligent, zoom automatique, sous-titres animés. Prêt pour TikTok, Reels et Shorts en un clic.</p>
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sect-head">
+      <span class="sect-eyebrow">Studio de clips</span>
+      <h2>Colle un lien ou dépose ta vidéo. <em>L'IA fait le reste.</em></h2>
+    </div>
+
+    <div class="uploader-shell">
+      <div class="uploader">
+        <div class="up-tabs">
+          <div class="up-tab active">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v14M6 9l6-6 6 6"/></svg>
+            Importer un fichier
+          </div>
+          <div class="up-tab">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15l5-3-5-3v6z"/><rect x="3" y="5" width="18" height="14" rx="2"/></svg>
+            Lien YouTube
+          </div>
+          <div class="up-tab">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="14" height="14" rx="2"/><path d="M17 9l4-2v10l-4-2"/></svg>
+            Enregistrement
+          </div>
+        </div>
+
+        <div class="drop" id="drop-zone">
+          <div class="drop-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v14M6 9l6-6 6 6M4 21h16"/></svg>
+          </div>
+          <h4>Dépose ta vidéo ici</h4>
+          <p>MP4, MOV, MKV — jusqu'à 4 h, 8 Go. On s'occupe du reste.</p>
+          <div class="drop-actions">
+            <button class="btn btn-primary" id="pick-file">Choisir un fichier</button>
+            <input type="file" id="file-input" accept="video/mp4,video/quicktime,video/x-matroska,video/webm" style="display:none">
+            <button class="btn btn-ghost" id="use-example">Utiliser un exemple</button>
+          </div>
+          <div class="yt-input">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A79BC9" stroke-width="2"><path d="M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1"/></svg>
+            <input type="text" id="yt-url" placeholder="youtube.com/watch?v=..." value="https://youtube.com/watch?v=q7Hn8pW3vXk">
+            <button id="yt-go">Analyser</button>
+          </div>
+          <div class="api-config">
+            <label>API</label>
+            <input type="text" id="api-base" placeholder="http://localhost:8000">
+          </div>
+          <div class="job-status" id="job-status" hidden>
+            <div class="js-row">
+              <span class="js-dot"></span>
+              <span id="js-text">Analyse en cours…</span>
+              <span id="js-id" class="js-id"></span>
+            </div>
+            <div class="js-bar"><i id="js-bar-fill"></i></div>
+          </div>
+        </div>
+
+        <div class="analysis">
+          <div class="an-item">
+            <div class="k">Détection scènes</div>
+            <div class="v"><strong>184</strong><span>+12</span></div>
+            <div class="track"><i></i></div>
+          </div>
+          <div class="an-item">
+            <div class="k">Transcription</div>
+            <div class="v"><strong>98%</strong><span>fr-FR</span></div>
+            <div class="track"><i style="animation-delay:.4s"></i></div>
+          </div>
+          <div class="an-item">
+            <div class="k">Hooks candidats</div>
+            <div class="v"><strong>12</strong><span>viraux</span></div>
+            <div class="track"><i style="animation-delay:.8s"></i></div>
+          </div>
+          <div class="an-item">
+            <div class="k">Clips 30 s</div>
+            <div class="v"><strong>8</strong><span>prêts</span></div>
+            <div class="track"><i style="animation-delay:1.2s"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="editeur">
+  <div class="wrap">
+    <div class="sect-head">
+      <span class="sect-eyebrow">Éditeur</span>
+      <h2>Un éditeur pensé pour <em>publier vite</em>, pas pour bidouiller.</h2>
+      <p class="sect-lede">Timeline, sous-titres animés, zoom auto, format 9:16, aperçu en temps réel. Tout ce qu'il faut, rien de plus.</p>
+    </div>
+
+    <div class="editor">
+      <div class="ed-bar">
+        <div class="ed-dots"><i></i><i></i><i></i></div>
+        <div class="ed-title">clip_04 · <span>« le vrai secret »</span> · 00:00 / 00:30</div>
+        <div class="ed-actions">
+          <button>Aperçu</button>
+          <button class="primary">Exporter →</button>
+        </div>
+      </div>
+      <div class="ed-body">
+        <div class="ed-preview">
+          <div class="phone">
+            <div class="phone-face">
+              <div class="caption">le vrai secret,<br>c'est de <b>commencer</b><br>avant d'être prêt.</div>
+            </div>
+            <div class="phone-play"></div>
+          </div>
+        </div>
+        <div class="ed-side">
+          <div class="side-h">Format</div>
+          <div class="format-row">
+            <div class="fmt active">9:16</div>
+            <div class="fmt">1:1</div>
+            <div class="fmt">16:9</div>
+          </div>
+
+          <div class="side-h">Sous-titres</div>
+          <div class="caption-edit">le vrai secret, c'est de <b>commencer</b> avant d'être prêt.</div>
+          <div class="gen-subs">
+            <svg class="spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></svg>
+            Générer les sous-titres automatiquement
+          </div>
+
+          <div class="side-h">Effets</div>
+          <div class="toggle-row">Zoom auto sur locuteur <div class="toggle"></div></div>
+          <div class="toggle-row">Animation de texte <div class="toggle"></div></div>
+          <div class="toggle-row">B-roll suggéré <div class="toggle off"></div></div>
+        </div>
+      </div>
+      <div class="timeline">
+        <div class="tl-head">
+          <span>TIMELINE · 00:00</span>
+          <span>00:30</span>
+        </div>
+        <div class="tl-track">
+          <div class="tl-clip c1">Hook</div>
+          <div class="tl-clip c2">Punchline · zoom</div>
+          <div class="tl-clip c3">CTA</div>
+          <div class="tl-playhead"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="viral">
+  <div class="wrap">
+    <div class="sect-head">
+      <span class="sect-eyebrow">Analyse virale</span>
+      <h2>Chaque clip est <em>noté par l'IA</em> — tu publies ceux qui décollent.</h2>
+      <p class="sect-lede">Un score viral détaillé sur 4 axes : hook des 3 premières secondes, rétention prédite, charge émotionnelle, potentiel de partage.</p>
+    </div>
+
+    <div class="clips-grid" id="clips-grid">
+      <div class="clip">
+        <div class="thumb thumb-1">
+          <div class="score-pill"><i></i>94</div>
+          <div class="duration">00:28</div>
+          <div class="thumb-cap">le vrai secret,<br>c'est de <b>commencer</b>…</div>
+        </div>
+        <div class="clip-meta">
+          <h3 class="clip-title">« Le vrai secret, c'est de commencer »</h3>
+          <div class="breakdown">
+            <div class="bd-row"><span class="lbl">Hook</span><div class="bar"><i style="width:96%"></i></div><span class="n">96</span></div>
+            <div class="bd-row"><span class="lbl">Rétention</span><div class="bar"><i style="width:91%"></i></div><span class="n">91</span></div>
+            <div class="bd-row"><span class="lbl">Émotion</span><div class="bar"><i style="width:93%"></i></div><span class="n">93</span></div>
+            <div class="bd-row"><span class="lbl">Partage</span><div class="bar"><i style="width:95%"></i></div><span class="n">95</span></div>
+          </div>
+          <div class="ai-note">
+            <div class="glyph">AI</div>
+            <div>Ce clip possède un hook fort dans les 3 premières secondes et crée une forte curiosité.</div>
+          </div>
+          <div class="clip-actions">
+            <button>Aperçu</button>
+            <button class="edit">Modifier →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="clip">
+        <div class="thumb thumb-2">
+          <div class="score-pill"><i></i>88</div>
+          <div class="duration">00:30</div>
+          <div class="thumb-cap">personne ne te dira<br><b>cette vérité</b> sur l'IA</div>
+        </div>
+        <div class="clip-meta">
+          <h3 class="clip-title">« Personne ne te dira cette vérité sur l'IA »</h3>
+          <div class="breakdown">
+            <div class="bd-row"><span class="lbl">Hook</span><div class="bar"><i style="width:92%"></i></div><span class="n">92</span></div>
+            <div class="bd-row"><span class="lbl">Rétention</span><div class="bar"><i style="width:84%"></i></div><span class="n">84</span></div>
+            <div class="bd-row"><span class="lbl">Émotion</span><div class="bar"><i style="width:87%"></i></div><span class="n">87</span></div>
+            <div class="bd-row"><span class="lbl">Partage</span><div class="bar"><i style="width:89%"></i></div><span class="n">89</span></div>
+          </div>
+          <div class="ai-note">
+            <div class="glyph">AI</div>
+            <div>Punchline claire à 00:12 + charge émotionnelle stable. Idéal pour un carousel de Reels.</div>
+          </div>
+          <div class="clip-actions">
+            <button>Aperçu</button>
+            <button class="edit">Modifier →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="clip">
+        <div class="thumb thumb-3">
+          <div class="score-pill warn"><i></i>76</div>
+          <div class="duration">00:26</div>
+          <div class="thumb-cap">j'ai testé ça pendant<br><b>30 jours</b> — résultat :</div>
+        </div>
+        <div class="clip-meta">
+          <h3 class="clip-title">« J'ai testé ça pendant 30 jours — résultat : »</h3>
+          <div class="breakdown">
+            <div class="bd-row"><span class="lbl">Hook</span><div class="bar"><i style="width:81%"></i></div><span class="n">81</span></div>
+            <div class="bd-row"><span class="lbl">Rétention</span><div class="bar"><i style="width:72%"></i></div><span class="n">72</span></div>
+            <div class="bd-row"><span class="lbl">Émotion</span><div class="bar"><i style="width:78%"></i></div><span class="n">78</span></div>
+            <div class="bd-row"><span class="lbl">Partage</span><div class="bar"><i style="width:74%"></i></div><span class="n">74</span></div>
+          </div>
+          <div class="ai-note">
+            <div class="glyph">AI</div>
+            <div>Hook correct mais chute d'attention à 00:18 — raccourcis ou ajoute un B-roll pour booster la rétention.</div>
+          </div>
+          <div class="clip-actions">
+            <button>Aperçu</button>
+            <button class="edit">Modifier →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="dashboard">
+  <div class="wrap">
+    <div class="sect-head">
+      <span class="sect-eyebrow">Dashboard</span>
+      <h2>Ton studio, <em>toujours à portée de main.</em></h2>
+    </div>
+
+    <div class="dash">
+      <div class="dash-head">
+        <div class="avatar">JF</div>
+        <div class="dash-hello">
+          <div class="h1">Bon retour, Julien.</div>
+          <div class="sub">4 nouveaux clips à approuver depuis hier.</div>
+        </div>
+        <div class="dash-cta">
+          <button class="btn btn-primary">+ Nouvelle vidéo</button>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat hero">
+          <div class="lbl">Meilleur score viral</div>
+          <div class="val">96<span style="font-size:16px;color:var(--text-muted)">/100</span></div>
+          <div class="delta">↑ +8 pts cette semaine</div>
+        </div>
+        <div class="stat">
+          <div class="lbl">Vidéos analysées</div>
+          <div class="val">47</div>
+          <div class="delta">↑ +6</div>
+        </div>
+        <div class="stat">
+          <div class="lbl">Clips générés</div>
+          <div class="val">312</div>
+          <div class="delta">↑ +42</div>
+        </div>
+        <div class="stat">
+          <div class="lbl">Clips publiés</div>
+          <div class="val">128</div>
+          <div class="delta">↑ +19</div>
+        </div>
+        <div class="stat">
+          <div class="lbl">Vues cumulées</div>
+          <div class="val">2,4 M</div>
+          <div class="delta">↑ +340 k</div>
+        </div>
+      </div>
+
+      <div class="storage">
+        <div>
+          <div class="lbl" style="font-size:11.5px;color:var(--text-muted);font-family:var(--font-mono);letter-spacing:.06em;text-transform:uppercase">Stockage utilisé</div>
+          <div class="storage-bar"><i></i></div>
+        </div>
+        <div class="val"><b>62 Go</b> / 100 Go</div>
+      </div>
+
+      <div class="recent-h">
+        <h3>Clips récents</h3>
+        <a href="#">Tout voir →</a>
+      </div>
+
+      <div class="mini-clips">
+        <div class="mini">
+          <div class="mt thumb-1"><div class="score-pill"><i></i>94</div><div class="duration">00:28</div></div>
+          <div class="mb">
+            <div class="row"><b>Le vrai secret…</b><span>il y a 2 h</span></div>
+            <button class="edit-btn">Modifier</button>
+          </div>
+        </div>
+        <div class="mini">
+          <div class="mt thumb-2"><div class="score-pill"><i></i>88</div><div class="duration">00:30</div></div>
+          <div class="mb">
+            <div class="row"><b>Vérité sur l'IA</b><span>il y a 5 h</span></div>
+            <button class="edit-btn">Modifier</button>
+          </div>
+        </div>
+        <div class="mini">
+          <div class="mt thumb-3"><div class="score-pill warn"><i></i>76</div><div class="duration">00:26</div></div>
+          <div class="mb">
+            <div class="row"><b>30 jours de test</b><span>hier</span></div>
+            <button class="edit-btn">Modifier</button>
+          </div>
+        </div>
+        <div class="mini">
+          <div class="mt thumb-1" style="background:linear-gradient(160deg,#0F172A,#4C1D95 60%,#DB2777)"><div class="score-pill"><i></i>91</div><div class="duration">00:29</div></div>
+          <div class="mb">
+            <div class="row"><b>Cette erreur…</b><span>hier</span></div>
+            <button class="edit-btn">Modifier</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tarifs">
+  <div class="wrap">
+    <div class="cta-final">
+      <span class="eyebrow" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:white"><span class="dot"></span> 100 clips offerts · sans carte</span>
+      <h2 style="margin-top:20px">Ton prochain clip viral<br>est déjà dans ta dernière vidéo.</h2>
+      <p>Lance l'analyse en 30 secondes. On te sort 8 à 12 clips prêts à publier — tu choisis ceux qui décollent.</p>
+      <div class="cta-row" style="justify-content:center">
+        <button class="btn btn-primary" style="background:white;color:#4C1D95;box-shadow:0 20px 50px -12px rgba(0,0,0,0.4)">Créer mon premier clip →</button>
+        <button class="btn btn-ghost" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.25)">Voir une démo</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div class="copy">© 2026 Clipwave · Fait avec beaucoup de violet à Paris.</div>
+    <div class="links">
+      <a href="#">Confidentialité</a>
+      <a href="#">Conditions</a>
+      <a href="#">Support</a>
+      <a href="#">API</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ---------- Starfield / particles ---------- */
+  (function() {
+    const cvs = document.getElementById('starfield');
+    const ctx = cvs.getContext('2d');
+    let W, H, particles = [];
+    const N = 90;
+    function resize() {
+      const r = cvs.parentElement.getBoundingClientRect();
+      W = cvs.width = r.width * devicePixelRatio;
+      H = cvs.height = r.height * devicePixelRatio;
+      cvs.style.width = r.width + 'px';
+      cvs.style.height = r.height + 'px';
+      particles = Array.from({length: N}, () => ({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        z: Math.random() * 0.8 + 0.2,
+        r: Math.random() * 1.6 + 0.4,
+        vy: (Math.random() * 0.4 + 0.1),
+        hue: Math.random() * 40 + 270
+      }));
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    function tick() {
+      ctx.clearRect(0, 0, W, H);
+      for (const p of particles) {
+        p.y -= p.vy * p.z;
+        if (p.y < -10) { p.y = H + 10; p.x = Math.random() * W; }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * p.z * devicePixelRatio, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${p.hue}, 90%, 75%, ${0.15 + p.z * 0.4})`;
+        ctx.fill();
+      }
+      requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+
+  /* ---------- 3D orb ---------- */
+  (function() {
+    const cvs = document.getElementById('orb-canvas');
+    const ctx = cvs.getContext('2d');
+    let W, H, cx, cy, R;
+    const dots = [];
+    const RING = 900;
+    for (let i = 0; i < RING; i++) {
+      // Fibonacci sphere
+      const t = i / RING;
+      const phi = Math.acos(1 - 2 * t);
+      const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+      dots.push({
+        x: Math.sin(phi) * Math.cos(theta),
+        y: Math.sin(phi) * Math.sin(theta),
+        z: Math.cos(phi),
+      });
+    }
+    // Orbiting small spheres
+    const moons = Array.from({length: 6}, (_, i) => ({
+      r: 0.6 + Math.random() * 0.55,
+      speed: 0.15 + Math.random() * 0.25,
+      tilt: Math.random() * Math.PI,
+      phase: Math.random() * Math.PI * 2,
+      size: 6 + Math.random() * 10,
+      hue: 280 + Math.random() * 40
+    }));
+
+    function resize() {
+      const r = cvs.getBoundingClientRect();
+      W = cvs.width = r.width * devicePixelRatio;
+      H = cvs.height = r.height * devicePixelRatio;
+      cvs.style.width = r.width + 'px';
+      cvs.style.height = r.height + 'px';
+      cx = W / 2; cy = H / 2;
+      R = Math.min(W, H) * 0.28;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    let t0 = performance.now();
+    let mx = 0, my = 0;
+    window.addEventListener('mousemove', e => {
+      const r = cvs.getBoundingClientRect();
+      mx = ((e.clientX - r.left) / r.width - 0.5) * 0.6;
+      my = ((e.clientY - r.top) / r.height - 0.5) * 0.6;
+    });
+
+    function draw(now) {
+      const t = (now - t0) / 1000;
+      ctx.clearRect(0, 0, W, H);
+
+      // Halo glow
+      const grd = ctx.createRadialGradient(cx, cy, R * 0.4, cx, cy, R * 2.4);
+      grd.addColorStop(0, 'rgba(168,85,247,0.55)');
+      grd.addColorStop(0.35, 'rgba(124,58,237,0.28)');
+      grd.addColorStop(0.7, 'rgba(236,72,153,0.10)');
+      grd.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, 0, W, H);
+
+      const yaw = t * 0.35 + mx * 1.4;
+      const pitch = Math.sin(t * 0.25) * 0.2 + my * 1.2;
+      const cosY = Math.cos(yaw), sinY = Math.sin(yaw);
+      const cosP = Math.cos(pitch), sinP = Math.sin(pitch);
+
+      // Core sphere gradient body
+      const core = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.05, cx, cy, R);
+      core.addColorStop(0, 'rgba(245,208,254,0.95)');
+      core.addColorStop(0.25, 'rgba(192,132,252,0.75)');
+      core.addColorStop(0.65, 'rgba(124,58,237,0.55)');
+      core.addColorStop(1, 'rgba(30,10,60,0.2)');
+      ctx.beginPath();
+      ctx.arc(cx, cy, R * 1.02, 0, Math.PI * 2);
+      ctx.fillStyle = core;
+      ctx.fill();
+
+      // Rotated dot cloud
+      const projected = dots.map(d => {
+        let x = d.x, y = d.y, z = d.z;
+        // yaw around Y
+        let x1 = x * cosY + z * sinY;
+        let z1 = -x * sinY + z * cosY;
+        // pitch around X
+        let y1 = y * cosP - z1 * sinP;
+        let z2 = y * sinP + z1 * cosP;
+        return { x: x1, y: y1, z: z2 };
+      }).sort((a, b) => a.z - b.z);
+
+      for (const p of projected) {
+        const scale = 0.65 + p.z * 0.35;
+        const alpha = 0.15 + Math.max(0, p.z) * 0.55;
+        const size = (0.9 + p.z * 1.4) * devicePixelRatio;
+        const hue = 280 + p.x * 40;
+        ctx.beginPath();
+        ctx.arc(cx + p.x * R * scale, cy + p.y * R * scale, size, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${hue}, 95%, ${65 + p.z * 15}%, ${alpha})`;
+        ctx.fill();
+      }
+
+      // Specular highlight
+      const spec = ctx.createRadialGradient(cx - R * 0.4, cy - R * 0.5, 0, cx - R * 0.4, cy - R * 0.5, R * 0.6);
+      spec.addColorStop(0, 'rgba(255,255,255,0.55)');
+      spec.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = spec;
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Moons
+      for (const m of moons) {
+        const a = t * m.speed + m.phase;
+        const orbit = R * (1.4 + m.r * 0.7);
+        let x = Math.cos(a) * orbit;
+        let z = Math.sin(a) * orbit;
+        let y = Math.sin(a * 1.3 + m.tilt) * orbit * 0.25;
+        // apply pitch
+        const y1 = y * cosP - z * sinP;
+        const z1 = y * sinP + z * cosP;
+        const depth = 1 + z1 / (orbit * 2);
+        const px = cx + x * depth;
+        const py = cy + y1 * depth;
+        const s = m.size * depth * devicePixelRatio;
+
+        const g = ctx.createRadialGradient(px - s * 0.4, py - s * 0.4, 0, px, py, s * 1.5);
+        g.addColorStop(0, `hsla(${m.hue}, 90%, 85%, 0.95)`);
+        g.addColorStop(0.5, `hsla(${m.hue}, 90%, 65%, 0.75)`);
+        g.addColorStop(1, `hsla(${m.hue}, 90%, 40%, 0)`);
+        ctx.beginPath();
+        ctx.arc(px, py, s * 1.4, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(px, py, s * 0.55, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${m.hue}, 95%, 88%, 0.9)`;
+        ctx.fill();
+      }
+
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  })();
+
+  /* Toggle tabs & format buttons */
+  document.querySelectorAll('.up-tabs').forEach(g => {
+    g.addEventListener('click', e => {
+      const t = e.target.closest('.up-tab'); if (!t) return;
+      g.querySelectorAll('.up-tab').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+    });
+  });
+  document.querySelectorAll('.format-row').forEach(g => {
+    g.addEventListener('click', e => {
+      const t = e.target.closest('.fmt'); if (!t) return;
+      g.querySelectorAll('.fmt').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+    });
+  });
+  document.querySelectorAll('.toggle').forEach(t => {
+    t.addEventListener('click', () => t.classList.toggle('off'));
+  });
+
+  /* ---------- Backend wiring ---------- */
+  (function () {
+    const API_KEY = 'clipwave.api_base';
+    const apiInput = document.getElementById('api-base');
+    const saved = (() => { try { return localStorage.getItem(API_KEY); } catch { return null; } })();
+    apiInput.value = saved || '';
+    apiInput.addEventListener('change', () => {
+      try { localStorage.setItem(API_KEY, apiInput.value.trim()); } catch {}
+    });
+    const api = () => apiInput.value.trim().replace(/\/$/, '');
+
+    const status = document.getElementById('job-status');
+    const stText = document.getElementById('js-text');
+    const stId = document.getElementById('js-id');
+    const stBar = document.getElementById('js-bar-fill');
+    const grid = document.getElementById('clips-grid');
+
+    function showStatus(text, pct, kind) {
+      status.hidden = false;
+      status.classList.remove('err', 'done');
+      if (kind) status.classList.add(kind);
+      stText.textContent = text;
+      stBar.style.width = (pct ?? 0) + '%';
+    }
+
+    async function pollJob(jobId) {
+      stId.textContent = '#' + jobId;
+      let pct = 15;
+      while (true) {
+        await new Promise(r => setTimeout(r, 2000));
+        pct = Math.min(pct + 4, 92);
+        let res;
+        try {
+          res = await fetch(`${api()}/api/jobs/${jobId}`);
+        } catch (e) {
+          showStatus('Impossible de joindre l\'API — vérifie l\'URL et que le backend tourne.', 0, 'err');
+          return;
+        }
+        if (!res.ok) { showStatus('Job introuvable', 0, 'err'); return; }
+        const data = await res.json();
+        if (data.status === 'running' || data.status === 'queued') {
+          showStatus(data.progress ? `Analyse — ${data.progress}` : 'Analyse en cours…', pct);
+          continue;
+        }
+        if (data.status === 'error') {
+          showStatus('Erreur : ' + (data.error || 'inconnue'), 100, 'err');
+          return;
+        }
+        showStatus(`${data.clips.length} clips générés`, 100, 'done');
+        renderClips(data.clips);
+        return;
+      }
+    }
+
+    function badge(score) {
+      const cls = score >= 85 ? '' : score >= 70 ? 'warn' : 'warn';
+      return `<div class="score-pill ${cls}"><i></i>${score}</div>`;
+    }
+
+    function renderClips(clips) {
+      const gradients = [
+        'linear-gradient(160deg,#7C3AED,#DB2777 60%,#F97316)',
+        'linear-gradient(160deg,#4C1D95,#A21CAF 60%,#F472B6)',
+        'linear-gradient(160deg,#1E1B4B,#6D28D9 55%,#DB2777)',
+        'linear-gradient(160deg,#0F172A,#4C1D95 60%,#DB2777)',
+      ];
+      grid.innerHTML = clips.map((c, i) => {
+        const dur = Math.round(c.end - c.start);
+        const durTxt = `00:${String(dur).padStart(2, '0')}`;
+        const clipUrl = c.file ? `${api()}/api/clips/${c.file}` : null;
+        const media = clipUrl
+          ? `<video src="${clipUrl}" controls playsinline preload="metadata"></video>`
+          : `<div class="thumb" style="background:${gradients[i % 4]}"><div class="thumb-cap">${escapeHtml(c.title)}</div></div>`;
+        return `
+          <div class="clip">
+            <div class="thumb" style="background:${gradients[i % 4]}; padding:0">
+              ${badge(c.viral_score)}
+              <div class="duration">${durTxt}</div>
+              ${media}
+            </div>
+            <div class="clip-meta">
+              <h3 class="clip-title">« ${escapeHtml(c.title)} »</h3>
+              <div class="breakdown">
+                ${row('Hook', c.hook)}
+                ${row('Rétention', c.retention)}
+                ${row('Émotion', c.emotion)}
+                ${row('Partage', c.share)}
+              </div>
+              <div class="ai-note"><div class="glyph">AI</div><div>${escapeHtml(c.rationale)}</div></div>
+              <div class="clip-actions">
+                <button>Aperçu</button>
+                <button class="edit">Modifier →</button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+      grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    const row = (lbl, n) => `<div class="bd-row"><span class="lbl">${lbl}</span><div class="bar"><i style="width:${n}%"></i></div><span class="n">${n}</span></div>`;
+    const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]);
+
+    // Wire buttons
+    const fileInput = document.getElementById('file-input');
+    document.getElementById('pick-file').addEventListener('click', e => { e.preventDefault(); fileInput.click(); });
+    fileInput.addEventListener('change', async () => {
+      const f = fileInput.files[0]; if (!f) return;
+      const fd = new FormData();
+      fd.append('file', f); fd.append('n_clips', '6'); fd.append('cut', 'true');
+      showStatus(`Upload de ${f.name}…`, 5);
+      try {
+        const res = await fetch(`${api()}/api/upload`, { method: 'POST', body: fd });
+        if (!res.ok) throw new Error(await res.text());
+        const { job_id } = await res.json();
+        pollJob(job_id);
+      } catch (e) {
+        showStatus('Upload échoué : ' + e.message, 0, 'err');
+      }
+    });
+
+    document.getElementById('yt-go').addEventListener('click', async e => {
+      e.preventDefault();
+      const url = document.getElementById('yt-url').value.trim();
+      if (!url) return;
+      showStatus('Envoi du lien YouTube…', 5);
+      try {
+        const res = await fetch(`${api()}/api/analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ youtube_url: url, n_clips: 6 }),
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const { job_id } = await res.json();
+        pollJob(job_id);
+      } catch (e) {
+        showStatus('Erreur : ' + e.message, 0, 'err');
+      }
+    });
+
+    // Drag & drop
+    const dz = document.getElementById('drop-zone');
+    ['dragover', 'dragenter'].forEach(ev => dz.addEventListener(ev, e => {
+      e.preventDefault(); dz.style.background = 'radial-gradient(600px 300px at 50% 0%, rgba(168,85,247,0.28), transparent 70%)';
+    }));
+    ['dragleave', 'drop'].forEach(ev => dz.addEventListener(ev, e => {
+      e.preventDefault(); dz.style.background = '';
+    }));
+    dz.addEventListener('drop', e => {
+      const f = e.dataTransfer.files[0]; if (!f) return;
+      fileInput.files = e.dataTransfer.files;
+      fileInput.dispatchEvent(new Event('change'));
+    });
+  })();
+</script>
+</body>
+</html>
