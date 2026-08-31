@@ -55,15 +55,22 @@ class Clip:
 def download_youtube(url: str, job_dir: Path) -> Path:
     out = job_dir / "source.%(ext)s"
     opts = {
-        "format": "bestvideo[height<=1080]+bestaudio/best[height<=1080]",
+        "format": "bv*[height<=1080]+ba/b[height<=1080]/bv*+ba/b",
         "merge_output_format": "mp4",
         "outtmpl": str(out),
         "quiet": True,
         "noprogress": True,
+        "ignoreerrors": False,
     }
     with yt_dlp.YoutubeDL(opts) as ydl:
         info = ydl.extract_info(url, download=True)
-    return job_dir / f"source.{info.get('ext', 'mp4')}"
+    ext = info.get("ext", "mp4")
+    path = job_dir / f"source.{ext}"
+    if not path.exists():
+        # merge_output_format may have converted to mp4
+        for p in job_dir.glob("source.*"):
+            return p
+    return path
 
 
 def transcribe(video_path: Path) -> list[TranscriptSegment]:
