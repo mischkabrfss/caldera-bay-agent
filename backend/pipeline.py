@@ -124,7 +124,7 @@ def score_with_claude(segments: list[TranscriptSegment], n_clips: int = 6) -> li
         ],
     )
 
-    raw = msg.content[0].text
+    raw = "".join(b.text for b in msg.content if hasattr(b, "text"))
     match = re.search(r"\{.*\}", raw, re.DOTALL)
     if not match:
         raise ValueError(f"Claude did not return JSON: {raw[:200]}")
