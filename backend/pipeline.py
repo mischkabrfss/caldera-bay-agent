@@ -7,7 +7,7 @@ import os
 import re
 import subprocess
 import uuid
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, field, asdict
 from pathlib import Path
 
 import anthropic
@@ -32,10 +32,18 @@ def _get_whisper() -> WhisperModel:
 
 
 @dataclass
+class Word:
+    start: float
+    end: float
+    text: str
+
+
+@dataclass
 class TranscriptSegment:
     start: float
     end: float
     text: str
+    words: list[Word] = field(default_factory=list)
 
 
 @dataclass
@@ -67,7 +75,6 @@ def download_youtube(url: str, job_dir: Path) -> Path:
     ext = info.get("ext", "mp4")
     path = job_dir / f"source.{ext}"
     if not path.exists():
-        # merge_output_format may have converted to mp4
         for p in job_dir.glob("source.*"):
             return p
     return path
@@ -75,11 +82,28 @@ def download_youtube(url: str, job_dir: Path) -> Path:
 
 def transcribe(video_path: Path) -> list[TranscriptSegment]:
     model = _get_whisper()
-    segments, _ = model.transcribe(str(video_path), vad_filter=True, beam_size=1)
-    return [
-        TranscriptSegment(start=s.start, end=s.end, text=s.text.strip())
-        for s in segments
-    ]
+    segments, _ = model.transcribe(
+        str(video_path),
+        vad_filter=True,
+        beam_size=1,
+        word_timestamps=True,
+    )
+    out: list[TranscriptSegment] = []
+    for s in segments:
+        words = [
+            Word(start=float(w.start), end=float(w.end), text=w.word.strip())
+            for w in (s.words or [])
+            if w.start is not None and w.end is not None
+        ]
+        out.append(
+            TranscriptSegment(
+                start=s.start,
+                end=s.end,
+                text=s.text.strip(),
+                words=words,
+            )
+        )
+    return out
 
 
 VIRAL_PROMPT = """Tu es un monteur senior spécialisé dans les Shorts TikTok / Reels / YouTube.
@@ -148,15 +172,119 @@ def score_with_claude(segments: list[TranscriptSegment], n_clips: int = 6) -> li
     return clips
 
 
-def cut_clip_9x16(source: Path, clip: Clip, out_dir: Path, index: int) -> Path:
-    """Cut, center-crop to 9:16, and burn nothing (subtitles come later)."""
+# ---------- Subtitles ----------
+
+def _fmt_ass_time(t: float) -> str:
+    t = max(0.0, t)
+    h = int(t // 3600)
+    m = int((t % 3600) // 60)
+    s = t % 60
+    return f"{h}:{m:02d}:{s:05.2f}"
+
+
+def _clip_words(segments: list[TranscriptSegment], clip: Clip) -> list[Word]:
+    """Return words that fall inside the clip, with clip-relative timestamps."""
+    words: list[Word] = []
+    for seg in segments:
+        for w in seg.words:
+            if w.end <= clip.start or w.start >= clip.end:
+                continue
+            start = max(0.0, w.start - clip.start)
+            end = min(clip.end - clip.start, w.end - clip.start)
+            if end - start < 0.02:
+                continue
+            words.append(Word(start=start, end=end, text=w.text))
+    return words
+
+
+def _chunk_words(words: list[Word], max_per_chunk: int = 3) -> list[list[Word]]:
+    chunks: list[list[Word]] = []
+    cur: list[Word] = []
+    for w in words:
+        cur.append(w)
+        ends_phrase = bool(re.search(r"[.!?…]$", w.text))
+        if len(cur) >= max_per_chunk or ends_phrase:
+            chunks.append(cur)
+            cur = []
+    if cur:
+        chunks.append(cur)
+    return chunks
+
+
+def generate_ass(words: list[Word], clip_duration: float) -> str:
+    """TikTok-style captions: 3 words at a time, active word highlighted."""
+    header = """[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Base,Impact,96,&H00FFFFFF,&H0000FFFF,&H00000000,&H00000000,1,0,0,0,100,100,2,0,1,7,2,2,60,60,220,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+"""
+
+    lines: list[str] = []
+    for chunk in _chunk_words(words, max_per_chunk=3):
+        if not chunk:
+            continue
+        start = chunk[0].start
+        end = min(chunk[-1].end + 0.15, clip_duration)
+        # Karaoke: each word highlighted for its own duration
+        parts: list[str] = []
+        for w in chunk:
+            k = max(1, int(round((w.end - w.start) * 100)))
+            text = w.text.replace("\\", "").replace("{", "").replace("}", "").upper()
+            # Active-word gets a color swap via \1c
+            parts.append(rf"{{\kf{k}\1c&H00FFFFFF&\3c&H00000000&}}{text}")
+        body = " ".join(parts)
+        # Add a pop-in scale animation
+        body = rf"{{\fscx90\fscy90\t(0,120,\fscx100\fscy100)}}{body}"
+        lines.append(
+            f"Dialogue: 0,{_fmt_ass_time(start)},{_fmt_ass_time(end)},Base,,0,0,0,,{body}"
+        )
+    return header + "\n".join(lines) + "\n"
+
+
+def _ffmpeg_escape_subs_path(p: Path) -> str:
+    """Escape a path for use in ffmpeg's subtitles= filter."""
+    s = str(p.resolve())
+    # Windows paths need forward slashes and escaped colon
+    s = s.replace("\\", "/")
+    s = s.replace(":", r"\:")
+    return s
+
+
+def cut_clip_9x16(
+    source: Path,
+    clip: Clip,
+    out_dir: Path,
+    index: int,
+    segments: list[TranscriptSegment] | None = None,
+) -> Path:
+    """Cut, center-crop to 9:16, and burn animated captions if segments are given."""
     out = out_dir / f"clip_{index:02d}.mp4"
     duration = clip.end - clip.start
-    vf = (
-        "crop='min(iw,ih*9/16)':'min(ih,iw*16/9)',"
-        "scale=1080:1920:force_original_aspect_ratio=increase,"
-        "crop=1080:1920"
-    )
+
+    filters = [
+        "crop='min(iw,ih*9/16)':'min(ih,iw*16/9)'",
+        "scale=1080:1920:force_original_aspect_ratio=increase",
+        "crop=1080:1920",
+    ]
+
+    subs_path: Path | None = None
+    if segments:
+        words = _clip_words(segments, clip)
+        if words:
+            subs_path = out_dir / f"clip_{index:02d}.ass"
+            subs_path.write_text(generate_ass(words, duration), encoding="utf-8")
+            filters.append(f"subtitles='{_ffmpeg_escape_subs_path(subs_path)}'")
+
+    vf = ",".join(filters)
+
     cmd = [
         "ffmpeg", "-y", "-ss", f"{clip.start:.2f}", "-i", str(source),
         "-t", f"{duration:.2f}", "-vf", vf,
@@ -191,7 +319,7 @@ def run_pipeline(
     if do_cut:
         for i, clip in enumerate(clips):
             try:
-                out = cut_clip_9x16(source, clip, job_dir, i)
+                out = cut_clip_9x16(source, clip, job_dir, i, segments=segments)
                 clip.file = str(out.relative_to(WORK_DIR))
             except subprocess.CalledProcessError:
                 clip.file = None
