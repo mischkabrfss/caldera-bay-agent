@@ -258,16 +258,19 @@ def _ffmpeg_escape_subs_path(p: Path) -> str:
     return s
 
 
-def cut_clip_9x16(
+def render_clip(
     source: Path,
-    clip: Clip,
-    out_dir: Path,
-    index: int,
-    segments: list[TranscriptSegment] | None = None,
+    out_path: Path,
+    start: float,
+    end: float,
+    clip_words: list[Word] | None = None,
 ) -> Path:
-    """Cut, center-crop to 9:16, and burn animated captions if segments are given."""
-    out = out_dir / f"clip_{index:02d}.mp4"
-    duration = clip.end - clip.start
+    """Render a 9:16 clip with optional burned-in animated captions.
+
+    ``clip_words`` are already clip-relative (start=0 at ``start``).
+    """
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    duration = max(0.5, end - start)
 
     filters = [
         "crop='min(iw,ih*9/16)':'min(ih,iw*16/9)'",
@@ -275,24 +278,50 @@ def cut_clip_9x16(
         "crop=1080:1920",
     ]
 
-    subs_path: Path | None = None
-    if segments:
-        words = _clip_words(segments, clip)
-        if words:
-            subs_path = out_dir / f"clip_{index:02d}.ass"
-            subs_path.write_text(generate_ass(words, duration), encoding="utf-8")
-            filters.append(f"subtitles='{_ffmpeg_escape_subs_path(subs_path)}'")
+    if clip_words:
+        subs_path = out_path.with_suffix(".ass")
+        subs_path.write_text(generate_ass(clip_words, duration), encoding="utf-8")
+        filters.append(f"subtitles='{_ffmpeg_escape_subs_path(subs_path)}'")
 
     vf = ",".join(filters)
 
     cmd = [
-        "ffmpeg", "-y", "-ss", f"{clip.start:.2f}", "-i", str(source),
+        "ffmpeg", "-y", "-ss", f"{start:.2f}", "-i", str(source),
         "-t", f"{duration:.2f}", "-vf", vf,
         "-c:v", "libx264", "-preset", "veryfast", "-crf", "22",
         "-c:a", "aac", "-b:a", "128k",
-        str(out),
+        str(out_path),
     ]
     subprocess.run(cmd, check=True, capture_output=True)
+    return out_path
+
+
+def cut_clip_9x16(
+    source: Path,
+    clip: Clip,
+    out_dir: Path,
+    index: int,
+    segments: list[TranscriptSegment] | None = None,
+) -> Path:
+    """Compatibility shim used during the initial pipeline pass."""
+    words = _clip_words(segments, clip) if segments else None
+    return render_clip(
+        source=source,
+        out_path=out_dir / f"clip_{index:02d}.mp4",
+        start=clip.start,
+        end=clip.end,
+        clip_words=words,
+    )
+
+
+def _clip_words_source(segments: list[TranscriptSegment], clip: Clip) -> list[dict]:
+    """Words that fall in this clip, with SOURCE-time timestamps (for the editor)."""
+    out: list[dict] = []
+    for seg in segments:
+        for w in seg.words:
+            if w.end <= clip.start or w.start >= clip.end:
+                continue
+            out.append({"start": float(w.start), "end": float(w.end), "text": w.text})
     return out
 
 
@@ -329,8 +358,98 @@ def run_pipeline(
     except ValueError:
         source_rel = str(source)
 
+    # Persist meta.json so the editor can re-render individual clips later.
+    meta_clips = []
+    for i, clip in enumerate(clips):
+        d = asdict(clip)
+        d["index"] = i
+        d["words"] = _clip_words_source(segments, clip)
+        meta_clips.append(d)
+    meta = {
+        "job_id": job_id,
+        "source": source_rel,
+        "clips": meta_clips,
+    }
+    (job_dir / "meta.json").write_text(
+        json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+
     return {
         "job_id": job_id,
         "source": source_rel,
         "clips": [asdict(c) for c in clips],
     }
+
+
+def load_meta(job_id: str) -> dict | None:
+    """Load a job's persisted meta.json, or None if missing."""
+    p = WORK_DIR / job_id / "meta.json"
+    if not p.is_file():
+        return None
+    return json.loads(p.read_text(encoding="utf-8"))
+
+
+def save_meta(job_id: str, meta: dict) -> None:
+    p = WORK_DIR / job_id / "meta.json"
+    p.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def render_edited_clip(
+    job_id: str,
+    clip_index: int,
+    trim_start: float,
+    trim_end: float,
+    edited_words: list[dict],
+) -> str:
+    """Re-render a clip with edited trim + word text.
+
+    ``edited_words`` are in SOURCE time (same reference as ``trim_start``).
+    Returns the relative path (from WORK_DIR) of the new clip file.
+    """
+    meta = load_meta(job_id)
+    if not meta:
+        raise ValueError(f"job {job_id} has no meta.json")
+
+    source = WORK_DIR / meta["source"]
+    if not source.is_file():
+        # Handle stored absolute paths on Windows.
+        source = Path(meta["source"])
+    if not source.is_file():
+        raise FileNotFoundError(f"source not found for job {job_id}")
+
+    # Filter and shift words to be clip-relative.
+    clip_words: list[Word] = []
+    for w in edited_words:
+        s = float(w["start"])
+        e = float(w["end"])
+        if e <= trim_start or s >= trim_end:
+            continue
+        start = max(0.0, s - trim_start)
+        end = min(trim_end - trim_start, e - trim_start)
+        if end - start < 0.02:
+            continue
+        clip_words.append(Word(start=start, end=end, text=str(w["text"]).strip()))
+
+    out_path = WORK_DIR / job_id / f"clip_{clip_index:02d}.mp4"
+    render_clip(
+        source=source,
+        out_path=out_path,
+        start=trim_start,
+        end=trim_end,
+        clip_words=clip_words,
+    )
+
+    # Update meta.json so subsequent edits see the current trim + words.
+    for c in meta["clips"]:
+        if c.get("index") == clip_index:
+            c["start"] = trim_start
+            c["end"] = trim_end
+            c["words"] = [
+                {"start": float(w["start"]), "end": float(w["end"]), "text": str(w["text"])}
+                for w in edited_words
+            ]
+            c["file"] = str(out_path.relative_to(WORK_DIR))
+            break
+    save_meta(job_id, meta)
+
+    return str(out_path.relative_to(WORK_DIR))
