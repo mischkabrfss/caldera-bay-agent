@@ -48,6 +48,7 @@ def _run_job(job_id: str, *, youtube_url: str | None, source_path: Path | None,
             source_path=source_path,
             n_clips=n_clips,
             do_cut=cut,
+            job_id=job_id,
         )
         JOBS[job_id] = {"status": "done", **result}
     except Exception as e:
