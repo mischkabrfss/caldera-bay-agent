@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, HttpUrl
 
-from pipeline import WORK_DIR, run_pipeline
+from pipeline import WORK_DIR, load_meta, render_edited_clip, run_pipeline
 
 load_dotenv()
 
@@ -22,7 +22,7 @@ MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_BYTES", str(8 * 1024**3)))  # 8 GB
 ALLOWED_EXTS = {".mp4", ".mov", ".mkv", ".webm", ".m4v"}
 STATIC_DIR = Path(__file__).parent / "static"
 
-app = FastAPI(title="Clipwave API", version="0.3.0")
+app = FastAPI(title="Clipwave API", version="0.4.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -125,6 +125,45 @@ def get_clip(path: str) -> FileResponse:
     if not file.is_file() or WORK_DIR.resolve() not in file.parents:
         raise HTTPException(404, "not found")
     return FileResponse(file, media_type="video/mp4")
+
+
+@app.get("/api/jobs/{job_id}/meta")
+def job_meta(job_id: str) -> dict:
+    """Full clip metadata for the editor (source, per-clip words, etc.)."""
+    meta = load_meta(job_id)
+    if not meta:
+        raise HTTPException(404, "no meta for this job")
+    return meta
+
+
+class EditWord(BaseModel):
+    start: float
+    end: float
+    text: str
+
+
+class EditClipRequest(BaseModel):
+    start: float
+    end: float
+    words: list[EditWord]
+
+
+@app.post("/api/jobs/{job_id}/clips/{index}/render")
+def render_edit(job_id: str, index: int, req: EditClipRequest) -> dict:
+    """Re-cut and re-render a clip with edited trim and word text."""
+    try:
+        file_rel = render_edited_clip(
+            job_id=job_id,
+            clip_index=index,
+            trim_start=req.start,
+            trim_end=req.end,
+            edited_words=[w.model_dump() for w in req.words],
+        )
+    except (ValueError, FileNotFoundError) as e:
+        raise HTTPException(404, str(e))
+    except Exception as e:
+        raise HTTPException(500, f"render failed: {e}")
+    return {"file": file_rel}
 
 
 @app.get("/health")
