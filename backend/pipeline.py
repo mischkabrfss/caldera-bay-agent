@@ -330,11 +330,23 @@ def run_pipeline(
     source_path: Path | None = None,
     n_clips: int = 6,
     do_cut: bool = True,
+    job_id: str | None = None,
 ) -> dict:
     if not youtube_url and not source_path:
         raise ValueError("youtube_url or source_path required")
 
-    job_id = uuid.uuid4().hex[:12]
+    # Reuse the caller-provided job_id (from the API) if any, otherwise
+    # fall back to the source path's parent, otherwise create a fresh one.
+    if not job_id and source_path:
+        parent = source_path.parent
+        try:
+            rel = parent.relative_to(WORK_DIR)
+            if rel.parts:
+                job_id = rel.parts[0]
+        except ValueError:
+            pass
+    if not job_id:
+        job_id = uuid.uuid4().hex[:12]
     job_dir = WORK_DIR / job_id
     job_dir.mkdir(parents=True, exist_ok=True)
 
