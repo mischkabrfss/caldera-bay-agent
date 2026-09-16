@@ -211,17 +211,60 @@ def _chunk_words(words: list[Word], max_per_chunk: int = 3) -> list[list[Word]]:
     return chunks
 
 
-def generate_ass(words: list[Word], clip_duration: float) -> str:
+ASPECT_DIMS = {
+    "9:16": (1080, 1920),
+    "1:1": (1080, 1080),
+    "16:9": (1920, 1080),
+}
+
+# Numpad-style ASS alignment: 8=top, 5=middle, 2=bottom (all center-horizontal)
+POSITION_ALIGNMENT = {
+    "top": 8,
+    "middle": 5,
+    "bottom": 2,
+}
+
+
+def _hex_to_ass_color(hx: str) -> str:
+    """Convert #RRGGBB to ASS &HAABBGGRR& (fully opaque)."""
+    s = (hx or "").strip().lstrip("#")
+    if len(s) == 3:
+        s = "".join(c * 2 for c in s)
+    if len(s) != 6:
+        return "&H0000FFFF&"  # fallback: yellow
+    r, g, b = s[0:2], s[2:4], s[4:6]
+    return f"&H00{b}{g}{r}&".upper()
+
+
+def generate_ass(
+    words: list[Word],
+    clip_duration: float,
+    aspect_ratio: str = "9:16",
+    font: str = "Impact",
+    font_size: int = 96,
+    position: str = "bottom",
+    highlight_color: str = "#FFFF00",
+) -> str:
     """TikTok-style captions: 3 words at a time, active word highlighted."""
-    header = """[Script Info]
+    play_w, play_h = ASPECT_DIMS.get(aspect_ratio, ASPECT_DIMS["9:16"])
+    alignment = POSITION_ALIGNMENT.get(position, 2)
+    margin_v = max(60, int(play_h * 0.11))
+    hi_color = _hex_to_ass_color(highlight_color)
+
+    style_line = (
+        f"Style: Base,{font},{font_size},&H00FFFFFF,{hi_color},&H00000000,&H00000000,"
+        f"1,0,0,0,100,100,2,0,1,7,2,{alignment},60,60,{margin_v},1"
+    )
+
+    header = f"""[Script Info]
 ScriptType: v4.00+
-PlayResX: 1080
-PlayResY: 1920
+PlayResX: {play_w}
+PlayResY: {play_h}
 ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Base,Impact,96,&H00FFFFFF,&H0000FFFF,&H00000000,&H00000000,1,0,0,0,100,100,2,0,1,7,2,2,60,60,220,1
+{style_line}
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -238,8 +281,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         for w in chunk:
             k = max(1, int(round((w.end - w.start) * 100)))
             text = w.text.replace("\\", "").replace("{", "").replace("}", "").upper()
-            # Active-word gets a color swap via \1c
-            parts.append(rf"{{\kf{k}\1c&H00FFFFFF&\3c&H00000000&}}{text}")
+            # Active-word swap uses the secondary colour via the karaoke tag \kf
+            parts.append(rf"{{\kf{k}}}{text}")
         body = " ".join(parts)
         # Add a pop-in scale animation
         body = rf"{{\fscx90\fscy90\t(0,120,\fscx100\fscy100)}}{body}"
@@ -258,29 +301,54 @@ def _ffmpeg_escape_subs_path(p: Path) -> str:
     return s
 
 
+def _aspect_crop_scale_filter(aspect_ratio: str) -> list[str]:
+    """FFmpeg filter chain that center-crops then scales to the target box."""
+    w, h = ASPECT_DIMS.get(aspect_ratio, ASPECT_DIMS["9:16"])
+    if w >= h:
+        # Landscape/square: pick a width <= source width, height derived from ratio
+        crop_expr = f"crop='min(iw,ih*{w}/{h})':'min(ih,iw*{h}/{w})'"
+    else:
+        # Portrait
+        crop_expr = f"crop='min(iw,ih*{w}/{h})':'min(ih,iw*{h}/{w})'"
+    return [
+        crop_expr,
+        f"scale={w}:{h}:force_original_aspect_ratio=increase",
+        f"crop={w}:{h}",
+    ]
+
+
 def render_clip(
     source: Path,
     out_path: Path,
     start: float,
     end: float,
     clip_words: list[Word] | None = None,
+    aspect_ratio: str = "9:16",
+    caption_style: dict | None = None,
 ) -> Path:
-    """Render a 9:16 clip with optional burned-in animated captions.
+    """Render a clip in the chosen aspect ratio with optional burned-in captions.
 
     ``clip_words`` are already clip-relative (start=0 at ``start``).
+    ``caption_style`` (dict) may set: font, font_size, position, highlight_color.
     """
     out_path.parent.mkdir(parents=True, exist_ok=True)
     duration = max(0.5, end - start)
 
-    filters = [
-        "crop='min(iw,ih*9/16)':'min(ih,iw*16/9)'",
-        "scale=1080:1920:force_original_aspect_ratio=increase",
-        "crop=1080:1920",
-    ]
+    filters = _aspect_crop_scale_filter(aspect_ratio)
 
     if clip_words:
+        style = caption_style or {}
+        ass_body = generate_ass(
+            clip_words,
+            duration,
+            aspect_ratio=aspect_ratio,
+            font=style.get("font", "Impact"),
+            font_size=int(style.get("font_size", 96)),
+            position=style.get("position", "bottom"),
+            highlight_color=style.get("highlight_color", "#FFFF00"),
+        )
         subs_path = out_path.with_suffix(".ass")
-        subs_path.write_text(generate_ass(clip_words, duration), encoding="utf-8")
+        subs_path.write_text(ass_body, encoding="utf-8")
         filters.append(f"subtitles='{_ffmpeg_escape_subs_path(subs_path)}'")
 
     vf = ",".join(filters)
@@ -412,8 +480,10 @@ def render_edited_clip(
     trim_start: float,
     trim_end: float,
     edited_words: list[dict],
+    aspect_ratio: str = "9:16",
+    caption_style: dict | None = None,
 ) -> str:
-    """Re-render a clip with edited trim + word text.
+    """Re-render a clip with edited trim, word text, format and caption style.
 
     ``edited_words`` are in SOURCE time (same reference as ``trim_start``).
     Returns the relative path (from WORK_DIR) of the new clip file.
@@ -449,9 +519,11 @@ def render_edited_clip(
         start=trim_start,
         end=trim_end,
         clip_words=clip_words,
+        aspect_ratio=aspect_ratio,
+        caption_style=caption_style,
     )
 
-    # Update meta.json so subsequent edits see the current trim + words.
+    # Update meta.json so subsequent edits see the current trim + words + style.
     for c in meta["clips"]:
         if c.get("index") == clip_index:
             c["start"] = trim_start
@@ -461,6 +533,9 @@ def render_edited_clip(
                 for w in edited_words
             ]
             c["file"] = str(out_path.relative_to(WORK_DIR))
+            c["aspect_ratio"] = aspect_ratio
+            if caption_style:
+                c["caption_style"] = caption_style
             break
     save_meta(job_id, meta)
 
