@@ -587,6 +587,37 @@
   .stat.hero { grid-column: span 1; background: linear-gradient(135deg, rgba(0,229,255,0.25), rgba(255,0,229,0.12)); border-color: rgba(0,229,255,0.4); }
   .stat .spark { position: absolute; right: 12px; bottom: 12px; opacity: 0.55; }
 
+  .chart-card {
+    padding: 20px 22px 12px; border-radius: 16px;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--stroke);
+    margin-bottom: 18px; position: relative;
+  }
+  .chart-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+  .chart-head h3 { margin: 0; font-family: var(--font-display); font-size: 15px; font-weight: 500; color: var(--text); }
+  .chart-head .legend {
+    font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);
+    letter-spacing: .06em; text-transform: uppercase; display: flex; gap: 12px; align-items: center;
+  }
+  .chart-head .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; background: var(--violet); vertical-align: -1px; margin-right: 6px; }
+  .chart-svg { display: block; width: 100%; height: 180px; overflow: visible; cursor: crosshair; }
+  .chart-svg .grid line { stroke: rgba(255,255,255,0.06); stroke-width: 1; }
+  .chart-svg .axis text { font-family: var(--font-mono); font-size: 10px; fill: var(--text-muted); letter-spacing: .05em; }
+  .chart-svg .area { fill: url(#chartGrad); }
+  .chart-svg .line { stroke: var(--violet); stroke-width: 2; fill: none; }
+  .chart-svg .dot { fill: var(--ground-2); stroke: var(--violet); stroke-width: 2; }
+  .chart-svg .cursor { stroke: rgba(0, 229, 255, 0.35); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0; }
+  .chart-svg .hover-dot { fill: var(--violet-bright); stroke: white; stroke-width: 2; opacity: 0; }
+  .chart-svg .peak-lbl { font-family: var(--font-mono); font-size: 11px; fill: var(--violet-bright); font-weight: 600; }
+  .chart-tooltip {
+    position: absolute; pointer-events: none; opacity: 0;
+    padding: 8px 12px; border-radius: 10px;
+    background: rgba(5, 3, 24, 0.92); border: 1px solid rgba(0, 229, 255, 0.35);
+    color: var(--text); font-size: 12px; font-family: var(--font-mono);
+    transform: translate(-50%, -110%); transition: opacity .12s;
+    white-space: nowrap; z-index: 10;
+  }
+  .chart-tooltip b { color: var(--violet-bright); font-weight: 600; }
+
   .storage {
     padding: 18px; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--stroke);
     display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 18px; margin-bottom: 26px;
@@ -1215,6 +1246,37 @@
         </div>
       </div>
 
+      <div class="chart-card" id="perf-chart">
+        <div class="chart-head">
+          <h3>Score viral moyen · 7 derniers jours</h3>
+          <div class="legend"><span><i></i>Score /100</span></div>
+        </div>
+        <svg class="chart-svg" viewBox="0 0 700 180" preserveAspectRatio="none" aria-label="Évolution du score viral sur 7 jours">
+          <defs>
+            <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#00E5FF" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <g class="grid">
+            <line x1="40" x2="680" y1="20" y2="20"/>
+            <line x1="40" x2="680" y1="60" y2="60"/>
+            <line x1="40" x2="680" y1="100" y2="100"/>
+            <line x1="40" x2="680" y1="140" y2="140"/>
+          </g>
+          <g class="axis">
+            <text x="30" y="24" text-anchor="end">100</text>
+            <text x="30" y="64" text-anchor="end">85</text>
+            <text x="30" y="104" text-anchor="end">70</text>
+            <text x="30" y="144" text-anchor="end">55</text>
+          </g>
+          <g id="chart-marks"></g>
+          <line class="cursor" id="chart-cursor" y1="10" y2="150"/>
+          <circle class="hover-dot" id="chart-hover-dot" r="5"/>
+        </svg>
+        <div class="chart-tooltip" id="chart-tip"></div>
+      </div>
+
       <div class="storage">
         <div>
           <div class="lbl" style="font-size:11.5px;color:var(--text-muted);font-family:var(--font-mono);letter-spacing:.06em;text-transform:uppercase">Stockage utilisé</div>
@@ -1559,6 +1621,67 @@
   document.querySelectorAll('.toggle').forEach(t => {
     t.addEventListener('click', () => t.classList.toggle('off'));
   });
+
+  /* ---------- Dashboard chart ---------- */
+  (function () {
+    const data = [
+      { day: 'Lun', score: 72 },
+      { day: 'Mar', score: 78 },
+      { day: 'Mer', score: 81 },
+      { day: 'Jeu', score: 85 },
+      { day: 'Ven', score: 79 },
+      { day: 'Sam', score: 88 },
+      { day: 'Dim', score: 96 },
+    ];
+    const marks = document.getElementById('chart-marks');
+    if (!marks) return;
+    const W = 700, H = 180, PAD_L = 40, PAD_R = 20, PAD_T = 20, PAD_B = 30;
+    const min = 55, max = 100;
+    const x = i => PAD_L + i * ((W - PAD_L - PAD_R) / (data.length - 1));
+    const y = s => PAD_T + (1 - (s - min) / (max - min)) * (H - PAD_T - PAD_B);
+    const pts = data.map((d, i) => [x(i), y(d.score)]);
+    const linePath = pts.map((p, i) => (i ? 'L' : 'M') + p[0] + ' ' + p[1]).join(' ');
+    const areaPath = `M ${pts[0][0]} ${H - PAD_B} ` + linePath.slice(1) + ` L ${pts[pts.length-1][0]} ${H - PAD_B} Z`;
+    marks.innerHTML = `
+      <path class="area" d="${areaPath}"/>
+      <path class="line" d="${linePath}"/>
+      ${pts.map(p => `<circle class="dot" cx="${p[0]}" cy="${p[1]}" r="4"/>`).join('')}
+      ${data.map((d, i) => `<text class="axis" x="${x(i)}" y="${H - 8}" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--text-muted)">${d.day}</text>`).join('')}
+    `;
+    // Peak label
+    const peakIdx = data.reduce((m, d, i, a) => d.score > a[m].score ? i : m, 0);
+    const pk = pts[peakIdx];
+    const peakLbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    peakLbl.setAttribute('class', 'peak-lbl');
+    peakLbl.setAttribute('x', pk[0]);
+    peakLbl.setAttribute('y', pk[1] - 12);
+    peakLbl.setAttribute('text-anchor', 'middle');
+    peakLbl.textContent = data[peakIdx].score;
+    marks.appendChild(peakLbl);
+    // Hover
+    const svg = document.querySelector('#perf-chart .chart-svg');
+    const cursor = document.getElementById('chart-cursor');
+    const hoverDot = document.getElementById('chart-hover-dot');
+    const tip = document.getElementById('chart-tip');
+    const wrap = document.getElementById('perf-chart');
+    svg.addEventListener('mousemove', ev => {
+      const rect = svg.getBoundingClientRect();
+      const relX = (ev.clientX - rect.left) / rect.width * W;
+      let bi = 0, bd = Infinity;
+      pts.forEach((p, i) => { const d = Math.abs(p[0] - relX); if (d < bd) { bd = d; bi = i; } });
+      const [px, py] = pts[bi];
+      cursor.setAttribute('x1', px); cursor.setAttribute('x2', px); cursor.style.opacity = 1;
+      hoverDot.setAttribute('cx', px); hoverDot.setAttribute('cy', py); hoverDot.style.opacity = 1;
+      const wrapRect = wrap.getBoundingClientRect();
+      tip.style.left = (rect.left - wrapRect.left + px / W * rect.width) + 'px';
+      tip.style.top = (rect.top - wrapRect.top + py / H * rect.height) + 'px';
+      tip.innerHTML = `${data[bi].day} · <b>${data[bi].score}</b>/100`;
+      tip.style.opacity = 1;
+    });
+    svg.addEventListener('mouseleave', () => {
+      cursor.style.opacity = 0; hoverDot.style.opacity = 0; tip.style.opacity = 0;
+    });
+  })();
 
   /* ---------- Backend wiring ---------- */
   (function () {
