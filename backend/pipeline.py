@@ -109,27 +109,60 @@ def transcribe(video_path: Path) -> list[TranscriptSegment]:
 VIRAL_PROMPT = """Tu es un monteur senior spécialisé dans les Shorts TikTok / Reels / YouTube.
 
 Voici la transcription horodatée d'une vidéo (start_s -> end_s : texte).
-Ton travail : identifier les {n} meilleurs extraits candidats à devenir des clips viraux de 20 à 30 secondes.
+Ton travail : identifier au maximum {n} meilleurs extraits candidats à devenir
+des clips viraux courts (idéalement 20-30 secondes, mais 10-40 s toléré si la
+vidéo est courte). Si la vidéo est trop courte, renvoie moins de clips.
 
-Contraintes strictes :
-- Chaque clip fait entre 20 et 30 secondes.
-- start_s et end_s doivent tomber sur des débuts/fins de phrase de la transcription (pas au milieu d'un mot).
+Contraintes :
+- start_s et end_s tombent sur des débuts/fins de phrase (pas au milieu d'un mot).
 - Le clip doit avoir un HOOK fort dans les 3 premières secondes.
 - Pas de chevauchement entre clips.
+- Retourne au moins UN clip, même court, si la vidéo contient du contenu parlé.
 
-Pour chaque clip, retourne un objet JSON avec :
-- start_s (float), end_s (float)
-- title (string, court, en français, accrocheur, style TikTok — 6 mots max)
-- hook (0-100), retention (0-100), emotion (0-100), share (0-100)
-- viral_score (0-100, moyenne pondérée où hook compte double)
-- rationale (1 phrase courte en français, explique pourquoi ça marchera)
+Pour chaque clip :
+- title : court, en français, accrocheur, style TikTok, 6 mots max.
+- hook, retention, emotion, share : 0-100.
+- viral_score : 0-100 (moyenne pondérée où le hook compte double).
+- rationale : 1 phrase courte en français expliquant pourquoi ça marche.
 
-Réponds UNIQUEMENT avec un JSON valide de la forme :
-{{"clips": [ {{...}}, {{...}} ]}}
+Utilise l'outil `return_clips` pour renvoyer ta réponse.
 
 TRANSCRIPTION :
 {transcript}
 """
+
+
+CLIPS_TOOL = {
+    "name": "return_clips",
+    "description": "Renvoie la liste des clips viraux sélectionnés.",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "clips": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "start_s": {"type": "number"},
+                        "end_s": {"type": "number"},
+                        "title": {"type": "string"},
+                        "hook": {"type": "integer"},
+                        "retention": {"type": "integer"},
+                        "emotion": {"type": "integer"},
+                        "share": {"type": "integer"},
+                        "viral_score": {"type": "integer"},
+                        "rationale": {"type": "string"},
+                    },
+                    "required": [
+                        "start_s", "end_s", "title", "hook", "retention",
+                        "emotion", "share", "viral_score", "rationale",
+                    ],
+                },
+            }
+        },
+        "required": ["clips"],
+    },
+}
 
 
 def score_with_claude(segments: list[TranscriptSegment], n_clips: int = 6) -> list[Clip]:
@@ -140,6 +173,8 @@ def score_with_claude(segments: list[TranscriptSegment], n_clips: int = 6) -> li
     msg = client.messages.create(
         model=os.getenv("CLAUDE_MODEL", "claude-sonnet-5"),
         max_tokens=4000,
+        tools=[CLIPS_TOOL],
+        tool_choice={"type": "tool", "name": "return_clips"},
         messages=[
             {
                 "role": "user",
@@ -148,11 +183,20 @@ def score_with_claude(segments: list[TranscriptSegment], n_clips: int = 6) -> li
         ],
     )
 
-    raw = "".join(b.text for b in msg.content if hasattr(b, "text"))
-    match = re.search(r"\{.*\}", raw, re.DOTALL)
-    if not match:
-        raise ValueError(f"Claude did not return JSON: {raw[:200]}")
-    data = json.loads(match.group(0))
+    # Extract the tool_use block (guaranteed by tool_choice=required tool).
+    data = None
+    for block in msg.content:
+        if getattr(block, "type", None) == "tool_use" and getattr(block, "name", None) == "return_clips":
+            data = block.input
+            break
+
+    if data is None:
+        # Fallback: try to parse a text block as JSON in case the SDK returned text.
+        raw = "".join(b.text for b in msg.content if hasattr(b, "text"))
+        match = re.search(r"\{.*\}", raw, re.DOTALL)
+        if not match:
+            raise ValueError(f"Claude did not return JSON: {raw[:400]}")
+        data = json.loads(match.group(0))
 
     clips: list[Clip] = []
     for c in data.get("clips", []):
@@ -169,6 +213,8 @@ def score_with_claude(segments: list[TranscriptSegment], n_clips: int = 6) -> li
                 rationale=c["rationale"],
             )
         )
+    if not clips:
+        raise ValueError("Claude n'a retourné aucun clip — la vidéo est peut-être trop courte ou sans parole.")
     return clips
 
 
