@@ -548,6 +548,12 @@
     border: 1px solid var(--stroke); background: rgba(255,255,255,0.04); color: var(--text-muted); cursor: pointer;
   }
   .clip-actions .edit { background: linear-gradient(135deg, var(--violet), var(--pink)); color: white; border-color: transparent; }
+  .clip-actions .btn-dl {
+    flex: 1; padding: 10px; border-radius: 10px; font-size: 12.5px; font-weight: 500;
+    border: 1px solid var(--stroke); background: rgba(255,255,255,0.04); color: var(--text);
+    text-align: center; text-decoration: none; cursor: pointer;
+  }
+  .clip-actions .btn-dl:hover { background: rgba(0, 229, 255, 0.12); border-color: var(--violet); color: var(--violet-bright); }
 
   /* ---------- Dashboard ---------- */
   .dash {
@@ -1647,7 +1653,7 @@
               </div>
               <div class="ai-note"><div class="glyph">AI</div><div>${escapeHtml(c.rationale)}</div></div>
               <div class="clip-actions">
-                <button>Aperçu</button>
+                ${clipUrl ? `<a class="btn-dl" href="${clipUrl}" download="clip_${String(i+1).padStart(2,'0')}.mp4">⬇ Télécharger</a>` : `<button disabled>Télécharger</button>`}
                 <button class="edit" data-clip-index="${i}">Modifier →</button>
               </div>
             </div>
