@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import shutil
 import threading
+import time
 import uuid
 from pathlib import Path
 
@@ -21,6 +22,20 @@ load_dotenv()
 MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_BYTES", str(8 * 1024**3)))  # 8 GB
 ALLOWED_EXTS = {".mp4", ".mov", ".mkv", ".webm", ".m4v"}
 STATIC_DIR = Path(__file__).parent / "static"
+JOB_TTL_DAYS = int(os.getenv("JOB_TTL_DAYS", "7"))
+
+
+def _cleanup_old_jobs() -> None:
+    """Delete job folders older than JOB_TTL_DAYS to keep the disk in check."""
+    if not WORK_DIR.exists():
+        return
+    cutoff = time.time() - JOB_TTL_DAYS * 86400
+    for entry in WORK_DIR.iterdir():
+        try:
+            if entry.is_dir() and entry.stat().st_mtime < cutoff:
+                shutil.rmtree(entry, ignore_errors=True)
+        except OSError:
+            pass
 
 app = FastAPI(title="Clipwave API", version="0.5.0")
 app.add_middleware(
@@ -31,6 +46,11 @@ app.add_middleware(
 )
 
 JOBS: dict[str, dict] = {}
+
+
+@app.on_event("startup")
+def _startup_cleanup() -> None:
+    _cleanup_old_jobs()
 
 
 class AnalyzeRequest(BaseModel):
