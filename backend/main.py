@@ -22,7 +22,7 @@ MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_BYTES", str(8 * 1024**3)))  # 8 GB
 ALLOWED_EXTS = {".mp4", ".mov", ".mkv", ".webm", ".m4v"}
 STATIC_DIR = Path(__file__).parent / "static"
 
-app = FastAPI(title="Clipwave API", version="0.4.0")
+app = FastAPI(title="Clipwave API", version="0.5.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -143,15 +143,24 @@ class EditWord(BaseModel):
     text: str
 
 
+class CaptionStyle(BaseModel):
+    font: str | None = None
+    font_size: int | None = None
+    position: str | None = None  # top | middle | bottom
+    highlight_color: str | None = None  # #RRGGBB
+
+
 class EditClipRequest(BaseModel):
     start: float
     end: float
     words: list[EditWord]
+    aspect_ratio: str | None = None  # 9:16 | 1:1 | 16:9
+    caption_style: CaptionStyle | None = None
 
 
 @app.post("/api/jobs/{job_id}/clips/{index}/render")
 def render_edit(job_id: str, index: int, req: EditClipRequest) -> dict:
-    """Re-cut and re-render a clip with edited trim and word text."""
+    """Re-cut and re-render a clip with edited trim, words, format and style."""
     try:
         file_rel = render_edited_clip(
             job_id=job_id,
@@ -159,6 +168,12 @@ def render_edit(job_id: str, index: int, req: EditClipRequest) -> dict:
             trim_start=req.start,
             trim_end=req.end,
             edited_words=[w.model_dump() for w in req.words],
+            aspect_ratio=req.aspect_ratio or "9:16",
+            caption_style=(
+                {k: v for k, v in req.caption_style.model_dump().items() if v is not None}
+                if req.caption_style
+                else None
+            ),
         )
     except (ValueError, FileNotFoundError) as e:
         raise HTTPException(404, str(e))
