@@ -1671,14 +1671,33 @@
     // Wire buttons
     const fileInput = document.getElementById('file-input');
     document.getElementById('pick-file').addEventListener('click', e => { e.preventDefault(); fileInput.click(); });
+    const MAX_UPLOAD_MB = 8192; // 8 GB
+    const ALLOWED_EXT = ['.mp4', '.mov', '.mkv', '.webm', '.m4v'];
+
+    async function parseErr(res) {
+      try {
+        const t = await res.text();
+        try { const j = JSON.parse(t); return j.detail || j.error || t; } catch { return t; }
+      } catch { return `HTTP ${res.status}`; }
+    }
+
     fileInput.addEventListener('change', async () => {
       const f = fileInput.files[0]; if (!f) return;
+      const ext = '.' + (f.name.split('.').pop() || '').toLowerCase();
+      if (!ALLOWED_EXT.includes(ext)) {
+        showStatus(`Format ${ext} non supporté. Utilise ${ALLOWED_EXT.join(', ')}.`, 0, 'err');
+        fileInput.value = ''; return;
+      }
+      if (f.size > MAX_UPLOAD_MB * 1024 * 1024) {
+        showStatus(`Fichier trop volumineux (${(f.size / 1024**3).toFixed(1)} Go, max ${(MAX_UPLOAD_MB/1024).toFixed(0)} Go).`, 0, 'err');
+        fileInput.value = ''; return;
+      }
       const fd = new FormData();
       fd.append('file', f); fd.append('n_clips', '6'); fd.append('cut', 'true');
       showStatus(`Upload de ${f.name}…`, 5);
       try {
         const res = await fetch(`${api()}/api/upload`, { method: 'POST', body: fd });
-        if (!res.ok) throw new Error(await res.text());
+        if (!res.ok) throw new Error(await parseErr(res));
         const { job_id } = await res.json();
         pollJob(job_id);
       } catch (e) {
@@ -1689,7 +1708,10 @@
     document.getElementById('yt-go').addEventListener('click', async e => {
       e.preventDefault();
       const url = document.getElementById('yt-url').value.trim();
-      if (!url) return;
+      if (!url) { showStatus('Colle un lien YouTube d\'abord.', 0, 'err'); return; }
+      if (!/^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(url)) {
+        showStatus('Ce lien ne ressemble pas à une URL YouTube valide.', 0, 'err'); return;
+      }
       showStatus('Envoi du lien YouTube…', 5);
       try {
         const res = await fetch(`${api()}/api/analyze`, {
@@ -1697,7 +1719,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ youtube_url: url, n_clips: 6 }),
         });
-        if (!res.ok) throw new Error(await res.text());
+        if (!res.ok) throw new Error(await parseErr(res));
         const { job_id } = await res.json();
         pollJob(job_id);
       } catch (e) {
