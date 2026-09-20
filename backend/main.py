@@ -213,6 +213,11 @@ def index() -> FileResponse:
     return FileResponse(STATIC_DIR / "index.html", media_type="text/html")
 
 
+@app.get("/confidentialite")
+def privacy_policy() -> FileResponse:
+    return FileResponse(STATIC_DIR / "confidentialite.html", media_type="text/html")
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
