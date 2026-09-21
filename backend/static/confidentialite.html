@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Politique de confidentialité — Clipwave</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ground: #050318;
+      --ground-2: #0A0630;
+      --violet: #00E5FF;
+      --violet-bright: #66F5FF;
+      --pink: #FF00E5;
+      --text: #E6FBFF;
+      --text-muted: #8FB8D9;
+      --stroke: rgba(255,255,255,0.08);
+      --stroke-strong: rgba(255,255,255,0.14);
+      --font-body: 'Inter', system-ui, sans-serif;
+      --font-display: 'Space Grotesk', 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body); color: var(--text); background: var(--ground);
+      background-image:
+        radial-gradient(1000px 700px at 90% -10%, rgba(0, 229, 255, 0.18), transparent 55%),
+        radial-gradient(900px 600px at 0% 100%, rgba(255, 0, 229, 0.12), transparent 60%);
+      background-attachment: fixed; min-height: 100vh; line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 780px; margin: 0 auto; padding: 60px 28px 100px; }
+    .back {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--violet-bright); text-decoration: none; font-family: var(--font-mono);
+      font-size: 13px; letter-spacing: .04em; margin-bottom: 32px;
+    }
+    .back:hover { color: var(--text); }
+    .eyebrow {
+      font-family: var(--font-mono); font-size: 12px; color: var(--violet-bright);
+      letter-spacing: .12em; text-transform: uppercase; margin-bottom: 12px;
+    }
+    h1 {
+      font-family: var(--font-display); font-size: 42px; font-weight: 600;
+      letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 12px;
+    }
+    .updated {
+      font-family: var(--font-mono); font-size: 12.5px; color: var(--text-muted);
+      margin-bottom: 44px;
+    }
+    h2 {
+      font-family: var(--font-display); font-size: 22px; font-weight: 500;
+      margin: 40px 0 14px; letter-spacing: -0.01em;
+      padding-top: 20px; border-top: 1px solid var(--stroke);
+    }
+    h2:first-of-type { border-top: none; padding-top: 0; }
+    p, li { color: var(--text-muted); font-size: 15.5px; margin-bottom: 12px; }
+    ul { padding-left: 22px; margin-bottom: 14px; }
+    li { margin-bottom: 8px; }
+    strong, b { color: var(--text); font-weight: 500; }
+    a { color: var(--violet-bright); }
+    a:hover { color: white; }
+    .callout {
+      padding: 18px 22px; border-radius: 14px;
+      background: rgba(0, 229, 255, 0.06); border: 1px solid rgba(0, 229, 255, 0.22);
+      margin: 20px 0;
+    }
+    .callout p { color: var(--text); margin: 0; font-size: 14.5px; }
+    footer.foot {
+      margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--stroke);
+      font-family: var(--font-mono); font-size: 12px; color: var(--text-muted);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    footer.foot a { color: var(--text-muted); text-decoration: none; margin-left: 16px; }
+    footer.foot a:hover { color: var(--violet-bright); }
+    @media (max-width: 640px) {
+      h1 { font-size: 32px; }
+      h2 { font-size: 19px; }
+      .wrap { padding: 40px 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="/">← Retour à Clipwave</a>
+    <div class="eyebrow">Politique de confidentialité</div>
+    <h1>Tes données, notre engagement.</h1>
+    <div class="updated">Dernière mise à jour : 20 septembre 2026</div>
+
+    <div class="callout">
+      <p>Clipwave est un outil qui te permet de générer des clips courts à partir de tes vidéos longues. Cette page décrit précisément quelles données on collecte, pourquoi, et comment tu peux les supprimer.</p>
+    </div>
+
+    <h2>1. Qui est responsable de tes données ?</h2>
+    <p>Le responsable du traitement est l'éditeur de Clipwave, joignable par email à <a href="mailto:contact@clipwave.app">contact@clipwave.app</a>. En cas de question sur cette politique ou l'exercice de tes droits, écris à cette adresse.</p>
+
+    <h2>2. Quelles données on collecte</h2>
+    <p><strong>Compte utilisateur</strong> — via la connexion Google : ton nom, ton adresse email et l'identifiant unique fourni par Google. On ne reçoit ni ton mot de passe, ni tes contacts, ni ton contenu Google.</p>
+    <p><strong>Vidéos que tu envoies</strong> — le fichier vidéo lui-même (upload direct ou téléchargé depuis un lien YouTube que tu fournis), la transcription générée automatiquement, et les clips produits.</p>
+    <p><strong>Paiement</strong> — via Stripe : tes coordonnées de facturation minimales (nom, pays, email). Les données de carte bancaire sont saisies et stockées <b>uniquement chez Stripe</b>, jamais sur nos serveurs.</p>
+    <p><strong>Données techniques</strong> — adresse IP et logs serveur (nécessaires pour la sécurité du service), conservés au maximum 30 jours.</p>
+
+    <h2>3. Pourquoi on utilise ces données</h2>
+    <ul>
+      <li>Te fournir le service (traiter tes vidéos, te renvoyer les clips)</li>
+      <li>Gérer ton compte et tes crédits</li>
+      <li>Traiter tes paiements et tes reçus</li>
+      <li>Assurer la sécurité (détection d'abus, quotas)</li>
+      <li>Répondre à tes emails de support</li>
+    </ul>
+    <p>On <b>n'utilise pas</b> tes vidéos pour entraîner des modèles d'IA, on ne les revend à personne, et on ne les partage avec aucun tiers en dehors des sous-traitants strictement nécessaires listés ci-dessous.</p>
+
+    <h2>4. Combien de temps on garde tes données</h2>
+    <ul>
+      <li><strong>Vidéos sources et clips générés</strong> : supprimés automatiquement au bout de <b>7 jours</b> après leur création.</li>
+      <li><strong>Transcriptions</strong> : conservées avec le clip, donc 7 jours.</li>
+      <li><strong>Données de compte</strong> (nom, email, historique de crédits) : conservées tant que ton compte est actif. Supprimées dans les 30 jours suivant ta demande de suppression.</li>
+      <li><strong>Factures</strong> : conservées 10 ans conformément à l'obligation légale française.</li>
+      <li><strong>Logs techniques</strong> : 30 jours maximum.</li>
+    </ul>
+
+    <h2>5. Sous-traitants qui reçoivent tes données</h2>
+    <p>Pour faire fonctionner le service, on utilise des prestataires soigneusement choisis :</p>
+    <ul>
+      <li><strong>Google</strong> — pour l'authentification (Google Sign-In). Traitement conforme au RGPD via les clauses contractuelles types.</li>
+      <li><strong>Stripe</strong> — pour le paiement. Certifié PCI-DSS.</li>
+      <li><strong>Anthropic</strong> — la transcription de ta vidéo est envoyée à l'API Claude pour analyser les moments les plus viraux. Anthropic ne conserve pas ces données pour entraîner ses modèles (voir sa <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">politique de confidentialité</a>).</li>
+      <li><strong>Modal Labs</strong> — hébergement des serveurs de traitement vidéo (États-Unis, transfert encadré par les clauses contractuelles types de la Commission européenne).</li>
+    </ul>
+
+    <h2>6. Tes droits (RGPD)</h2>
+    <p>Conformément au Règlement Général sur la Protection des Données, tu disposes des droits suivants :</p>
+    <ul>
+      <li><strong>Accès</strong> — savoir quelles données on détient sur toi</li>
+      <li><strong>Rectification</strong> — corriger une information inexacte</li>
+      <li><strong>Suppression</strong> (« droit à l'oubli ») — demander l'effacement de ton compte et de tes données</li>
+      <li><strong>Portabilité</strong> — récupérer tes données dans un format lisible</li>
+      <li><strong>Opposition</strong> — t'opposer à un traitement</li>
+      <li><strong>Réclamation</strong> — saisir la CNIL à tout moment (<a href="https://www.cnil.fr" target="_blank" rel="noopener">www.cnil.fr</a>)</li>
+    </ul>
+    <p>Pour exercer un droit, écris à <a href="mailto:contact@clipwave.app">contact@clipwave.app</a>. On répond sous un mois maximum.</p>
+
+    <h2>7. Cookies</h2>
+    <p>On utilise uniquement des cookies <b>strictement nécessaires</b> au fonctionnement du site : session de connexion, préférences d'interface. Aucun cookie publicitaire, aucun tracker analytique tiers. Aucun consentement séparé n'est requis pour ce type de cookie.</p>
+
+    <h2>8. Sécurité</h2>
+    <p>Tes données transitent via HTTPS. Les mots de passe ne nous concernent pas (délégation à Google). Les paiements sont chiffrés bout-en-bout via Stripe. Les vidéos sont stockées sur des serveurs à accès restreint et supprimées automatiquement après 7 jours.</p>
+
+    <h2>9. Modifications de cette politique</h2>
+    <p>Cette politique peut évoluer si le service change. La date de dernière mise à jour figure en haut de page. Les modifications substantielles seront notifiées par email aux utilisateurs actifs.</p>
+
+    <h2>10. Contact</h2>
+    <p>Toute question ? Écris-nous à <a href="mailto:contact@clipwave.app">contact@clipwave.app</a>.</p>
+
+    <footer class="foot">
+      <div>© 2026 Clipwave</div>
+      <div>
+        <a href="/">Accueil</a>
+        <a href="/conditions">Conditions</a>
+        <a href="/mentions-legales">Mentions légales</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
