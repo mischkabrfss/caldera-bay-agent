@@ -36,6 +36,12 @@
   .bg-video {
     position: fixed; inset: 0; width: 100vw; height: 100vh;
     object-fit: cover; z-index: -3; pointer-events: none;
+    opacity: 0.55; mix-blend-mode: screen;
+    animation: bg-breath 8s ease-in-out infinite;
+  }
+  @keyframes bg-breath {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 0.42; }
   }
   .bg-scene {
     position: fixed; inset: 0; z-index: -3; pointer-events: none;
