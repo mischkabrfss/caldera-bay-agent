@@ -88,6 +88,15 @@
     33% { transform: translate(10vw, 8vh) scale(1.15); }
     66% { transform: translate(-8vw, 12vh) scale(0.9); }
   }
+  .orb-canvas {
+    position: fixed; top: 50%; right: -5%; transform: translateY(-50%);
+    width: 90vh; height: 90vh; max-width: 65vw; max-height: 65vw;
+    z-index: -2; pointer-events: none;
+  }
+  .starfield {
+    position: fixed; inset: 0; width: 100vw; height: 100vh;
+    z-index: -2; pointer-events: none;
+  }
   .bg-grid {
     position: fixed; inset: 0; z-index: -2; pointer-events: none;
     background-image:
@@ -659,6 +668,8 @@
 <div class="bg-scene"></div>
 <div class="bg-orb-3"></div>
 <div class="bg-orb-4"></div>
+<canvas id="orb-canvas" class="orb-canvas"></canvas>
+<canvas id="starfield" class="starfield"></canvas>
 <div class="bg-grid"></div>
 <div class="bg-overlay"></div>
 
@@ -940,6 +951,170 @@
 </footer>
 
 <script>
+  /* ---------- Starfield particles ---------- */
+  (function() {
+    const cvs = document.getElementById('starfield');
+    if (!cvs) return;
+    const ctx = cvs.getContext('2d');
+    let W, H, particles = [];
+    const N = 80;
+    function resize() {
+      W = cvs.width = innerWidth * devicePixelRatio;
+      H = cvs.height = innerHeight * devicePixelRatio;
+      cvs.style.width = innerWidth + 'px';
+      cvs.style.height = innerHeight + 'px';
+      particles = Array.from({length: N}, () => ({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        z: Math.random() * 0.8 + 0.2,
+        r: Math.random() * 1.6 + 0.4,
+        vy: (Math.random() * 0.4 + 0.1),
+        hue: Math.random() * 40 + 20, // orange-ish
+      }));
+    }
+    resize();
+    addEventListener('resize', resize);
+    function tick() {
+      ctx.clearRect(0, 0, W, H);
+      for (const p of particles) {
+        p.y -= p.vy * p.z;
+        if (p.y < -10) { p.y = H + 10; p.x = Math.random() * W; }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * p.z * devicePixelRatio, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${p.hue}, 90%, 70%, ${0.12 + p.z * 0.35})`;
+        ctx.fill();
+      }
+      requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+
+  /* ---------- 3D orb (fibonacci sphere) ---------- */
+  (function() {
+    const cvs = document.getElementById('orb-canvas');
+    if (!cvs) return;
+    const ctx = cvs.getContext('2d');
+    let W, H, cx, cy, R;
+    const dots = [];
+    const RING = 800;
+    for (let i = 0; i < RING; i++) {
+      const t = i / RING;
+      const phi = Math.acos(1 - 2 * t);
+      const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+      dots.push({
+        x: Math.sin(phi) * Math.cos(theta),
+        y: Math.sin(phi) * Math.sin(theta),
+        z: Math.cos(phi),
+      });
+    }
+    const moons = Array.from({length: 5}, (_, i) => ({
+      r: 0.6 + Math.random() * 0.55,
+      speed: 0.15 + Math.random() * 0.25,
+      tilt: Math.random() * Math.PI,
+      phase: Math.random() * Math.PI * 2,
+      size: 6 + Math.random() * 10,
+      hue: 20 + Math.random() * 30, // orange
+    }));
+    function resize() {
+      const r = cvs.getBoundingClientRect();
+      W = cvs.width = r.width * devicePixelRatio;
+      H = cvs.height = r.height * devicePixelRatio;
+      cvs.style.width = r.width + 'px';
+      cvs.style.height = r.height + 'px';
+      cx = W / 2; cy = H / 2;
+      R = Math.min(W, H) * 0.28;
+    }
+    resize();
+    addEventListener('resize', resize);
+    let t0 = performance.now();
+    let mx = 0, my = 0;
+    addEventListener('mousemove', e => {
+      mx = (e.clientX / innerWidth - 0.5) * 0.6;
+      my = (e.clientY / innerHeight - 0.5) * 0.6;
+    });
+    function draw(now) {
+      const t = (now - t0) / 1000;
+      ctx.clearRect(0, 0, W, H);
+      // Halo
+      const grd = ctx.createRadialGradient(cx, cy, R * 0.4, cx, cy, R * 2.4);
+      grd.addColorStop(0, 'rgba(255, 107, 0, 0.55)');
+      grd.addColorStop(0.35, 'rgba(255, 61, 0, 0.28)');
+      grd.addColorStop(0.7, 'rgba(192, 132, 252, 0.10)');
+      grd.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, 0, W, H);
+      const yaw = t * 0.35 + mx * 1.4;
+      const pitch = Math.sin(t * 0.25) * 0.2 + my * 1.2;
+      const cosY = Math.cos(yaw), sinY = Math.sin(yaw);
+      const cosP = Math.cos(pitch), sinP = Math.sin(pitch);
+      // Core body
+      const core = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.05, cx, cy, R);
+      core.addColorStop(0, 'rgba(255, 220, 180, 0.95)');
+      core.addColorStop(0.25, 'rgba(255, 150, 60, 0.70)');
+      core.addColorStop(0.65, 'rgba(255, 61, 0, 0.50)');
+      core.addColorStop(1, 'rgba(30,10,0,0.2)');
+      ctx.beginPath();
+      ctx.arc(cx, cy, R * 1.02, 0, Math.PI * 2);
+      ctx.fillStyle = core;
+      ctx.fill();
+      // Rotated dots
+      const projected = dots.map(d => {
+        const x = d.x, y = d.y, z = d.z;
+        const x1 = x * cosY + z * sinY;
+        const z1 = -x * sinY + z * cosY;
+        const y1 = y * cosP - z1 * sinP;
+        const z2 = y * sinP + z1 * cosP;
+        return { x: x1, y: y1, z: z2 };
+      }).sort((a, b) => a.z - b.z);
+      for (const p of projected) {
+        const scale = 0.65 + p.z * 0.35;
+        const alpha = 0.15 + Math.max(0, p.z) * 0.55;
+        const size = (0.9 + p.z * 1.4) * devicePixelRatio;
+        const hue = 20 + p.x * 20;
+        ctx.beginPath();
+        ctx.arc(cx + p.x * R * scale, cy + p.y * R * scale, size, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${hue}, 95%, ${65 + p.z * 15}%, ${alpha})`;
+        ctx.fill();
+      }
+      // Specular highlight
+      const spec = ctx.createRadialGradient(cx - R * 0.4, cy - R * 0.5, 0, cx - R * 0.4, cy - R * 0.5, R * 0.6);
+      spec.addColorStop(0, 'rgba(255,255,255,0.55)');
+      spec.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = spec;
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.fill();
+      // Moons
+      for (const m of moons) {
+        const a = t * m.speed + m.phase;
+        const orbit = R * (1.4 + m.r * 0.7);
+        const x = Math.cos(a) * orbit;
+        const z = Math.sin(a) * orbit;
+        const y = Math.sin(a * 1.3 + m.tilt) * orbit * 0.25;
+        const y1 = y * cosP - z * sinP;
+        const z1 = y * sinP + z * cosP;
+        const depth = 1 + z1 / (orbit * 2);
+        const px = cx + x * depth;
+        const py = cy + y1 * depth;
+        const s = m.size * depth * devicePixelRatio;
+        const g = ctx.createRadialGradient(px - s * 0.4, py - s * 0.4, 0, px, py, s * 1.5);
+        g.addColorStop(0, `hsla(${m.hue}, 90%, 85%, 0.95)`);
+        g.addColorStop(0.5, `hsla(${m.hue}, 90%, 65%, 0.75)`);
+        g.addColorStop(1, `hsla(${m.hue}, 90%, 40%, 0)`);
+        ctx.beginPath();
+        ctx.arc(px, py, s * 1.4, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(px, py, s * 0.55, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${m.hue}, 95%, 88%, 0.9)`;
+        ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  })();
+
   /* ---------- Uploader tabs ---------- */
   (function () {
     const tabs = document.querySelectorAll('.row-tabs button');
