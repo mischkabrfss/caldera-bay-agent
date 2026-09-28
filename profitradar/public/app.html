@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ProfitRadar — Tableau de bord</title>
+<meta name="theme-color" content="#06050c">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/app.css">
+</head>
+<body class="app">
+<div class="bg-fx" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#00f5a0"/><stop offset=".6" stop-color="#00c2ff"/><stop offset="1" stop-color="#8b5cff"/></linearGradient></defs></svg>
+
+<header class="app-top"><div class="wrap">
+  <a class="logo" href="/"><span class="logo-mark"></span><span>Profit<b>Radar</b></span></a>
+  <div class="top-right"><span class="plan-chip" id="planChip">Test</span><button class="btn btn-main btn-sm" id="upBtn" data-open-upgrade>Upgrade</button></div>
+</div></header>
+
+<main class="wrap app-main">
+  <!-- AUDIT -->
+  <section class="view" id="v-audit">
+    <div class="view-head"><span class="eyebrow">Audit boutique</span><h1>Scanne ta <span class="grad-text">boutique</span></h1><p class="muted" id="trialInfo"></p></div>
+    <form class="store-form" id="auditForm">
+      <label class="store-input"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l1.5-5h15L21 9M3 9h18M3 9v11h18V9M9 20v-6h6v6"/></svg><input name="store" placeholder="maboutique.com" inputmode="url" autocomplete="url" aria-label="Adresse de ta boutique" required></label>
+      <button class="btn btn-main" type="submit">Analyser <span class="arrow">→</span></button>
+    </form>
+    <div id="auditOut"></div>
+  </section>
+
+  <!-- PRODUITS -->
+  <section class="view" id="v-produits">
+    <div class="view-head"><span class="eyebrow">Fiches produit</span><h1>Chaque produit <span class="grad-text">passé au crible</span></h1></div>
+    <div class="toolbar"><button class="seg on" data-sort="asc">À corriger d’abord</button><button class="seg" data-sort="desc">Meilleurs d’abord</button></div>
+    <div id="productsOut"></div>
+  </section>
+
+  <!-- ESPION -->
+  <section class="view" id="v-espion">
+    <div class="view-head"><span class="eyebrow">Espion concurrents</span><h1>Vois ce qui <span class="grad-text">vend chez les autres</span></h1></div>
+    <div class="toolbar"><button class="seg on" data-spy-tab="spy">Espionner</button><button class="seg" data-spy-tab="compare">Comparer <small class="lock-tag">SCALE</small></button></div>
+    <div id="spyPane">
+      <form class="store-form" id="spyForm">
+        <label class="store-input"><span>🕵️</span><input name="store" placeholder="boutique-concurrente.com" inputmode="url" aria-label="Boutique concurrente" required></label>
+        <button class="btn btn-main" type="submit">Espionner <span class="arrow">→</span></button>
+      </form>
+      <div id="spyOut"></div>
+    </div>
+    <div id="comparePane" class="hidden">
+      <form class="card compare-form" id="compareForm">
+        <input name="s" placeholder="Boutique 1" inputmode="url" required><input name="s" placeholder="Boutique 2" inputmode="url" required><input name="s" placeholder="Boutique 3 (optionnel)" inputmode="url"><input name="s" placeholder="Boutique 4 (optionnel)" inputmode="url">
+        <button class="btn btn-main" type="submit">Comparer <span class="arrow">→</span></button>
+      </form>
+      <div id="compareOut"></div>
+    </div>
+  </section>
+
+  <!-- RADAR -->
+  <section class="view" id="v-radar">
+    <div class="view-head"><span class="eyebrow">Radar produits gagnants</span><h1>Les produits qui <span class="grad-text">explosent</span></h1><p class="muted">Classés par rang de vente, fraîcheur, prix et promo dans des boutiques de référence.</p></div>
+    <div class="niches" id="niches"></div>
+    <div id="radarOut"></div>
+  </section>
+
+  <!-- COMPTE -->
+  <section class="view" id="v-compte">
+    <div class="view-head"><span class="eyebrow">Mon compte</span><h1>Ton <span class="grad-text">abonnement</span></h1></div>
+    <div class="card account-card" id="accountCard"></div>
+    <h2 class="sub-title">Changer d’offre</h2>
+    <div class="plans-mini" id="plansMini"></div>
+    <h2 class="sub-title">Déjà abonné sur un autre appareil ?</h2>
+    <form class="card restore" id="restoreForm">
+      <input name="email" type="email" placeholder="E-mail utilisé au paiement" required autocomplete="email">
+      <input name="last4" placeholder="4 derniers chiffres de ta carte" inputmode="numeric" pattern="\d{4}" maxlength="4" required>
+      <button class="btn btn-ghost" type="submit">Récupérer mon accès</button>
+    </form>
+  </section>
+</main>
+
+<nav class="tabbar" aria-label="Navigation">
+  <a href="#audit" data-tab="audit"><span>🩺</span>Audit</a>
+  <a href="#produits" data-tab="produits"><span>🧠</span>Produits</a>
+  <a href="#radar" data-tab="radar"><span>🛰️</span>Radar</a>
+  <a href="#espion" data-tab="espion"><span>🕵️</span>Espion</a>
+  <a href="#compte" data-tab="compte"><span>👤</span>Compte</a>
+</nav>
+
+<div class="modal hidden" id="upgradeModal" role="dialog" aria-modal="true" aria-labelledby="upTitle">
+  <div class="modal-box card">
+    <button class="modal-x" data-close aria-label="Fermer">✕</button>
+    <span class="eyebrow">Débloque tout</span><h2 id="upTitle">Passe à la <span class="grad-text">vitesse supérieure</span></h2>
+    <p class="muted" id="upReason"></p>
+    <div class="plans-mini" id="plansModal"></div>
+    <p class="plan-note">Sans engagement · Paiement sécurisé Stripe</p>
+  </div>
+</div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<script src="/app.js" defer></script>
+</body>
+</html>

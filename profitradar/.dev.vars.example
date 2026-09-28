@@ -1,0 +1,2 @@
+# Ta clé secrète Stripe (sk_test_... pour tester, sk_live_... pour vendre)
+STRIPE_SECRET_KEY=
