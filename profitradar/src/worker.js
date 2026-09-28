@@ -21,10 +21,10 @@ class HttpError extends Error {
   }
 }
 
-async function cached(key, ttl, load) {
+async function cached(key, ttl, load, overwrite = false) {
   const cache = globalThis.caches?.default;
   const request = new Request(`https://cache.profitradar.internal/${key}`);
-  if (cache) {
+  if (cache && !overwrite) {
     const hit = await cache.match(request);
     if (hit) return hit.json();
   }
@@ -86,6 +86,19 @@ async function consumeTrial(request, ctx) {
   return TEST_LIMITS.audits - next.n;
 }
 
+// Radar : résultat frais 12 h + dernier résultat valide gardé 30 jours (si les boutiques ne répondent plus).
+async function scanNiche(niche) {
+  const results = await Promise.allSettled(NICHES[niche].stores.map((host) => fetchStoreLite(host)));
+  const items = radarFrom(results.filter((r) => r.status === 'fulfilled').map((r) => r.value));
+  if (items.length) await cached(`radar-backup/${niche}`, 2_592_000, async () => items, true);
+  return items;
+}
+
+async function radar(niche, fresh = false) {
+  const items = fresh ? await scanNiche(niche) : await cached(`radar/${niche}`, 43200, () => scanNiche(niche));
+  return items.length ? items : cached(`radar-backup/${niche}`, 2_592_000, async () => []);
+}
+
 async function loadStore(input, full) {
   const host = normalizeStore(input);
   return cached(`${full ? 'full' : 'lite'}/${host}`, full ? 1800 : 21600, () => (full ? fetchStoreFull(host) : fetchStoreLite(host)));
@@ -131,10 +144,7 @@ async function route(request, env, ctx) {
   if (pathname === '/api/radar') {
     const niche = NICHES[url.searchParams.get('niche')] ? url.searchParams.get('niche') : 'mode';
     const access = await getAccess(request, env, ctx);
-    const items = await cached(`radar/${niche}`, 43200, async () => {
-      const results = await Promise.allSettled(NICHES[niche].stores.map((host) => fetchStoreLite(host)));
-      return radarFrom(results.filter((r) => r.status === 'fulfilled').map((r) => r.value));
-    });
+    const items = await radar(niche);
     const allowed = can(access.plan, 'radar');
     return json({ plan: access.plan, niche, locked: !allowed, items: allowed ? items : lockItems(items.slice(0, 8), 1) });
   }
@@ -212,6 +222,11 @@ async function route(request, env, ctx) {
 }
 
 export default {
+  // Tâche quotidienne (gratuite) : rafraîchit le radar de chaque niche.
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(Promise.allSettled(Object.keys(NICHES).map((niche) => radar(niche, true))));
+  },
+
   async fetch(request, env) {
     const url = new URL(request.url);
     if (!url.pathname.startsWith('/api/')) return env.ASSETS.fetch(request);

@@ -179,3 +179,12 @@ td b { font-family: var(--display); }
   .result-grid { display: grid; grid-template-columns: 380px 1fr; gap: 16px; align-items: start; }
 }
 .demo-bar { position: sticky; top: 60px; z-index: 39; padding: 8px 16px; text-align: center; font-size: 12px; font-weight: 800; letter-spacing: .02em; color: #07060d; background: var(--grad); background-size: 200% auto; animation: shine 4s linear infinite; }
+
+/* Squelettes de chargement */
+.skeleton { display: grid; gap: 10px; margin-top: 14px; }
+.skeleton div { height: 64px; border-radius: 18px; background: linear-gradient(90deg, rgba(255,255,255,.04) 25%, rgba(255,255,255,.1) 50%, rgba(255,255,255,.04) 75%); background-size: 200% 100%; animation: shimmer 1.3s linear infinite; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+.tabbar a.on::before { content: ''; position: absolute; top: 4px; left: 50%; width: 18px; height: 3px; margin-left: -9px; border-radius: 3px; background: var(--green); box-shadow: 0 0 10px var(--green); animation: pop .4s both; }
+.result-hero .gauge { position: relative; }
+.count-pop { animation: countPop .5s cubic-bezier(.2,1.6,.4,1); }
+@keyframes countPop { 50% { transform: scale(1.25); color: var(--green); } }

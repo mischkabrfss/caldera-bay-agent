@@ -217,3 +217,18 @@ test('API : limiteur de tentatives', async () => {
   delete globalThis.caches;
   assert.deepEqual(codes, [404, 404, 404, 404, 404, 429]);
 });
+
+test('Shopify : 2e tentative automatique si la boutique renvoie une erreur', async () => {
+  let calls = 0;
+  globalThis.fetch = async () => (++calls === 1 ? new Response('busy', { status: 503 }) : new Response(JSON.stringify({ products: [] }), { headers: { 'content-type': 'application/json' } }));
+  assert.deepEqual(await fetchProducts('x.myshopify.com', 1), []);
+  assert.equal(calls, 2);
+});
+
+test('Radar : tâche quotidienne sans erreur', async () => {
+  installFetch();
+  const jobs = [];
+  await worker.scheduled({}, env(), { waitUntil: (p) => jobs.push(p) });
+  const results = await Promise.all(jobs);
+  assert.ok(results.length === 1 && results[0].every((r) => r.status === 'fulfilled'));
+});

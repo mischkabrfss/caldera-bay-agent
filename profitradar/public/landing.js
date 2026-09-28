@@ -168,3 +168,65 @@ function note(button, text) {
   }
   el.textContent = text;
 }
+
+// Titre révélé mot par mot (garde le dégradé sur « de l’argent »)
+(() => {
+  const h1 = $('.hero h1');
+  if (!h1 || reduced) return;
+  let i = 0;
+  const wrap = (node) => {
+    for (const child of [...node.childNodes]) {
+      if (child.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        child.textContent.split(/(\s+)/).forEach((part) => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) return frag.append(part);
+          const w = Object.assign(document.createElement('span'), { className: 'w', textContent: part });
+          w.style.setProperty('--i', i++);
+          frag.append(w);
+        });
+        child.replaceWith(frag);
+      } else if (child.classList?.contains('grad-text')) {
+        child.classList.add('w');
+        child.style.setProperty('--i', i++);
+      } else wrap(child);
+    }
+  };
+  wrap(h1);
+})();
+
+// Champ boutique : exemples qui s'écrivent tout seuls
+(() => {
+  const input = $('.hero input[name=store]');
+  if (!input || reduced) return;
+  const examples = ['maboutique.com', 'lampe-design.fr', 'urban-sneakers.com', 'cosy-home.myshopify.com', 'bijoux-lina.fr'];
+  let e = 0, c = 0, del = false;
+  input.classList.add('typing');
+  const tick = () => {
+    if (document.activeElement === input || input.value) { input.placeholder = 'maboutique.com'; return setTimeout(tick, 1200); }
+    const word = examples[e];
+    c += del ? -1 : 1;
+    input.placeholder = word.slice(0, c) + (c % 2 ? '▍' : '');
+    if (!del && c === word.length) { del = true; return setTimeout(tick, 1400); }
+    if (del && c === 0) { del = false; e = (e + 1) % examples.length; }
+    setTimeout(tick, del ? 35 : 80);
+  };
+  setTimeout(tick, 1200);
+})();
+
+// Barre de progression + parallaxe des halos
+(() => {
+  const bar = $('#progress');
+  const blobs = $$('.blob');
+  let ticking = false;
+  addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      if (bar) bar.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
+      if (!reduced) blobs.forEach((b, i) => (b.style.translate = `0 ${scrollY * (0.12 + i * 0.08)}px`));
+      ticking = false;
+    });
+  }, { passive: true });
+})();

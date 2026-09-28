@@ -25,13 +25,19 @@ async function get(url, { json = false, timeout = 9000 } = {}) {
   // Développement local uniquement : SHOPIFY_MOCK redirige vers un faux Shopify (test/mock-shop.mjs).
   const mock = globalThis.SHOPIFY_MOCK;
   if (mock) url = `${mock}/${url.replace(/^https:\/\//, '')}`;
-  const response = await fetch(url, {
+  const attempt = () => fetch(url, {
     headers: { 'User-Agent': UA, Accept: json ? 'application/json' : 'text/html,*/*' },
     redirect: 'follow',
     signal: AbortSignal.timeout(timeout),
     cf: { cacheTtl: 900, cacheEverything: true },
   });
-  return response;
+  // Une 2e tentative si Shopify limite (429), plante (5xx) ou si le réseau coupe.
+  try {
+    const response = await attempt();
+    if (response.status !== 429 && response.status < 500) return response;
+  } catch { /* on retente */ }
+  await new Promise((r) => setTimeout(r, 700));
+  return attempt();
 }
 
 async function getJson(url) {

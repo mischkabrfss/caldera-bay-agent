@@ -104,7 +104,7 @@ function paintPlan() {
 const STEPS = ['Connexion à la boutique', 'Lecture du catalogue produits', 'Analyse SEO & visibilité', 'Détection pixels, avis & apps', 'Notation de chaque fiche produit', 'Calcul du score final'];
 
 function loader(target, steps = STEPS) {
-  target.innerHTML = `<div class="card loader"><div class="radar"><i style="top:24%;left:62%"></i><i style="top:60%;left:30%;animation-delay:.7s"></i><i style="top:40%;left:80%;animation-delay:1.3s"></i></div><div class="loader-steps">${steps.map((s) => `<div>${s}</div>`).join('')}</div></div>`;
+  target.innerHTML = `<div class="skeleton" aria-hidden="true"><div></div></div><div class="card loader"><div class="radar"><i style="top:24%;left:62%"></i><i style="top:60%;left:30%;animation-delay:.7s"></i><i style="top:40%;left:80%;animation-delay:1.3s"></i></div><div class="loader-steps">${steps.map((s) => `<div>${s}</div>`).join('')}</div></div><div class="skeleton" aria-hidden="true"><div></div><div></div><div></div></div>`;
   const rows = $$('.loader-steps div', target);
   let i = 0;
   rows[0].classList.add('on');
@@ -122,7 +122,7 @@ async function runAudit(input) {
   const [r] = await Promise.all([api('/api/audit', { store: input }), wait(2600)]);
   done();
   if (!r.ok) {
-    if (r.status === 402) { out.innerHTML = ''; openUpgrade(r.data.error); } else out.innerHTML = `<div class="card empty"><b>😕</b>${esc(r.data.error || 'Analyse impossible.')}</div>`;
+    if (r.status === 402) { out.innerHTML = ''; openUpgrade(state.me.demo ? `${r.data.error} (Démo : choisis une offre ou réinitialise dans Compte.)` : r.data.error); } else out.innerHTML = `<div class="card empty"><b>😕</b>${esc(r.data.error || 'Analyse impossible.')}</div>`;
     return;
   }
   state.audit = r.data.report;
@@ -143,11 +143,14 @@ function gaugeSvg(id) {
   return `<div class="gauge"><svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="52" fill="none" stroke-width="10"/><circle class="val" id="${id}" cx="60" cy="60" r="52" fill="none" stroke-width="10" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg><div class="gauge-num"><b id="${id}N">0</b><small>/ 100</small></div></div>`;
 }
 function animateGauge(id, value) {
-  requestAnimationFrame(() => { $(`#${id}`).style.strokeDashoffset = 326.7 * (1 - value / 100); });
+  const ring = $(`#${id}`);
+  const num = $(`#${id}N`);
+  if (!ring || !num) return;
+  requestAnimationFrame(() => { ring.style.strokeDashoffset = 326.7 * (1 - value / 100); });
   const start = performance.now();
   const tick = (t) => {
     const p = Math.min(1, (t - start) / 1600);
-    $(`#${id}N`).textContent = Math.round(value * (1 - Math.pow(1 - p, 3)));
+    num.textContent = Math.round(value * (1 - Math.pow(1 - p, 3)));
     if (p < 1) requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
@@ -166,8 +169,8 @@ function renderAudit() {
         <span class="grade ${gradeClass(a.score)}">${esc(a.grade)}</span>
         <h2>${esc(a.name)}</h2><p class="muted" style="font-size:13px">${esc(a.host)}${a.theme ? ` · thème ${esc(a.theme)}` : ''}</p>
         <div class="stats">
-          <div><b>${a.stats.products}</b><span>produits</span></div><div><b>${a.fixes.length}</b><span>corrections</span></div><div><b>${a.stats.avgImages}</b><span>photos/fiche</span></div>
-          <div><b>${a.stats.avgWords}</b><span>mots/fiche</span></div><div><b>${a.stats.soldOut}</b><span>ruptures</span></div><div><b>${money(a.stats.avgPrice, a.currency)}</b><span>prix moyen</span></div>
+          <div><b data-n="${a.stats.products}">0</b><span>produits</span></div><div><b data-n="${a.fixes.length}">0</b><span>corrections</span></div><div><b>${a.stats.avgImages}</b><span>photos/fiche</span></div>
+          <div><b data-n="${a.stats.avgWords}">0</b><span>mots/fiche</span></div><div><b data-n="${a.stats.soldOut}">0</b><span>ruptures</span></div><div><b>${money(a.stats.avgPrice, a.currency)}</b><span>prix moyen</span></div>
         </div>
         ${a.stack.length ? `<div class="stack">${a.stack.map((s) => `<span>✓ ${esc(STACK[s] || s)}</span>`).join('')}</div>` : ''}
       </div>
@@ -186,6 +189,17 @@ function renderAudit() {
     </div>
   </div>`;
   animateGauge('scoreG', a.score);
+  setTimeout(() => $('.result-hero .gauge', out)?.insertAdjacentHTML('beforeend', '<span class="pulse-ring"></span><span class="pulse-ring r2"></span>'), 1600);
+  $$('[data-n]', out).forEach((el, i) => {
+    const target = Number(el.dataset.n);
+    const start = performance.now() + i * 120;
+    const tick = (t) => {
+      const p = Math.max(0, Math.min(1, (t - start) / 1100));
+      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(tick); else el.classList.add('count-pop');
+    };
+    requestAnimationFrame(tick);
+  });
   setTimeout(() => $$('.cat-row .bar i', out).forEach((b, i) => setTimeout(() => (b.style.width = `${b.dataset.w}%`), i * 120)), 200);
 }
 
@@ -232,7 +246,7 @@ function pCard(p, i, cur) {
     ${!locked && p.store ? `<span class="src">chez ${esc(p.store)}</span>` : ''}
     ${!locked && p.verdict ? `<span class="src">${esc(p.verdict)}${p.age !== null && p.age !== undefined ? ` · il y a ${p.age} j` : ''}</span>` : ''}</div>`;
   if (locked) return `<div class="card pcard is-locked" style="--d:${i * 0.05}s">${inner}<div class="lock-over"><span>🔒</span><button class="btn btn-main" data-open-upgrade data-reason="Le radar et l’espion sont inclus dans l’offre Pro.">Pro</button></div></div>`;
-  return `<a class="card pcard" style="--d:${i * 0.05}s" href="${esc(p.url)}" target="_blank" rel="noopener nofollow">${inner}</a>`;
+  return `<a class="card pcard tilt" style="--d:${i * 0.05}s" href="${esc(p.url)}" target="_blank" rel="noopener nofollow">${inner}</a>`;
 }
 
 // ---------- Radar ----------
@@ -312,13 +326,23 @@ function renderAccount() {
     <div class="account-actions">
       ${portal ? '<button class="btn btn-ghost" id="portalBtn">Gérer mon abonnement / factures</button>' : ''}
       ${!portal && state.me.portalLogin ? `<a class="btn btn-ghost" href="${esc(state.me.portalLogin)}" target="_blank" rel="noopener">Gérer mon abonnement (lien par e-mail)</a>` : ''}
-      ${plan !== 'test' ? '<button class="btn btn-ghost" id="logoutBtn">Se déconnecter</button>' : ''}
+      ${plan !== 'test' && !state.me.demo ? '<button class="btn btn-ghost" id="logoutBtn">Se déconnecter</button>' : ''}
+      ${state.me.demo ? '<button class="btn btn-ghost" id="resetDemo">↺ Réinitialiser la démo</button>' : ''}
       ${state.audit && isScale ? '<button class="btn btn-ghost" id="exportAudit">⬇️ Exporter mon dernier audit (CSV)</button>' : ''}
     </div>`;
   planCards($('#plansMini'), plan);
   $('#portalBtn')?.addEventListener('click', async () => {
     const r = await api('/api/portal', {});
     if (r.data.url) location.assign(r.data.url); else toast(r.data.error || 'Portail indisponible.', 'err');
+  });
+  $('#resetDemo')?.addEventListener('click', async () => {
+    await api('/api/demo-reset', {});
+    state.audit = null;
+    store.set('pr_audit', null);
+    await loadMe();
+    renderAccount();
+    renderAudit();
+    toast('Démo réinitialisée : 3 analyses gratuites à nouveau ✦', 'ok');
   });
   $('#logoutBtn')?.addEventListener('click', async () => { await api('/api/logout', {}); location.reload(); });
   $('#exportAudit')?.addEventListener('click', () => {
@@ -368,7 +392,7 @@ async function detectBackend() {
   if (r.ok && r.data.plans) return r;
   ({ demoApi } = await import('./demo.js'));
   document.body.classList.add('is-demo');
-  $('.app-top').insertAdjacentHTML('afterend', '<div class="demo-bar">✦ Démo · boutiques d’exemple · offres gratuites ici</div>');
+  $('.app-top').insertAdjacentHTML('afterend', '<div class="demo-bar">✦ Démo · boutiques d’exemple</div>');
   return demoApi('/api/config');
 }
 

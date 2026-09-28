@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div class="progress" id="progress"></div>
 <div class="bg-fx" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><canvas id="coins"></canvas></div>
 
 <div class="ticker" aria-hidden="true"><div class="ticker-track">
@@ -38,7 +39,7 @@
     <p class="lead reveal" style="--d:.16s">Colle l’adresse de ta boutique Shopify. En <strong>30 secondes</strong>, ProfitRadar la scanne, note chaque fiche produit, te dit <strong>quoi changer et pourquoi</strong>, et te montre les <strong>produits qui cartonnent</strong> chez les autres.</p>
     <form class="store-form reveal" style="--d:.24s" data-store-form>
       <label class="store-input"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l1.5-5h15L21 9M3 9h18M3 9v11h18V9M9 20v-6h6v6"/></svg><input name="store" placeholder="maboutique.com" autocomplete="url" inputmode="url" aria-label="Adresse de ta boutique Shopify" required></label>
-      <button class="btn btn-main" type="submit">Analyser ma boutique <span class="arrow">→</span></button>
+      <button class="btn btn-main magnet" type="submit">Analyser ma boutique <span class="arrow">→</span></button>
     </form>
     <div class="micro reveal" style="--d:.32s"><span>3 analyses offertes</span><span>Sans carte bancaire</span><span>Rien à installer</span></div>
   </div>
@@ -71,18 +72,24 @@
   </div>
 </div></section>
 
+<section style="padding-top:0"><div class="feed reveal" aria-label="Exemples de détections">
+  <div class="feed-row"><span>⚠️ Pixel TikTok manquant</span><span>🔥 Top 3 des ventes détecté</span><span>📦 Crée un pack x2</span><span>⭐ Aucun avis client visible</span><span>🖼️ 1 seule photo sur 6 fiches</span><span>💸 Prix barré conseillé : -30 %</span><span>🚚 Livraison offerte à mettre en avant</span><span>⚠️ Pixel TikTok manquant</span><span>🔥 Top 3 des ventes détecté</span><span>📦 Crée un pack x2</span><span>⭐ Aucun avis client visible</span><span>🖼️ 1 seule photo sur 6 fiches</span><span>💸 Prix barré conseillé : -30 %</span><span>🚚 Livraison offerte à mettre en avant</span></div>
+  <div class="feed-row rev"><span>🛰️ Nouveau produit gagnant : lancé il y a 4 j</span><span>✍️ Description trop courte (32 mots)</span><span>🔎 Méta-description absente</span><span>📈 Concurrent : 12 lancements ce mois</span><span>🧾 CGV manquantes</span><span>⚡ 58 scripts sur l’accueil</span><span>🛰️ Nouveau produit gagnant : lancé il y a 4 j</span><span>✍️ Description trop courte (32 mots)</span><span>🔎 Méta-description absente</span><span>📈 Concurrent : 12 lancements ce mois</span><span>🧾 CGV manquantes</span><span>⚡ 58 scripts sur l’accueil</span></div>
+  <p class="feed-note">Exemples de ce que ProfitRadar détecte</p>
+</div></section>
+
 <section id="fonctions"><div class="wrap">
   <div class="section-head reveal"><span class="eyebrow">Tout ce qu’il te faut</span><h2>Arrête de deviner. <span class="grad-text">Sache exactement</span> quoi faire.</h2><p>Chaque problème est expliqué : pourquoi il te coûte des ventes et comment le corriger en quelques minutes.</p></div>
   <div class="bento">
-    <article class="card feature wide reveal"><span class="tag-plan">TOUTES LES OFFRES</span><div class="f-ic">🩺</div><h3>Audit 360° de ta boutique</h3><p>SEO, confiance, fiches produit, prix, marketing, vitesse : un score sur 100 et un plan d’action trié par impact.</p>
+    <article class="card feature tilt wide reveal"><span class="tag-plan">TOUTES LES OFFRES</span><div class="f-ic">🩺</div><h3>Audit 360° de ta boutique</h3><p>SEO, confiance, fiches produit, prix, marketing, vitesse : un score sur 100 et un plan d’action trié par impact.</p>
       <div class="viz viz-list"><div style="--d:.1s"><span class="pill hi">ÉLEVÉ</span>Aucun avis client visible</div><div style="--d:.25s"><span class="pill md">MOYEN</span>Pas de pixel TikTok</div><div style="--d:.4s"><span class="pill ok">OK</span>Politique de remboursement</div></div></article>
-    <article class="card feature reveal" style="--d:.1s;--glow:rgba(139,92,255,.35)"><span class="tag-plan">BASIQUE</span><div class="f-ic">🧠</div><h3>Chaque produit noté</h3><p>Photos, description, prix, promo, stock : ce qui est bon, ce qui est mauvais et pourquoi.</p>
+    <article class="card feature tilt reveal" style="--d:.1s;--glow:rgba(139,92,255,.35)"><span class="tag-plan">BASIQUE</span><div class="f-ic">🧠</div><h3>Chaque produit noté</h3><p>Photos, description, prix, promo, stock : ce qui est bon, ce qui est mauvais et pourquoi.</p>
       <div class="viz viz-bars"><i style="--h:40%"></i><i style="--h:72%"></i><i style="--h:55%"></i><i style="--h:90%"></i><i style="--h:66%"></i><i style="--h:100%"></i><i style="--h:80%"></i></div></article>
-    <article class="card feature reveal" style="--glow:rgba(255,209,102,.3)"><span class="tag-plan">PRO</span><div class="f-ic">🛰️</div><h3>Radar produits gagnants</h3><p>On scanne des boutiques qui cartonnent et on te sort les produits qui explosent, avec les raisons.</p>
+    <article class="card feature tilt reveal" style="--glow:rgba(255,209,102,.3)"><span class="tag-plan">PRO</span><div class="f-ic">🛰️</div><h3>Radar produits gagnants</h3><p>On scanne des boutiques qui cartonnent et on te sort les produits qui explosent, avec les raisons.</p>
       <div class="viz viz-radar"><div class="radar"><i style="top:22%;left:60%"></i><i style="top:62%;left:28%;animation-delay:.7s"></i><i style="top:45%;left:78%;animation-delay:1.4s"></i></div></div></article>
-    <article class="card feature reveal" style="--d:.1s;--glow:rgba(255,79,216,.3)"><span class="tag-plan">PRO</span><div class="f-ic">🕵️</div><h3>Espion concurrents</h3><p>Best-sellers, nouveautés, prix, promos et outils de n’importe quelle boutique Shopify.</p>
+    <article class="card feature tilt reveal" style="--d:.1s;--glow:rgba(255,79,216,.3)"><span class="tag-plan">PRO</span><div class="f-ic">🕵️</div><h3>Espion concurrents</h3><p>Best-sellers, nouveautés, prix, promos et outils de n’importe quelle boutique Shopify.</p>
       <div class="viz viz-spark"><svg viewBox="0 0 300 110" preserveAspectRatio="none"><path d="M0 95 C40 90 50 70 80 72 S120 40 150 50 S200 20 230 26 S270 8 300 6" fill="none" stroke="url(#g)" stroke-width="4" stroke-linecap="round"/></svg></div></article>
-    <article class="card feature reveal" style="--d:.2s;--glow:rgba(0,194,255,.3)"><span class="tag-plan">SCALE</span><div class="f-ic">⚔️</div><h3>Comparateur & export</h3><p>Compare 4 boutiques côte à côte et exporte tout en CSV pour tes équipes ou tes clients.</p>
+    <article class="card feature tilt reveal" style="--d:.2s;--glow:rgba(0,194,255,.3)"><span class="tag-plan">SCALE</span><div class="f-ic">⚔️</div><h3>Comparateur & export</h3><p>Compare 4 boutiques côte à côte et exporte tout en CSV pour tes équipes ou tes clients.</p>
       <div class="viz viz-bars"><i style="--h:70%"></i><i style="--h:45%"></i><i style="--h:95%"></i><i style="--h:60%"></i></div></article>
   </div>
 </div></section>
@@ -90,9 +97,9 @@
 <section><div class="wrap">
   <div class="section-head reveal"><span class="eyebrow">Comment ça marche</span><h2>3 étapes. <span class="grad-text">30 secondes.</span></h2></div>
   <div class="steps">
-    <div class="card step reveal"><span class="step-n">1</span><div><h3>Colle ton adresse</h3><p>maboutique.com ou maboutique.myshopify.com. Pas d’app à installer, pas de mot de passe.</p></div></div>
-    <div class="card step reveal" style="--d:.1s"><span class="step-n">2</span><div><h3>On scanne tout</h3><p>Catalogue, fiches, prix, pixels, avis, politiques, vitesse : plus de 30 points vérifiés.</p></div></div>
-    <div class="card step reveal" style="--d:.2s"><span class="step-n">3</span><div><h3>Tu corriges, tu vends</h3><p>Un plan d’action clair, trié par impact, avec le « pourquoi » et le « comment » pour chaque point.</p></div></div>
+    <div class="card step tilt reveal"><span class="step-n">1</span><div><h3>Colle ton adresse</h3><p>maboutique.com ou maboutique.myshopify.com. Pas d’app à installer, pas de mot de passe.</p></div></div>
+    <div class="card step tilt reveal" style="--d:.1s"><span class="step-n">2</span><div><h3>On scanne tout</h3><p>Catalogue, fiches, prix, pixels, avis, politiques, vitesse : plus de 30 points vérifiés.</p></div></div>
+    <div class="card step tilt reveal" style="--d:.2s"><span class="step-n">3</span><div><h3>Tu corriges, tu vends</h3><p>Un plan d’action clair, trié par impact, avec le « pourquoi » et le « comment » pour chaque point.</p></div></div>
   </div>
 </div></section>
 
@@ -111,16 +118,16 @@
 <section id="tarifs"><div class="wrap">
   <div class="section-head reveal"><span class="eyebrow">Tarifs</span><h2>Commence gratuitement. <span class="grad-text">Scale quand ça paie.</span></h2><p>Sans engagement. Résiliable en 1 clic depuis ton espace.</p></div>
   <div class="pricing">
-    <div class="card plan reveal"><h3>Test</h3><div class="price">0 €</div>
+    <div class="card plan tilt reveal"><h3>Test</h3><div class="price">0 €</div>
       <ul><li>3 analyses de boutique</li><li>Score global + 6 catégories</li><li>Top 3 des corrections</li><li>3 fiches produit détaillées</li><li class="no">Espion & radar</li></ul>
       <a class="btn btn-ghost" href="#analyser">Tester maintenant</a></div>
-    <div class="card plan reveal" style="--d:.08s"><h3>Basique</h3><div class="price">19 €<small> /mois</small></div>
+    <div class="card plan tilt reveal" style="--d:.08s"><h3>Basique</h3><div class="price">19 €<small> /mois</small></div>
       <ul><li>Analyses illimitées</li><li>Audit complet (30+ points)</li><li>Toutes tes fiches produit notées</li><li>Plan d’action trié par impact</li><li class="no">Espion & radar</li></ul>
       <button class="btn btn-ghost" data-plan="basic">Choisir Basique</button></div>
-    <div class="card plan featured reveal" style="--d:.16s"><h3>Pro <span class="badge-hot">RECOMMANDÉ</span></h3><div class="price">49 €<small> /mois</small></div>
+    <div class="card plan tilt featured reveal" style="--d:.16s"><h3>Pro <span class="badge-hot">RECOMMANDÉ</span></h3><div class="price">49 €<small> /mois</small></div>
       <ul><li>Tout Basique</li><li>Radar produits gagnants (6 niches)</li><li>Espion concurrents illimité</li><li>Best-sellers & nouveautés des concurrents</li><li>Prix de revente conseillés</li></ul>
       <button class="btn btn-main" data-plan="pro">Passer Pro <span class="arrow">→</span></button></div>
-    <div class="card plan reveal" style="--d:.24s"><h3>Scale</h3><div class="price">99 €<small> /mois</small></div>
+    <div class="card plan tilt reveal" style="--d:.24s"><h3>Scale</h3><div class="price">99 €<small> /mois</small></div>
       <ul><li>Tout Pro</li><li>Comparateur 4 boutiques</li><li>Export CSV illimité</li><li>Idéal agences & multi-boutiques</li></ul>
       <button class="btn btn-ghost" data-plan="scale">Choisir Scale</button></div>
   </div>
@@ -140,9 +147,9 @@
 </div></section>
 
 <section><div class="wrap">
-  <div class="card final reveal"><div class="big-radar"></div>
+  <div class="card final reveal sparkles"><div class="big-radar"></div><i style="top:18%;left:12%"></i><i style="top:30%;right:10%;animation-delay:.8s"></i><i style="bottom:22%;left:22%;animation-delay:1.6s"></i><i style="bottom:30%;right:24%;animation-delay:.4s"></i>
     <span class="eyebrow">Prêt ?</span><h2>Découvre ton score <span class="grad-text">maintenant.</span></h2><p>30 secondes. Gratuit. Tu vas enfin savoir ce qui bloque tes ventes.</p>
-    <a class="btn btn-main" href="#analyser">Analyser ma boutique <span class="arrow">→</span></a>
+    <a class="btn btn-main magnet" href="#analyser">Analyser ma boutique <span class="arrow">→</span></a>
   </div>
 </div></section>
 </main>
@@ -154,6 +161,7 @@
 </div></footer>
 
 <div class="sticky-cta" id="stickyCta"><a class="btn btn-main" href="#analyser">Tester gratuitement <span class="arrow">→</span></a></div>
+<script src="fx.js" defer></script>
 <script src="landing.js" defer></script>
 </body>
 </html>

@@ -75,7 +75,10 @@ const fail = (status, error, extra = {}) => ({ ok: false, status, data: { error,
 export function demoApi(path, body = {}) {
   const url = new URL(path, 'https://demo.local');
   const plan = read('pr_demo_plan', 'test');
-  const used = read('pr_demo_n', 0);
+  // Les essais gratuits de la démo repartent à zéro chaque jour.
+  const today = new Date().toDateString();
+  const trial = read('pr_demo_trial', { n: 0, day: today });
+  const used = trial.day === today ? trial.n : 0;
   switch (url.pathname) {
     case '/api/config':
       return ok({ stripe: false, demo: true, plans: PLANS, niches: Object.fromEntries(Object.entries(NICHES).map(([k, v]) => [k, { label: v.label, emoji: v.emoji }])) });
@@ -84,7 +87,7 @@ export function demoApi(path, body = {}) {
     case '/api/audit': {
       if (plan === 'test' && used >= TEST_LIMITS.audits) return fail(402, `Tes ${TEST_LIMITS.audits} analyses gratuites sont utilisées. Passe à une offre pour continuer.`);
       const report = auditStore(demoStore(body.store));
-      if (plan === 'test') write('pr_demo_n', used + 1);
+      if (plan === 'test') write('pr_demo_trial', { n: used + 1, day: today });
       return ok({ plan, trialLeft: plan === 'test' ? TEST_LIMITS.audits - used - 1 : null, report: can(plan, 'fullAudit') ? report : lockAudit(report) });
     }
     case '/api/spy': {
@@ -105,6 +108,10 @@ export function demoApi(path, body = {}) {
       return ok({ changed: true, plan: body.plan });
     case '/api/logout':
       write('pr_demo_plan', 'test');
+      return ok({ ok: true });
+    case '/api/demo-reset':
+      write('pr_demo_plan', 'test');
+      write('pr_demo_trial', { n: 0, day: today });
       return ok({ ok: true });
     default:
       return fail(400, 'Disponible sur le site en ligne (mode démo).');

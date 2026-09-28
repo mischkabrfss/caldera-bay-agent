@@ -274,3 +274,41 @@ footer a:hover { color: var(--text); }
   *, *::before, *::after { animation-duration: .001s !important; animation-iteration-count: 1 !important; transition-duration: .001s !important; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* ---------- Effets supplémentaires ---------- */
+.btn, .seg, .tabbar a { position: relative; overflow: hidden; }
+.ripple { position: absolute; border-radius: 50%; background: rgba(255,255,255,.45); transform: scale(0); animation: ripple .65s ease-out forwards; pointer-events: none; }
+@keyframes ripple { to { transform: scale(1); opacity: 0; } }
+.card { --mx: 50%; --my: 0%; position: relative; }
+.card::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s; background: radial-gradient(420px circle at var(--mx) var(--my), rgba(0,245,160,.13), transparent 45%); }
+.card:hover::after { opacity: 1; }
+.tilt { transition: transform .25s ease-out, border-color .35s; will-change: transform; }
+.btn-main.magnet { transition: transform .2s ease-out, box-shadow .2s; }
+
+/* Barre de progression de lecture */
+.progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 70; background: var(--grad); transform-origin: 0 50%; transform: scaleX(0); box-shadow: 0 0 12px var(--green); }
+
+/* Titre qui apparaît mot par mot */
+.hero h1 .w { display: inline-block; opacity: 0; transform: translateY(.6em) rotate(4deg); filter: blur(8px); animation: wordUp .9s cubic-bezier(.2,.9,.2,1) forwards; animation-delay: calc(.15s + var(--i) * .07s); }
+@keyframes wordUp { to { opacity: 1; transform: none; filter: none; } }
+
+/* Curseur de saisie qui clignote dans le champ boutique */
+.store-input input.typing::placeholder { color: #bdb8da; }
+
+/* Flux de détections (exemples) */
+.feed { display: grid; gap: 10px; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.feed-row { display: flex; gap: 10px; width: max-content; animation: marquee 40s linear infinite; }
+.feed-row.rev { animation-direction: reverse; animation-duration: 48s; }
+.feed-row span { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 14px; background: var(--card); border: 1px solid var(--line); font-size: 14px; font-weight: 700; white-space: nowrap; }
+.feed-note { text-align: center; color: var(--muted); font-size: 12px; margin-top: 12px; }
+
+/* Anneau qui pulse autour du score */
+.pulse-ring { position: absolute; inset: 6%; border-radius: 50%; border: 2px solid rgba(0,245,160,.5); animation: ring 2.4s ease-out infinite; pointer-events: none; }
+.pulse-ring.r2 { animation-delay: 1.2s; }
+@keyframes ring { from { transform: scale(.85); opacity: .9; } to { transform: scale(1.25); opacity: 0; } }
+
+/* Étincelles autour du bouton principal du hero */
+.sparkles { position: relative; }
+.sparkles i { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 10px var(--gold); animation: sparkle 2.6s ease-in-out infinite; pointer-events: none; }
+@keyframes sparkle { 0%, 100% { opacity: 0; transform: scale(.3) translateY(0); } 40% { opacity: 1; transform: scale(1) translateY(-10px); } }
+.hero h1 .grad-text.w { animation: wordUp .9s cubic-bezier(.2,.9,.2,1) calc(.15s + var(--i) * .07s) forwards, shine 5s linear infinite; }
