@@ -92,7 +92,7 @@ export function demoApi(path, body = {}) {
   const used = trial.day === today ? trial.n : 0;
   switch (url.pathname) {
     case '/api/config':
-      return ok({ stripe: false, demo: true, plans: PLANS, niches: Object.fromEntries(Object.entries(NICHES).map(([k, v]) => [k, { label: v.label, emoji: v.emoji }])) });
+      return ok({ stripe: false, demo: true, plans: PLANS, niches: Object.fromEntries(Object.entries(NICHES).map(([k, v]) => [k, { label: v.label }])) });
     case '/api/me':
       return ok({ plan, email: '', trialLeft: Math.max(0, TEST_LIMITS.audits - used), portal: false, demo: true });
     case '/api/audit': {

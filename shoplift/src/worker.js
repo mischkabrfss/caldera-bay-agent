@@ -111,7 +111,7 @@ async function route(request, env, ctx) {
   const origin = env.PUBLIC_URL || url.origin;
 
   if (pathname === '/api/config') {
-    return json({ stripe: !!env.STRIPE_SECRET_KEY, plans: PLANS, niches: Object.fromEntries(Object.entries(NICHES).map(([k, v]) => [k, { label: v.label, emoji: v.emoji }])) });
+    return json({ stripe: !!env.STRIPE_SECRET_KEY, plans: PLANS, niches: Object.fromEntries(Object.entries(NICHES).map(([k, v]) => [k, { label: v.label }])) });
   }
 
   if (pathname === '/api/me') {

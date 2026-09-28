@@ -84,7 +84,7 @@ if (!reduced && matchMedia('(pointer: fine)').matches) {
 const canvas = $('#coins');
 if (canvas && !reduced) {
   const ctx = canvas.getContext('2d');
-  const glyphs = ['€', '💸', '✦', '€', '💰', '✦'];
+  const glyphs = ['€', '€', '$', '€', '%', '€'];
   let w, h, items;
   const reset = () => {
     const dpr = Math.min(devicePixelRatio || 1, 2);

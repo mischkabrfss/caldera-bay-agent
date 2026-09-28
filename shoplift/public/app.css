@@ -193,3 +193,11 @@ td b { font-family: var(--display); }
 .src-badge { display: inline-block; margin-top: 10px; padding: 6px 12px; border-radius: 99px; font-size: 12px; font-weight: 700; background: rgba(255,209,102,.12); color: var(--gold); }
 .src-badge.real { background: rgba(0,245,160,.14); color: var(--green); }
 img.noimg { visibility: hidden; }
+.tabbar a span .ic { width: 22px; height: 22px; }
+.tabbar a.on span .ic { color: var(--green); }
+.empty b .ic { width: 40px; height: 40px; color: var(--green); stroke-width: 1.5; }
+.store-input > .ic { opacity: .7; }
+.h3 .ic, .unlock-banner h3 .ic { color: var(--green); }
+.lock-over .ic { width: 22px; height: 22px; }
+.score-badge .ic { width: 12px; height: 12px; }
+.con-line b .ic { color: var(--red); } .pro-line .ic, .stack .ic, .strengths .ic, .src-badge .ic { width: 14px; height: 14px; }

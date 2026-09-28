@@ -81,7 +81,7 @@ document.addEventListener('click', async (e) => {
       await loadMe();
       renderAccount();
       confetti();
-      return toast(`C’est fait : tu es maintenant en ${PLAN_INFO[r.data.plan].name} ✦`, 'ok');
+      return toast(`C’est fait : tu es maintenant en ${PLAN_INFO[r.data.plan].name}`, 'ok');
     }
     toast(r.data.error || 'Paiement indisponible.', 'err');
     buy.disabled = false;
@@ -100,7 +100,7 @@ function paintPlan() {
   chip.textContent = plan === 'test' ? 'Test' : PLAN_INFO[plan].name;
   chip.classList.toggle('paid', plan !== 'test');
   $('#upBtn').classList.toggle('hidden', plan === 'scale');
-  $('#trialInfo').textContent = plan === 'test' ? `🎁 ${trialLeft} analyse${trialLeft > 1 ? 's' : ''} gratuite${trialLeft > 1 ? 's' : ''} restante${trialLeft > 1 ? 's' : ''}` : 'Analyses illimitées ✦';
+  $('#trialInfo').innerHTML = plan === 'test' ? `${icon('gift')} ${trialLeft} analyse${trialLeft > 1 ? 's' : ''} gratuite${trialLeft > 1 ? 's' : ''} restante${trialLeft > 1 ? 's' : ''}` : 'Analyses illimitées';
 }
 
 // ---------- Audit ----------
@@ -125,7 +125,7 @@ async function runAudit(input, connected = null) {
   const [r] = await Promise.all([api('/api/audit', { store: input, connected }), wait(2600)]);
   done();
   if (!r.ok) {
-    if (r.status === 402) { out.innerHTML = ''; openUpgrade(state.me.demo ? `${r.data.error} (Démo : choisis une offre ou réinitialise dans Compte.)` : r.data.error); } else out.innerHTML = `<div class="card empty"><b>😕</b>${esc(r.data.error || 'Analyse impossible.')}</div>`;
+    if (r.status === 402) { out.innerHTML = ''; openUpgrade(state.me.demo ? `${r.data.error} (Démo : choisis une offre ou réinitialise dans Compte.)` : r.data.error); } else out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error || 'Analyse impossible.')}</div>`;
     return;
   }
   state.audit = r.data.report;
@@ -162,7 +162,7 @@ function animateGauge(id, value) {
 function renderAudit() {
   const a = state.audit;
   const out = $('#auditOut');
-  if (!a) { out.innerHTML = '<div class="card empty"><b>🛰️</b>Entre l’adresse de ta boutique Shopify pour lancer ton premier audit.</div>'; return; }
+  if (!a) { out.innerHTML = '<div class="card empty"><b>' + icon('radar') + '</b>Entre l’adresse de ta boutique Shopify pour lancer ton premier audit.</div>'; return; }
   const locked = a.fixes.filter((f) => f.locked).length;
   out.innerHTML = `
   <div class="result-grid">
@@ -170,25 +170,25 @@ function renderAudit() {
       <div class="card result-hero">
         ${gaugeSvg('scoreG')}
         <span class="grade ${gradeClass(a.score)}">${esc(a.grade)}</span>
-        ${a.source === 'shopify' ? '<p class="src-badge real">✓ Analyse réelle · via ta connexion Shopify</p>' : ''}
+        ${a.source === 'shopify' ? '<p class="src-badge real">' + icon('check') + ' Analyse réelle · via ta connexion Shopify</p>' : ''}
         <h2>${esc(a.name)}</h2><p class="muted" style="font-size:13px">${esc(a.host)}${a.theme ? ` · thème ${esc(a.theme)}` : ''}</p>
         <div class="stats">
           <div><b data-n="${a.stats.products}">0</b><span>produits</span></div><div><b data-n="${a.fixes.length}">0</b><span>corrections</span></div><div><b>${a.stats.avgImages}</b><span>photos/fiche</span></div>
           <div><b data-n="${a.stats.avgWords}">0</b><span>mots/fiche</span></div><div><b data-n="${a.stats.soldOut}">0</b><span>ruptures</span></div><div><b>${money(a.stats.avgPrice, a.currency)}</b><span>prix moyen</span></div>
         </div>
-        ${a.stack.length ? `<div class="stack">${a.stack.map((s) => `<span>✓ ${esc(STACK[s] || s)}</span>`).join('')}</div>` : ''}
+        ${a.stack.length ? `<div class="stack">${a.stack.map((s) => `<span>${icon('check')} ${esc(STACK[s] || s)}</span>`).join('')}</div>` : ''}
       </div>
       <div class="card cats">${a.categories.map((c) => `<div class="cat-row"><span>${esc(c.label)}</span><span style="color:${colorOf(c.score)}">${c.score}</span><div class="bar"><i data-w="${c.score}" style="background:${colorOf(c.score)}"></i></div></div>`).join('')}</div>
     </div>
     <div>
-      <div class="h3">🎯 Ton plan d’action <span class="muted" style="font-size:13px">${a.fixes.length} points</span></div>
+      <div class="h3">${icon('target')} Ton plan d’action <span class="muted" style="font-size:13px">${a.fixes.length} points</span></div>
       <div class="list">${a.fixes.map((f, i) => f.locked ? `
         <div class="card fix locked" style="--d:${i * 0.05}s"><div class="fix-top blur"><span class="pill ${impactPill[f.impact]}">${esc(f.impact.toUpperCase())}</span><span class="t">${esc(f.title)}</span></div>
-        <div class="lock-over" style="background:none;place-content:center end;padding-right:14px">🔒</div></div>` : `
+        <div class="lock-over" style="background:none;place-content:center end;padding-right:14px">${icon('lock')}</div></div>` : `
         <div class="card fix ${i === 0 ? 'open' : ''}" style="--d:${i * 0.05}s"><div class="fix-top"><span class="pill ${impactPill[f.impact]}">${esc(f.impact.toUpperCase())}</span><span class="t">${esc(f.title)}</span><span class="chev">⌄</span></div>
         <div class="fix-body"><div><p><b>Pourquoi c’est important</b>${esc(f.why)}</p><p class="how"><b>Comment corriger</b>${esc(f.fix)}</p></div></div></div>`).join('')}</div>
-      ${locked ? `<div class="card unlock-banner"><h3>🔓 ${locked} corrections cachées</h3><p>Débloque le plan d’action complet et l’analyse de toutes tes fiches produit.</p><button class="btn btn-main" data-open-upgrade>Tout débloquer <span class="arrow">→</span></button></div>` : ''}
-      ${a.strengths.length ? `<div class="h3">💪 Ce qui est déjà top</div><div class="strengths">${a.strengths.map((s) => `<span>✓ ${esc(s)}</span>`).join('')}</div>` : ''}
+      ${locked ? `<div class="card unlock-banner"><h3>${icon('unlock')} ${locked} corrections cachées</h3><p>Débloque le plan d’action complet et l’analyse de toutes tes fiches produit.</p><button class="btn btn-main" data-open-upgrade>Tout débloquer <span class="arrow">→</span></button></div>` : ''}
+      ${a.strengths.length ? `<div class="h3">${icon('star')} Ce qui est déjà top</div><div class="strengths">${a.strengths.map((s) => `<span>${icon('check')} ${esc(s)}</span>`).join('')}</div>` : ''}
       <a class="btn btn-ghost" style="width:100%;margin-top:18px" href="#produits">Voir l’analyse produit par produit →</a>
     </div>
   </div>`;
@@ -217,7 +217,7 @@ async function runConnected() {
     runAudit(storeData.host, storeData);
   } catch (error) {
     done();
-    out.innerHTML = `<div class="card empty"><b>🔌</b>${esc(error.message)}</div>`;
+    out.innerHTML = `<div class="card empty"><b>${icon('plug')}</b>${esc(error.message)}</div>`;
   }
 }
 
@@ -225,7 +225,7 @@ async function offerConnect() {
   if (!state.me.demo) return;
   const { shopifyAvailable } = await import('./connect.js');
   if (!(await shopifyAvailable())) return;
-  $('#auditForm').insertAdjacentHTML('beforebegin', '<button class="btn btn-main magnet connect-btn" id="connectBtn" type="button">🔗 Analyser ma vraie boutique <span class="arrow">→</span></button><p class="muted connect-note">Analyse réelle, en lecture seule, via ta connexion Shopify claude.ai.</p>');
+  $('#auditForm').insertAdjacentHTML('beforebegin', '<button class="btn btn-main magnet connect-btn" id="connectBtn" type="button">' + icon('link') + ' Analyser ma vraie boutique <span class="arrow">→</span></button><p class="muted connect-note">Analyse réelle, en lecture seule, via ta connexion Shopify claude.ai.</p>');
   $('#connectBtn').addEventListener('click', runConnected);
 }
 
@@ -237,24 +237,24 @@ $('#auditForm').addEventListener('submit', (e) => {
 
 // ---------- Produits ----------
 function productCard(p, i, cur) {
-  if (p.locked) return `<div class="card prod locked" style="--d:${i * 0.04}s"><div class="blur" style="display:contents"><img class="prod-img" src="${safeImg(p.image)}" alt="" loading="lazy"><div><h3>${esc(p.title)}</h3><div class="prod-meta"><span class="ring" style="--p:${p.score};--c:${colorOf(p.score)}">${p.score}</span></div></div></div><div class="lock-over"><span>🔒 Analyse détaillée</span><button class="btn btn-main" data-open-upgrade>Débloquer</button></div></div>`;
+  if (p.locked) return `<div class="card prod locked" style="--d:${i * 0.04}s"><div class="blur" style="display:contents"><img class="prod-img" src="${safeImg(p.image)}" alt="" loading="lazy"><div><h3>${esc(p.title)}</h3><div class="prod-meta"><span class="ring" style="--p:${p.score};--c:${colorOf(p.score)}">${p.score}</span></div></div></div><div class="lock-over"><span>${icon('lock')} Analyse détaillée</span><button class="btn btn-main" data-open-upgrade>Débloquer</button></div></div>`;
   return `<div class="card prod" style="--d:${i * 0.04}s">
     <img class="prod-img" src="${safeImg(p.image)}" alt="" loading="lazy">
     <div><div class="prod-head"><h3>${esc(p.title)}</h3><span class="ring" style="--p:${p.score};--c:${colorOf(p.score)}">${p.score}</span></div>
       <div class="prod-meta"><span class="pill ${p.verdict === 'Produit fort' ? 'ok' : p.verdict === 'Faible' ? 'hi' : 'md'}">${esc(p.verdict.toUpperCase())}</span><span>${money(p.price, cur)}</span>${p.discount ? `<span>-${p.discount}%</span>` : ''}${p.available ? '' : '<span style="color:var(--red)">Rupture</span>'}</div></div>
     <details class="prod-details" ${i === 0 ? 'open' : ''}><summary>${p.cons.length} à corriger · ${p.pros.length} points forts</summary>
-      ${p.cons.map((c) => `<div class="con-line"><b>✗ ${esc(c.t)}</b><span>${esc(c.why)}</span><em>→ ${esc(c.fix)}</em></div>`).join('')}
-      ${p.pros.map((t) => `<div class="pro-line">✓ ${esc(t)}</div>`).join('')}
+      ${p.cons.map((c) => `<div class="con-line"><b>${icon('x')} ${esc(c.t)}</b><span>${esc(c.why)}</span><em>→ ${esc(c.fix)}</em></div>`).join('')}
+      ${p.pros.map((t) => `<div class="pro-line">${icon('check')} ${esc(t)}</div>`).join('')}
     </details></div>`;
 }
 
 function renderProducts() {
   const out = $('#productsOut');
   const a = state.audit;
-  if (!a) { out.innerHTML = '<div class="card empty"><b>🧠</b>Lance d’abord un audit de ta boutique dans l’onglet Audit.<br><br><a class="btn btn-main" href="#audit">Lancer un audit</a></div>'; return; }
+  if (!a) { out.innerHTML = '<div class="card empty"><b>' + icon('box') + '</b>Lance d’abord un audit de ta boutique dans l’onglet Audit.<br><br><a class="btn btn-main" href="#audit">Lancer un audit</a></div>'; return; }
   const list = [...a.products].sort((x, y) => (state.sort === 'asc' ? x.score - y.score : y.score - x.score));
   const hidden = a.products.filter((p) => p.locked).length;
-  out.innerHTML = `<div class="list">${list.slice(0, 120).map((p, i) => productCard(p, i, a.currency)).join('')}</div>${hidden ? `<div class="card unlock-banner"><h3>🔓 ${hidden} fiches à débloquer</h3><p>Vois pour chaque produit ce qui cloche, pourquoi, et comment le corriger.</p><button class="btn btn-main" data-open-upgrade>Débloquer toutes les fiches</button></div>` : ''}`;
+  out.innerHTML = `<div class="list">${list.slice(0, 120).map((p, i) => productCard(p, i, a.currency)).join('')}</div>${hidden ? `<div class="card unlock-banner"><h3>${icon('unlock')} ${hidden} fiches à débloquer</h3><p>Vois pour chaque produit ce qui cloche, pourquoi, et comment le corriger.</p><button class="btn btn-main" data-open-upgrade>Débloquer toutes les fiches</button></div>` : ''}`;
 }
 $$('[data-sort]').forEach((b) => b.addEventListener('click', () => {
   state.sort = b.dataset.sort;
@@ -265,13 +265,13 @@ $$('[data-sort]').forEach((b) => b.addEventListener('click', () => {
 // ---------- Cartes produit (radar / espion) ----------
 function pCard(p, i, cur) {
   const locked = p.locked;
-  const inner = `<div class="img">${p.image ? `<img src="${safeImg(p.image)}" alt="" loading="lazy">` : ''}<span class="score-badge ${p.score >= 80 ? 'hot' : ''}">${p.score >= 80 ? '🔥 ' : ''}${p.score}</span></div>
+  const inner = `<div class="img">${p.image ? `<img src="${safeImg(p.image)}" alt="" loading="lazy">` : ''}<span class="score-badge ${p.score >= 80 ? 'hot' : ''}">${p.score >= 80 ? '' + icon('trend') + ' ' : ''}${p.score}</span></div>
     <div class="body"><h3>${esc(locked ? 'Produit gagnant caché' : p.title)}</h3>
     <div class="price">${locked ? '••,•• €' : money(p.price, p.currency || cur)}${!locked && p.discount ? `<s>-${p.discount}%</s>` : ''}</div>
     ${p.reasons?.length ? `<div class="reasons">${p.reasons.slice(0, 3).map((r) => `<span>${esc(r)}</span>`).join('')}</div>` : ''}
     ${!locked && p.store ? `<span class="src">chez ${esc(p.store)}</span>` : ''}
     ${!locked && p.verdict ? `<span class="src">${esc(p.verdict)}${p.age !== null && p.age !== undefined ? ` · il y a ${p.age} j` : ''}</span>` : ''}</div>`;
-  if (locked) return `<div class="card pcard is-locked" style="--d:${i * 0.05}s">${inner}<div class="lock-over"><span>🔒</span><button class="btn btn-main" data-open-upgrade data-reason="Le radar et l’espion sont inclus dans l’offre Pro.">Pro</button></div></div>`;
+  if (locked) return `<div class="card pcard is-locked" style="--d:${i * 0.05}s">${inner}<div class="lock-over"><span>${icon('lock')}</span><button class="btn btn-main" data-open-upgrade data-reason="Le radar et l’espion sont inclus dans l’offre Pro.">Pro</button></div></div>`;
   if (p.example) return `<div class="card pcard tilt" style="--d:${i * 0.05}s">${inner}</div>`;
   return `<a class="card pcard tilt" style="--d:${i * 0.05}s" href="${esc(p.url)}" target="_blank" rel="noopener nofollow">${inner}</a>`;
 }
@@ -285,10 +285,10 @@ async function loadRadar(niche) {
   const done = loader(out, ['Scan des boutiques de référence', 'Lecture des best-sellers', 'Calcul du score produit gagnant']);
   const [r] = await Promise.all([api(`/api/radar?niche=${encodeURIComponent(niche)}`), wait(1500)]);
   done();
-  if (!r.ok) { out.innerHTML = `<div class="card empty"><b>😕</b>${esc(r.data.error)}</div>`; return; }
-  if (!r.data.items.length) { out.innerHTML = '<div class="card empty"><b>📡</b>Le radar se recharge pour cette niche. Réessaie dans quelques minutes.</div>'; return; }
+  if (!r.ok) { out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error)}</div>`; return; }
+  if (!r.data.items.length) { out.innerHTML = '<div class="card empty"><b>' + icon('radar') + '</b>Le radar se recharge pour cette niche. Réessaie dans quelques minutes.</div>'; return; }
   const note = r.data.items[0]?.example ? '<p class="src-badge" style="margin:0 0 12px">Aperçu : produits d’exemple. Le vrai radar scanne des boutiques réelles chaque nuit sur le site en ligne.</p>' : '';
-  out.innerHTML = `${note}<div class="pgrid">${r.data.items.map((p, i) => pCard(p, i)).join('')}</div>${r.data.locked ? '<div class="card unlock-banner"><h3>🛰️ Débloque le radar complet</h3><p>24 produits gagnants par niche, avec leurs raisons et le lien direct.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}`;
+  out.innerHTML = `${note}<div class="pgrid">${r.data.items.map((p, i) => pCard(p, i)).join('')}</div>${r.data.locked ? '<div class="card unlock-banner"><h3>' + icon('radar') + ' Débloque le radar complet</h3><p>24 produits gagnants par niche, avec leurs raisons et le lien direct.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}`;
 }
 
 // ---------- Espion & comparateur ----------
@@ -305,7 +305,7 @@ $('#spyForm').addEventListener('submit', async (e) => {
   const done = loader(out, ['Connexion à la boutique', 'Lecture des best-sellers', 'Détection des nouveautés', 'Analyse des prix']);
   const [r] = await Promise.all([api('/api/spy', { store: new FormData(e.target).get('store') }), wait(1800)]);
   done();
-  if (!r.ok) { out.innerHTML = `<div class="card empty"><b>😕</b>${esc(r.data.error)}</div>`; return; }
+  if (!r.ok) { out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error)}</div>`; return; }
   const s = r.data.report;
   state.spy = s;
   out.innerHTML = `
@@ -313,9 +313,9 @@ $('#spyForm').addEventListener('submit', async (e) => {
     <div class="spy-stats"><div class="card"><b>${s.stats.products}</b><span>produits</span></div><div class="card"><b>${money(s.stats.avgPrice, s.currency)}</b><span>prix moyen</span></div><div class="card"><b>${s.stats.launches30}</b><span>lancés /30 j</span></div>
     <div class="card"><b>${money(s.stats.minPrice, s.currency)}</b><span>prix min</span></div><div class="card"><b>${money(s.stats.maxPrice, s.currency)}</b><span>prix max</span></div><div class="card"><b>${s.stats.discounted}%</b><span>en promo</span></div></div>
     ${s.topTypes.length ? `<div class="strengths">${s.topTypes.map((t) => `<span>${esc(t.name)} · ${t.count}</span>`).join('')}</div>` : ''}
-    <div class="h3">🏆 Best-sellers</div>${s.bestsellers.length ? `<div class="pgrid">${s.bestsellers.map((p, i) => pCard(p, i, s.currency)).join('')}</div>` : '<p class="muted">Classement des ventes non disponible sur cette boutique.</p>'}
-    <div class="h3">🚀 Derniers lancements</div><div class="pgrid">${s.launches.map((p, i) => pCard(p, i, s.currency)).join('')}</div>
-    ${s.locked ? '<div class="card unlock-banner"><h3>🕵️ Vois tout chez tes concurrents</h3><p>Best-sellers, nouveautés et liens directs avec l’offre Pro.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}`;
+    <div class="h3">${icon('award')} Best-sellers</div>${s.bestsellers.length ? `<div class="pgrid">${s.bestsellers.map((p, i) => pCard(p, i, s.currency)).join('')}</div>` : '<p class="muted">Classement des ventes non disponible sur cette boutique.</p>'}
+    <div class="h3">${icon('rocket')} Derniers lancements</div><div class="pgrid">${s.launches.map((p, i) => pCard(p, i, s.currency)).join('')}</div>
+    ${s.locked ? '<div class="card unlock-banner"><h3>' + icon('eye') + ' Vois tout chez tes concurrents</h3><p>Best-sellers, nouveautés et liens directs avec l’offre Pro.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}`;
 });
 
 $('#compareForm').addEventListener('submit', async (e) => {
@@ -326,14 +326,14 @@ $('#compareForm').addEventListener('submit', async (e) => {
   const done = loader(out, ['Scan des boutiques', 'Lecture des catalogues', 'Comparaison']);
   const [r] = await Promise.all([api('/api/compare', { stores }), wait(1500)]);
   done();
-  if (!r.ok) { out.innerHTML = `<div class="card empty"><b>😕</b>${esc(r.data.error)}</div>`; return; }
+  if (!r.ok) { out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error)}</div>`; return; }
   const rows = r.data.rows;
   const best = (k, max = true) => rows.reduce((b, x) => ((max ? x[k] > b : x[k] < b) ? x[k] : b), max ? -Infinity : Infinity);
   const cols = [['products', 'Produits', true], ['avgPrice', 'Prix moyen', true], ['launches30', 'Lancés /30 j', true], ['discounted', '% en promo', true], ['avgScore', 'Score fiches', true]];
   out.innerHTML = `<div class="card table-wrap"><table><thead><tr><th>Boutique</th>${cols.map((c) => `<th>${c[1]}</th>`).join('')}<th>Best-seller n°1</th></tr></thead><tbody>
     ${rows.map((x) => `<tr><td><b>${esc(x.name)}</b><br><small class="muted">${esc(x.host)}</small></td>${cols.map(([k, , m]) => `<td class="${x[k] === best(k, m) ? 'win' : ''}">${k === 'avgPrice' ? money(x[k], x.currency) : k === 'discounted' ? `${x[k]}%` : x[k]}</td>`).join('')}<td>${x.top ? `<a href="${esc(x.top.url)}" target="_blank" rel="noopener nofollow">${esc(x.top.title)}</a>` : '—'}</td></tr>`).join('')}
   </tbody></table></div>${r.data.failed.length ? `<p class="muted" style="margin-top:8px">Non analysées : ${r.data.failed.map(esc).join(', ')}</p>` : ''}
-  <button class="btn btn-ghost" style="margin-top:12px" id="csvBtn">⬇️ Exporter en CSV</button>`;
+  <button class="btn btn-ghost" style="margin-top:12px" id="csvBtn">⬇ Exporter en CSV</button>`;
   $('#csvBtn').onclick = () => downloadCsv('comparatif.csv', [['Boutique', 'Adresse', ...cols.map((c) => c[1]), 'Best-seller'], ...rows.map((x) => [x.name, x.host, ...cols.map(([k]) => x[k]), x.top?.title || ''])]);
 });
 
@@ -355,8 +355,8 @@ function renderAccount() {
       ${portal ? '<button class="btn btn-ghost" id="portalBtn">Gérer mon abonnement / factures</button>' : ''}
       ${!portal && state.me.portalLogin ? `<a class="btn btn-ghost" href="${esc(state.me.portalLogin)}" target="_blank" rel="noopener">Gérer mon abonnement (lien par e-mail)</a>` : ''}
       ${plan !== 'test' && !state.me.demo ? '<button class="btn btn-ghost" id="logoutBtn">Se déconnecter</button>' : ''}
-      ${state.me.demo ? '<button class="btn btn-ghost" id="resetDemo">↺ Réinitialiser la démo</button>' : ''}
-      ${state.audit && isScale ? '<button class="btn btn-ghost" id="exportAudit">⬇️ Exporter mon dernier audit (CSV)</button>' : ''}
+      ${state.me.demo ? '<button class="btn btn-ghost" id="resetDemo">' + icon('refresh') + ' Réinitialiser la démo</button>' : ''}
+      ${state.audit && isScale ? '<button class="btn btn-ghost" id="exportAudit">' + icon('download') + ' Exporter mon dernier audit (CSV)</button>' : ''}
     </div>`;
   planCards($('#plansMini'), plan);
   $('#portalBtn')?.addEventListener('click', async () => {
@@ -370,7 +370,7 @@ function renderAccount() {
     await loadMe();
     renderAccount();
     renderAudit();
-    toast('Démo réinitialisée : 3 analyses gratuites à nouveau ✦', 'ok');
+    toast('Démo réinitialisée : 3 analyses gratuites à nouveau', 'ok');
   });
   $('#logoutBtn')?.addEventListener('click', async () => { await api('/api/logout', {}); location.reload(); });
   $('#exportAudit')?.addEventListener('click', () => {
@@ -386,7 +386,7 @@ $('#restoreForm').addEventListener('submit', async (e) => {
   const f = new FormData(e.target);
   const r = await api('/api/restore', { email: f.get('email'), last4: f.get('last4') });
   if (!r.ok) return toast(r.data.error || 'Introuvable.', 'err');
-  toast('Accès récupéré ✦', 'ok');
+  toast('Accès récupéré', 'ok');
   await loadMe();
   renderAccount();
 });
@@ -420,7 +420,7 @@ async function detectBackend() {
   if (r.ok && r.data.plans) return r;
   ({ demoApi } = await import('./demo.js'));
   document.body.classList.add('is-demo');
-  $('.app-top').insertAdjacentHTML('afterend', '<div class="demo-bar">✦ Démo · boutiques d’exemple</div>');
+  $('.app-top').insertAdjacentHTML('afterend', '<div class="demo-bar">Démo · boutiques d’exemple</div>');
   return demoApi('/api/config');
 }
 
@@ -429,12 +429,12 @@ async function detectBackend() {
   const cfg = await detectBackend();
   await loadMe();
   state.config = cfg.data;
-  $('#niches').innerHTML = Object.entries(cfg.data?.niches || {}).map(([id, n]) => `<button class="seg ${id === state.niche ? 'on' : ''}" data-niche="${id}">${n.emoji} ${esc(n.label)}</button>`).join('');
+  $('#niches').innerHTML = Object.entries(cfg.data?.niches || {}).map(([id, n]) => `<button class="seg ${id === state.niche ? 'on' : ''}" data-niche="${id}">${esc(n.label)}</button>`).join('');
   $$('#niches .seg').forEach((b) => b.addEventListener('click', () => loadRadar(b.dataset.niche)));
   show(location.hash.slice(1) || 'audit');
   offerConnect();
   renderAudit();
-  if (params.get('bienvenue')) { confetti(); toast(`Bienvenue dans l’offre ${PLAN_INFO[params.get('bienvenue')]?.name || ''} ✦ Tout est débloqué !`, 'ok'); }
+  if (params.get('bienvenue')) { confetti(); toast(`Bienvenue dans l’offre ${PLAN_INFO[params.get('bienvenue')]?.name || ''} : tout est débloqué.`, 'ok'); }
   if (params.get('paiement') === 'attente') toast('Paiement en cours de validation… rafraîchis dans quelques secondes.');
   if (params.get('paiement') === 'erreur') toast('Le paiement n’a pas pu être vérifié.', 'err');
   let handoff = null;

@@ -11,7 +11,7 @@
 <meta property="og:image" content="/og.png">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Sora:wght@700;800&display=swap" rel="stylesheet" media="print" onload="this.media=\'all\'">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -19,8 +19,8 @@
 <div class="bg-fx" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><canvas id="coins"></canvas></div>
 
 <div class="ticker" aria-hidden="true"><div class="ticker-track">
-  <span>🔥 3 analyses gratuites</span><span>⚡ Audit complet en 30 secondes</span><span>💸 Sans carte bancaire</span><span>🛰️ Radar de produits gagnants</span><span>🕵️ Espionne n’importe quelle boutique Shopify</span><span>🔒 Aucune installation, aucun accès à tes données clients</span>
-  <span>🔥 3 analyses gratuites</span><span>⚡ Audit complet en 30 secondes</span><span>💸 Sans carte bancaire</span><span>🛰️ Radar de produits gagnants</span><span>🕵️ Espionne n’importe quelle boutique Shopify</span><span>🔒 Aucune installation, aucun accès à tes données clients</span>
+  <span>3 analyses gratuites</span><span>Audit complet en 30 secondes</span><span>Sans carte bancaire</span><span>Radar de produits gagnants</span><span>Analyse n’importe quelle boutique Shopify</span><span>Aucune installation, aucun accès à tes données clients</span>
+  <span>3 analyses gratuites</span><span>Audit complet en 30 secondes</span><span>Sans carte bancaire</span><span>Radar de produits gagnants</span><span>Analyse n’importe quelle boutique Shopify</span><span>Aucune installation, aucun accès à tes données clients</span>
 </div></div>
 
 <header class="nav" id="nav"><div class="wrap">
@@ -34,14 +34,14 @@
 <main>
 <section class="hero" id="analyser"><div class="wrap hero-grid">
   <div>
-    <span class="chip reveal"><span class="dot"></span>Intelligence Shopify · nouvelle génération</span>
+    <span class="chip reveal"><span class="dot"></span>Pour les boutiques Shopify</span>
     <h1 class="reveal" style="--d:.08s">Ta boutique laisse <span class="grad-text">de l’argent</span> sur la table.</h1>
     <p class="lead reveal" style="--d:.16s">Colle l’adresse de ta boutique Shopify. En <strong>30 secondes</strong>, Shoplift la scanne, note chaque fiche produit, te dit <strong>quoi changer et pourquoi</strong>, et te montre les <strong>produits qui cartonnent</strong> chez les autres.</p>
     <form class="store-form reveal" style="--d:.24s" data-store-form>
       <label class="store-input"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l1.5-5h15L21 9M3 9h18M3 9v11h18V9M9 20v-6h6v6"/></svg><input name="store" placeholder="maboutique.com" autocomplete="url" inputmode="url" aria-label="Adresse de ta boutique Shopify" required></label>
       <button class="btn btn-main magnet" type="submit">Analyser ma boutique <span class="arrow">→</span></button>
     </form>
-    <button class="hero-quiz reveal" style="--d:.3s" type="button" data-quiz>🎯 Calcule combien tu peux gagner <span>→</span></button>
+    <button class="hero-quiz reveal" style="--d:.3s" type="button" data-quiz><i data-i="target"></i> Calcule combien tu peux gagner <span>→</span></button>
     <div class="micro reveal" style="--d:.32s"><span>3 analyses offertes</span><span>Sans carte bancaire</span><span>Rien à installer</span></div>
   </div>
 
@@ -58,9 +58,9 @@
       </div>
       <div class="ph-money"><small>Exemple · potentiel détecté</small><b id="demoMoney">+0 €</b></div>
     </div></div>
-    <div class="toast t1"><span class="ic">🔥</span>Produit gagnant détecté : top 3 des ventes</div>
-    <div class="toast t2"><span class="ic">📦</span>Crée un pack x2 : panier moyen +30 %</div>
-    <div class="toast t3"><span class="ic">⚠️</span>Pixel Meta manquant sur ta boutique</div>
+    <div class="toast t1"><span class="ic"><i data-i="trend"></i></span>Produit gagnant détecté : top 3 des ventes</div>
+    <div class="toast t2"><span class="ic"><i data-i="box"></i></span>Crée un pack x2 : panier moyen +30 %</div>
+    <div class="toast t3"><span class="ic"><i data-i="alert"></i></span>Pixel Meta manquant sur ta boutique</div>
   </div>
 </div></section>
 
@@ -74,23 +74,23 @@
 </div></section>
 
 <section style="padding-top:0"><div class="feed reveal" aria-label="Exemples de détections">
-  <div class="feed-row"><span>⚠️ Pixel TikTok manquant</span><span>🔥 Top 3 des ventes détecté</span><span>📦 Crée un pack x2</span><span>⭐ Aucun avis client visible</span><span>🖼️ 1 seule photo sur 6 fiches</span><span>💸 Prix barré conseillé : -30 %</span><span>🚚 Livraison offerte à mettre en avant</span><span>⚠️ Pixel TikTok manquant</span><span>🔥 Top 3 des ventes détecté</span><span>📦 Crée un pack x2</span><span>⭐ Aucun avis client visible</span><span>🖼️ 1 seule photo sur 6 fiches</span><span>💸 Prix barré conseillé : -30 %</span><span>🚚 Livraison offerte à mettre en avant</span></div>
-  <div class="feed-row rev"><span>🛰️ Nouveau produit gagnant : lancé il y a 4 j</span><span>✍️ Description trop courte (32 mots)</span><span>🔎 Méta-description absente</span><span>📈 Concurrent : 12 lancements ce mois</span><span>🧾 CGV manquantes</span><span>⚡ 58 scripts sur l’accueil</span><span>🛰️ Nouveau produit gagnant : lancé il y a 4 j</span><span>✍️ Description trop courte (32 mots)</span><span>🔎 Méta-description absente</span><span>📈 Concurrent : 12 lancements ce mois</span><span>🧾 CGV manquantes</span><span>⚡ 58 scripts sur l’accueil</span></div>
+  <div class="feed-row"><span><i data-i="alert"></i> Pixel TikTok manquant</span><span><i data-i="trend"></i> Top 3 des ventes détecté</span><span><i data-i="box"></i> Crée un pack x2</span><span><i data-i="star"></i> Aucun avis client visible</span><span><i data-i="image"></i> 1 seule photo sur 6 fiches</span><span><i data-i="euro"></i> Prix barré conseillé : -30 %</span><span><i data-i="truck"></i> Livraison offerte à mettre en avant</span><span><i data-i="alert"></i> Pixel TikTok manquant</span><span><i data-i="trend"></i> Top 3 des ventes détecté</span><span><i data-i="box"></i> Crée un pack x2</span><span><i data-i="star"></i> Aucun avis client visible</span><span><i data-i="image"></i> 1 seule photo sur 6 fiches</span><span><i data-i="euro"></i> Prix barré conseillé : -30 %</span><span><i data-i="truck"></i> Livraison offerte à mettre en avant</span></div>
+  <div class="feed-row rev"><span><i data-i="radar"></i> Nouveau produit gagnant : lancé il y a 4 j</span><span><i data-i="pen"></i> Description trop courte (32 mots)</span><span><i data-i="search"></i> Méta-description absente</span><span><i data-i="trend"></i> Concurrent : 12 lancements ce mois</span><span><i data-i="file"></i> CGV manquantes</span><span><i data-i="zap"></i> 58 scripts sur l’accueil</span><span><i data-i="radar"></i> Nouveau produit gagnant : lancé il y a 4 j</span><span><i data-i="pen"></i> Description trop courte (32 mots)</span><span><i data-i="search"></i> Méta-description absente</span><span><i data-i="trend"></i> Concurrent : 12 lancements ce mois</span><span><i data-i="file"></i> CGV manquantes</span><span><i data-i="zap"></i> 58 scripts sur l’accueil</span></div>
   <p class="feed-note">Exemples de ce que Shoplift détecte</p>
 </div></section>
 
 <section id="fonctions"><div class="wrap">
   <div class="section-head reveal"><span class="eyebrow">Tout ce qu’il te faut</span><h2>Arrête de deviner. <span class="grad-text">Sache exactement</span> quoi faire.</h2><p>Chaque problème est expliqué : pourquoi il te coûte des ventes et comment le corriger en quelques minutes.</p></div>
   <div class="bento">
-    <article class="card feature tilt wide reveal"><span class="tag-plan">TOUTES LES OFFRES</span><div class="f-ic">🩺</div><h3>Audit 360° de ta boutique</h3><p>SEO, confiance, fiches produit, prix, marketing, vitesse : un score sur 100 et un plan d’action trié par impact.</p>
+    <article class="card feature tilt wide reveal"><span class="tag-plan">TOUTES LES OFFRES</span><div class="f-ic"><i data-i="activity"></i></div><h3>Audit 360° de ta boutique</h3><p>SEO, confiance, fiches produit, prix, marketing, vitesse : un score sur 100 et un plan d’action trié par impact.</p>
       <div class="viz viz-list"><div style="--d:.1s"><span class="pill hi">ÉLEVÉ</span>Aucun avis client visible</div><div style="--d:.25s"><span class="pill md">MOYEN</span>Pas de pixel TikTok</div><div style="--d:.4s"><span class="pill ok">OK</span>Politique de remboursement</div></div></article>
-    <article class="card feature tilt reveal" style="--d:.1s;--glow:rgba(139,92,255,.35)"><span class="tag-plan">BASIQUE</span><div class="f-ic">🧠</div><h3>Chaque produit noté</h3><p>Photos, description, prix, promo, stock : ce qui est bon, ce qui est mauvais et pourquoi.</p>
+    <article class="card feature tilt reveal" style="--d:.1s;--glow:rgba(139,92,255,.35)"><span class="tag-plan">BASIQUE</span><div class="f-ic"><i data-i="box"></i></div><h3>Chaque produit noté</h3><p>Photos, description, prix, promo, stock : ce qui est bon, ce qui est mauvais et pourquoi.</p>
       <div class="viz viz-bars"><i style="--h:40%"></i><i style="--h:72%"></i><i style="--h:55%"></i><i style="--h:90%"></i><i style="--h:66%"></i><i style="--h:100%"></i><i style="--h:80%"></i></div></article>
-    <article class="card feature tilt reveal" style="--glow:rgba(255,209,102,.3)"><span class="tag-plan">PRO</span><div class="f-ic">🛰️</div><h3>Radar produits gagnants</h3><p>On scanne des boutiques qui cartonnent et on te sort les produits qui explosent, avec les raisons.</p>
+    <article class="card feature tilt reveal" style="--glow:rgba(255,209,102,.3)"><span class="tag-plan">PRO</span><div class="f-ic"><i data-i="radar"></i></div><h3>Radar produits gagnants</h3><p>On scanne des boutiques qui cartonnent et on te sort les produits qui explosent, avec les raisons.</p>
       <div class="viz viz-radar"><div class="radar"><i style="top:22%;left:60%"></i><i style="top:62%;left:28%;animation-delay:.7s"></i><i style="top:45%;left:78%;animation-delay:1.4s"></i></div></div></article>
-    <article class="card feature tilt reveal" style="--d:.1s;--glow:rgba(255,79,216,.3)"><span class="tag-plan">PRO</span><div class="f-ic">🕵️</div><h3>Espion concurrents</h3><p>Best-sellers, nouveautés, prix, promos et outils de n’importe quelle boutique Shopify.</p>
+    <article class="card feature tilt reveal" style="--d:.1s;--glow:rgba(255,79,216,.3)"><span class="tag-plan">PRO</span><div class="f-ic"><i data-i="eye"></i></div><h3>Espion concurrents</h3><p>Best-sellers, nouveautés, prix, promos et outils de n’importe quelle boutique Shopify.</p>
       <div class="viz viz-spark"><svg viewBox="0 0 300 110" preserveAspectRatio="none"><path d="M0 95 C40 90 50 70 80 72 S120 40 150 50 S200 20 230 26 S270 8 300 6" fill="none" stroke="url(#g)" stroke-width="4" stroke-linecap="round"/></svg></div></article>
-    <article class="card feature tilt reveal" style="--d:.2s;--glow:rgba(0,194,255,.3)"><span class="tag-plan">SCALE</span><div class="f-ic">⚔️</div><h3>Comparateur & export</h3><p>Compare 4 boutiques côte à côte et exporte tout en CSV pour tes équipes ou tes clients.</p>
+    <article class="card feature tilt reveal" style="--d:.2s;--glow:rgba(0,194,255,.3)"><span class="tag-plan">SCALE</span><div class="f-ic"><i data-i="columns"></i></div><h3>Comparateur & export</h3><p>Compare 4 boutiques côte à côte et exporte tout en CSV pour tes équipes ou tes clients.</p>
       <div class="viz viz-bars"><i style="--h:70%"></i><i style="--h:45%"></i><i style="--h:95%"></i><i style="--h:60%"></i></div></article>
   </div>
 </div></section>
@@ -162,6 +162,7 @@
 </div></footer>
 
 <div class="sticky-cta" id="stickyCta"><a class="btn btn-main" href="#analyser">Tester gratuitement <span class="arrow">→</span></a></div>
+<script src="icons.js"></script>
 <script src="fx.js" defer></script>
 <script src="quiz.js" defer></script>
 <script src="landing.js" defer></script>

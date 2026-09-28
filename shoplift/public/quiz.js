@@ -8,15 +8,15 @@
 
   const STEPS = [
     { id: 'stage', q: 'Où en est ta boutique ?', type: 'choice', options: [
-      ['launch', '🌱', 'Pas encore lancée'], ['small', '🚀', 'Moins de 1 000 €/mois'], ['mid', '📈', '1 000 à 10 000 €/mois'], ['big', '👑', 'Plus de 10 000 €/mois']] },
+      ['launch', 'sprout', 'Pas encore lancée'], ['small', 'rocket', 'Moins de 1 000 €/mois'], ['mid', 'trend', '1 000 à 10 000 €/mois'], ['big', 'award', 'Plus de 10 000 €/mois']] },
     { id: 'visitors', q: 'Combien de visiteurs par mois ?', hint: 'Une estimation suffit.', type: 'range', min: 100, max: 200000, unit: 'visiteurs' },
     { id: 'cr', q: 'Ton taux de conversion ?', hint: 'Sur 100 visiteurs, combien achètent ?', type: 'choice', options: [
-      ['1.2', '🤷', 'Je ne sais pas'], ['0.3', '🐢', 'Moins de 0,5 %'], ['0.75', '🙂', '0,5 à 1 %'], ['1.5', '💪', '1 à 2 %'], ['2.5', '🔥', '2 à 3 %'], ['3.5', '🚀', 'Plus de 3 %']] },
+      ['1.2', 'help', 'Je ne sais pas'], ['0.3', 'gauge', 'Moins de 0,5 %'], ['0.75', 'gauge', '0,5 à 1 %'], ['1.5', 'gauge', '1 à 2 %'], ['2.5', 'gauge', '2 à 3 %'], ['3.5', 'gauge', 'Plus de 3 %']] },
     { id: 'aov', q: 'Ton panier moyen ?', hint: 'Le montant moyen d’une commande.', type: 'range', min: 10, max: 300, unit: '€' },
     { id: 'goal', q: 'Ton objectif ?', type: 'choice', options: [
-      ['first', '🎯', 'Ma première vente'], ['1k', '💶', '1 000 €/mois'], ['10k', '💰', '10 000 €/mois'], ['100k', '🏆', '100 000 €/mois']] },
+      ['first', 'target', 'Ma première vente'], ['1k', 'euro', '1 000 €/mois'], ['10k', 'coins', '10 000 €/mois'], ['100k', 'award', '100 000 €/mois']] },
     { id: 'blocker', q: 'Ton plus gros blocage ?', type: 'choice', options: [
-      ['traffic', '👻', 'Pas assez de visiteurs'], ['conversion', '🛒', 'Les visiteurs n’achètent pas'], ['aov', '🪙', 'Panier trop petit'], ['product', '🔍', 'Je ne sais pas quoi vendre']] },
+      ['traffic', 'eyeoff', 'Pas assez de visiteurs'], ['conversion', 'cart', 'Les visiteurs n’achètent pas'], ['aov', 'coins', 'Panier trop petit'], ['product', 'search', 'Je ne sais pas quoi vendre']] },
   ];
   const DEFAULT_VISITORS = { launch: 1000, small: 3000, mid: 15000, big: 60000 };
   const ACTIONS = {
@@ -41,7 +41,7 @@
     root.setAttribute('aria-modal', 'true');
     root.setAttribute('aria-label', 'Quiz : combien ta boutique peut gagner');
     root.innerHTML = `<div class="quiz-bg"><i></i><i></i><i></i></div><canvas class="quiz-confetti"></canvas>
-      <div class="quiz-top"><span class="logo"><span class="logo-mark"></span><span>Shop<b>lift</b></span></span><button class="quiz-x" type="button" aria-label="Fermer le quiz">✕</button></div>
+      <div class="quiz-top"><span class="logo"><span class="logo-mark"></span><span>Shop<b>lift</b></span></span><button class="quiz-x" type="button" aria-label="Fermer le quiz">${window.icon('x')}</button></div>
       <div class="quiz-bar"><i></i></div><div class="quiz-stage"></div>`;
     document.body.append(root);
     root.querySelector('.quiz-x').onclick = close;
@@ -59,7 +59,6 @@
   function close() {
     root.classList.remove('open');
     document.documentElement.style.overflow = '';
-    try { localStorage.setItem('sl_quiz_seen', '1'); } catch { /* stockage indisponible */ }
   }
 
   function swap(html) {
@@ -73,13 +72,22 @@
 
   function intro() {
     root.querySelector('.quiz-bar i').style.width = '0%';
-    const stage = swap(`<div class="quiz-intro"><span class="quiz-emoji">💸</span><span class="eyebrow">Quiz · 30 secondes</span>
+    const stage = swap(`<div class="quiz-intro"><div class="slot" aria-hidden="true"><span>+</span><b></b><b></b><b></b><b></b><span>€</span></div><span class="eyebrow">Quiz · 30 secondes</span>
       <h2>Combien ta boutique <span class="grad-text">pourrait te rapporter</span> ?</h2>
       <p class="muted">6 questions rapides. Ton résultat personnalisé s’affiche à la fin.</p>
       <button class="btn btn-main" type="button">C’est parti <span class="arrow">→</span></button>
       <button class="quiz-skip" type="button">Pas maintenant</button></div>`);
     stage.querySelector('.btn').onclick = () => question();
+    spinSlot(stage.querySelector('.slot'));
     stage.querySelector('.quiz-skip').onclick = close;
+  }
+
+  function spinSlot(slot) {
+    const cells = [...slot.querySelectorAll('b')];
+    cells.forEach((c, i) => {
+      c.innerHTML = `<i>${Array.from({ length: 12 }, (_, k) => (k + i * 3) % 10).join('<br>')}</i>`;
+      c.style.setProperty('--d', `${i * 0.18}s`);
+    });
   }
 
   function question() {
@@ -88,7 +96,7 @@
     if (s.id === 'visitors' && answers.stage) answers.visitors = DEFAULT_VISITORS[answers.stage];
     const head = `<span class="quiz-count">${step + 1} / ${STEPS.length}</span><h2>${s.q}</h2>${s.hint ? `<p class="muted">${s.hint}</p>` : ''}`;
     if (s.type === 'choice') {
-      const stage = swap(`${head}<div class="quiz-choices">${s.options.map(([v, e, l], i) => `<button type="button" class="quiz-choice${answers[s.id] === v ? ' on' : ''}" data-v="${v}" style="--d:${i * 0.06}s"><span>${e}</span>${l}</button>`).join('')}</div>${nav(false)}`);
+      const stage = swap(`${head}<div class="quiz-choices">${s.options.map(([v, e, l], i) => `<button type="button" class="quiz-choice${answers[s.id] === v ? ' on' : ''}" data-v="${v}" style="--d:${i * 0.06}s"><span>${window.icon(e)}</span>${l}</button>`).join('')}</div>${nav(false)}`);
       stage.querySelectorAll('.quiz-choice').forEach((b) => (b.onclick = () => {
         answers[s.id] = b.dataset.v;
         stage.querySelectorAll('.quiz-choice').forEach((x) => x.classList.toggle('on', x === b));
@@ -166,6 +174,7 @@
         ${r.days ? `<p>Rentabilisé en <b>${r.days} jour${r.days > 1 ? 's' : ''}</b> si tu atteins ce potentiel.</p>` : ''}</div>
       <button class="btn btn-main quiz-go" type="button">Analyser ma boutique gratuitement <span class="arrow">→</span></button>
       <button class="quiz-skip quiz-plans" type="button">Voir l’offre ${planName}</button>
+      <button class="btn btn-ghost quiz-redo" type="button">${window.icon('refresh')} Refaire le quiz</button>
       <p class="quiz-legal">Estimation indicative basée sur des moyennes e-commerce, pas une promesse de résultat.</p>
     </div>`);
     const big = stage.querySelector('[data-to]');
@@ -178,6 +187,7 @@
     };
     requestAnimationFrame(tick);
     confetti();
+    stage.querySelector('.quiz-redo').onclick = () => { step = 0; Object.assign(answers, { visitors: 3000, aov: 40 }); ['stage', 'cr', 'goal', 'blocker'].forEach((k) => delete answers[k]); question(); };
     stage.querySelector('.quiz-go').onclick = () => {
       close();
       const input = document.querySelector('.hero input[name=store]');
@@ -209,8 +219,6 @@
   }
 
   document.addEventListener('click', (e) => { if (e.target.closest('[data-quiz]')) { e.preventDefault(); open(); } });
-  let seen = false;
-  try { seen = localStorage.getItem('sl_quiz_seen') === '1'; } catch { /* stockage indisponible */ }
-  if (!seen) setTimeout(open, 1200);
+  open(); // s'ouvre dès l'arrivée, à chaque visite
   window.shopliftQuiz = { open, compute: () => compute() };
 })();

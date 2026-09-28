@@ -8,7 +8,7 @@
 <meta name="robots" content="noindex">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Sora:wght@700;800&display=swap" rel="stylesheet" media="print" onload="this.media=\'all\'">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="app.css">
 </head>
@@ -46,7 +46,7 @@
     <div class="toolbar"><button class="seg on" data-spy-tab="spy">Espionner</button><button class="seg" data-spy-tab="compare">Comparer <small class="lock-tag">SCALE</small></button></div>
     <div id="spyPane">
       <form class="store-form" id="spyForm">
-        <label class="store-input"><span>🕵️</span><input name="store" placeholder="boutique-concurrente.com" inputmode="url" aria-label="Boutique concurrente" required></label>
+        <label class="store-input"><i data-i="eye"></i><input name="store" placeholder="boutique-concurrente.com" inputmode="url" aria-label="Boutique concurrente" required></label>
         <button class="btn btn-main" type="submit">Espionner <span class="arrow">→</span></button>
       </form>
       <div id="spyOut"></div>
@@ -83,16 +83,16 @@
 </main>
 
 <nav class="tabbar" aria-label="Navigation">
-  <a href="#audit" data-tab="audit"><span>🩺</span>Audit</a>
-  <a href="#produits" data-tab="produits"><span>🧠</span>Produits</a>
-  <a href="#radar" data-tab="radar"><span>🛰️</span>Radar</a>
-  <a href="#espion" data-tab="espion"><span>🕵️</span>Espion</a>
-  <a href="#compte" data-tab="compte"><span>👤</span>Compte</a>
+  <a href="#audit" data-tab="audit"><span><i data-i="activity"></i></span>Audit</a>
+  <a href="#produits" data-tab="produits"><span><i data-i="box"></i></span>Produits</a>
+  <a href="#radar" data-tab="radar"><span><i data-i="radar"></i></span>Radar</a>
+  <a href="#espion" data-tab="espion"><span><i data-i="eye"></i></span>Espion</a>
+  <a href="#compte" data-tab="compte"><span><i data-i="user"></i></span>Compte</a>
 </nav>
 
 <div class="modal hidden" id="upgradeModal" role="dialog" aria-modal="true" aria-labelledby="upTitle">
   <div class="modal-box card">
-    <button class="modal-x" data-close aria-label="Fermer">✕</button>
+    <button class="modal-x" data-close aria-label="Fermer"><i data-i="x"></i></button>
     <span class="eyebrow">Débloque tout</span><h2 id="upTitle">Passe à la <span class="grad-text">vitesse supérieure</span></h2>
     <p class="muted" id="upReason"></p>
     <div class="plans-mini" id="plansModal"></div>
@@ -100,6 +100,7 @@
   </div>
 </div>
 <div class="toasts" id="toasts" aria-live="polite"></div>
+<script src="icons.js"></script>
 <script src="fx.js" defer></script>
 <script type="module" src="app.js"></script>
 </body>
