@@ -4,7 +4,7 @@ const b64 = (bytes) => btoa(String.fromCharCode(...new Uint8Array(bytes))).repla
 const unb64 = (text) => Uint8Array.from(atob(text.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0));
 
 export function secretOf(env) {
-  return env.APP_SECRET || env.STRIPE_SECRET_KEY || 'profitradar-dev-only-secret';
+  return env.APP_SECRET || env.STRIPE_SECRET_KEY || 'shoplift-dev-only-secret';
 }
 
 async function key(secret) {

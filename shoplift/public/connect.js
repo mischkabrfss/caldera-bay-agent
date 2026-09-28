@@ -1,7 +1,7 @@
 // Analyse réelle d'une boutique via le connecteur Shopify de claude.ai (aperçu publié uniquement).
 // Lecture seule : une requête GraphQL Admin, aucune modification de la boutique.
 const SERVER = 'Shopify';
-const QUERY = `query ProfitRadarAudit { shop { name currencyCode description primaryDomain { host url } shopPolicies { type } } products(first: 100, query: "status:active") { nodes { id title handle descriptionHtml vendor productType tags createdAt publishedAt onlineStoreUrl seo { title description } media(first: 10) { nodes { alt preview { image { url altText } } } } variants(first: 20) { nodes { price compareAtPrice availableForSale } } } } collectionsCount { count } pages(first: 50) { nodes { handle title } } }`;
+const QUERY = `query ShopliftAudit { shop { name currencyCode description primaryDomain { host url } shopPolicies { type } } products(first: 100, query: "status:active") { nodes { id title handle descriptionHtml vendor productType tags createdAt publishedAt onlineStoreUrl seo { title description } media(first: 10) { nodes { alt preview { image { url altText } } } } variants(first: 20) { nodes { price compareAtPrice availableForSale } } } } collectionsCount { count } pages(first: 50) { nodes { handle title } } }`;
 
 const MESSAGES = {
   server_not_connected: 'Connecteur Shopify absent : ajoute-le dans claude.ai → Paramètres → Connecteurs.',

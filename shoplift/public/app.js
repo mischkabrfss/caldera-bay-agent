@@ -1,4 +1,4 @@
-// Tableau de bord ProfitRadar.
+// Tableau de bord Shoplift.
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -170,7 +170,7 @@ function renderAudit() {
       <div class="card result-hero">
         ${gaugeSvg('scoreG')}
         <span class="grade ${gradeClass(a.score)}">${esc(a.grade)}</span>
-        ${a.source === 'shopify' ? '<p class="src-badge real">✓ Analyse réelle · via ta connexion Shopify</p>' : a.source === 'demo' ? '<p class="src-badge">Boutique d’exemple (aperçu). L’analyse réelle d’une adresse fonctionne sur le site en ligne.</p>' : ''}
+        ${a.source === 'shopify' ? '<p class="src-badge real">✓ Analyse réelle · via ta connexion Shopify</p>' : ''}
         <h2>${esc(a.name)}</h2><p class="muted" style="font-size:13px">${esc(a.host)}${a.theme ? ` · thème ${esc(a.theme)}` : ''}</p>
         <div class="stats">
           <div><b data-n="${a.stats.products}">0</b><span>produits</span></div><div><b data-n="${a.fixes.length}">0</b><span>corrections</span></div><div><b>${a.stats.avgImages}</b><span>photos/fiche</span></div>
@@ -225,7 +225,7 @@ async function offerConnect() {
   if (!state.me.demo) return;
   const { shopifyAvailable } = await import('./connect.js');
   if (!(await shopifyAvailable())) return;
-  $('#auditForm').insertAdjacentHTML('beforebegin', '<button class="btn btn-main magnet connect-btn" id="connectBtn" type="button">🔗 Analyser ma vraie boutique <span class="arrow">→</span></button><p class="muted connect-note">Analyse réelle, en lecture seule, via ta connexion Shopify claude.ai.<br>Ou teste une adresse ci-dessous (boutique d’exemple sur cet aperçu).</p>');
+  $('#auditForm').insertAdjacentHTML('beforebegin', '<button class="btn btn-main magnet connect-btn" id="connectBtn" type="button">🔗 Analyser ma vraie boutique <span class="arrow">→</span></button><p class="muted connect-note">Analyse réelle, en lecture seule, via ta connexion Shopify claude.ai.</p>');
   $('#connectBtn').addEventListener('click', runConnected);
 }
 
@@ -272,6 +272,7 @@ function pCard(p, i, cur) {
     ${!locked && p.store ? `<span class="src">chez ${esc(p.store)}</span>` : ''}
     ${!locked && p.verdict ? `<span class="src">${esc(p.verdict)}${p.age !== null && p.age !== undefined ? ` · il y a ${p.age} j` : ''}</span>` : ''}</div>`;
   if (locked) return `<div class="card pcard is-locked" style="--d:${i * 0.05}s">${inner}<div class="lock-over"><span>🔒</span><button class="btn btn-main" data-open-upgrade data-reason="Le radar et l’espion sont inclus dans l’offre Pro.">Pro</button></div></div>`;
+  if (p.example) return `<div class="card pcard tilt" style="--d:${i * 0.05}s">${inner}</div>`;
   return `<a class="card pcard tilt" style="--d:${i * 0.05}s" href="${esc(p.url)}" target="_blank" rel="noopener nofollow">${inner}</a>`;
 }
 
@@ -286,7 +287,8 @@ async function loadRadar(niche) {
   done();
   if (!r.ok) { out.innerHTML = `<div class="card empty"><b>😕</b>${esc(r.data.error)}</div>`; return; }
   if (!r.data.items.length) { out.innerHTML = '<div class="card empty"><b>📡</b>Le radar se recharge pour cette niche. Réessaie dans quelques minutes.</div>'; return; }
-  out.innerHTML = `<div class="pgrid">${r.data.items.map((p, i) => pCard(p, i)).join('')}</div>${r.data.locked ? '<div class="card unlock-banner"><h3>🛰️ Débloque le radar complet</h3><p>24 produits gagnants par niche, avec leurs raisons et le lien direct.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}`;
+  const note = r.data.items[0]?.example ? '<p class="src-badge" style="margin:0 0 12px">Aperçu : produits d’exemple. Le vrai radar scanne des boutiques réelles chaque nuit sur le site en ligne.</p>' : '';
+  out.innerHTML = `${note}<div class="pgrid">${r.data.items.map((p, i) => pCard(p, i)).join('')}</div>${r.data.locked ? '<div class="card unlock-banner"><h3>🛰️ Débloque le radar complet</h3><p>24 produits gagnants par niche, avec leurs raisons et le lien direct.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}`;
 }
 
 // ---------- Espion & comparateur ----------

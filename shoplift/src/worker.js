@@ -23,7 +23,7 @@ class HttpError extends Error {
 
 async function cached(key, ttl, load, overwrite = false) {
   const cache = globalThis.caches?.default;
-  const request = new Request(`https://cache.profitradar.internal/${key}`);
+  const request = new Request(`https://cache.shoplift.internal/${key}`);
   if (cache && !overwrite) {
     const hit = await cache.match(request);
     if (hit) return hit.json();
@@ -37,7 +37,7 @@ async function cached(key, ttl, load, overwrite = false) {
 async function allowAttempt(key, max) {
   const cache = globalThis.caches?.default;
   if (!cache) return true;
-  const request = new Request(`https://cache.profitradar.internal/limit/${key}`);
+  const request = new Request(`https://cache.shoplift.internal/limit/${key}`);
   const hit = await cache.match(request);
   const count = hit ? Number(await hit.text()) : 0;
   if (count >= max) return false;

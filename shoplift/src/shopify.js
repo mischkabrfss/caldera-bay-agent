@@ -1,5 +1,5 @@
 // Lecture des données publiques d'une boutique Shopify : aucune installation, aucun token.
-const UA = 'Mozilla/5.0 (compatible; ProfitRadar/1.0; +https://profitradar.app)';
+const UA = 'Mozilla/5.0 (compatible; Shoplift/1.0; +https://shoplift.app)';
 const MAX_HTML = 700_000;
 
 export class StoreError extends Error {
@@ -7,6 +7,13 @@ export class StoreError extends Error {
     super(message);
     this.code = code;
   }
+}
+
+// Adresse inexistante (aucune réponse) ≠ site existant qui n'est pas une boutique Shopify.
+function notFound(host, status) {
+  return status === 0
+    ? new StoreError('not_found', `« ${host} » n’existe pas ou ne répond pas. Vérifie l’orthographe de l’adresse.`)
+    : new StoreError('not_shopify', `« ${host} » existe mais ce n’est pas une boutique Shopify ouverte (autre plateforme, boutique fermée ou protégée par mot de passe).`);
 }
 
 export function normalizeStore(input) {
@@ -123,7 +130,7 @@ export async function fetchStoreLite(host) {
     getJson(`https://${host}/meta.json`),
     getText(`https://${host}/collections/all?sort_by=best-selling`),
   ]);
-  if (!products) throw new StoreError('not_shopify', `${host} n’est pas une boutique Shopify accessible (boutique fermée, protégée par mot de passe ou adresse incorrecte).`);
+  if (!products) throw notFound(host, best.status);
   return { host, meta: meta || {}, products, bestsellers: bestsellerHandles(best.text) };
 }
 
@@ -145,7 +152,7 @@ export async function fetchStoreFull(host) {
   if (home.finalUrl && new URL(home.finalUrl).pathname.startsWith('/password')) {
     throw new StoreError('password', 'Ta boutique est protégée par un mot de passe. Retire-le (Boutique en ligne → Préférences) le temps de l’analyse.');
   }
-  if (!products) throw new StoreError('not_shopify', `${host} n’est pas une boutique Shopify accessible. Vérifie l’adresse (ex : maboutique.myshopify.com).`);
+  if (!products) throw notFound(host, home.status);
   return {
     host,
     meta: meta || {},

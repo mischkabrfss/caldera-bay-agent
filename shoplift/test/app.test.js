@@ -248,3 +248,12 @@ test('Connexion Shopify : réponse Admin GraphQL → audit réel sans page d’a
   assert.ok(!report.fixes.some((f) => f.title === 'Politique de livraison')); // page « livraison » reconnue
   assert.ok(report.products[0].cons.some((c) => c.t === 'Prix à 0 €'));
 });
+
+test('Adresse inexistante ≠ site qui n’est pas Shopify', async () => {
+  globalThis.fetch = async () => { throw new TypeError('getaddrinfo ENOTFOUND'); };
+  const r1 = await (await call('/api/audit', { method: 'POST', body: { store: 'nexistepas-xyz.com' } })).json();
+  assert.equal(r1.code, 'not_found');
+  installFetch();
+  const r2 = await (await call('/api/audit', { method: 'POST', body: { store: 'autre-site.com' } })).json();
+  assert.equal(r2.code, 'not_shopify');
+});

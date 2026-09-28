@@ -66,6 +66,17 @@ function demoStore(input) {
   };
 }
 
+// Boutique Shopify réellement connectée (lue via le connecteur), seule analysable sur l'aperçu.
+let connected = null;
+const clean = (v) => String(v || '').trim().toLowerCase().replace(/^[a-z]+:\/\//, '').replace(/^www\./, '').split(/[/?#]/)[0];
+function matchConnected(input) {
+  if (!connected) return null;
+  const typed = clean(input);
+  const names = [connected.host, connected.meta?.name, String(connected.host).split('.')[0]].map(clean);
+  return typed && names.includes(typed) ? connected : null;
+}
+const UNVERIFIABLE = (input) => `Impossible de vérifier « ${clean(input) || '?'} » sur cet aperçu : il ne peut lire que ta boutique Shopify connectée (bouton « Analyser ma vraie boutique »). Sur le site en ligne, toute boutique Shopify existante est analysée et une adresse inexistante est refusée.`;
+
 const mem = {};
 const read = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return mem[k] ?? d; } };
 const write = (k, v) => { mem[k] = v; try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* stockage indisponible */ } };
@@ -86,23 +97,29 @@ export function demoApi(path, body = {}) {
       return ok({ plan, email: '', trialLeft: Math.max(0, TEST_LIMITS.audits - used), portal: false, demo: true });
     case '/api/audit': {
       if (plan === 'test' && used >= TEST_LIMITS.audits) return fail(402, `Tes ${TEST_LIMITS.audits} analyses gratuites sont utilisées. Passe à une offre pour continuer.`);
-      const report = auditStore(body.connected || demoStore(body.store)); // boutique connectée (réelle) ou exemple
+      if (body.connected) connected = body.connected;
+      const real = body.connected || matchConnected(body.store);
+      if (!real) return fail(422, UNVERIFIABLE(body.store), { code: 'unverifiable' });
+      const report = auditStore(real);
       if (plan === 'test') write('pr_demo_trial', { n: used + 1, day: today });
       return ok({ plan, trialLeft: plan === 'test' ? TEST_LIMITS.audits - used - 1 : null, report: can(plan, 'fullAudit') ? report : lockAudit(report) });
     }
     case '/api/spy': {
-      const report = spyStore(demoStore(body.store));
+      const real = matchConnected(body.store);
+      if (!real) return fail(422, UNVERIFIABLE(body.store), { code: 'unverifiable' });
+      const report = spyStore(real);
       if (!can(plan, 'spy')) Object.assign(report, { bestsellers: lockItems(report.bestsellers, 1), launches: lockItems(report.launches, 1), locked: true });
       return ok({ plan, report });
     }
     case '/api/radar': {
       const niche = NICHES[url.searchParams.get('niche')] ? url.searchParams.get('niche') : 'mode';
-      const items = radarFrom(NICHES[niche].stores.map(demoStore));
+      // Aperçu : produits d'exemple, clairement signalés (le vrai radar scanne des boutiques réelles sur le site en ligne).
+      const items = radarFrom(NICHES[niche].stores.map(demoStore)).map((i) => ({ ...i, store: 'Exemple', host: '', url: '#', example: true }));
       return ok({ plan, niche, locked: !can(plan, 'radar'), items: can(plan, 'radar') ? items : lockItems(items.slice(0, 8), 1) });
     }
     case '/api/compare':
       if (!can(plan, 'compare')) return fail(403, 'Le comparateur multi-boutiques est inclus dans l’offre Scale.');
-      return ok({ rows: compareStores((body.stores || []).filter(Boolean).slice(0, 4).map(demoStore)), failed: [] });
+      return fail(422, 'Sur l’aperçu, seule ta boutique connectée peut être lue : le comparateur de vraies boutiques fonctionne sur le site en ligne.', { code: 'unverifiable' });
     case '/api/checkout':
       write('pr_demo_plan', body.plan);
       return ok({ changed: true, plan: body.plan });

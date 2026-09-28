@@ -1,4 +1,4 @@
-# ProfitRadar : SaaS d'audit Shopify et de recherche produit
+# Shoplift : SaaS d'audit Shopify et de recherche produit
 
 - **Page de vente** animée, pensée pour mobile : `/`
 - **Application** : `/app`
@@ -15,7 +15,7 @@
 
 1. Clique sur le bouton ci-dessous et connecte-toi à Cloudflare (compte gratuit) :
 
-   [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/mischkabrfss/caldera-bay-agent/tree/claude/pensive-keller-yre2ua/profitradar)
+   [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/mischkabrfss/caldera-bay-agent/tree/claude/pensive-keller-yre2ua/shoplift)
 
 2. Quand Cloudflare demande `STRIPE_SECRET_KEY`, colle ta clé secrète Stripe :
    - `sk_test_…` pour tester (carte de test `4242 4242 4242 4242`) ;

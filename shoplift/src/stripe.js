@@ -46,7 +46,7 @@ export function createCheckout(env, plan, origin, email) {
           currency: 'eur',
           unit_amount: offer.price,
           recurring: { interval: 'month' },
-          product_data: { name: `ProfitRadar ${offer.name}`, metadata: { plan } },
+          product_data: { name: `Shoplift ${offer.name}`, metadata: { plan } },
         },
       },
     },
@@ -109,6 +109,6 @@ export async function changePlan(env, access, plan) {
     metadata: { plan },
     proration_behavior: 'always_invoice',
   });
-  await stripe(env, 'POST', `products/${encodeURIComponent(product)}`, { name: `ProfitRadar ${PLANS[plan].name}`, metadata: { plan } }).catch(() => null);
+  await stripe(env, 'POST', `products/${encodeURIComponent(product)}`, { name: `Shoplift ${PLANS[plan].name}`, metadata: { plan } }).catch(() => null);
   return subscriptionToAccess(updated, access.email);
 }
