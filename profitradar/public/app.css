@@ -188,3 +188,8 @@ td b { font-family: var(--display); }
 .result-hero .gauge { position: relative; }
 .count-pop { animation: countPop .5s cubic-bezier(.2,1.6,.4,1); }
 @keyframes countPop { 50% { transform: scale(1.25); color: var(--green); } }
+.connect-btn { width: 100%; white-space: normal; min-height: 60px; font-size: 17px; }
+.connect-note { font-size: 12px; margin: 8px 0 16px; text-align: center; }
+.src-badge { display: inline-block; margin-top: 10px; padding: 6px 12px; border-radius: 99px; font-size: 12px; font-weight: 700; background: rgba(255,209,102,.12); color: var(--gold); }
+.src-badge.real { background: rgba(0,245,160,.14); color: var(--green); }
+img.noimg { visibility: hidden; }

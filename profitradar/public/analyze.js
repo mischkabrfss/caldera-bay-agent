@@ -65,6 +65,7 @@ export function analyzeProduct(product, { now = Date.now(), rank = null } = {}) 
   else { score -= 12; cons.push({ t: images ? 'Trop peu de photos' : 'Aucune photo', why: 'Sur mobile, la photo fait 80 % de la décision. Une seule image = doute.', fix: 'Vise 5 visuels minimum dont 1 lifestyle et 1 vidéo courte ou GIF.' }); }
   if (images && altMissing / images > 0.5) { score -= 3; cons.push({ t: 'Images sans texte alternatif', why: 'Google Images ne peut pas référencer tes photos et l’accessibilité en pâtit.', fix: 'Renseigne un alt descriptif sur chaque image (ex : « lampe coucher de soleil orange dans un salon »).' }); }
 
+  if (price <= 0 && product.variants.length) { score -= 20; cons.push({ t: 'Prix à 0 €', why: 'Le produit est affiché gratuit : soit une erreur qui fait perdre de l’argent, soit un produit invendable au paiement.', fix: 'Renseigne le vrai prix de vente dans la fiche (et un prix barré si tu fais une promo).' }); }
   if (price > 0) {
     const cents = Math.round((price % 1) * 100);
     if ([99, 95, 90, 97].includes(cents)) { score += 3; pros.push('Prix psychologique (.99/.90) : paraît plus accessible.'); }
@@ -130,14 +131,24 @@ export function auditStore(store, { now = Date.now() } = {}) {
   const d = detect(html);
   const checks = [];
   const add = (cat, ok, impact, title, why, fix, detail = '') => checks.push({ cat, ok, impact, title, why, fix, detail });
+  // Boutique connectée via Shopify (store.html === null) : pas de page d'accueil à lire, ces points sont ignorés.
+  const hasWeb = store.html !== null && store.html !== undefined;
+  const web = (...args) => hasWeb && add(...args);
+  const adm = store.admin;
+  if (adm) {
+    add('seo', (adm.description || '').length >= 70, 'élevé', 'Méta-description de la boutique', adm.description ? `${adm.description.length} caractères.` : 'Aucune description de boutique : Google invente un extrait au hasard.', 'Boutique en ligne → Préférences : rédige 120–160 caractères avec ton offre et un bénéfice.');
+    const seoRate = pct(adm.seoCustom, products.length);
+    add('seo', seoRate >= 50, 'moyen', 'Titres SEO des fiches produit', `${seoRate}% de tes fiches ont un titre ou une description SEO personnalisés.`, 'Sur chaque fiche : « Référencement sur les moteurs de recherche » → titre avec le mot-clé principal + description qui donne envie de cliquer.');
+    add('trust', adm.pages >= 3, 'moyen', 'Pages d’information (FAQ, livraison, à propos)', `${adm.pages} page(s) publiée(s).`, 'Crée au minimum : Contact, FAQ, Livraison, Retours, Notre histoire.');
+  }
 
   // SEO
   const title = tag(html, /<title[^>]*>([\s\S]*?)<\/title>/i).replace(/\s+/g, ' ');
   const description = tag(html, /<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)["']/i) || tag(html, /<meta[^>]+content=["']([^"']*)["'][^>]+name=["']description["']/i);
-  add('seo', title.length >= 25 && title.length <= 70, 'élevé', 'Titre de la page d’accueil', `Google affiche ce titre dans ses résultats. Actuel : « ${title || 'vide'} » (${title.length} car.).`, 'Écris 40–65 caractères : Marque – ce que tu vends + bénéfice. Boutique en ligne → Préférences.');
-  add('seo', description.length >= 70 && description.length <= 170, 'élevé', 'Méta-description', description ? `${description.length} caractères : ${description.length < 70 ? 'trop courte' : description.length > 170 ? 'coupée par Google' : 'bonne longueur'}.` : 'Aucune méta-description : Google invente un extrait au hasard.', 'Rédige 120–160 caractères avec ton offre, un bénéfice et un appel à l’action.');
-  add('seo', /<meta[^>]+property=["']og:image["']/i.test(html), 'moyen', 'Image de partage (réseaux sociaux)', 'Sans image og:image, tes liens partagés sur WhatsApp, Instagram ou Facebook s’affichent sans visuel.', 'Ajoute une image de partage dans Préférences de la boutique en ligne.');
-  add('seo', /<h1[\s>]/i.test(html), 'faible', 'Titre H1 sur l’accueil', 'Le H1 indique à Google le sujet principal de ta page.', 'Ajoute une bannière avec un titre principal clair (ex : « Lampes d’ambiance design »).');
+  web('seo', title.length >= 25 && title.length <= 70, 'élevé', 'Titre de la page d’accueil', `Google affiche ce titre dans ses résultats. Actuel : « ${title || 'vide'} » (${title.length} car.).`, 'Écris 40–65 caractères : Marque – ce que tu vends + bénéfice. Boutique en ligne → Préférences.');
+  web('seo', description.length >= 70 && description.length <= 170, 'élevé', 'Méta-description', description ? `${description.length} caractères : ${description.length < 70 ? 'trop courte' : description.length > 170 ? 'coupée par Google' : 'bonne longueur'}.` : 'Aucune méta-description : Google invente un extrait au hasard.', 'Rédige 120–160 caractères avec ton offre, un bénéfice et un appel à l’action.');
+  web('seo', /<meta[^>]+property=["']og:image["']/i.test(html), 'moyen', 'Image de partage (réseaux sociaux)', 'Sans image og:image, tes liens partagés sur WhatsApp, Instagram ou Facebook s’affichent sans visuel.', 'Ajoute une image de partage dans Préférences de la boutique en ligne.');
+  web('seo', /<h1[\s>]/i.test(html), 'faible', 'Titre H1 sur l’accueil', 'Le H1 indique à Google le sujet principal de ta page.', 'Ajoute une bannière avec un titre principal clair (ex : « Lampes d’ambiance design »).');
   add('seo', !!store.checks?.sitemap, 'faible', 'Sitemap', 'Le sitemap aide Google à découvrir toutes tes pages.', 'Soumets /sitemap.xml dans Google Search Console.');
   const imgs = products.flatMap((p) => p.images);
   const altRate = pct(imgs.filter((i) => i.alt.trim()).length, imgs.length);
@@ -150,8 +161,8 @@ export function auditStore(store, { now = Date.now() } = {}) {
   add('trust', !!c.terms, 'moyen', 'Conditions générales de vente', 'Les CGV sont obligatoires pour vendre en ligne en France.', 'Paramètres → Politiques → Conditions d’utilisation / CGV.');
   add('trust', !!c.shipping, 'moyen', 'Politique de livraison', 'Le délai de livraison est la question n°1 des clients e-commerce.', 'Ajoute délais, transporteurs et frais dans Paramètres → Politiques.');
   add('trust', !!c.contact, 'moyen', 'Page contact', 'Une boutique sans contact visible paraît louche : le taux de conversion chute.', 'Crée une page /pages/contact avec formulaire, e-mail et délai de réponse.');
-  add('trust', d.reviews, 'élevé', 'Avis clients visibles', 'La preuve sociale est le levier n°1 de conversion : jusqu’à +30 % sur les fiches avec avis.', 'Installe Judge.me (gratuit) et affiche les étoiles sur les fiches et l’accueil.');
-  add('trust', d.trustText, 'moyen', 'Réassurance (paiement sécurisé, garantie)', 'Les badges de réassurance réduisent la peur d’acheter chez une boutique inconnue.', 'Ajoute sous le bouton d’achat : paiement sécurisé, satisfait ou remboursé 30 j, livraison suivie.');
+  web('trust', d.reviews, 'élevé', 'Avis clients visibles', 'La preuve sociale est le levier n°1 de conversion : jusqu’à +30 % sur les fiches avec avis.', 'Installe Judge.me (gratuit) et affiche les étoiles sur les fiches et l’accueil.');
+  web('trust', d.trustText, 'moyen', 'Réassurance (paiement sécurisé, garantie)', 'Les badges de réassurance réduisent la peur d’acheter chez une boutique inconnue.', 'Ajoute sous le bouton d’achat : paiement sécurisé, satisfait ou remboursé 30 j, livraison suivie.');
 
   // Fiches produit
   const n = analyzed.length || 1;
@@ -174,35 +185,36 @@ export function auditStore(store, { now = Date.now() } = {}) {
   add('offer', avgPrice >= 20, 'élevé', 'Panier moyen potentiel', `Prix moyen : ${avgPrice.toFixed(2)} ${store.meta?.currency || '€'}.`, 'Sous 20 €, la pub est rarement rentable : crée des lots et des bundles.');
   add('offer', pct(discounted, n) >= 20, 'moyen', 'Prix barrés / promotions', `${discounted} produit(s) avec un prix barré.`, 'Ajoute un prix comparatif honnête sur tes best-sellers pour créer l’urgence.');
   add('offer', bundles > 0, 'élevé', 'Lots & bundles', bundles ? `${bundles} offre(s) groupée(s) détectée(s).` : 'Aucun lot ni bundle détecté.', 'Crée un « Pack x2 -15 % » et un « Kit complet » : +20 à 40 % de panier moyen.');
-  add('offer', d.freeShipping, 'moyen', 'Livraison offerte mise en avant', 'La livraison payante est la 1re cause d’abandon de panier.', 'Affiche « Livraison offerte dès X € » dans une barre d’annonce.');
-  add('offer', d.upsell, 'faible', 'Ventes additionnelles', 'Aucun module « souvent acheté ensemble » détecté.', 'Active les recommandations produit du thème ou une app d’upsell gratuite.');
+  web('offer', d.freeShipping, 'moyen', 'Livraison offerte mise en avant', 'La livraison payante est la 1re cause d’abandon de panier.', 'Affiche « Livraison offerte dès X € » dans une barre d’annonce.');
+  web('offer', d.upsell, 'faible', 'Ventes additionnelles', 'Aucun module « souvent acheté ensemble » détecté.', 'Active les recommandations produit du thème ou une app d’upsell gratuite.');
 
   // Marketing
-  add('marketing', d.metaPixel, 'élevé', 'Pixel Meta (Facebook/Instagram)', 'Sans pixel, impossible de mesurer et d’optimiser tes pubs Meta ni de recibler.', 'Installe l’app « Facebook & Instagram » de Shopify et connecte ton pixel.');
-  add('marketing', d.tiktokPixel, 'moyen', 'Pixel TikTok', 'TikTok est le canal le moins cher pour lancer un produit viral.', 'Installe l’app TikTok de Shopify.');
-  add('marketing', d.google, 'moyen', 'Google Analytics / Tag Manager', 'Tu pilotes à l’aveugle sans analytics.', 'Installe l’app « Google & YouTube » de Shopify.');
-  add('marketing', d.newsletter || d.klaviyo, 'moyen', 'Capture d’e-mails', 'Un e-mail capté = des ventes relancées gratuitement.', 'Ajoute un pop-up -10 % contre l’e-mail (Shopify Forms, gratuit).');
-  add('marketing', d.social, 'faible', 'Liens réseaux sociaux', 'Les réseaux prouvent que la marque existe vraiment.', 'Ajoute tes liens Instagram/TikTok dans le pied de page.');
+  web('marketing', d.metaPixel, 'élevé', 'Pixel Meta (Facebook/Instagram)', 'Sans pixel, impossible de mesurer et d’optimiser tes pubs Meta ni de recibler.', 'Installe l’app « Facebook & Instagram » de Shopify et connecte ton pixel.');
+  web('marketing', d.tiktokPixel, 'moyen', 'Pixel TikTok', 'TikTok est le canal le moins cher pour lancer un produit viral.', 'Installe l’app TikTok de Shopify.');
+  web('marketing', d.google, 'moyen', 'Google Analytics / Tag Manager', 'Tu pilotes à l’aveugle sans analytics.', 'Installe l’app « Google & YouTube » de Shopify.');
+  web('marketing', d.newsletter || d.klaviyo, 'moyen', 'Capture d’e-mails', 'Un e-mail capté = des ventes relancées gratuitement.', 'Ajoute un pop-up -10 % contre l’e-mail (Shopify Forms, gratuit).');
+  web('marketing', d.social, 'faible', 'Liens réseaux sociaux', 'Les réseaux prouvent que la marque existe vraiment.', 'Ajoute tes liens Instagram/TikTok dans le pied de page.');
 
   // Performance
   const scripts = (html.match(/<script\b/gi) || []).length;
   const kb = Math.round(html.length / 1024);
-  add('tech', kb <= 450, 'moyen', 'Poids de la page d’accueil', `${kb} Ko de HTML.`, 'Retire les sections inutiles et les apps non utilisées.');
-  add('tech', scripts <= 45, 'moyen', 'Scripts chargés', `${scripts} scripts sur l’accueil.`, 'Désinstalle les apps inutilisées : chaque script ralentit le mobile.');
-  add('tech', pct((html.match(/loading=["']lazy["']/gi) || []).length, (html.match(/<img\b/gi) || []).length || 1) >= 40 || !/<img\b/i.test(html), 'faible', 'Chargement différé des images', 'Les images hors écran doivent être chargées en différé.', 'Utilise un thème 2.0 récent (Dawn, Sense…) qui gère le lazy-loading.');
+  web('tech', kb <= 450, 'moyen', 'Poids de la page d’accueil', `${kb} Ko de HTML.`, 'Retire les sections inutiles et les apps non utilisées.');
+  web('tech', scripts <= 45, 'moyen', 'Scripts chargés', `${scripts} scripts sur l’accueil.`, 'Désinstalle les apps inutilisées : chaque script ralentit le mobile.');
+  web('tech', pct((html.match(/loading=["']lazy["']/gi) || []).length, (html.match(/<img\b/gi) || []).length || 1) >= 40 || !/<img\b/i.test(html), 'faible', 'Chargement différé des images', 'Les images hors écran doivent être chargées en différé.', 'Utilise un thème 2.0 récent (Dawn, Sense…) qui gère le lazy-loading.');
 
   const categories = Object.entries(CATEGORIES).map(([id, meta]) => {
     const list = checks.filter((x) => x.cat === id);
     const total = list.reduce((s, x) => s + IMPACT_WEIGHT[x.impact], 0);
     const got = list.reduce((s, x) => s + (x.ok ? IMPACT_WEIGHT[x.impact] : 0), 0);
-    return { id, label: meta.label, weight: meta.weight, score: pct(got, total) };
-  });
+    return { id, label: meta.label, weight: meta.weight, score: pct(got, total), total };
+  }).filter((c) => c.total > 0);
   const score = clamp(categories.reduce((s, x) => s + x.score * x.weight, 0) / categories.reduce((s, x) => s + x.weight, 0));
   const fixes = checks.filter((x) => !x.ok).sort((a, b) => IMPACT_WEIGHT[b.impact] - IMPACT_WEIGHT[a.impact]);
   const strengths = checks.filter((x) => x.ok).map((x) => x.title);
 
   return {
     host: store.host,
+    source: store.source || 'web',
     name: store.meta?.name || store.host,
     currency: store.meta?.currency || 'EUR',
     theme: themeName(html),

@@ -60,7 +60,7 @@ function demoStore(input) {
   const products = catalog(full);
   const rich = isRich(full);
   return {
-    host: full, meta: { name: full.split('.')[0].replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()), currency: 'EUR' }, products,
+    source: 'demo', host: full, meta: { name: full.split('.')[0].replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()), currency: 'EUR' }, products,
     collections: [{ title: 'Nouveautés', handle: 'new' }, { title: 'Best-sellers', handle: 'best' }], html: homeHtml(full), bestsellers: bestsellers(full, products),
     checks: { refund: rich, privacy: true, terms: rich, shipping: rich, contact: rich, sitemap: rich },
   };
@@ -86,7 +86,7 @@ export function demoApi(path, body = {}) {
       return ok({ plan, email: '', trialLeft: Math.max(0, TEST_LIMITS.audits - used), portal: false, demo: true });
     case '/api/audit': {
       if (plan === 'test' && used >= TEST_LIMITS.audits) return fail(402, `Tes ${TEST_LIMITS.audits} analyses gratuites sont utilisées. Passe à une offre pour continuer.`);
-      const report = auditStore(demoStore(body.store));
+      const report = auditStore(body.connected || demoStore(body.store)); // boutique connectée (réelle) ou exemple
       if (plan === 'test') write('pr_demo_trial', { n: used + 1, day: today });
       return ok({ plan, trialLeft: plan === 'test' ? TEST_LIMITS.audits - used - 1 : null, report: can(plan, 'fullAudit') ? report : lockAudit(report) });
     }

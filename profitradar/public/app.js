@@ -18,6 +18,9 @@ const PLAN_INFO = {
 const RANK = { test: 0, basic: 1, pro: 2, scale: 3 };
 const state = { me: { plan: 'test', trialLeft: 3 }, config: null, audit: store.get('pr_audit'), sort: 'asc', niche: 'mode', spy: null };
 
+// Images bloquées ou cassées : on les masque proprement au lieu d'une icône cassée.
+document.addEventListener('error', (e) => { if (e.target.tagName === 'IMG') e.target.classList.add('noimg'); }, true);
+
 let demoApi = null; // Mode démo : chargé seulement si le serveur est absent (aperçu statique).
 
 async function api(path, body) {
@@ -116,10 +119,10 @@ function loader(target, steps = STEPS) {
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function runAudit(input) {
+async function runAudit(input, connected = null) {
   const out = $('#auditOut');
   const done = loader(out);
-  const [r] = await Promise.all([api('/api/audit', { store: input }), wait(2600)]);
+  const [r] = await Promise.all([api('/api/audit', { store: input, connected }), wait(2600)]);
   done();
   if (!r.ok) {
     if (r.status === 402) { out.innerHTML = ''; openUpgrade(state.me.demo ? `${r.data.error} (Démo : choisis une offre ou réinitialise dans Compte.)` : r.data.error); } else out.innerHTML = `<div class="card empty"><b>😕</b>${esc(r.data.error || 'Analyse impossible.')}</div>`;
@@ -167,6 +170,7 @@ function renderAudit() {
       <div class="card result-hero">
         ${gaugeSvg('scoreG')}
         <span class="grade ${gradeClass(a.score)}">${esc(a.grade)}</span>
+        ${a.source === 'shopify' ? '<p class="src-badge real">✓ Analyse réelle · via ta connexion Shopify</p>' : a.source === 'demo' ? '<p class="src-badge">Boutique d’exemple (aperçu). L’analyse réelle d’une adresse fonctionne sur le site en ligne.</p>' : ''}
         <h2>${esc(a.name)}</h2><p class="muted" style="font-size:13px">${esc(a.host)}${a.theme ? ` · thème ${esc(a.theme)}` : ''}</p>
         <div class="stats">
           <div><b data-n="${a.stats.products}">0</b><span>produits</span></div><div><b data-n="${a.fixes.length}">0</b><span>corrections</span></div><div><b>${a.stats.avgImages}</b><span>photos/fiche</span></div>
@@ -201,6 +205,28 @@ function renderAudit() {
     requestAnimationFrame(tick);
   });
   setTimeout(() => $$('.cat-row .bar i', out).forEach((b, i) => setTimeout(() => (b.style.width = `${b.dataset.w}%`), i * 120)), 200);
+}
+
+async function runConnected() {
+  const out = $('#auditOut');
+  const done = loader(out, ['Connexion à ta boutique Shopify', 'Lecture de tes produits', 'Vérification des politiques et pages', 'Notation de chaque fiche produit', 'Calcul du score final']);
+  try {
+    const { readConnectedStore } = await import('./connect.js');
+    const storeData = await readConnectedStore();
+    done();
+    runAudit(storeData.host, storeData);
+  } catch (error) {
+    done();
+    out.innerHTML = `<div class="card empty"><b>🔌</b>${esc(error.message)}</div>`;
+  }
+}
+
+async function offerConnect() {
+  if (!state.me.demo) return;
+  const { shopifyAvailable } = await import('./connect.js');
+  if (!(await shopifyAvailable())) return;
+  $('#auditForm').insertAdjacentHTML('beforebegin', '<button class="btn btn-main magnet connect-btn" id="connectBtn" type="button">🔗 Analyser ma vraie boutique <span class="arrow">→</span></button><p class="muted connect-note">Analyse réelle, en lecture seule, via ta connexion Shopify claude.ai.<br>Ou teste une adresse ci-dessous (boutique d’exemple sur cet aperçu).</p>');
+  $('#connectBtn').addEventListener('click', runConnected);
 }
 
 $('#auditForm').addEventListener('submit', (e) => {
@@ -404,6 +430,7 @@ async function detectBackend() {
   $('#niches').innerHTML = Object.entries(cfg.data?.niches || {}).map(([id, n]) => `<button class="seg ${id === state.niche ? 'on' : ''}" data-niche="${id}">${n.emoji} ${esc(n.label)}</button>`).join('');
   $$('#niches .seg').forEach((b) => b.addEventListener('click', () => loadRadar(b.dataset.niche)));
   show(location.hash.slice(1) || 'audit');
+  offerConnect();
   renderAudit();
   if (params.get('bienvenue')) { confetti(); toast(`Bienvenue dans l’offre ${PLAN_INFO[params.get('bienvenue')]?.name || ''} ✦ Tout est débloqué !`, 'ok'); }
   if (params.get('paiement') === 'attente') toast('Paiement en cours de validation… rafraîchis dans quelques secondes.');

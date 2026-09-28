@@ -232,3 +232,19 @@ test('Radar : tâche quotidienne sans erreur', async () => {
   const results = await Promise.all(jobs);
   assert.ok(results.length === 1 && results[0].every((r) => r.status === 'fulfilled'));
 });
+
+test('Connexion Shopify : réponse Admin GraphQL → audit réel sans page d’accueil', async () => {
+  const { toStore } = await import('../public/connect.js');
+  const payload = { data: {
+    shop: { name: 'Test', currencyCode: 'EUR', description: '', primaryDomain: { host: 't.myshopify.com' }, shopPolicies: [{ type: 'PRIVACY_POLICY' }] },
+    products: { nodes: [{ id: 'p1', title: 'Canapé', handle: 'canape', descriptionHtml: '<p>Beau</p>', productType: '', tags: [], createdAt: new Date().toISOString(), seo: { title: null, description: null },
+      media: { nodes: [{ alt: '', preview: { image: { url: 'https://cdn.shopify.com/a.png', altText: '' } } }] }, variants: { nodes: [{ price: '0.00', compareAtPrice: null, availableForSale: true }] } }] },
+    collectionsCount: { count: 2 }, pages: { nodes: [{ handle: 'contact' }, { handle: 'livraison' }, { handle: 'retours' }] },
+  } };
+  const report = auditStore(toStore(payload));
+  assert.equal(report.source, 'shopify');
+  assert.ok(!report.categories.some((c) => c.id === 'marketing' || c.id === 'tech')); // non vérifiables sans page d'accueil
+  assert.ok(report.fixes.some((f) => f.title === 'Conditions générales de vente'));
+  assert.ok(!report.fixes.some((f) => f.title === 'Politique de livraison')); // page « livraison » reconnue
+  assert.ok(report.products[0].cons.some((c) => c.t === 'Prix à 0 €'));
+});
