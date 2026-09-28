@@ -136,7 +136,9 @@ sim();
 $$('[data-store-form]').forEach((form) => form.addEventListener('submit', (e) => {
   e.preventDefault();
   const store = new FormData(form).get('store').trim();
-  if (store) location.href = `/app?store=${encodeURIComponent(store)}`;
+  if (!store) return;
+  try { sessionStorage.setItem('pr_store', store); } catch { /* stockage indisponible */ }
+  location.href = `app.html?store=${encodeURIComponent(store)}`;
 }));
 
 // Achat d'une offre
@@ -148,10 +150,21 @@ $$('[data-plan]').forEach((button) => button.addEventListener('click', async () 
     const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan: button.dataset.plan }) });
     const data = await res.json();
     if (data.url) return location.assign(data.url);
-    alert(data.error || 'Paiement indisponible pour le moment.');
+    note(button, data.error || 'Paiement indisponible pour le moment.');
   } catch {
-    alert('Connexion impossible. Réessaie dans un instant.');
+    location.href = 'app.html#compte'; // aperçu sans serveur : on ouvre la démo
+    return;
   }
   button.disabled = false;
   button.innerHTML = label;
 }));
+
+function note(button, text) {
+  let el = button.parentElement.querySelector('.plan-msg');
+  if (!el) {
+    el = Object.assign(document.createElement('small'), { className: 'plan-msg' });
+    el.style.cssText = 'color:var(--gold);font-weight:700;text-align:center';
+    button.after(el);
+  }
+  el.textContent = text;
+}

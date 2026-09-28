@@ -3,6 +3,7 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const safeImg = (src) => {
+  if (/^data:image\/svg\+xml,/.test(src || '')) return esc(src);
   if (!/^https?:\/\//.test(src || '')) return '';
   try { const u = new URL(src); if (u.hostname === 'cdn.shopify.com') u.searchParams.set('width', '400'); return esc(u.href); } catch { return ''; }
 };
@@ -17,7 +18,10 @@ const PLAN_INFO = {
 const RANK = { test: 0, basic: 1, pro: 2, scale: 3 };
 const state = { me: { plan: 'test', trialLeft: 3 }, config: null, audit: store.get('pr_audit'), sort: 'asc', niche: 'mode', spy: null };
 
+let demoApi = null; // Mode démo : chargé seulement si le serveur est absent (aperçu statique).
+
 async function api(path, body) {
+  if (demoApi) return demoApi(path, body);
   try {
     const res = await fetch(path, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {});
     const data = await res.json().catch(() => ({}));
@@ -359,9 +363,19 @@ async function loadMe() {
   if (state.me.expired) toast('Ton abonnement a pris fin : retour à l’offre Test.', 'err');
 }
 
+async function detectBackend() {
+  const r = await api('/api/config');
+  if (r.ok && r.data.plans) return r;
+  ({ demoApi } = await import('./demo.js'));
+  document.body.classList.add('is-demo');
+  $('.app-top').insertAdjacentHTML('afterend', '<div class="demo-bar">✦ Démo · boutiques d’exemple · offres gratuites ici</div>');
+  return demoApi('/api/config');
+}
+
 (async function init() {
   const params = new URLSearchParams(location.search);
-  const [, cfg] = await Promise.all([loadMe(), api('/api/config')]);
+  const cfg = await detectBackend();
+  await loadMe();
   state.config = cfg.data;
   $('#niches').innerHTML = Object.entries(cfg.data?.niches || {}).map(([id, n]) => `<button class="seg ${id === state.niche ? 'on' : ''}" data-niche="${id}">${n.emoji} ${esc(n.label)}</button>`).join('');
   $$('#niches .seg').forEach((b) => b.addEventListener('click', () => loadRadar(b.dataset.niche)));
@@ -370,7 +384,9 @@ async function loadMe() {
   if (params.get('bienvenue')) { confetti(); toast(`Bienvenue dans l’offre ${PLAN_INFO[params.get('bienvenue')]?.name || ''} ✦ Tout est débloqué !`, 'ok'); }
   if (params.get('paiement') === 'attente') toast('Paiement en cours de validation… rafraîchis dans quelques secondes.');
   if (params.get('paiement') === 'erreur') toast('Le paiement n’a pas pu être vérifié.', 'err');
-  const s = params.get('store');
+  let handoff = null;
+  try { handoff = sessionStorage.getItem('pr_store'); sessionStorage.removeItem('pr_store'); } catch { /* stockage indisponible */ }
+  const s = params.get('store') || handoff;
   if (s) { $('#auditForm input').value = s; show('audit'); runAudit(s); }
   if ([...params.keys()].length) history.replaceState(null, '', location.pathname + location.hash);
 })();

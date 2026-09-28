@@ -178,3 +178,4 @@ td b { font-family: var(--display); }
   .pgrid { grid-template-columns: repeat(4, 1fr); }
   .result-grid { display: grid; grid-template-columns: 380px 1fr; gap: 16px; align-items: start; }
 }
+.demo-bar { position: sticky; top: 60px; z-index: 39; padding: 8px 16px; text-align: center; font-size: 12px; font-weight: 800; letter-spacing: .02em; color: #07060d; background: var(--grad); background-size: 200% auto; animation: shine 4s linear infinite; }

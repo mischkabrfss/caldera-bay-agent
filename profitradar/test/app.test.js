@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { beforeEach, test } from 'node:test';
-import { analyzeProduct, auditStore, compareStores, radarFrom, spyStore } from '../src/analyze.js';
+import { analyzeProduct, auditStore, compareStores, radarFrom, spyStore } from '../public/analyze.js';
 import { sign, verify } from '../src/auth.js';
-import { can } from '../src/plans.js';
+import { can } from '../public/plans.js';
 import { bestsellerHandles, fetchProducts, normalizeStore } from '../src/shopify.js';
 import worker from '../src/worker.js';
 import { fakeStore, installFetch } from './fixtures.js';

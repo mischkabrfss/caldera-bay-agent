@@ -1,5 +1,5 @@
 // Client Stripe minimal (API REST, aucune dépendance).
-import { PLANS } from './plans.js';
+import { PLANS } from '../public/plans.js';
 
 const ACTIVE = new Set(['active', 'trialing', 'past_due']);
 

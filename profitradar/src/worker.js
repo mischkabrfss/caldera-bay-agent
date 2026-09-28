@@ -1,7 +1,7 @@
-import { auditStore, compareStores, radarFrom, spyStore } from './analyze.js';
+import { auditStore, compareStores, radarFrom, spyStore } from '../public/analyze.js';
 import { cookie, readCookie, secretOf, sign, verify } from './auth.js';
-import { can, PLANS, TEST_LIMITS } from './plans.js';
-import { NICHES } from './seeds.js';
+import { can, lockAudit, lockItems, PLANS, TEST_LIMITS } from '../public/plans.js';
+import { NICHES } from '../public/seeds.js';
 import { fetchStoreFull, fetchStoreLite, normalizeStore, StoreError } from './shopify.js';
 import { accessFromCheckout, accessFromEmail, changePlan, createCheckout, portalUrl, refreshAccess } from './stripe.js';
 
@@ -85,14 +85,6 @@ async function consumeTrial(request, ctx) {
   ctx.cookies.push(cookie(TRIAL, await sign(next, ctx.secret), MONTH / 1000));
   return TEST_LIMITS.audits - next.n;
 }
-
-function lockAudit(report) {
-  const fixes = report.fixes.map((fix, i) => (i < TEST_LIMITS.fixes ? fix : { cat: fix.cat, impact: fix.impact, title: fix.title, locked: true }));
-  const products = report.products.map((p, i) => (i < TEST_LIMITS.products ? p : { title: p.title, image: p.image, score: p.score, verdict: p.verdict, locked: true }));
-  return { ...report, fixes, products };
-}
-
-const lockItems = (items, keep) => items.map((item, i) => (i < keep ? item : { image: item.image, score: item.score, locked: true }));
 
 async function loadStore(input, full) {
   const host = normalizeStore(input);
