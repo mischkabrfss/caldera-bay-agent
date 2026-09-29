@@ -111,27 +111,6 @@ if (canvas && !reduced) {
   reset(); addEventListener('resize', reset); draw();
 }
 
-// Simulateur
-const sV = $('#sV'), sB = $('#sB'), sC = $('#sC');
-let shown = 0;
-function sim() {
-  $('#oV').textContent = fmt(sV.value);
-  $('#oB').textContent = `${sB.value} €`;
-  $('#oC').textContent = `+${Number(sC.value).toFixed(1).replace('.', ',')} pt`;
-  const target = sV.value * (sC.value / 100) * sB.value;
-  const from = shown;
-  const start = performance.now();
-  const tick = (t) => {
-    const p = Math.min(1, (t - start) / 500);
-    shown = from + (target - from) * p;
-    $('#simOut').textContent = `+${fmt(shown)} €`;
-    if (p < 1) requestAnimationFrame(tick);
-  };
-  requestAnimationFrame(tick);
-}
-[sV, sB, sC].forEach((el) => el.addEventListener('input', sim));
-sim();
-
 // Formulaire boutique → app
 $$('[data-store-form]').forEach((form) => form.addEventListener('submit', (e) => {
   e.preventDefault();

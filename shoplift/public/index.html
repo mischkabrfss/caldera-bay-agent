@@ -25,6 +25,7 @@
     <button class="btn btn-main quiz-start" type="button">C’est parti <span class="arrow">→</span></button>
     <button class="quiz-skip" type="button">Pas maintenant</button></div></div>
 </div>
+<div id="site">
 <div class="progress" id="progress"></div>
 <div class="bg-fx" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><canvas id="coins"></canvas></div>
 
@@ -51,7 +52,6 @@
       <label class="store-input"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l1.5-5h15L21 9M3 9h18M3 9v11h18V9M9 20v-6h6v6"/></svg><input name="store" placeholder="maboutique.com" autocomplete="url" inputmode="url" aria-label="Adresse de ta boutique Shopify" required></label>
       <button class="btn btn-main magnet" type="submit">Analyser ma boutique <span class="arrow">→</span></button>
     </form>
-    <button class="hero-quiz reveal" style="--d:.3s" type="button" data-quiz><i data-i="target"></i> Calcule combien tu peux gagner <span>→</span></button>
     <div class="micro reveal" style="--d:.32s"><span>1 analyse offerte</span><span>Sans carte bancaire</span><span>Rien à installer</span></div>
   </div>
 
@@ -114,24 +114,9 @@
   </div>
 </div></section>
 
-<section><div class="wrap">
-  <div class="section-head reveal"><span class="eyebrow">Simulateur</span><h2>Combien peut te rapporter <span class="grad-text">+1 point</span> de conversion ?</h2><p>Déplace les curseurs avec tes propres chiffres.</p></div>
-  <div class="card sim reveal">
-    <div>
-      <label>Visiteurs par mois <output id="oV">5 000</output></label><input type="range" id="sV" min="500" max="100000" step="500" value="5000">
-      <label style="margin-top:18px">Panier moyen <output id="oB">40 €</output></label><input type="range" id="sB" min="10" max="200" step="1" value="40">
-      <label style="margin-top:18px">Gain de conversion <output id="oC">+1 pt</output></label><input type="range" id="sC" min="0.2" max="3" step="0.1" value="1">
-    </div>
-    <div class="sim-out"><span class="eyebrow">Chiffre d’affaires en plus</span><b id="simOut">+2 000 €</b><small>par mois · simulation indicative, pas une promesse de résultat</small></div>
-  </div>
-</div></section>
-
 <section id="tarifs"><div class="wrap">
-  <div class="section-head reveal"><span class="eyebrow">Tarifs</span><h2>Commence gratuitement. <span class="grad-text">Scale quand ça paie.</span></h2><p>Sans engagement. Résiliable en 1 clic depuis ton espace.</p></div>
+  <div class="section-head reveal"><span class="eyebrow">Tarifs</span><h2>Choisis ton offre. <span class="grad-text">Scale quand ça paie.</span></h2><p>Sans engagement. Résiliable en 1 clic depuis ton espace.</p></div>
   <div class="pricing">
-    <div class="card plan tilt reveal"><h3>Test</h3><div class="price">0 €</div>
-      <ul><li>1 analyse de boutique</li><li>Score global + 6 catégories</li><li>Top 3 des corrections</li><li>3 fiches produit détaillées</li><li class="no">Espion & radar</li></ul>
-      <a class="btn btn-ghost" href="#analyser">Tester maintenant</a></div>
     <div class="card plan tilt reveal" style="--d:.08s"><h3>Basique</h3><div class="price">19 €<small> /mois</small></div>
       <ul><li>Analyses illimitées</li><li>Audit complet (30+ points)</li><li>Toutes tes fiches produit notées</li><li>Plan d’action trié par impact</li><li class="no">Espion & radar</li></ul>
       <button class="btn btn-ghost" data-plan="basic">Choisir Basique</button></div>
@@ -172,6 +157,7 @@
 </div></footer>
 
 <div class="sticky-cta" id="stickyCta"><a class="btn btn-main" href="#analyser">Tester gratuitement <span class="arrow">→</span></a></div>
+</div>
 <script src="icons.js"></script>
 <script src="fx.js" defer></script>
 <script src="quiz.js" defer></script>

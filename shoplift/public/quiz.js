@@ -61,6 +61,7 @@
 
   function close() {
     root.classList.remove('open');
+    scrollTo(0, 0);
   }
 
   function swap(html) {
