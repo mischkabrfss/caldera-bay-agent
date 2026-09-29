@@ -129,6 +129,7 @@ $$('[data-plan]').forEach((button) => button.addEventListener('click', async () 
     const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan: button.dataset.plan }) });
     const data = await res.json();
     if (data.url) return location.assign(data.url);
+    if (data.changed) return location.assign(`app.html?bienvenue=${data.plan}`); // abonné : changement d'offre fait
     note(button, data.error || 'Paiement indisponible pour le moment.');
   } catch {
     location.href = 'app.html#compte'; // aperçu sans serveur : on ouvre la démo

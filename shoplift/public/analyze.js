@@ -98,7 +98,7 @@ export function analyzeProduct(product, { now = Date.now(), rank = null } = {}) 
 }
 
 // ---------- Audit boutique ----------
-function detect(html) {
+export function detect(html) {
   const h = html.toLowerCase();
   const has = (...needles) => needles.some((n) => h.includes(n));
   return {
@@ -233,12 +233,16 @@ export function auditStore(store, { now = Date.now() } = {}) {
 }
 
 // ---------- Espion concurrent ----------
+// Outils marketing repérés sur la page d'accueil (libellés lisibles).
+export const STACK_LABELS = { metaPixel: 'Pixel Meta', tiktokPixel: 'Pixel TikTok', google: 'Google Analytics', pinterest: 'Pinterest', snapchat: 'Snapchat', klaviyo: 'Klaviyo (e-mails)', newsletter: 'Newsletter', reviews: 'Avis clients', trustText: 'Réassurance', freeShipping: 'Livraison offerte', upsell: 'Ventes additionnelles', chat: 'Chat client', social: 'Réseaux sociaux', currencyConverter: 'Multi-devises' };
+
 export function spyStore(store, { now = Date.now() } = {}) {
   const rankOf = new Map(store.bestsellers.map((h, i) => [h, i]));
   const analyzed = store.products.map((p) => ({ ...analyzeProduct(p, { now, rank: rankOf.has(p.handle) ? rankOf.get(p.handle) : null }), url: `https://${store.host}/products/${p.handle}` }));
   const prices = analyzed.map((p) => p.price).filter((p) => p > 0);
   const types = {};
   for (const p of store.products) if (p.type) types[p.type] = (types[p.type] || 0) + 1;
+  const stack = store.html ? Object.entries(detect(store.html)).filter(([, v]) => v).map(([k]) => STACK_LABELS[k] || k) : null;
   return {
     host: store.host,
     name: store.meta?.name || store.host,
@@ -251,6 +255,7 @@ export function spyStore(store, { now = Date.now() } = {}) {
       discounted: pct(analyzed.filter((p) => p.discount >= 10).length, analyzed.length),
       launches30: analyzed.filter((p) => p.age !== null && p.age <= 30).length,
     },
+    stack,
     topTypes: Object.entries(types).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([name, count]) => ({ name, count })),
     bestsellers: analyzed.filter((p) => p.rank !== null).sort((a, b) => a.rank - b.rank).slice(0, 12),
     launches: analyzed.filter((p) => p.age !== null).sort((a, b) => a.age - b.age).slice(0, 12),

@@ -22,9 +22,20 @@
    - `sk_live_…` pour vendre.
 
    Tu la trouves dans Stripe → Développeurs → Clés API.
-3. Dans Stripe, active le portail client : Paramètres → Facturation → Portail client → **Enregistrer**. C'est lui qui permet à tes clients de résilier et de télécharger leurs factures.
+3. Dans Stripe (5 minutes) :
+   - **Portail client** : Paramètres → Facturation → Portail client → **Enregistrer**. Il permet à tes clients de résilier, changer de carte et télécharger leurs factures.
+   - **Reçus automatiques** : Paramètres → E-mails clients → coche « Paiements réussis » et « Remboursements ». Chaque client reçoit sa facture par e-mail.
+   - **Moyens de paiement** : Paramètres → Moyens de paiement → active Apple Pay et Google Pay (la page de vente les annonce).
 
 C'est tout. Les 3 abonnements sont créés automatiquement dans Stripe à la première vente : tu n'as aucun produit à configurer.
+
+### Si le bouton de déploiement ne marche pas
+Depuis un ordinateur avec Node.js, dans le dossier `shoplift/` :
+```bash
+npm install
+npx wrangler deploy                         # ouvre la connexion Cloudflare la 1re fois
+npx wrangler secret put STRIPE_SECRET_KEY   # colle ta clé Stripe
+```
 
 ### Optionnel
 - `PORTAL_LOGIN_URL` : le lien de connexion du portail client Stripe (disponible dans la même page de Stripe). Il permet à un client qui a récupéré son accès sur un nouvel appareil de gérer son abonnement.

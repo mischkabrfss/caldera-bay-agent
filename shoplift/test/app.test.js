@@ -254,3 +254,13 @@ test('Adresse inexistante ≠ site qui n’est pas Shopify', async () => {
   const r2 = await (await call('/api/audit', { method: 'POST', body: { store: 'autre-site.com' } })).json();
   assert.equal(r2.code, 'not_shopify');
 });
+
+test('API : l’espion (Pro) détecte les outils marketing de la page d’accueil', async () => {
+  installFetch();
+  const token = await sign({ plan: 'pro', dev: true, chk: Date.now(), exp: Date.now() + 1e9 }, 'shoplift-dev-only-secret');
+  const res = await call('/api/spy', { method: 'POST', body: { store: 'demo' }, cookie: `pr_session=${token}` });
+  const { report } = await res.json();
+  assert.ok(report.stack.includes('Pixel Meta') && report.stack.includes('Avis clients'));
+  assert.equal(report.locked, undefined);
+  assert.ok(report.launches.length > 0);
+});

@@ -124,14 +124,16 @@ export function bestsellerHandles(html) {
 }
 
 // Lecture légère (espion, radar, comparateur).
-export async function fetchStoreLite(host) {
-  const [products, meta, best] = await Promise.all([
+// withHome : lit aussi la page d'accueil (outils marketing détectés par l'espion).
+export async function fetchStoreLite(host, { withHome = false } = {}) {
+  const [products, meta, best, home] = await Promise.all([
     fetchProducts(host, 2),
     getJson(`https://${host}/meta.json`),
     getText(`https://${host}/collections/all?sort_by=best-selling`),
+    withHome ? getText(`https://${host}/`) : null,
   ]);
   if (!products) throw notFound(host, best.status);
-  return { host, meta: meta || {}, products, bestsellers: bestsellerHandles(best.text) };
+  return { host, meta: meta || {}, products, bestsellers: bestsellerHandles(best.text), html: home ? home.text : null };
 }
 
 // Lecture complète pour l'audit.

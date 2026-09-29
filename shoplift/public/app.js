@@ -302,7 +302,8 @@ function renderProducts() {
   if (!a) { out.innerHTML = '<div class="card empty"><b>' + icon('box') + '</b>Lance d’abord un audit de ta boutique dans l’onglet Audit.<br><br><a class="btn btn-main" href="#audit">Lancer un audit</a></div>'; return; }
   const list = [...a.products].sort((x, y) => (state.sort === 'asc' ? x.score - y.score : y.score - x.score));
   const hidden = a.products.filter((p) => p.locked).length;
-  out.innerHTML = `<div class="list">${list.slice(0, 120).map((p, i) => productCard(p, i, a.currency)).join('')}</div>${hidden ? `<div class="card unlock-banner"><h3>${icon('unlock')} ${hidden} fiches à débloquer</h3><p>Vois pour chaque produit ce qui cloche, pourquoi, et comment le corriger.</p><button class="btn btn-main" data-open-upgrade>Débloquer toutes les fiches</button></div>` : ''}`;
+  out.innerHTML = `${exportButton('products')}<div class="list">${list.slice(0, 120).map((p, i) => productCard(p, i, a.currency)).join('')}</div>${hidden ? `<div class="card unlock-banner"><h3>${icon('unlock')} ${hidden} fiches à débloquer</h3><p>Vois pour chaque produit ce qui cloche, pourquoi, et comment le corriger.</p><button class="btn btn-main" data-open-upgrade>Débloquer toutes les fiches</button></div>` : ''}`;
+  bindExport('products', () => [['Produit', 'Note', 'Verdict', 'Prix', 'À corriger', 'Points forts'], ...a.products.filter((p) => !p.locked).map((p) => [p.title, p.score, p.verdict, p.price, p.cons.map((c) => `${c.t} : ${c.fix}`).join(' | '), p.pros.join(' | ')])], `produits-${a.host}.csv`);
 }
 $$('[data-sort]').forEach((b) => b.addEventListener('click', () => {
   state.sort = b.dataset.sort;
@@ -315,8 +316,9 @@ function pCard(p, i, cur) {
   const locked = p.locked;
   const inner = `<div class="img">${p.image ? `<img src="${safeImg(p.image)}" alt="" loading="lazy">` : ''}<span class="score-badge ${p.score >= 80 ? 'hot' : ''}">${p.score >= 80 ? '' + icon('trend') + ' ' : ''}${p.score}</span></div>
     <div class="body"><h3>${esc(locked ? 'Produit gagnant caché' : p.title)}</h3>
-    <div class="price">${locked ? '••,•• €' : money(p.price, p.currency || cur)}${!locked && p.discount ? `<s>-${p.discount}%</s>` : ''}</div>
+    <div class="price">${locked ? '••,•• €' : money(p.price, p.currency || cur)}${!locked && p.discount ? `<em class="off">-${p.discount}%</em>` : ''}</div>
     ${p.reasons?.length ? `<div class="reasons">${p.reasons.slice(0, 3).map((r) => `<span>${esc(r)}</span>`).join('')}</div>` : ''}
+    ${!locked && p.resale ? `<span class="resale">Revente conseillée : ${money(p.resale.low, p.currency)} – ${money(p.resale.high, p.currency)}</span>` : ''}
     ${!locked && p.store ? `<span class="src">chez ${esc(p.store)}</span>` : ''}
     ${!locked && p.verdict ? `<span class="src">${esc(p.verdict)}${p.age !== null && p.age !== undefined ? ` · il y a ${p.age} j` : ''}</span>` : ''}</div>`;
   if (locked) return `<div class="card pcard is-locked" style="--d:${i * 0.05}s">${inner}<div class="lock-over"><span>${icon('lock')}</span><button class="btn btn-main" data-open-upgrade data-reason="Le radar et l’espion sont inclus dans l’offre Pro.">Pro</button></div></div>`;
@@ -336,7 +338,8 @@ async function loadRadar(niche) {
   if (!r.ok) { out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error)}</div>`; return; }
   if (!r.data.items.length) { out.innerHTML = '<div class="card empty"><b>' + icon('radar') + '</b>Le radar se recharge pour cette niche. Réessaie dans quelques minutes.</div>'; return; }
   const note = r.data.items[0]?.example ? '<p class="src-badge" style="margin:0 0 12px">Produits d’exemple sur cet aperçu.</p>' : '';
-  out.innerHTML = `${note}<div class="pgrid">${r.data.items.map((p, i) => pCard(p, i)).join('')}</div>${r.data.locked ? '<div class="card unlock-banner"><h3>' + icon('radar') + ' Débloque le radar complet</h3><p>24 produits gagnants par niche, avec leurs raisons et le lien direct.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}`;
+  out.innerHTML = `${note}${exportButton('radar')}<div class="pgrid">${r.data.items.map((p, i) => pCard(p, i)).join('')}</div>${r.data.locked ? '<div class="card unlock-banner"><h3>' + icon('radar') + ' Débloque le radar complet</h3><p>24 produits gagnants par niche, avec leurs raisons et le lien direct.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}`;
+  bindExport('radar', () => [['Produit', 'Boutique', 'Prix', 'Revente conseillée min', 'Revente conseillée max', 'Score', 'Raisons', 'Lien'], ...r.data.items.filter((p) => !p.locked).map((p) => [p.title, p.store, p.price, p.resale?.low, p.resale?.high, p.score, (p.reasons || []).join(' · '), p.url])], `radar-${niche}.csv`);
 }
 
 // ---------- Espion & comparateur ----------
@@ -365,9 +368,12 @@ async function runSpy(storeInput, connected = null) {
     <div class="spy-stats"><div class="card"><b>${s.stats.products}</b><span>produits</span></div><div class="card"><b>${money(s.stats.avgPrice, s.currency)}</b><span>prix moyen</span></div><div class="card"><b>${s.stats.launches30}</b><span>lancés /30 j</span></div>
     <div class="card"><b>${money(s.stats.minPrice, s.currency)}</b><span>prix min</span></div><div class="card"><b>${money(s.stats.maxPrice, s.currency)}</b><span>prix max</span></div><div class="card"><b>${s.stats.discounted}%</b><span>en promo</span></div></div>
     ${s.topTypes.length ? `<div class="strengths">${s.topTypes.map((t) => `<span>${esc(t.name)} · ${t.count}</span>`).join('')}</div>` : ''}
+    ${s.stack ? `<div class="h3">${icon('zap')} Outils marketing détectés</div>${s.stack.length ? `<div class="stack left">${s.stack.map((t) => `<span>${icon('check')} ${esc(t)}</span>`).join('')}</div>` : '<p class="muted">Aucun outil marketing repéré sur sa page d’accueil.</p>'}` : ''}
     <div class="h3">${icon('award')} Best-sellers</div>${s.bestsellers.length ? `<div class="pgrid">${s.bestsellers.map((p, i) => pCard(p, i, s.currency)).join('')}</div>` : '<p class="muted">Classement des ventes non disponible sur cette boutique.</p>'}
     <div class="h3">${icon('rocket')} Derniers lancements</div><div class="pgrid">${s.launches.map((p, i) => pCard(p, i, s.currency)).join('')}</div>
-    ${s.locked ? '<div class="card unlock-banner"><h3>' + icon('eye') + ' Vois tout chez tes concurrents</h3><p>Best-sellers, nouveautés et liens directs avec l’offre Pro.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}`;
+    ${s.locked ? '<div class="card unlock-banner"><h3>' + icon('eye') + ' Vois tout chez tes concurrents</h3><p>Best-sellers, nouveautés et liens directs avec l’offre Pro.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}
+    ${exportButton('spy')}`;
+  bindExport('spy', () => [['Liste', 'Produit', 'Prix', 'Promo %', 'Note', 'Lien'], ...s.bestsellers.map((p) => ['Best-seller', p.title, p.price, p.discount, p.score, p.url]), ...s.launches.map((p) => ['Nouveauté', p.title, p.price, p.discount, p.score, p.url])], `espion-${s.host}.csv`);
 }
 
 $('#compareForm').addEventListener('submit', async (e) => {
@@ -388,6 +394,12 @@ $('#compareForm').addEventListener('submit', async (e) => {
   <button class="btn btn-ghost" style="margin-top:12px" id="csvBtn">⬇ Exporter en CSV</button>`;
   $('#csvBtn').onclick = () => downloadCsv('comparatif.csv', [['Boutique', 'Adresse', ...cols.map((c) => c[1]), 'Best-seller'], ...rows.map((x) => [x.name, x.host, ...cols.map(([k]) => x[k]), x.top?.title || ''])]);
 });
+
+// Export CSV (offre Scale) : un bouton par écran, rien pour les autres offres.
+const exportButton = (id) => (RANK[state.me.plan] >= 3 ? `<button class="btn btn-ghost export-btn" type="button" id="export-${id}">${icon('download')} Exporter en CSV</button>` : '');
+function bindExport(id, rows, name) {
+  $(`#export-${id}`)?.addEventListener('click', () => downloadCsv(name, rows()));
+}
 
 function downloadCsv(name, rows) {
   const csv = rows.map((r) => r.map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(';')).join('\n');

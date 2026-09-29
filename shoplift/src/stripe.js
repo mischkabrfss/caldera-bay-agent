@@ -76,8 +76,11 @@ export async function refreshAccess(env, access) {
 
 // Récupération d'accès sur un nouvel appareil : e-mail + 4 derniers chiffres de la carte.
 export async function accessFromEmail(env, email, last4) {
-  const customers = await stripe(env, 'GET', 'customers', { email, limit: 5 });
-  for (const customer of customers.data || []) {
+  // Stripe compare les e-mails en tenant compte des majuscules : on essaie la saisie telle quelle puis en minuscules.
+  const variants = [...new Set([email, email.toLowerCase()])];
+  const found = [];
+  for (const variant of variants) found.push(...((await stripe(env, 'GET', 'customers', { email: variant, limit: 5 })).data || []));
+  for (const customer of found) {
     const subs = await stripe(env, 'GET', 'subscriptions', { customer: customer.id, status: 'all', limit: 10, expand: ['data.default_payment_method'] });
     for (const sub of subs.data || []) {
       const access = subscriptionToAccess(sub, email);

@@ -99,9 +99,12 @@ async function radar(niche, fresh = false) {
   return items.length ? items : cached(`radar-backup/${niche}`, 2_592_000, async () => []);
 }
 
-async function loadStore(input, full) {
+// mode : 'full' (audit), 'spy' (catalogue + page d'accueil), 'lite' (catalogue seul)
+async function loadStore(input, mode) {
   const host = normalizeStore(input);
-  return cached(`${full ? 'full' : 'lite'}/${host}`, full ? 1800 : 21600, () => (full ? fetchStoreFull(host) : fetchStoreLite(host)));
+  if (mode === 'full') return cached(`full/${host}`, 1800, () => fetchStoreFull(host));
+  const withHome = mode === 'spy';
+  return cached(`${mode}/${host}`, 21600, () => fetchStoreLite(host, { withHome }));
 }
 
 async function route(request, env, ctx) {
@@ -124,7 +127,7 @@ async function route(request, env, ctx) {
     const { store } = await body(request);
     const access = await getAccess(request, env, ctx);
     const host = normalizeStore(store);
-    const report = auditStore(await loadStore(host, true));
+    const report = auditStore(await loadStore(host, 'full'));
     const trialLeft = access.plan === 'test' ? await consumeTrial(request, ctx) : null;
     return json({ plan: access.plan, trialLeft, report: can(access.plan, 'fullAudit') ? report : lockAudit(report) });
   }
@@ -132,7 +135,7 @@ async function route(request, env, ctx) {
   if (pathname === '/api/spy' && method === 'POST') {
     const { store } = await body(request);
     const access = await getAccess(request, env, ctx);
-    const report = spyStore(await loadStore(store, false));
+    const report = spyStore(await loadStore(store, 'spy'));
     if (!can(access.plan, 'spy')) {
       report.bestsellers = lockItems(report.bestsellers, 1);
       report.launches = lockItems(report.launches, 1);
@@ -155,7 +158,7 @@ async function route(request, env, ctx) {
     const { stores } = await body(request);
     const hosts = [...new Set((Array.isArray(stores) ? stores : []).filter(Boolean).map(normalizeStore))].slice(0, 4);
     if (hosts.length < 2) throw new HttpError(400, 'Entre au moins 2 boutiques à comparer.');
-    const results = await Promise.allSettled(hosts.map((h) => loadStore(h, false)));
+    const results = await Promise.allSettled(hosts.map((h) => loadStore(h, 'lite')));
     const ok = results.filter((r) => r.status === 'fulfilled').map((r) => r.value);
     const failed = hosts.filter((_, i) => results[i].status === 'rejected');
     return json({ rows: compareStores(ok), failed });
@@ -191,8 +194,8 @@ async function route(request, env, ctx) {
     const { email, last4 } = await body(request);
     if (!env.STRIPE_SECRET_KEY) throw new HttpError(503, 'Paiement non configuré.');
     if (typeof email !== 'string' || !email.includes('@') || !/^\d{4}$/.test(String(last4))) throw new HttpError(400, 'Entre ton e-mail et les 4 derniers chiffres de ta carte.');
-    const mail = email.trim().toLowerCase();
-    if (!(await allowAttempt(`restore/${encodeURIComponent(mail)}`, 5))) throw new HttpError(429, 'Trop de tentatives. Réessaie dans une heure.');
+    const mail = email.trim();
+    if (!(await allowAttempt(`restore/${encodeURIComponent(mail.toLowerCase())}`, 5))) throw new HttpError(429, 'Trop de tentatives. Réessaie dans une heure.');
     const access = await accessFromEmail(env, mail, String(last4));
     if (!access) throw new HttpError(404, 'Aucun abonnement actif ne correspond à ces informations.');
     // Accès récupéré : fonctionnalités oui, facturation non (elle passe par le lien e-mail sécurisé de Stripe).
