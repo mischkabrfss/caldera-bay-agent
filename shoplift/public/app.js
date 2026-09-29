@@ -322,7 +322,7 @@ function pCard(p, i, cur) {
     ${!locked && p.store ? `<span class="src">chez ${esc(p.store)}</span>` : ''}
     ${!locked && p.verdict ? `<span class="src">${esc(p.verdict)}${p.age !== null && p.age !== undefined ? ` · il y a ${p.age} j` : ''}</span>` : ''}</div>`;
   if (locked) return `<div class="card pcard is-locked" style="--d:${i * 0.05}s">${inner}<div class="lock-over"><span>${icon('lock')}</span><button class="btn btn-main" data-open-upgrade data-reason="Le radar et l’espion sont inclus dans l’offre Pro.">Pro</button></div></div>`;
-  if (p.example) return `<div class="card pcard tilt" style="--d:${i * 0.05}s">${inner}</div>`;
+  if (p.example || !p.url) return `<div class="card pcard tilt" style="--d:${i * 0.05}s">${inner}</div>`; // pas de lien = pas de page morte
   return `<a class="card pcard tilt" style="--d:${i * 0.05}s" href="${esc(p.url)}" target="_blank" rel="noopener nofollow">${inner}</a>`;
 }
 

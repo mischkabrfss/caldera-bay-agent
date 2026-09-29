@@ -238,7 +238,7 @@ export const STACK_LABELS = { metaPixel: 'Pixel Meta', tiktokPixel: 'Pixel TikTo
 
 export function spyStore(store, { now = Date.now() } = {}) {
   const rankOf = new Map(store.bestsellers.map((h, i) => [h, i]));
-  const analyzed = store.products.map((p) => ({ ...analyzeProduct(p, { now, rank: rankOf.has(p.handle) ? rankOf.get(p.handle) : null }), url: `https://${store.host}/products/${p.handle}` }));
+  const analyzed = store.products.map((p) => ({ ...analyzeProduct(p, { now, rank: rankOf.has(p.handle) ? rankOf.get(p.handle) : null }), url: p.url !== undefined ? p.url : `https://${store.host}/products/${p.handle}` }));
   const prices = analyzed.map((p) => p.price).filter((p) => p > 0);
   const types = {};
   for (const p of store.products) if (p.type) types[p.type] = (types[p.type] || 0) + 1;

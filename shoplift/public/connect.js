@@ -47,6 +47,7 @@ export function toStore(payload) {
     images: (p.media?.nodes || []).filter((m) => m.preview?.image?.url).map((m) => ({ src: m.preview.image.url, alt: m.preview.image.altText || m.alt || '' })),
     variants: (p.variants?.nodes || []).map((v) => ({ price: Number(v.price) || 0, compareAt: Number(v.compareAtPrice) || 0, available: v.availableForSale !== false })),
     options: [],
+    url: p.onlineStoreUrl || '', // vrai lien Shopify ; vide si le produit n'est pas publié en ligne
   }));
   return {
     source: 'shopify',
