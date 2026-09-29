@@ -75,7 +75,7 @@ function matchConnected(input) {
   const names = [connected.host, connected.meta?.name, String(connected.host).split('.')[0]].map(clean);
   return typed && names.includes(typed) ? connected : null;
 }
-const UNVERIFIABLE = (input) => `Impossible de vérifier « ${clean(input) || '?'} » sur cet aperçu : il ne peut lire que ta boutique Shopify connectée (bouton « Analyser ma vraie boutique »). Sur le site en ligne, toute boutique Shopify existante est analysée et une adresse inexistante est refusée.`;
+const UNVERIFIABLE = () => 'Sur cet aperçu, seule ta boutique Shopify connectée peut être analysée : clique sur « Analyser ma vraie boutique ». Sur le site en ligne, toutes les boutiques Shopify le sont.';
 
 const mem = {};
 const read = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return mem[k] ?? d; } };
@@ -96,7 +96,7 @@ export function demoApi(path, body = {}) {
     case '/api/me':
       return ok({ plan, email: '', trialLeft: Math.max(0, TEST_LIMITS.audits - used), portal: false, demo: true });
     case '/api/audit': {
-      if (plan === 'test' && used >= TEST_LIMITS.audits) return fail(402, `Tes ${TEST_LIMITS.audits} analyses gratuites sont utilisées. Passe à une offre pour continuer.`);
+      if (plan === 'test' && used >= TEST_LIMITS.audits) return fail(402, `Ton analyse gratuite est utilisée. Choisis une offre pour continuer.`);
       if (body.connected) connected = body.connected;
       const real = body.connected || matchConnected(body.store);
       if (!real) return fail(422, UNVERIFIABLE(body.store), { code: 'unverifiable' });
@@ -119,7 +119,7 @@ export function demoApi(path, body = {}) {
     }
     case '/api/compare':
       if (!can(plan, 'compare')) return fail(403, 'Le comparateur multi-boutiques est inclus dans l’offre Scale.');
-      return fail(422, 'Sur l’aperçu, seule ta boutique connectée peut être lue : le comparateur de vraies boutiques fonctionne sur le site en ligne.', { code: 'unverifiable' });
+      return fail(422, 'Le comparateur fonctionne sur le site en ligne.', { code: 'unverifiable' });
     case '/api/checkout':
       write('pr_demo_plan', body.plan);
       return ok({ changed: true, plan: body.plan });

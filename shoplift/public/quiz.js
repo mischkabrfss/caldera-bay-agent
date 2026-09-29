@@ -35,30 +35,32 @@
   let root;
 
   function build() {
-    root = document.createElement('div');
-    root.className = 'quiz';
-    root.setAttribute('role', 'dialog');
-    root.setAttribute('aria-modal', 'true');
-    root.setAttribute('aria-label', 'Quiz : combien ta boutique peut gagner');
-    root.innerHTML = `<div class="quiz-bg"><i></i><i></i><i></i></div><canvas class="quiz-confetti"></canvas>
-      <div class="quiz-top"><span class="logo"><span class="logo-mark"></span><span>Shop<b>lift</b></span></span><button class="quiz-x" type="button" aria-label="Fermer le quiz">${window.icon('x')}</button></div>
-      <div class="quiz-bar"><i></i></div><div class="quiz-stage"></div>`;
-    document.body.append(root);
+    root = document.getElementById('quiz'); // coque déjà présente dans la page (affichée dès la 1re image)
+    if (!root) {
+      root = document.createElement('div');
+      root.id = 'quiz';
+      root.className = 'quiz';
+      root.setAttribute('role', 'dialog');
+      root.setAttribute('aria-modal', 'true');
+      root.innerHTML = `<div class="quiz-bg"><i></i><i></i><i></i></div><canvas class="quiz-confetti"></canvas>
+        <div class="quiz-top"><span class="logo"><span class="logo-mark"></span><span>Shop<b>lift</b></span></span><button class="quiz-x" type="button" aria-label="Fermer le quiz">${window.icon('x')}</button></div>
+        <div class="quiz-bar"><i></i></div><div class="quiz-stage"></div>`;
+      document.body.append(root);
+    }
     root.querySelector('.quiz-x').onclick = close;
     addEventListener('keydown', (e) => e.key === 'Escape' && root.classList.contains('open') && close());
   }
 
-  function open() {
+  function open(first = false) {
     if (!root) build();
     step = 0;
     root.classList.add('open');
-    document.documentElement.style.overflow = 'hidden';
-    intro();
+    const ready = first && root.querySelector('.quiz-start');
+    if (ready) bindIntro(root.querySelector('.quiz-stage')); else intro();
   }
 
   function close() {
     root.classList.remove('open');
-    document.documentElement.style.overflow = '';
   }
 
   function swap(html) {
@@ -75,10 +77,14 @@
     const stage = swap(`<div class="quiz-intro"><div class="slot" aria-hidden="true"><span>+</span><b></b><b></b><b></b><b></b><span>€</span></div><span class="eyebrow">Quiz · 30 secondes</span>
       <h2>Combien ta boutique <span class="grad-text">pourrait te rapporter</span> ?</h2>
       <p class="muted">6 questions rapides. Ton résultat personnalisé s’affiche à la fin.</p>
-      <button class="btn btn-main" type="button">C’est parti <span class="arrow">→</span></button>
+      <button class="btn btn-main quiz-start" type="button">C’est parti <span class="arrow">→</span></button>
       <button class="quiz-skip" type="button">Pas maintenant</button></div>`);
-    stage.querySelector('.btn').onclick = () => question();
     spinSlot(stage.querySelector('.slot'));
+    bindIntro(stage);
+  }
+
+  function bindIntro(stage) {
+    stage.querySelector('.quiz-start').onclick = () => question();
     stage.querySelector('.quiz-skip').onclick = close;
   }
 
@@ -219,6 +225,6 @@
   }
 
   document.addEventListener('click', (e) => { if (e.target.closest('[data-quiz]')) { e.preventDefault(); open(); } });
-  open(); // s'ouvre dès l'arrivée, à chaque visite
+  open(true); // déjà affiché par la page : on branche les boutons
   window.shopliftQuiz = { open, compute: () => compute() };
 })();

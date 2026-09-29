@@ -7,7 +7,7 @@
   - espion concurrents ;
   - radar de produits gagnants ;
   - comparateur de boutiques et export CSV.
-- **4 offres** : Test (gratuit, 3 analyses), Basique à 19 €, Pro à 49 € et Scale à 99 € par mois, via un abonnement Stripe.
+- **4 offres** : Test (gratuit, 1 analyse), Basique à 19 €, Pro à 49 € et Scale à 99 € par mois, via un abonnement Stripe.
 - **Coût** : 0 €. Hébergement sur Cloudflare Workers (offre gratuite), sans base de données et sans IA payante.
 - **Connexion Shopify** : le client colle simplement l'adresse de sa boutique. On lit ses données publiques : aucune app à installer, aucun compte Shopify Partner nécessaire.
 

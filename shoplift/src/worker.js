@@ -79,7 +79,7 @@ async function getAccess(request, env, ctx) {
 async function consumeTrial(request, ctx) {
   const trial = (await verify(readCookie(request, TRIAL), ctx.secret)) || { n: 0 };
   if (trial.n >= TEST_LIMITS.audits) {
-    throw new HttpError(402, `Tes ${TEST_LIMITS.audits} analyses gratuites sont utilisées. Passe à une offre pour continuer.`, { upgrade: 'basic' });
+    throw new HttpError(402, `Ton analyse gratuite est utilisée. Choisis une offre pour continuer.`, { upgrade: 'basic' });
   }
   const next = { n: trial.n + 1, exp: Date.now() + MONTH };
   ctx.cookies.push(cookie(TRIAL, await sign(next, ctx.secret), MONTH / 1000));

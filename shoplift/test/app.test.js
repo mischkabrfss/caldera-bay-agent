@@ -78,20 +78,17 @@ test('droits par offre', () => {
   assert.ok(!can('pro', 'compare') && can('scale', 'compare'));
 });
 
-test('API : test gratuit limité à 3 analyses, résultats verrouillés', async () => {
-  let cookie = '';
-  for (let i = 0; i < 3; i++) {
-    const res = await call('/api/audit', { method: 'POST', body: { store: 'demo' }, cookie });
-    assert.equal(res.status, 200);
-    const data = await res.json();
-    assert.equal(data.plan, 'test');
-    assert.equal(data.trialLeft, 2 - i);
-    assert.ok(data.report.fixes[3].locked && !data.report.fixes[3].why);
-    assert.ok(data.report.products[2].pros && data.report.products[2].locked === undefined);
-    cookie = cookiesOf(res) || cookie;
-  }
-  const blocked = await call('/api/audit', { method: 'POST', body: { store: 'demo' }, cookie });
+test('API : 1 analyse gratuite, résultats verrouillés, puis blocage', async () => {
+  const res = await call('/api/audit', { method: 'POST', body: { store: 'demo' } });
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.equal(data.plan, 'test');
+  assert.equal(data.trialLeft, 0);
+  assert.ok(data.report.fixes[3].locked && !data.report.fixes[3].why);
+  assert.ok(data.report.products[2].pros && data.report.products[2].locked === undefined);
+  const blocked = await call('/api/audit', { method: 'POST', body: { store: 'demo' }, cookie: cookiesOf(res) });
   assert.equal(blocked.status, 402);
+  assert.match((await blocked.json()).error, /analyse gratuite est utilisée/);
 });
 
 test('API : boutique introuvable = message clair', async () => {

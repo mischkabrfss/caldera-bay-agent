@@ -16,6 +16,39 @@ const PLAN_INFO = {
   scale: { name: 'Scale', price: '99 €', pitch: 'Comparateur 4 boutiques + export CSV' },
 };
 const RANK = { test: 0, basic: 1, pro: 2, scale: 3 };
+// Ce que chaque offre inclut, dit simplement.
+const INCLUDED = {
+  test: ['1 analyse gratuite de ta boutique', 'Ton score et tes 3 corrections les plus importantes'],
+  basic: ['Analyses illimitées de ta boutique', 'Le plan d’action complet, du plus important au moins important', 'La note de chacun de tes produits, avec quoi corriger'],
+  pro: ['Tout ce qu’il y a dans Basique', 'Le radar des produits qui se vendent le mieux', 'L’espion : les best-sellers et nouveautés de tes concurrents'],
+  scale: ['Tout ce qu’il y a dans Pro', 'Le comparateur de 4 boutiques côte à côte', 'L’export de tes analyses en fichier Excel (CSV)'],
+};
+const FIRST_STEPS = {
+  basic: [['audit', 'Analyse ta boutique', 'Tu obtiens ton score et la liste de ce qu’il faut corriger.'], ['produits', 'Corrige tes produits', 'Commence par les produits notés en rouge.']],
+  pro: [['audit', 'Analyse ta boutique', 'Ton score et la liste complète des corrections.'], ['radar', 'Trouve des produits gagnants', 'Choisis ta niche : les produits qui se vendent le mieux s’affichent.'], ['espion', 'Espionne un concurrent', 'Colle son adresse : tu vois ce qu’il vend le plus.']],
+  scale: [['audit', 'Analyse ta boutique', 'Ton score et la liste complète des corrections.'], ['radar', 'Trouve des produits gagnants', 'Les produits qui se vendent le mieux, par niche.'], ['espion', 'Compare jusqu’à 4 boutiques', 'Onglet Espion, puis « Comparer ».']],
+};
+const list = (items) => `<ul class="incl">${items.map((t) => `<li>${icon('check')}<span>${t}</span></li>`).join('')}</ul>`;
+
+function welcome(plan) {
+  if (!PLAN_INFO[plan]) return;
+  $('#welcomeBody').innerHTML = `
+    <span class="eyebrow">Paiement confirmé</span>
+    <h2 id="welTitle">Ton offre <span class="grad-text">${PLAN_INFO[plan].name}</span> est active</h2>
+    <p class="muted">Tout est débloqué, tu peux commencer tout de suite.</p>
+    <h3 class="sub-title">Par où commencer</h3>
+    <ol class="steps-list">${FIRST_STEPS[plan].map(([tab, t, d], i) => `<li><button type="button" data-go="${tab}"><b>${i + 1}</b><span><strong>${t}</strong><small>${d}</small></span>${icon('arrow')}</button></li>`).join('')}</ol>
+    <h3 class="sub-title">Ce qui est inclus</h3>${list(INCLUDED[plan])}
+    <button class="btn btn-main" type="button" data-go="audit" style="width:100%;margin-top:18px">Commencer <span class="arrow">→</span></button>
+    <p class="plan-note">Factures, carte bancaire, changement d’offre ou résiliation : onglet Compte.</p>`;
+  $('#welcomeModal').classList.remove('hidden');
+  confetti();
+}
+document.addEventListener('click', (e) => {
+  const go = e.target.closest('[data-go]');
+  if (go) { $('#welcomeModal').classList.add('hidden'); location.hash = go.dataset.go; show(go.dataset.go); }
+  if (e.target.id === 'welcomeModal') $('#welcomeModal').classList.add('hidden');
+});
 const state = { me: { plan: 'test', trialLeft: 3 }, config: null, audit: store.get('pr_audit'), sort: 'asc', niche: 'mode', spy: null };
 
 // Images bloquées ou cassées : on les masque proprement au lieu d'une icône cassée.
@@ -80,8 +113,7 @@ document.addEventListener('click', async (e) => {
       $('#upgradeModal').classList.add('hidden');
       await loadMe();
       renderAccount();
-      confetti();
-      return toast(`C’est fait : tu es maintenant en ${PLAN_INFO[r.data.plan].name}`, 'ok');
+      return welcome(r.data.plan);
     }
     toast(r.data.error || 'Paiement indisponible.', 'err');
     buy.disabled = false;
@@ -100,7 +132,7 @@ function paintPlan() {
   chip.textContent = plan === 'test' ? 'Test' : PLAN_INFO[plan].name;
   chip.classList.toggle('paid', plan !== 'test');
   $('#upBtn').classList.toggle('hidden', plan === 'scale');
-  $('#trialInfo').innerHTML = plan === 'test' ? `${icon('gift')} ${trialLeft} analyse${trialLeft > 1 ? 's' : ''} gratuite${trialLeft > 1 ? 's' : ''} restante${trialLeft > 1 ? 's' : ''}` : 'Analyses illimitées';
+  $('#trialInfo').innerHTML = plan !== 'test' ? `${icon('check')} Offre ${PLAN_INFO[plan].name} active · analyses illimitées` : trialLeft > 0 ? `${icon('gift')} Ton analyse gratuite est disponible` : `${icon('lock')} Analyse gratuite utilisée · choisis une offre pour continuer`;
 }
 
 // ---------- Audit ----------
@@ -125,7 +157,7 @@ async function runAudit(input, connected = null) {
   const [r] = await Promise.all([api('/api/audit', { store: input, connected }), wait(2600)]);
   done();
   if (!r.ok) {
-    if (r.status === 402) { out.innerHTML = ''; openUpgrade(state.me.demo ? `${r.data.error} (Démo : choisis une offre ou réinitialise dans Compte.)` : r.data.error); } else out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error || 'Analyse impossible.')}</div>`;
+    if (r.status === 402) { out.innerHTML = ''; openUpgrade(r.data.error); } else out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error || 'Analyse impossible.')}</div>`;
     return;
   }
   state.audit = r.data.report;
@@ -287,7 +319,7 @@ async function loadRadar(niche) {
   done();
   if (!r.ok) { out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error)}</div>`; return; }
   if (!r.data.items.length) { out.innerHTML = '<div class="card empty"><b>' + icon('radar') + '</b>Le radar se recharge pour cette niche. Réessaie dans quelques minutes.</div>'; return; }
-  const note = r.data.items[0]?.example ? '<p class="src-badge" style="margin:0 0 12px">Aperçu : produits d’exemple. Le vrai radar scanne des boutiques réelles chaque nuit sur le site en ligne.</p>' : '';
+  const note = r.data.items[0]?.example ? '<p class="src-badge" style="margin:0 0 12px">Produits d’exemple sur cet aperçu.</p>' : '';
   out.innerHTML = `${note}<div class="pgrid">${r.data.items.map((p, i) => pCard(p, i)).join('')}</div>${r.data.locked ? '<div class="card unlock-banner"><h3>' + icon('radar') + ' Débloque le radar complet</h3><p>24 produits gagnants par niche, avec leurs raisons et le lien direct.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}`;
 }
 
@@ -348,16 +380,21 @@ function downloadCsv(name, rows) {
 function renderAccount() {
   const { plan, email, portal } = state.me;
   const isScale = RANK[plan] >= 3;
+  const paid = plan !== 'test';
   $('#accountCard').innerHTML = `
-    <span class="eyebrow">Offre actuelle</span><div class="big">${plan === 'test' ? 'Test gratuit' : `${esc(PLAN_INFO[plan].name)} <span class="grad-text">${PLAN_INFO[plan].price}/mois</span>`}</div>
+    <div class="acc-head"><span class="eyebrow">Ton offre</span>${paid ? '<span class="pill ok">ACTIVE</span>' : ''}</div>
+    <div class="big">${paid ? `${esc(PLAN_INFO[plan].name)} <span class="grad-text">${PLAN_INFO[plan].price}/mois</span>` : 'Gratuite'}</div>
     ${email ? `<p class="muted">${esc(email)}</p>` : ''}
+    ${list(INCLUDED[plan])}
     <div class="account-actions">
-      ${portal ? '<button class="btn btn-ghost" id="portalBtn">Gérer mon abonnement / factures</button>' : ''}
-      ${!portal && state.me.portalLogin ? `<a class="btn btn-ghost" href="${esc(state.me.portalLogin)}" target="_blank" rel="noopener">Gérer mon abonnement (lien par e-mail)</a>` : ''}
-      ${plan !== 'test' && !state.me.demo ? '<button class="btn btn-ghost" id="logoutBtn">Se déconnecter</button>' : ''}
-      ${state.me.demo ? '<button class="btn btn-ghost" id="resetDemo">' + icon('refresh') + ' Réinitialiser la démo</button>' : ''}
-      ${state.audit && isScale ? '<button class="btn btn-ghost" id="exportAudit">' + icon('download') + ' Exporter mon dernier audit (CSV)</button>' : ''}
-    </div>`;
+      ${portal ? `<button class="btn btn-main" id="portalBtn">Gérer mon abonnement</button>` : ''}
+      ${!portal && state.me.portalLogin ? `<a class="btn btn-ghost" href="${esc(state.me.portalLogin)}" target="_blank" rel="noopener">Gérer mon abonnement</a>` : ''}
+      ${!paid ? '<button class="btn btn-main" data-open-upgrade>Choisir une offre</button>' : ''}
+      ${state.audit && isScale ? `<button class="btn btn-ghost" id="exportAudit">${icon('download')} Exporter mon dernier audit</button>` : ''}
+      ${paid && !state.me.demo ? '<button class="btn btn-ghost" id="logoutBtn">Se déconnecter</button>' : ''}
+      ${state.me.demo ? `<button class="btn btn-ghost" id="resetDemo">${icon('refresh')} Réinitialiser l’aperçu</button>` : ''}
+    </div>
+    ${portal ? '<p class="plan-note" style="text-align:left;margin:0">Factures, carte bancaire, changement d’offre ou résiliation en 1 clic. Tu gardes l’accès jusqu’à la fin du mois payé.</p>' : ''}`;
   planCards($('#plansMini'), plan);
   $('#portalBtn')?.addEventListener('click', async () => {
     const r = await api('/api/portal', {});
@@ -370,7 +407,7 @@ function renderAccount() {
     await loadMe();
     renderAccount();
     renderAudit();
-    toast('Démo réinitialisée : 3 analyses gratuites à nouveau', 'ok');
+    toast('Démo réinitialisée : ton analyse gratuite est disponible.', 'ok');
   });
   $('#logoutBtn')?.addEventListener('click', async () => { await api('/api/logout', {}); location.reload(); });
   $('#exportAudit')?.addEventListener('click', () => {
@@ -420,7 +457,7 @@ async function detectBackend() {
   if (r.ok && r.data.plans) return r;
   ({ demoApi } = await import('./demo.js'));
   document.body.classList.add('is-demo');
-  $('.app-top').insertAdjacentHTML('afterend', '<div class="demo-bar">Démo · boutiques d’exemple</div>');
+  $('.app-top').insertAdjacentHTML('afterend', '<div class="demo-bar">Aperçu du site</div>');
   return demoApi('/api/config');
 }
 
@@ -434,9 +471,9 @@ async function detectBackend() {
   show(location.hash.slice(1) || 'audit');
   offerConnect();
   renderAudit();
-  if (params.get('bienvenue')) { confetti(); toast(`Bienvenue dans l’offre ${PLAN_INFO[params.get('bienvenue')]?.name || ''} : tout est débloqué.`, 'ok'); }
-  if (params.get('paiement') === 'attente') toast('Paiement en cours de validation… rafraîchis dans quelques secondes.');
-  if (params.get('paiement') === 'erreur') toast('Le paiement n’a pas pu être vérifié.', 'err');
+  if (params.get('bienvenue')) welcome(params.get('bienvenue'));
+  if (params.get('paiement') === 'attente') toast('Ton paiement est en cours de validation. Rafraîchis la page dans quelques secondes.');
+  if (params.get('paiement') === 'erreur') toast('Le paiement n’a pas abouti : aucun montant n’a été prélevé. Tu peux réessayer depuis l’onglet Compte.', 'err');
   let handoff = null;
   try { handoff = sessionStorage.getItem('pr_store'); sessionStorage.removeItem('pr_store'); } catch { /* stockage indisponible */ }
   const s = params.get('store') || handoff;

@@ -16,7 +16,7 @@ export const FEATURES = {
   export: 'scale',
 };
 
-export const TEST_LIMITS = { audits: 3, fixes: 3, products: 3, teaser: 3 };
+export const TEST_LIMITS = { audits: 1, fixes: 3, products: 3, teaser: 3 };
 
 export const can = (plan, feature) => (PLANS[plan]?.rank ?? 0) >= PLANS[FEATURES[feature]].rank;
 
