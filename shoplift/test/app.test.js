@@ -63,6 +63,15 @@ test('espion, radar et comparateur', () => {
   assert.equal(compareStores([store, store]).length, 2);
 });
 
+test('radar : ni cartes cadeaux ni assurances, 6 produits max par boutique', () => {
+  const store = { ...fakeStore(), products: [] };
+  const p = (title, i) => ({ ...products[0], id: i, handle: `h${i}`, title });
+  const junk = { ...store, products: [p('Gift Card', 1), p('Shipping Protection', 2), p('E-Gift Card', 3)] };
+  assert.equal(radarFrom([junk]).length, 0);
+  const big = { ...store, products: Array.from({ length: 10 }, (_, i) => p(`Lampe ${i}`, i)) };
+  assert.equal(radarFrom([big]).length, 6);
+});
+
 test('jetons signés : infalsifiables et expirables', async () => {
   const token = await sign({ plan: 'pro', exp: Date.now() + 1000 }, 's1');
   assert.equal((await verify(token, 's1')).plan, 'pro');

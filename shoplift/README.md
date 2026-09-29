@@ -41,14 +41,14 @@ npx wrangler secret put STRIPE_SECRET_KEY   # colle ta clé Stripe
 - `PORTAL_LOGIN_URL` : le lien de connexion du portail client Stripe (disponible dans la même page de Stripe). Il permet à un client qui a récupéré son accès sur un nouvel appareil de gérer son abonnement.
 - Nom de domaine perso : Cloudflare → ton Worker → Paramètres → Domaines.
 - Modifier les prix : `src/plans.js` (en centimes).
-- Boutiques scannées par le radar : `src/seeds.js`.
+- Boutiques scannées par le radar : `public/seeds.js` (puis `npm run snapshot` pour l’aperçu).
 - **À faire avant de vendre** : complète les `[À COMPLÉTER]` dans `public/mentions-legales.html`, `public/cgv.html` et `public/confidentialite.html`.
 
 ## Développement local
 
 ```bash
 npm install
-npm test                        # 17 tests (moteur, sécurité, Stripe simulé)
+npm test                        # 23 tests (moteur, sécurité, Stripe simulé)
 node test/mock-shop.mjs &       # faux Shopify local
 printf 'DEV_UNLOCK=true\nSHOPIFY_MOCK=http://127.0.0.1:8790\n' > .dev.vars
 npm run dev                     # http://localhost:8787 (/api/dev-login?plan=scale pour tout débloquer)

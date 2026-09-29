@@ -116,7 +116,7 @@ export async function fetchProducts(host, maxPages = 4) {
 
 export function bestsellerHandles(html) {
   const seen = new Set();
-  for (const match of html.matchAll(/href="[^"]*\/products\/([a-z0-9][a-z0-9\-_%]*)/gi)) {
+  for (const match of html.matchAll(/href=["'][^"']*\/products\/([a-z0-9][a-z0-9\-_%]*)/gi)) {
     seen.add(decodeURIComponent(match[1]).toLowerCase());
     if (seen.size >= 40) break;
   }
@@ -125,7 +125,7 @@ export function bestsellerHandles(html) {
 
 // Lecture légère (espion, radar, comparateur).
 // withHome : lit aussi la page d'accueil (outils marketing détectés par l'espion).
-export async function fetchStoreLite(host, { withHome = false } = {}) {
+async function fetchLite(host, { withHome = false } = {}) {
   const [products, meta, best, home] = await Promise.all([
     fetchProducts(host, 2),
     getJson(`https://${host}/meta.json`),
@@ -137,7 +137,7 @@ export async function fetchStoreLite(host, { withHome = false } = {}) {
 }
 
 // Lecture complète pour l'audit.
-export async function fetchStoreFull(host) {
+async function fetchFull(host) {
   const [products, meta, collections, home, best, refund, privacy, terms, shipping, contact, sitemap] = await Promise.all([
     fetchProducts(host, 4),
     getJson(`https://${host}/meta.json`),
@@ -165,3 +165,15 @@ export async function fetchStoreFull(host) {
     checks: { refund, privacy, terms, shipping, contact, sitemap },
   };
 }
+
+// Vitrine headless sur www (Hydrogen…) : le catalogue Shopify reste souvent servi sur le domaine nu.
+const withApexFallback = (read) => async (host, options) => {
+  try {
+    return await read(host, options);
+  } catch (error) {
+    if (error.code !== 'not_shopify' || !host.startsWith('www.')) throw error;
+    return read(host.slice(4), options).catch(() => { throw error; });
+  }
+};
+export const fetchStoreLite = withApexFallback(fetchLite);
+export const fetchStoreFull = withApexFallback(fetchFull);

@@ -1,8 +1,10 @@
 // Mode démo : utilisé seulement quand le serveur n'est pas joignable (aperçu statique).
-// Même moteur d'analyse que la production, sur des boutiques d'exemple générées.
-import { auditStore, compareStores, radarFrom, spyStore } from './analyze.js';
+// Même moteur d'analyse que la production ; radar figé sur de vrais produits (radar-snapshot.js).
+// catalog/homeHtml/imageSvg servent au faux Shopify local (test/mock-shop.mjs).
+import { auditStore, spyStore } from './analyze.js';
 import { can, lockAudit, lockItems, PLANS, TEST_LIMITS } from './plans.js';
 import { NICHES } from './seeds.js';
+import { SNAPSHOT, SNAPSHOT_DATE } from './radar-snapshot.js';
 
 const NAMES = ['Lampe coucher de soleil', 'Gourde isotherme inox', 'Coque magnétique iPhone', 'Masseur cervical chauffant', 'Tapis de yoga antidérapant', 'Brosse nettoyante visage', 'Collier prénom personnalisé', 'Harnais anti-traction chien', 'Mini projecteur galaxie', 'Organisateur de voiture', 'Sweat oversize brodé', 'Bague ajustable acier', 'Diffuseur huiles essentielles', 'Poêle céramique 28 cm', 'Couverture lestée', 'Lunettes anti-lumière bleue', 'Montre connectée sport', 'Legging gainant sculptant', 'Pistolet de massage', 'Veilleuse nuage enfant'];
 const COLORS = ['#00f5a0', '#8b5cff', '#ff4fd8', '#ffd166', '#00c2ff', '#ff5c7a'];
@@ -47,23 +49,6 @@ export const isRich = (host) => seeded(host)() > 0.5;
 export function homeHtml(host) {
   const rich = isRich(host);
   return `<html><head><title>${rich ? `${host} – La boutique tendance livrée en 48h` : host}</title>${rich ? '<meta name="description" content="Découvre nos best-sellers livrés en 48h. Paiement sécurisé, satisfait ou remboursé 30 jours. Rejoins la communauté.">' : ''}<script>Shopify.theme = {"name":"${rich ? 'Dawn' : 'Debut'}","id":1};</script>${rich ? '<script src="https://connect.facebook.net/en_US/fbevents.js"></script><div class="jdgm-widget"></div>' : ''}</head><body><h1>Bienvenue</h1><p>${rich ? 'Livraison gratuite dès 49€ · Paiement sécurisé' : ''}</p></body></html>`;
-}
-
-function bestsellers(host, products) {
-  const rnd = seeded(`${host}#best`);
-  return products.map((p) => [rnd(), p.handle]).sort((a, b) => a[0] - b[0]).map((x) => x[1]);
-}
-
-function demoStore(input) {
-  const host = String(input || '').trim().toLowerCase().replace(/^[a-z]+:\/\//, '').split(/[/?#]/)[0] || 'ma-boutique';
-  const full = host.includes('.') ? host : `${host}.myshopify.com`;
-  const products = catalog(full);
-  const rich = isRich(full);
-  return {
-    source: 'demo', host: full, meta: { name: full.split('.')[0].replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()), currency: 'EUR' }, products,
-    collections: [{ title: 'Nouveautés', handle: 'new' }, { title: 'Best-sellers', handle: 'best' }], html: homeHtml(full), bestsellers: bestsellers(full, products),
-    checks: { refund: rich, privacy: true, terms: rich, shipping: rich, contact: rich, sitemap: rich },
-  };
 }
 
 // Boutique Shopify réellement connectée (lue via le connecteur), seule analysable sur l'aperçu.
@@ -114,8 +99,8 @@ export function demoApi(path, body = {}) {
     }
     case '/api/radar': {
       const niche = NICHES[url.searchParams.get('niche')] ? url.searchParams.get('niche') : 'mode';
-      // Aperçu : produits d'exemple, clairement signalés (le vrai radar scanne des boutiques réelles sur le site en ligne).
-      const items = radarFrom(NICHES[niche].stores.map(demoStore)).map((i) => ({ ...i, store: 'Exemple', host: '', url: '#', example: true }));
+      // Aperçu : vrais produits relevés sur les boutiques du radar (npm run snapshot), liens directs vers leur page.
+      const items = (SNAPSHOT[niche] || []).map((i) => ({ ...i, snapshot: SNAPSHOT_DATE }));
       return ok({ plan, niche, locked: !can(plan, 'radar'), items: can(plan, 'radar') ? items : lockItems(items.slice(0, 8), 1) });
     }
     case '/api/compare':

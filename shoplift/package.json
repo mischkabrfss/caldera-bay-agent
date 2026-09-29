@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "test": "node --test test/*.test.js"
+    "test": "node --test test/*.test.js",
+    "snapshot": "NODE_USE_ENV_PROXY=1 node test/snapshot.mjs"
   },
   "devDependencies": {
     "wrangler": "4.143.0"

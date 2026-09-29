@@ -99,12 +99,13 @@ export function analyzeProduct(product, { now = Date.now(), rank = null } = {}) 
 
 // ---------- Audit boutique ----------
 export function detect(html) {
-  const h = html.toLowerCase();
+  const h = html.toLowerCase().replace(/\\/g, ''); // les Web Pixels Shopify sont en JSON échappé
   const has = (...needles) => needles.some((n) => h.includes(n));
   return {
-    metaPixel: has('fbevents.js', 'facebook-pixel', 'fbq('),
-    tiktokPixel: has('analytics.tiktok.com', 'ttq.load'),
-    google: has('googletagmanager.com', 'gtag(', 'google-analytics.com'),
+    // apiClientId = app Shopify officielle installée en « Web Pixel » (Facebook & Instagram, TikTok, Google & YouTube).
+    metaPixel: has('fbevents.js', 'facebook-pixel', 'fbq(', 'facebook_pixel', '"apiclientid":2329312', '"facebookcapienabled":true'),
+    tiktokPixel: has('analytics.tiktok.com', 'ttq.load', '"apiclientid":4383523'),
+    google: has('googletagmanager.com', 'gtag(', 'google-analytics.com', '"apiclientid":1780363'),
     pinterest: has('pintrk', 's.pinimg.com/ct'),
     snapchat: has('sc-static.net/scevent'),
     klaviyo: has('klaviyo'),
@@ -120,7 +121,7 @@ export function detect(html) {
 }
 
 function themeName(html) {
-  return tag(html, /Shopify\.theme\s*=\s*\{[^}]*?"name"\s*:\s*"([^"]+)"/i) || tag(html, /"theme_store_id"[\s\S]{0,80}?"name":"([^"]+)"/i) || '';
+  return (tag(html, /Shopify\.theme\s*=\s*\{[^}]*?"name"\s*:\s*"([^"]+)"/i) || tag(html, /"theme_store_id"[\s\S]{0,80}?"name":"([^"]+)"/i) || '').replace(/\\\//g, '/');
 }
 
 export function auditStore(store, { now = Date.now() } = {}) {
@@ -284,11 +285,15 @@ export function winningScore(product, { rank, now = Date.now() }) {
   return { score: clamp(score), reasons };
 }
 
-export function radarFrom(stores, { now = Date.now(), limit = 24 } = {}) {
+// Pas des produits à revendre : cartes cadeaux, assurances colis, abonnements, échantillons…
+const NOT_PRODUCT = /gift ?card|carte[- ]cadeau|e-?gift|insurance|assurance|shipping protection|protection plan|warranty|garantie|subscription|abonnement|of the month|sample|échantillon|donation|\broute\b/i;
+
+export function radarFrom(stores, { now = Date.now(), limit = 24, perStore = 6 } = {}) {
   const items = [];
   for (const store of stores) {
     const rankOf = new Map(store.bestsellers.map((h, i) => [h, i]));
     for (const p of store.products) {
+      if (NOT_PRODUCT.test(`${p.title} ${p.type}`) || !p.images.length || priceOf(p) < 3) continue;
       const rank = rankOf.has(p.handle) ? rankOf.get(p.handle) : null;
       const { score, reasons } = winningScore(p, { rank, now });
       const price = priceOf(p);
@@ -300,7 +305,9 @@ export function radarFrom(stores, { now = Date.now(), limit = 24 } = {}) {
       });
     }
   }
-  return items.sort((a, b) => b.score - a.score).slice(0, limit);
+  // Plafond par boutique : le radar reste varié même si une boutique domine.
+  const count = {};
+  return items.sort((a, b) => b.score - a.score).filter((i) => (count[i.host] = (count[i.host] || 0) + 1) <= perStore).slice(0, limit);
 }
 
 // ---------- Comparateur (Scale) ----------

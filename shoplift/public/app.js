@@ -3,7 +3,7 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const safeImg = (src) => {
-  if (/^data:image\/svg\+xml,/.test(src || '')) return esc(src);
+  if (/^data:image\/svg\+xml,/.test(src || '') || /^radar-img\/[\w.-]+$/.test(src || '')) return esc(src); // miniatures locales de l'aperçu
   if (!/^https?:\/\//.test(src || '')) return '';
   try { const u = new URL(src); if (u.hostname === 'cdn.shopify.com') u.searchParams.set('width', '400'); return esc(u.href); } catch { return ''; }
 };
@@ -322,7 +322,7 @@ function pCard(p, i, cur) {
     ${!locked && p.store ? `<span class="src">chez ${esc(p.store)}</span>` : ''}
     ${!locked && p.verdict ? `<span class="src">${esc(p.verdict)}${p.age !== null && p.age !== undefined ? ` · il y a ${p.age} j` : ''}</span>` : ''}</div>`;
   if (locked) return `<div class="card pcard is-locked" style="--d:${i * 0.05}s">${inner}<div class="lock-over"><span>${icon('lock')}</span><button class="btn btn-main" data-open-upgrade data-reason="Le radar et l’espion sont inclus dans l’offre Pro.">Pro</button></div></div>`;
-  if (p.example || !p.url) return `<div class="card pcard tilt" style="--d:${i * 0.05}s">${inner}</div>`; // pas de lien = pas de page morte
+  if (!p.url) return `<div class="card pcard tilt" style="--d:${i * 0.05}s">${inner}</div>`; // pas de lien = pas de page morte
   return `<a class="card pcard tilt" style="--d:${i * 0.05}s" href="${esc(p.url)}" target="_blank" rel="noopener nofollow">${inner}</a>`;
 }
 
@@ -337,7 +337,8 @@ async function loadRadar(niche) {
   done();
   if (!r.ok) { out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error)}</div>`; return; }
   if (!r.data.items.length) { out.innerHTML = '<div class="card empty"><b>' + icon('radar') + '</b>Le radar se recharge pour cette niche. Réessaie dans quelques minutes.</div>'; return; }
-  const note = r.data.items[0]?.example ? '<p class="src-badge" style="margin:0 0 12px">Produits d’exemple sur cet aperçu.</p>' : '';
+  const snap = r.data.items[0]?.snapshot;
+  const note = snap ? `<p class="src-badge" style="margin:0 0 12px">Vrais produits relevés le ${new Date(snap).toLocaleDateString('fr-FR')} (sur le site en ligne : mis à jour chaque jour).</p>` : '';
   out.innerHTML = `${note}${exportButton('radar')}<div class="pgrid">${r.data.items.map((p, i) => pCard(p, i)).join('')}</div>${r.data.locked ? '<div class="card unlock-banner"><h3>' + icon('radar') + ' Débloque le radar complet</h3><p>24 produits gagnants par niche, avec leurs raisons et le lien direct.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}`;
   bindExport('radar', () => [['Produit', 'Boutique', 'Prix', 'Revente conseillée min', 'Revente conseillée max', 'Score', 'Raisons', 'Lien'], ...r.data.items.filter((p) => !p.locked).map((p) => [p.title, p.store, p.price, p.resale?.low, p.resale?.high, p.score, (p.reasons || []).join(' · '), p.url])], `radar-${niche}.csv`);
 }
