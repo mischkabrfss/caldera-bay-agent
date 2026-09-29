@@ -257,8 +257,24 @@ async function offerConnect() {
   if (!state.me.demo) return;
   const { shopifyAvailable } = await import('./connect.js');
   if (!(await shopifyAvailable())) return;
-  $('#auditForm').insertAdjacentHTML('beforebegin', '<button class="btn btn-main magnet connect-btn" id="connectBtn" type="button">' + icon('link') + ' Analyser ma vraie boutique <span class="arrow">→</span></button><p class="muted connect-note">Analyse réelle, en lecture seule, via ta connexion Shopify claude.ai.</p>');
+  state.connectable = true;
+  $('#auditForm').classList.add('hidden'); // sur l'aperçu, seule la boutique connectée est lisible : pas de champ trompeur
+  $('#auditForm').insertAdjacentHTML('beforebegin', '<button class="btn btn-main magnet connect-btn" id="connectBtn" type="button">' + icon('refresh') + ' Relancer l’analyse <span class="arrow">→</span></button><p class="muted connect-note">Ta boutique Shopify connectée, analysée en lecture seule.</p>');
   $('#connectBtn').addEventListener('click', runConnected);
+  $('#spyForm').classList.add('hidden');
+  $('#spyForm').insertAdjacentHTML('beforebegin', '<button class="btn btn-main connect-btn" id="spyConnected" type="button">' + icon('eye') + ' Lancer l’espion <span class="arrow">→</span></button><p class="muted connect-note">Sur le site en ligne, tu colles l’adresse de n’importe quel concurrent.</p>');
+  $('#spyConnected').addEventListener('click', async () => {
+    try {
+      const { readConnectedStore } = await import('./connect.js');
+      const connected = await readConnectedStore();
+      runSpy(connected.host, connected);
+    } catch (error) {
+      $('#spyOut').innerHTML = `<div class="card empty"><b>${icon('plug')}</b>${esc(error.message)}</div>`;
+    }
+  });
+  // Analyse directe de la vraie boutique si aucune n'est affichée et que l'offre le permet
+  const hasReal = state.audit?.source === 'shopify';
+  if (!hasReal && (state.me.plan !== 'test' || state.me.trialLeft > 0)) runConnected();
 }
 
 $('#auditForm').addEventListener('submit', (e) => {
@@ -331,11 +347,15 @@ $$('[data-spy-tab]').forEach((b) => b.addEventListener('click', () => {
   if (b.dataset.spyTab === 'compare' && RANK[state.me.plan] < 3) openUpgrade('Le comparateur multi-boutiques et l’export CSV sont inclus dans l’offre Scale.');
 }));
 
-$('#spyForm').addEventListener('submit', async (e) => {
+$('#spyForm').addEventListener('submit', (e) => {
   e.preventDefault();
+  runSpy(new FormData(e.target).get('store'));
+});
+
+async function runSpy(storeInput, connected = null) {
   const out = $('#spyOut');
   const done = loader(out, ['Connexion à la boutique', 'Lecture des best-sellers', 'Détection des nouveautés', 'Analyse des prix']);
-  const [r] = await Promise.all([api('/api/spy', { store: new FormData(e.target).get('store') }), wait(1800)]);
+  const [r] = await Promise.all([api('/api/spy', { store: storeInput, connected }), wait(1800)]);
   done();
   if (!r.ok) { out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error)}</div>`; return; }
   const s = r.data.report;
@@ -348,7 +368,7 @@ $('#spyForm').addEventListener('submit', async (e) => {
     <div class="h3">${icon('award')} Best-sellers</div>${s.bestsellers.length ? `<div class="pgrid">${s.bestsellers.map((p, i) => pCard(p, i, s.currency)).join('')}</div>` : '<p class="muted">Classement des ventes non disponible sur cette boutique.</p>'}
     <div class="h3">${icon('rocket')} Derniers lancements</div><div class="pgrid">${s.launches.map((p, i) => pCard(p, i, s.currency)).join('')}</div>
     ${s.locked ? '<div class="card unlock-banner"><h3>' + icon('eye') + ' Vois tout chez tes concurrents</h3><p>Best-sellers, nouveautés et liens directs avec l’offre Pro.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}`;
-});
+}
 
 $('#compareForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -448,6 +468,7 @@ function confetti() {
 async function loadMe() {
   const r = await api('/api/me');
   if (r.ok) state.me = r.data;
+  try { if (state.me.plan && state.me.plan !== 'test') localStorage.setItem('sl_paid', state.me.plan); else localStorage.removeItem('sl_paid'); } catch { /* stockage indisponible */ }
   paintPlan();
   if (state.me.expired) toast('Ton abonnement a pris fin : retour à l’offre Test.', 'err');
 }
@@ -469,7 +490,7 @@ async function detectBackend() {
   $('#niches').innerHTML = Object.entries(cfg.data?.niches || {}).map(([id, n]) => `<button class="seg ${id === state.niche ? 'on' : ''}" data-niche="${id}">${esc(n.label)}</button>`).join('');
   $$('#niches .seg').forEach((b) => b.addEventListener('click', () => loadRadar(b.dataset.niche)));
   show(location.hash.slice(1) || 'audit');
-  offerConnect();
+  await offerConnect();
   renderAudit();
   if (params.get('bienvenue')) welcome(params.get('bienvenue'));
   if (params.get('paiement') === 'attente') toast('Ton paiement est en cours de validation. Rafraîchis la page dans quelques secondes.');
@@ -477,6 +498,6 @@ async function detectBackend() {
   let handoff = null;
   try { handoff = sessionStorage.getItem('pr_store'); sessionStorage.removeItem('pr_store'); } catch { /* stockage indisponible */ }
   const s = params.get('store') || handoff;
-  if (s) { $('#auditForm input').value = s; show('audit'); runAudit(s); }
+  if (s && !state.connectable) { $('#auditForm input').value = s; show('audit'); runAudit(s); }
   if ([...params.keys()].length) history.replaceState(null, '', location.pathname + location.hash);
 })();

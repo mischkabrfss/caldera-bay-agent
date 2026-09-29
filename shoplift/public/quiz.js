@@ -226,6 +226,8 @@
   }
 
   document.addEventListener('click', (e) => { if (e.target.closest('[data-quiz]')) { e.preventDefault(); open(); } });
-  open(true); // déjà affiché par la page : on branche les boutons
+  let paid = false;
+  try { paid = !!localStorage.getItem('sl_paid'); } catch { /* stockage indisponible */ }
+  if (paid) build(); else open(true); // abonné : pas de quiz ; sinon déjà affiché par la page, on branche les boutons
   window.shopliftQuiz = { open, compute: () => compute() };
 })();

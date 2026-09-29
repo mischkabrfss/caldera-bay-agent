@@ -209,3 +209,11 @@ function note(button, text) {
     });
   }, { passive: true });
 })();
+
+// Client abonné : les boutons mènent à son espace
+if (document.documentElement.classList.contains('is-paid')) {
+  document.querySelectorAll('.nav-links .btn-main, #stickyCta .btn').forEach((b) => {
+    b.href = 'app.html';
+    b.innerHTML = 'Mon espace <span class="arrow">→</span>';
+  });
+}

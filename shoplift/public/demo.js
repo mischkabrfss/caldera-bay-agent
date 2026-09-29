@@ -105,7 +105,8 @@ export function demoApi(path, body = {}) {
       return ok({ plan, trialLeft: plan === 'test' ? TEST_LIMITS.audits - used - 1 : null, report: can(plan, 'fullAudit') ? report : lockAudit(report) });
     }
     case '/api/spy': {
-      const real = matchConnected(body.store);
+      if (body.connected) connected = body.connected;
+      const real = body.connected || matchConnected(body.store);
       if (!real) return fail(422, UNVERIFIABLE(body.store), { code: 'unverifiable' });
       const report = spyStore(real);
       if (!can(plan, 'spy')) Object.assign(report, { bestsellers: lockItems(report.bestsellers, 1), launches: lockItems(report.launches, 1), locked: true });
