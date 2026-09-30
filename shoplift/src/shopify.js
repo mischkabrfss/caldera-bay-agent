@@ -134,7 +134,28 @@ async function fetchLite(host, { withHome = false } = {}) {
     withHome ? getText(`https://${host}/`) : null,
   ]);
   if (!products) throw notFound(host, best.status);
-  return { host, meta: meta || {}, products, bestsellers: bestsellerHandles(best.text), html: home ? home.text : null };
+  const known = new Set(products.map((p) => p.handle));
+  let bestsellers = bestsellerHandles(best.text);
+  let bestSource = 'sales';
+  if (withHome) { // espion uniquement (le radar reste dans la limite de requêtes Cloudflare)
+    // Page de tri générée en JavaScript → collection « best-sellers », sinon produits mis en avant sur l'accueil.
+    if (bestsellers.filter((h) => known.has(h)).length < 4) {
+      const col = (await getJson(`https://${host}/collections/best-sellers/products.json?limit=24`))?.products || [];
+      if (col.length >= 4) {
+        for (const p of col) if (!known.has(p.handle)) { products.push(slimProduct(p)); known.add(p.handle); }
+        bestsellers = col.map((p) => p.handle); bestSource = 'collection';
+      } else if (home?.text) {
+        const featured = bestsellerHandles(home.text);
+        if (featured.length >= 4) { bestsellers = featured; bestSource = 'home'; }
+      }
+    }
+    // Gros catalogues : les produits classés absents des 500 premiers sont lus un par un (12 maximum).
+    const missing = bestsellers.filter((h) => !known.has(h)).slice(0, 12);
+    for (const r of await Promise.all(missing.map((h) => getJson(`https://${host}/products/${h}.json`)))) {
+      if (r?.product && !known.has(r.product.handle)) { products.push(slimProduct(r.product)); known.add(r.product.handle); }
+    }
+  }
+  return { host, meta: meta || {}, products, bestsellers, bestSource, html: home ? home.text : null };
 }
 
 // Lecture complète pour l'audit.

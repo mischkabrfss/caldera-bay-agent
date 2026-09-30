@@ -1,5 +1,7 @@
 // Fournisseurs de qualité qui se connectent à Shopify : recherche directe du produit + app d'import.
 // Liens vérifiés le 30/09/2026.
+import { KIND_EN } from './seeds.js';
+
 const enc = encodeURIComponent;
 
 export const SUPPLIERS = [
@@ -14,15 +16,19 @@ export const SUPPLIERS = [
 
 // Mots-clés de recherche à partir du titre : sans marque, couleur, taille ni petits mots.
 // En anglais comme en français, les derniers mots utiles disent ce qu'est le produit (« … collar midi dress »).
+const VAGUE = new Set('apparel bottoms tops clothing accessories accessory default women womens men mens unisex product products unpublished gift shirts sweaters sweatshirts dresses bundle bundles bundle-dg sets skincare suncare natural'.split(' ')); // types Shopify trop vagues pour chercher
 const STOP = new Set('the a an of in on with to for and you me my your our by at from new de du des la le les et pour avec en un une'.split(' '));
 const words = (t) => t.toLowerCase().replace(/[™®©"',.!?:+]/g, ' ').split(/\s+/).filter(Boolean);
 export function supplierQuery(item) {
   const brand = new Set(words(String(item.store || '')).concat(words(String(item.store || '').replace(/\./g, ''))));
-  const segments = String(item.title || '').split(/\s[|–—-]\s|\s\(|\swith\s|\savec\s/i);
+  const segments = String(item.title || '').split(/\s[|–—-]\s|\s\(|\swith\s|\savec\s|\sin\s|\sen\s/i);
   const useful = (seg, keepBrand = false) => words(seg).filter((w) => !STOP.has(w) && (keepBrand || !brand.has(w)) && !/^\d+([.,]\d+)?(cm|mm|in|oz|ml|l|pcs|pack)?$/.test(w) && w.length > 1);
   const core = (segments.map(useful).find((w) => w.length) || []).slice(-3);
-  const type = useful(String(item.type || ''), true).slice(0, 2);
-  if (type.length && !core.some((w) => type.some((t) => w.startsWith(t.slice(0, 4)) || t.startsWith(w.slice(0, 4))))) core.push(...type);
+  // Terme générique : type de produit reconnu par le radar, sinon type Shopify s'il est lisible (« Sunglasses », pas « womens>apparel »).
+  const cleanType = /^[\p{L} &'-]+$/u.test(String(item.type || '').trim()) ? item.type : '';
+  const type = (KIND_EN[item.kind] ? KIND_EN[item.kind].split(' ') : useful(cleanType, true).filter((w) => !VAGUE.has(w))).slice(0, 2);
+  const has = (t) => core.some((w) => w.startsWith(t.slice(0, 4)) || t.startsWith(w.slice(0, 4)));
+  if (type.length && !type.every(has)) core.push(...type.filter((t) => !has(t)));
   return core.join(' ') || String(item.title || '').toLowerCase();
 }
 

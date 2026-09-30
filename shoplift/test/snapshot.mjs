@@ -2,7 +2,7 @@
 // Usage : npm run snapshot
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { radarFrom } from '../public/analyze.js';
-import { NICHES } from '../public/seeds.js';
+import { kindOf, NICHES } from '../public/seeds.js';
 import { fetchStoreLite } from '../src/shopify.js';
 
 // L'aperçu (artifact) bloque les images externes : on copie une miniature de chaque vraie photo à côté de la page.
@@ -23,7 +23,7 @@ const out = {};
 for (const [niche, { stores }] of Object.entries(NICHES)) {
   const results = await Promise.allSettled(stores.map((h) => fetchStoreLite(h)));
   results.forEach((r, i) => console.log(`${niche.padEnd(8)} ${stores[i].padEnd(24)} ${r.status === 'fulfilled' ? `${r.value.products.length} produits, ${r.value.bestsellers.length} best-sellers` : `ÉCHEC ${r.reason?.message}`}`));
-  out[niche] = radarFrom(results.filter((r) => r.status === 'fulfilled').map((r) => r.value));
+  out[niche] = radarFrom(results.filter((r) => r.status === 'fulfilled').map((r) => r.value), { kind: (p) => kindOf(niche, p) });
   for (const [i, item] of out[niche].entries()) {
     item.image = await thumb(item.image, `${niche}-${i}`);
     item.image2 = item.image2 ? await thumb(item.image2, `${niche}-${i}b`).catch(() => '') : '';

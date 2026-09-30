@@ -2,7 +2,8 @@
 // Même moteur d'analyse que la production ; radar figé sur de vrais produits (radar-snapshot.js).
 // catalog/homeHtml/imageSvg servent au faux Shopify local (test/mock-shop.mjs).
 import { auditStore, spyStore } from './analyze.js';
-import { can, lockAudit, lockItems, PLANS, TEST_LIMITS } from './plans.js';
+import { SPY_SNAPSHOT } from './spy-snapshot.js';
+import { can, lockAudit, lockItems, lockSpy, PLANS, TEST_LIMITS } from './plans.js';
 import { NICHES } from './seeds.js';
 import { SNAPSHOT, SNAPSHOT_DATE } from './radar-snapshot.js';
 
@@ -77,7 +78,7 @@ export function demoApi(path, body = {}) {
   const used = trial.day === today ? trial.n : 0;
   switch (url.pathname) {
     case '/api/config':
-      return ok({ stripe: false, demo: true, plans: PLANS, niches: Object.fromEntries(Object.entries(NICHES).map(([k, v]) => [k, { label: v.label }])) });
+      return ok({ stripe: false, demo: true, plans: PLANS, niches: Object.fromEntries(Object.entries(NICHES).map(([k, v]) => [k, { label: v.label }])), spyExamples: Object.keys(SPY_SNAPSHOT) });
     case '/api/me':
       return ok({ plan, email: '', trialLeft: Math.max(0, TEST_LIMITS.audits - used), portal: false, demo: true });
     case '/api/audit': {
@@ -90,12 +91,13 @@ export function demoApi(path, body = {}) {
       return ok({ plan, trialLeft: plan === 'test' ? TEST_LIMITS.audits - used - 1 : null, report: can(plan, 'fullAudit') ? report : lockAudit(report) });
     }
     case '/api/spy': {
+      // Aperçu : vraies analyses figées de 6 concurrents, ou la boutique Shopify connectée.
+      const snap = SPY_SNAPSHOT[clean(body.store)] || SPY_SNAPSHOT[`www.${clean(body.store)}`];
+      if (snap && !body.connected) return ok({ plan, report: lockSpy(structuredClone(snap.report), plan) });
       if (body.connected) connected = body.connected;
       const real = body.connected || matchConnected(body.store);
-      if (!real) return fail(422, UNVERIFIABLE(body.store), { code: 'unverifiable' });
-      const report = spyStore(real);
-      if (!can(plan, 'spy')) Object.assign(report, { bestsellers: lockItems(report.bestsellers, 1), launches: lockItems(report.launches, 1), locked: true });
-      return ok({ plan, report });
+      if (!real) return fail(422, `Sur cet aperçu, l’espion fonctionne sur ces vraies boutiques : ${Object.keys(SPY_SNAPSHOT).join(', ')}, ou sur ta boutique connectée. Sur le site en ligne, toutes les boutiques Shopify sont analysables.`, { code: 'unverifiable' });
+      return ok({ plan, report: lockSpy(spyStore(real), plan) });
     }
     case '/api/radar': {
       const niche = NICHES[url.searchParams.get('niche')] ? url.searchParams.get('niche') : 'mode';
@@ -105,7 +107,12 @@ export function demoApi(path, body = {}) {
     }
     case '/api/compare':
       if (!can(plan, 'compare')) return fail(403, 'Le comparateur multi-boutiques est inclus dans l’offre Scale.');
-      return fail(422, 'Le comparateur fonctionne sur le site en ligne.', { code: 'unverifiable' });
+      {
+        const hosts = (body.stores || []).map(clean).filter(Boolean);
+        const rows = hosts.map((h) => SPY_SNAPSHOT[h]?.row).filter(Boolean);
+        if (rows.length < 2) return fail(422, `Sur cet aperçu, compare ces vraies boutiques : ${Object.keys(SPY_SNAPSHOT).join(', ')}. Sur le site en ligne, toutes les boutiques Shopify fonctionnent.`, { code: 'unverifiable' });
+        return ok({ rows, failed: hosts.filter((h) => !SPY_SNAPSHOT[h]) });
+      }
     case '/api/checkout':
       write('pr_demo_plan', body.plan);
       return ok({ changed: true, plan: body.plan });

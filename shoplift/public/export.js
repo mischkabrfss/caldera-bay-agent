@@ -122,7 +122,8 @@ async function newPdf(landscape = false) {
     },
     page(title) { doc.addPage(); P.fill(C.paper); doc.rect(0, 0, W, H, 'F'); P.band(title); },
     need(h, title) { if (P.y + h > H - 56) P.page(title); },
-    h2(t, title) { P.need(60, title); P.font(17, true, C.ink); P.text(t, M, P.y); P.fill(C.gold); doc.rect(M, P.y + 7, 36, 3, 'F'); P.y += 28; },
+    // Titre de section : jamais seul en bas de page (assez de place pour la suite).
+    h2(t, title, after = 60) { P.need(after + 30, title); P.font(17, true, C.ink); P.text(t, M, P.y); P.fill(C.gold); doc.rect(M, P.y + 7, 36, 3, 'F'); P.y += 28; },
     cover({ kicker, title, sub, meta }) {
       P.fill(C.ink); doc.rect(0, 0, W, H, 'F');
       P.fill(C.ink2); doc.circle(W - 60, 90, 190, 'F');
@@ -319,7 +320,7 @@ async function radarPdf(items, { niche, date }) {
   const label = `Radar ${niche}`;
   let y = P.cover({ kicker: 'Radar produits gagnants', title: `${items.length} produits qui se vendent en ${niche}`, sub: 'Classés par rang de vente, fraîcheur, prix et promotion dans des boutiques Shopify de référence. Chaque produit renvoie vers sa page et vers des fournisseurs connectables à Shopify.', meta: `Relevé du ${date}` });
   await podium(P, items, y);
-  P.page(label); P.h2('Le classement complet', label);
+  P.page(label); P.h2('Le classement complet', label, 160);
   await productGrid(P, items, 'EUR', label);
   P.h2('Fournisseurs connectables à Shopify', label);
   supplierLinks({ title: '' }).forEach((s) => { P.need(18, label); P.font(9, true, C.ink); P.text(s.name, P.M, P.y); P.font(8.5, false, C.muted); P.text(`${s.tag} · livraison ${s.delay} · via ${s.via}`, P.M + 110, P.y); P.link('Installer ›', P.W - P.M - 44, P.y, s.app, 8.5); P.y += 16; });
@@ -330,13 +331,49 @@ async function spyPdf(s) {
   const P = await newPdf();
   const label = `Espion · ${s.host}`;
   let y = P.cover({ kicker: 'Espion concurrent', title: s.name, sub: s.host });
-  y = P.tiles([[s.stats.products, 'produits'], [money(s.stats.avgPrice, s.currency), 'prix moyen'], [s.stats.launches30, 'lancés / 30 j'], [money(s.stats.minPrice, s.currency), 'prix min'], [money(s.stats.maxPrice, s.currency), 'prix max'], [`${s.stats.discounted}%`, 'en promo']], y);
+  y = P.tiles([[s.stats.products, 'produits'], [money(s.stats.avgPrice, s.currency), 'prix moyen'], [s.stats.launches30 ?? '—', 'lancés / 30 j'], [money(s.stats.minPrice, s.currency), 'prix min'], [money(s.stats.maxPrice, s.currency), 'prix max'], [`${s.stats.discounted}%`, 'en promo']], y);
   if (s.topTypes?.length) { P.font(9, true, C.gold); P.text('CATÉGORIES PRINCIPALES', P.M, y + 10, { charSpace: 1 }); P.font(10, false, C.cream); P.text(P.lines(s.topTypes.map((t) => `${t.name} (${t.count})`).join(' · '), P.W - 2 * P.M), P.M, y + 28); y += 50; }
   if (s.stack) { P.font(9, true, C.gold); P.text('OUTILS MARKETING DÉTECTÉS', P.M, y + 10, { charSpace: 1 }); P.font(10, false, C.cream); P.text(P.lines(s.stack.length ? s.stack.join(' · ') : 'Aucun outil repéré sur la page d’accueil', P.W - 2 * P.M), P.M, y + 28); y += 50; }
   const hits = s.bestsellers.filter((p) => !p.locked).length ? s.bestsellers : s.launches;
-  if (hits.filter((p) => !p.locked).length) { P.font(9, true, C.gold); P.text(s.bestsellers.length ? 'SES 3 MEILLEURES VENTES' : 'SES 3 DERNIERS LANCEMENTS', P.M, y + 14, { charSpace: 1 }); await podium(P, hits.filter((p) => !p.locked), y + 26, s.currency); }
+  if (hits.filter((p) => !p.locked).length) { P.font(9, true, C.gold); P.text(s.bestsellers.length ? (s.bestSource === 'home' ? 'SES 3 PRODUITS MIS EN AVANT' : 'SES 3 MEILLEURES VENTES') : 'SES 3 DERNIERS LANCEMENTS', P.M, y + 14, { charSpace: 1 }); await podium(P, hits.filter((p) => !p.locked), y + 26, s.currency); }
   const best = s.bestsellers.filter((p) => !p.locked); const launch = s.launches.filter((p) => !p.locked);
-  if (best.length) { P.page(label); P.h2('Ses best-sellers', label); await productGrid(P, best, s.currency, label); }
+  const tips = (s.insights || []).filter((x) => !x.locked);
+  if (tips.length || s.charts) {
+    P.page(label);
+    if (tips.length) {
+      P.h2('Ce qu’il faut retenir', label, 70);
+      for (const t of tips) {
+        P.font(9, false); const lines = P.lines(t.text, P.W - 2 * P.M - 34); const h = 42 + lines.length * 11.5;
+        P.need(h + 8, label);
+        P.fill('#ffffff'); P.doc.setDrawColor(C.line); P.doc.roundedRect(P.M, P.y, P.W - 2 * P.M, h, 8, 8, 'FD');
+        P.fill(t.tone === 'good' ? C.good : C.amber); P.doc.circle(P.M + 16, P.y + 16, 5, 'F');
+        P.font(11, true, C.ink); P.text(t.title, P.M + 30, P.y + 19);
+        P.font(9, false, C.text); P.text(lines, P.M + 30, P.y + 34);
+        P.y += h + 8;
+      }
+    }
+    if (s.charts) {
+      const chart = (title, list) => {
+        const w = P.W - 2 * P.M; const h = 120; P.need(h + 60, label);
+        P.font(11, true, C.ink); P.text(title, P.M, P.y + 4); P.y += 30; // place pour les valeurs au-dessus des barres
+        const max = Math.max(1, ...list.map((x) => x.count || 0)); const bw = (w - 10 * (list.length - 1)) / list.length;
+        list.forEach((x, i) => {
+          const bh = Math.max(3, ((x.count || 0) / max) * (h - 30)); const bx = P.M + i * (bw + 10);
+          P.fill(C.soft); P.doc.roundedRect(bx, P.y, bw, h - 30, 5, 5, 'F');
+          P.fill(C.amber); P.doc.roundedRect(bx, P.y + (h - 30) - bh, bw, bh, 5, 5, 'F');
+          P.font(9, true, C.ink); P.text(String(x.count ?? '—'), bx + bw / 2, P.y + (h - 30) - bh - 4, { align: 'center' });
+          P.font(8, false, C.muted); P.text(x.label, bx + bw / 2, P.y + h - 16, { align: 'center' });
+        });
+        P.y += h + 14;
+      };
+      P.y += 10; P.h2('Sa stratégie en chiffres', label, 180);
+      chart(`Répartition de ses prix (${s.currency})`, s.charts.priceBuckets);
+      if (s.charts.launchesByMonth.some((m) => m.count)) chart('Ses lancements par mois', s.charts.launchesByMonth);
+      if (s.topTypes?.length) chart('Ses catégories principales', s.topTypes.slice(0, 6).map((t) => ({ label: P.lines(t.name, 70)[0], count: t.count })));
+    }
+  }
+  const bestTitle = s.bestSource === 'home' ? 'Mis en avant sur son accueil' : 'Ses best-sellers';
+  if (best.length) { P.page(label); P.h2(bestTitle, label); await productGrid(P, best, s.currency, label); }
   if (launch.length) { if (!best.length) P.page(label); P.h2('Ses derniers lancements', label); await productGrid(P, launch, s.currency, label); }
   return P.finish(label);
 }
@@ -357,7 +394,7 @@ async function comparePdf(rows, cols) {
     P.fill(n % 2 ? C.ink : C.ink2); doc.roundedRect(M, y, W - 2 * M, 38, 6, 6, 'F');
     P.font(10, true, C.cream); P.text(P.lines(r.name, 150)[0], M + 10, y + 16); P.font(7.5, false, '#a8bfae'); P.text(r.host, M + 10, y + 29);
     cols.forEach(([k], i) => {
-      const v = k === 'avgPrice' ? money(r[k], r.currency) : k === 'discounted' ? `${r[k]}%` : String(r[k]);
+      const v = k === 'avgPrice' ? money(r[k], r.currency) : k === 'discounted' ? `${r[k]}%` : String(r[k] ?? '—');
       const win = Number(r[k]) === best(k);
       P.font(11, true, win ? '#6fe3a5' : C.cream); P.text(v, M + 170 + i * colW + colW / 2, y + 23, { align: 'center' });
     });
@@ -484,8 +521,14 @@ async function spyXlsx(s) {
   const wb = await newBook();
   const cols = [{ key: 'k', header: 'Indicateur', width: 30, bold: true }, { key: 'v', header: 'Valeur', width: 40 }];
   const ws = sheet(wb, 'Synthèse', { title: `Espion · ${s.name}`, subtitle: `${s.host} · ${today()}`, columns: cols });
-  [['Produits', s.stats.products], ['Prix moyen', money(s.stats.avgPrice, s.currency)], ['Prix min', money(s.stats.minPrice, s.currency)], ['Prix max', money(s.stats.maxPrice, s.currency)], ['En promo', `${s.stats.discounted}%`], ['Lancés sur 30 jours', s.stats.launches30], ['Catégories principales', (s.topTypes || []).map((t) => `${t.name} (${t.count})`).join(' · ')], ['Outils marketing', s.stack ? s.stack.join(' · ') || 'Aucun repéré' : '—']].forEach((r, n) => addRow(ws, cols, r, n));
-  if (s.bestsellers.length) await productSheet(wb, 'Best-sellers', `Best-sellers · ${s.name}`, 'Dans l’ordre du classement des ventes', s.bestsellers, s.currency);
+  [['Produits', s.stats.products], ['Prix moyen', money(s.stats.avgPrice, s.currency)], ['Prix min', money(s.stats.minPrice, s.currency)], ['Prix max', money(s.stats.maxPrice, s.currency)], ['En promo', `${s.stats.discounted}%${s.stats.avgDiscount ? ` (remise moyenne -${s.stats.avgDiscount}%)` : ''}`], ['Prix en ,90–,99', `${s.stats.psychological ?? 0}%`], ['Lancés sur 30 jours', s.stats.launches30 ?? 'dates non fiables (catalogue réimporté)'], ['Thème', s.theme || '—'], ['Catégories principales', (s.topTypes || []).map((t) => `${t.name} (${t.count})`).join(' · ')], ['Outils marketing', s.stack ? s.stack.join(' · ') || 'Aucun repéré' : '—']].forEach((r, n) => addRow(ws, cols, r, n));
+  const tips = (s.insights || []).filter((x) => !x.locked);
+  if (tips.length) {
+    const tc = [{ key: 't', header: 'À retenir', width: 34, bold: true }, { key: 'x', header: 'Détail et conseil', width: 90, wrap: true }, { key: 'k', header: 'Type', width: 14, center: true }];
+    const ts = sheet(wb, 'Conseils', { title: `Ce qu’il faut retenir · ${s.name}`, subtitle: 'Sa stratégie et tes opportunités face à lui', columns: tc });
+    tips.forEach((t, n) => { const row = addRow(ts, tc, [t.title, t.text, t.tone === 'good' ? 'Opportunité' : 'Stratégie'], n, 34); if (t.tone === 'good') { row.getCell(3).font = { bold: true, color: { argb: argb(C.good) } }; } });
+  }
+  if (s.bestsellers.length) await productSheet(wb, s.bestSource === 'home' ? 'Mis en avant' : 'Best-sellers', `Best-sellers · ${s.name}`, 'Dans l’ordre du classement des ventes', s.bestsellers, s.currency);
   await productSheet(wb, 'Nouveautés', `Derniers lancements · ${s.name}`, 'Du plus récent au plus ancien', s.launches, s.currency);
   supplierSheet(wb);
   return new Blob([await wb.xlsx.writeBuffer()], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });

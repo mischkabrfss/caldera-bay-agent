@@ -249,24 +249,78 @@ export function spyStore(store, { now = Date.now() } = {}) {
   const analyzed = store.products.map((p) => ({ ...analyzeProduct(p, { now, rank: rankOf.has(p.handle) ? rankOf.get(p.handle) : null }), url: p.url !== undefined ? p.url : `https://${store.host}/products/${p.handle}` }));
   const prices = analyzed.map((p) => p.price).filter((p) => p > 0);
   const types = {};
-  for (const p of store.products) if (p.type) types[p.type] = (types[p.type] || 0) + 1;
-  const stack = store.html ? Object.entries(detect(store.html)).filter(([, v]) => v).map(([k]) => STACK_LABELS[k] || k) : null;
+  for (const p of store.products) if (p.type && !/^(unpublished|hidden|default|archive[ds]?|other|misc)$/i.test(p.type.trim())) types[p.type] = (types[p.type] || 0) + 1;
+  const d = store.html ? detect(store.html) : null;
+  const stack = d ? Object.entries(d).filter(([, v]) => v).map(([k]) => STACK_LABELS[k] || k) : null;
+  const currency = store.meta?.currency || 'EUR';
+  const discounted = analyzed.filter((p) => p.discount >= 10);
+  const stats = {
+    products: analyzed.length,
+    minPrice: prices.length ? Math.min(...prices) : 0,
+    maxPrice: prices.length ? Math.max(...prices) : 0,
+    avgPrice: round2(avg(prices)),
+    discounted: pct(discounted.length, analyzed.length),
+    avgDiscount: Math.round(avg(discounted.map((p) => p.discount))),
+    launches30: analyzed.filter((p) => p.age !== null && p.age <= 30).length,
+    psychological: pct(prices.filter((x) => /\.(99|95|9|90|97)$/.test(x.toFixed(2).replace(/0$/, '')) || Math.round(x * 100) % 100 >= 90).length, prices.length),
+  };
+  const topTypes = Object.entries(types).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([name, count]) => ({ name, count }));
+  const shown = analyzed.filter((p) => p.title.trim() && p.price > 0 && !NOT_PRODUCT.test(`${p.title} ${p.type}`));
+  const bestsellers = shown.filter((p) => p.rank !== null).sort((a, b) => a.rank - b.rank).slice(0, 12);
+  const launches = shown.filter((p) => p.age !== null).sort((a, b) => a.age - b.age).slice(0, 12);
+
+  // Graphiques : répartition des prix et lancements des 6 derniers mois.
+  const edges = [0, 15, 30, 50, 80, 120, Infinity];
+  const priceBuckets = edges.slice(0, -1).map((lo, i) => ({ label: edges[i + 1] === Infinity ? `${lo}+` : `${lo}–${edges[i + 1]}`, count: prices.filter((x) => x >= lo && x < edges[i + 1]).length }));
+  const months = Array.from({ length: 6 }, (_, i) => { const t = new Date(now); t.setUTCDate(1); t.setUTCMonth(t.getUTCMonth() - (5 - i)); return t; });
+  const launchesByMonth = months.map((m) => ({
+    label: m.toLocaleDateString('fr-FR', { month: 'short', timeZone: 'UTC' }).replace('.', ''),
+    count: store.products.filter((p) => { const c = new Date(p.createdAt || p.publishedAt); return c.getUTCFullYear() === m.getUTCFullYear() && c.getUTCMonth() === m.getUTCMonth(); }).length,
+  }));
+
+  // Catalogue réimporté d'un bloc (plus de 60 % « créés » ce mois-ci) : les dates de lancement ne veulent rien dire.
+  const reimported = analyzed.length >= 40 && stats.launches30 / analyzed.length > 0.6;
+  if (reimported) { stats.launches30 = null; launchesByMonth.forEach((m) => { m.count = null; }); }
+
+  // Ce qu'il faut retenir : lecture de sa stratégie + opportunités pour toi.
+  const money = (n) => { try { return new Intl.NumberFormat('fr-FR', { style: 'currency', currency, maximumFractionDigits: 0 }).format(n).replace(/\u202f/g, ' '); } catch { return `${Math.round(n)} €`; } };
+  const insights = [];
+  const star = bestsellers[0];
+  if (star) insights.push({ icon: 'award', tone: 'info', title: store.bestSource === 'home' ? 'Le produit qu’il met en avant' : 'Son produit phare', text: `« ${star.title} » à ${money(star.price)}. Étudie ses photos, son titre et son angle : c'est ce qui convainc ses clients.` });
+  const core = priceBuckets.reduce((a, b) => (b.count > a.count ? b : a), priceBuckets[0]);
+  const [lo, hi] = core.label.split(/–|\+/).map(Number);
+  if (prices.length) insights.push({ icon: 'euro', tone: 'info', title: 'Son cœur de gamme', text: `${pct(core.count, prices.length)} % de ses produits coûtent ${hi ? `entre ${money(lo)} et ${money(hi)}` : `plus de ${money(lo)}`}. Prix moyen ${money(stats.avgPrice)}.` });
+  const pace = stats.launches30;
+  insights.push(reimported ? { icon: 'rocket', tone: 'info', title: 'Catalogue réimporté récemment', text: 'Presque tous ses produits ont été remis en ligne ce mois-ci : ses dates de lancement ne sont pas fiables. Fie-toi plutôt à ses best-sellers.' }
+    : pace >= 10 ? { icon: 'rocket', tone: 'info', title: 'Il teste en continu', text: `${pace} nouveautés en 30 jours. Suis ses lancements chaque semaine : ceux qui restent en ligne sont ses gagnants.` }
+    : pace > 0 ? { icon: 'rocket', tone: 'info', title: 'Rythme de lancement régulier', text: `${pace} nouveauté${pace > 1 ? 's' : ''} en 30 jours : il complète son catalogue sans prendre de risque.` }
+      : { icon: 'rocket', tone: 'good', title: 'Catalogue figé', text: 'Aucune nouveauté depuis 30 jours : lance des nouveautés régulières pour capter ses clients qui cherchent du neuf.' });
+  if (analyzed.length) insights.push(stats.discounted >= 30 ? { icon: 'tag', tone: 'info', title: 'Stratégie promo agressive', text: `${stats.discounted} % du catalogue en promo (remise moyenne -${stats.avgDiscount} %). Ne le combats pas sur le prix : joue la qualité, les avis et la livraison.` }
+    : stats.discounted <= 5 ? { icon: 'tag', tone: 'good', title: 'Presque aucune promo', text: 'Il vend au prix fort. Une offre de lancement ou un lot -15 % peut suffire à te différencier.' }
+      : { icon: 'tag', tone: 'info', title: 'Promos ciblées', text: `${stats.discounted} % du catalogue en promo, remise moyenne -${stats.avgDiscount} %.` });
+  if (prices.length >= 5) insights.push(stats.psychological >= 50 ? { icon: 'gauge', tone: 'info', title: 'Prix psychologiques', text: `${stats.psychological} % de ses prix finissent en ,90–,99 : technique classique pour paraître moins cher.` } : { icon: 'gauge', tone: 'info', title: 'Prix ronds', text: 'Il affiche des prix ronds : image premium, pas de course au prix bas.' });
+  if (topTypes[0] && analyzed.length) insights.push({ icon: 'box', tone: 'info', title: 'Sa catégorie principale', text: `${topTypes[0].name} : ${pct(topTypes[0].count, store.products.length)} % de son catalogue.` });
+  if (d) {
+    if (!d.tiktokPixel) insights.push({ icon: 'zap', tone: 'good', title: 'TikTok : canal libre', text: 'Aucun pixel TikTok détecté : il ne fait probablement pas de pub TikTok. Fonce sur ce canal.' });
+    if (!d.metaPixel) insights.push({ icon: 'zap', tone: 'good', title: 'Peu ou pas de pub Meta', text: 'Aucun pixel Facebook/Instagram détecté : tu peux prendre de l’avance sur ces pubs.' });
+    if (!d.reviews) insights.push({ icon: 'star', tone: 'good', title: 'Pas d’avis clients affichés', text: 'Affiche des avis dès ton lancement : ce sera un vrai avantage face à lui.' });
+    else insights.push({ icon: 'star', tone: 'info', title: 'Il affiche des avis clients', text: 'Prévois une app d’avis (Judge.me est gratuite) dès ton lancement pour rivaliser.' });
+    if (!d.klaviyo && !d.newsletter) insights.push({ icon: 'mail', tone: 'good', title: 'Pas de capture d’e-mails', text: 'Il ne récupère pas les e-mails de ses visiteurs : un pop-up -10 % te donnera un avantage durable.' });
+  }
+
   return {
     host: store.host,
     name: store.meta?.name || store.host,
-    currency: store.meta?.currency || 'EUR',
-    stats: {
-      products: analyzed.length,
-      minPrice: prices.length ? Math.min(...prices) : 0,
-      maxPrice: prices.length ? Math.max(...prices) : 0,
-      avgPrice: round2(avg(prices)),
-      discounted: pct(analyzed.filter((p) => p.discount >= 10).length, analyzed.length),
-      launches30: analyzed.filter((p) => p.age !== null && p.age <= 30).length,
-    },
+    currency,
+    theme: store.html ? themeName(store.html) : '',
+    bestSource: store.bestSource || 'sales', // sales | collection | home (mis en avant sur l'accueil)
+    stats,
     stack,
-    topTypes: Object.entries(types).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([name, count]) => ({ name, count })),
-    bestsellers: analyzed.filter((p) => p.rank !== null).sort((a, b) => a.rank - b.rank).slice(0, 12),
-    launches: analyzed.filter((p) => p.age !== null).sort((a, b) => a.age - b.age).slice(0, 12),
+    topTypes,
+    charts: { priceBuckets, launchesByMonth },
+    insights,
+    bestsellers,
+    launches,
   };
 }
 
@@ -293,28 +347,46 @@ export function winningScore(product, { rank, now = Date.now() }) {
 }
 
 // Pas des produits à revendre : cartes cadeaux, assurances colis, abonnements, échantillons…
-const NOT_PRODUCT = /gift ?card|carte[- ]cadeau|e-?gift|insurance|assurance|shipping protection|protection plan|warranty|garantie|subscription|abonnement|of the month|sample|échantillon|donation|\broute\b/i;
+const NOT_PRODUCT = /unpublished|hidden|do not use|test product|gift ?card|carte[- ]cadeau|e-?gift|insurance|assurance|shipping protection|protection plan|warranty|garantie|subscription|abonnement|of the month|sample|échantillon|donation|\broute\b/i;
 
-export function radarFrom(stores, { now = Date.now(), limit = 24, perStore = 6 } = {}) {
+// kind(p) → type de produit générique (« Harnais ») ou null : sans type reconnu, le produit n'entre pas au radar.
+export function radarFrom(stores, { now = Date.now(), limit = 24, perStore = 4, perKind = 4, kind = null } = {}) {
   const items = [];
   for (const store of stores) {
     const rankOf = new Map(store.bestsellers.map((h, i) => [h, i]));
     for (const p of store.products) {
-      if (NOT_PRODUCT.test(`${p.title} ${p.type}`) || !p.images.length || priceOf(p) < 3) continue;
+      const price = priceOf(p);
+      if (NOT_PRODUCT.test(`${p.title} ${p.type}`) || !p.images.length || price < 3 || price > 250) continue;
+      const k = kind ? kind(p) : null;
+      if (kind && !k) continue;
       const rank = rankOf.has(p.handle) ? rankOf.get(p.handle) : null;
       const { score, reasons } = winningScore(p, { rank, now });
-      const price = priceOf(p);
       items.push({
-        title: p.title, image: p.images[0]?.src || '', image2: p.images[1]?.src || '', type: p.type || '', price: round2(price), currency: store.meta?.currency || 'EUR',
+        title: p.title, kind: k, image: p.images[0]?.src || '', image2: p.images[1]?.src || '', type: p.type || '', price: round2(price), currency: store.meta?.currency || 'EUR',
         discount: discountOf(p), store: store.meta?.name || store.host, host: store.host,
         url: `https://${store.host}/products/${p.handle}`, score, reasons,
         resale: { low: round2(price * 0.85), high: round2(price * 1.15) },
       });
     }
   }
-  // Plafond par boutique : le radar reste varié même si une boutique domine.
-  const count = {};
-  return items.sort((a, b) => b.score - a.score).filter((i) => (count[i.host] = (count[i.host] || 0) + 1) <= perStore).slice(0, limit);
+  // Demande : un même type de produit vendu par plusieurs boutiques de la niche = marché prouvé.
+  if (kind) {
+    const sellers = {};
+    for (const i of items) (sellers[i.kind] ??= new Set()).add(i.host);
+    for (const i of items) {
+      const n = sellers[i.kind].size;
+      i.sellers = n;
+      if (n >= 2) { i.score = Math.min(100, i.score + Math.min(12, 4 * (n - 1))); i.reasons = [`Vendu par ${n} boutiques`, ...i.reasons]; }
+    }
+  }
+  // Variété : un seul exemplaire par modèle (couleurs et tailles regroupées), plafond par boutique et par type.
+  const model = (i) => `${i.host}|${i.title.toLowerCase().split(/\s[|–—-]\s|\sin\s|\s\(|,|\d+\s*(?:"|x\d)/)[0].trim()}`;
+  const seen = new Set(); const byHost = {}; const byKind = {};
+  const unique = items.sort((a, b) => b.score - a.score).filter((i) => !seen.has(model(i)) && seen.add(model(i)));
+  const picked = unique.filter((i) => (byHost[i.host] = (byHost[i.host] || 0) + 1) <= perStore && (!i.kind || (byKind[i.kind] = (byKind[i.kind] || 0) + 1) <= perKind)).slice(0, limit);
+  // Niche plus étroite : on complète avec les meilleurs produits restants (toujours cohérents).
+  if (picked.length < limit) { const inList = new Set(picked); picked.push(...unique.filter((i) => !inList.has(i)).slice(0, limit - picked.length)); picked.sort((a, b) => b.score - a.score); }
+  return picked;
 }
 
 // ---------- Comparateur (Scale) ----------

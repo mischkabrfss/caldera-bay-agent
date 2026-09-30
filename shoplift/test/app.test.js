@@ -63,13 +63,25 @@ test('espion, radar et comparateur', () => {
   assert.equal(compareStores([store, store]).length, 2);
 });
 
-test('radar : ni cartes cadeaux ni assurances, 6 produits max par boutique', () => {
+test('radar : ni cartes cadeaux ni assurances, 4 par boutique puis complété si la niche est étroite', () => {
   const store = { ...fakeStore(), products: [] };
   const p = (title, i) => ({ ...products[0], id: i, handle: `h${i}`, title });
   const junk = { ...store, products: [p('Gift Card', 1), p('Shipping Protection', 2), p('E-Gift Card', 3)] };
   assert.equal(radarFrom([junk]).length, 0);
   const big = { ...store, products: Array.from({ length: 10 }, (_, i) => p(`Lampe ${i}`, i)) };
-  assert.equal(radarFrom([big]).length, 6);
+  assert.equal(radarFrom([big], { limit: 4 }).length, 4);
+  assert.equal(radarFrom([big]).length, 10); // pas d'autre boutique : la liste est complétée
+});
+
+test('radar : seulement des produits génériques demandés, variantes regroupées, demande multi-boutiques', async () => {
+  const { kindOf } = await import('../public/seeds.js');
+  const p = (title, i, host) => ({ ...products[0], id: i, handle: `h${i}`, title });
+  const a = { ...fakeStore(), host: 'a.com', products: [p('No Pull Dog Harness - Red', 1), p('No Pull Dog Harness - Blue', 2), p('Forks Up, Sunnies On', 3)] };
+  const b = { ...fakeStore(), host: 'b.com', products: [p('Easy Walk Harness', 4)] };
+  const items = radarFrom([a, b], { kind: (x) => kindOf('animaux', x) });
+  assert.equal(items.length, 2); // variante bleue regroupée, produit sans type écarté
+  assert.ok(items.every((i) => i.kind === 'Harnais' && i.sellers === 2 && i.reasons[0] === 'Vendu par 2 boutiques'));
+  assert.equal(kindOf('animaux', { title: 'Breakaway Cat Collar', type: 'Harness' }), 'Collier'); // le titre prime
 });
 
 test('jetons signés : infalsifiables et expirables', async () => {
@@ -231,12 +243,12 @@ test('Shopify : 2e tentative automatique si la boutique renvoie une erreur', asy
   assert.equal(calls, 2);
 });
 
-test('Radar : tâche quotidienne sans erreur', async () => {
+test('Radar : tâche planifiée (une niche par heure) sans erreur', async () => {
   installFetch();
   const jobs = [];
-  await worker.scheduled({}, env(), { waitUntil: (p) => jobs.push(p) });
+  await worker.scheduled({ scheduledTime: Date.UTC(2026, 8, 30, 5) }, env(), { waitUntil: (p) => jobs.push(p) });
   const results = await Promise.all(jobs);
-  assert.ok(results.length === 1 && results[0].every((r) => r.status === 'fulfilled'));
+  assert.ok(results.length === 1 && Array.isArray(results[0].items) && 'at' in results[0]);
 });
 
 test('Connexion Shopify : réponse Admin GraphQL → audit réel sans page d’accueil', async () => {
@@ -270,8 +282,20 @@ test('API : l’espion (Pro) détecte les outils marketing de la page d’accuei
   const res = await call('/api/spy', { method: 'POST', body: { store: 'demo' }, cookie: `pr_session=${token}` });
   const { report } = await res.json();
   assert.ok(report.stack.includes('Pixel Meta') && report.stack.includes('Avis clients'));
-  assert.equal(report.locked, undefined);
-  assert.ok(report.launches.length > 0);
+  assert.equal(report.level, 'full');
+  assert.equal(report.locked, false);
+  assert.ok(report.launches.length > 0 && report.insights.length > 0 && report.charts.priceBuckets.length === 6);
+});
+
+test('espion : ce que voit chaque offre', async () => {
+  const { lockSpy } = await import('../public/plans.js');
+  const report = spyStore({ ...fakeStore(), products });
+  const test_ = lockSpy(report, 'test'); const basic = lockSpy(report, 'basic'); const pro = lockSpy(report, 'pro');
+  assert.equal(test_.level, 'teaser'); assert.equal(test_.charts, null);
+  assert.ok(test_.insights.slice(2).every((i) => i.locked) && test_.launches.slice(1).every((p) => p.locked));
+  assert.equal(basic.level, 'insights'); assert.ok(basic.charts && basic.insights.every((i) => !i.locked));
+  assert.ok(basic.launches.slice(0, 3).every((p) => !p.locked));
+  assert.equal(pro.level, 'full'); assert.ok(pro.launches.every((p) => !p.locked));
 });
 
 test('boutique connectée : produit à 0 € et produit non publié signalés', () => {

@@ -3,7 +3,7 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const safeImg = (src) => {
-  if (/^data:image\/svg\+xml,/.test(src || '') || /^radar-img\/[\w.-]+$/.test(src || '')) return esc(src); // miniatures locales de l'aperçu
+  if (/^data:image\/svg\+xml,/.test(src || '') || /^(radar|spy)-img\/[\w.-]+$/.test(src || '')) return esc(src); // miniatures locales de l'aperçu
   if (!/^https?:\/\//.test(src || '')) return '';
   try { const u = new URL(src); if (u.hostname === 'cdn.shopify.com') u.searchParams.set('width', '400'); return esc(u.href); } catch { return ''; }
 };
@@ -21,10 +21,10 @@ const PLAN_INFO = {
 const RANK = { test: 0, basic: 1, pro: 2, scale: 3 };
 // Ce que chaque offre inclut, dit simplement.
 const INCLUDED = {
-  test: ['1 analyse gratuite de ta boutique', 'Ton score et tes 3 corrections les plus importantes'],
-  basic: ['Analyses illimitées de ta boutique', 'Le plan d’action complet, du plus important au moins important', 'La note de chacun de tes produits, avec quoi corriger'],
-  pro: ['Tout ce qu’il y a dans Basique', 'Le radar des produits qui se vendent le mieux, mis à jour toutes les 6 h', 'Pour chaque produit : 7 fournisseurs connectables à Shopify', 'L’espion : les best-sellers et nouveautés de tes concurrents'],
-  scale: ['Tout ce qu’il y a dans Pro', 'Le comparateur de 4 boutiques côte à côte', 'Tes analyses en rapport PDF pro et en fichier Excel avec photos'],
+  test: ['1 analyse gratuite de ta boutique', 'Ton score et tes 3 corrections les plus importantes', 'Un aperçu de l’espion sur n’importe quel concurrent'],
+  basic: ['Analyses illimitées de ta boutique', 'Le plan d’action complet, du plus important au moins important', 'La note de chacun de tes produits, avec quoi corriger', 'L’espion : stratégie, conseils et graphiques de tes concurrents'],
+  pro: ['Tout ce qu’il y a dans Basique', 'Le radar des produits qui se vendent le mieux, mis à jour toutes les 6 h', 'Pour chaque produit : 7 fournisseurs connectables à Shopify', 'L’espion complet : 12 best-sellers et 12 nouveautés par concurrent', 'Le suivi de 5 concurrents : leurs nouveautés signalées à chaque visite'],
+  scale: ['Tout ce qu’il y a dans Pro', 'Le suivi de 20 concurrents', 'Le comparateur de 4 boutiques côte à côte', 'Tes analyses en rapport PDF pro et en fichier Excel avec photos'],
 };
 const FIRST_STEPS = {
   basic: [['audit', 'Analyse ta boutique', 'Tu obtiens ton score et la liste de ce qu’il faut corriger.'], ['produits', 'Corrige tes produits', 'Commence par les produits notés en rouge.']],
@@ -264,8 +264,7 @@ async function offerConnect() {
   $('#auditForm').classList.add('hidden'); // sur l'aperçu, seule la boutique connectée est lisible : pas de champ trompeur
   $('#auditForm').insertAdjacentHTML('beforebegin', '<button class="btn btn-main magnet connect-btn" id="connectBtn" type="button">' + icon('refresh') + ' Relancer l’analyse <span class="arrow">→</span></button><p class="muted connect-note">Ta boutique Shopify connectée, analysée en lecture seule.</p>');
   $('#connectBtn').addEventListener('click', runConnected);
-  $('#spyForm').classList.add('hidden');
-  $('#spyForm').insertAdjacentHTML('beforebegin', '<button class="btn btn-main connect-btn" id="spyConnected" type="button">' + icon('eye') + ' Lancer l’espion <span class="arrow">→</span></button><p class="muted connect-note">Sur le site en ligne, tu colles l’adresse de n’importe quel concurrent.</p>');
+  $('#spyShortcuts').insertAdjacentHTML('afterend', '<button class="pc-btn spy-mine" id="spyConnected" type="button">' + icon('plug') + ' Analyser ma boutique connectée comme un concurrent</button>');
   $('#spyConnected').addEventListener('click', async () => {
     try {
       const { readConnectedStore } = await import('./connect.js');
@@ -327,8 +326,8 @@ const cards = []; // produits affichés, pour la fenêtre fournisseurs
 
 function pCard(p, i, cur) {
   const locked = p.locked;
-  const media = `${p.image ? photo(p.image) : ''}${!locked && p.image2 ? photo(p.image2, 'ph ph2') : ''}<span class="score-badge ${p.score >= 80 ? 'hot' : ''}">${p.score >= 80 ? '' + icon('trend') + ' ' : ''}${p.score}</span>${!locked && p.discount ? `<span class="deal">-${p.discount}%</span>` : ''}`;
-  const body = `<h3>${esc(locked ? 'Produit gagnant caché' : p.title)}</h3>
+  const media = `${p.image ? photo(p.image) : ''}${!locked && p.image2 ? photo(p.image2, 'ph ph2') : ''}<span class="score-badge ${p.score >= 80 ? 'hot' : ''}">${p.score >= 80 ? '' + icon('trend') + ' ' : ''}${p.score}</span>${!locked && p.discount ? `<span class="deal">-${p.discount}%</span>` : ''}${p.isNew ? '<span class="new-badge">NOUVEAU</span>' : ''}`;
+  const body = `${!locked && p.kind ? `<span class="kind">${esc(p.kind)}${p.sellers > 1 ? ` · ${p.sellers} boutiques` : ''}</span>` : ''}<h3>${esc(locked ? 'Produit gagnant caché' : p.title)}</h3>
     <div class="price">${locked ? '••,•• €' : money(p.price, p.currency || cur)}</div>
     ${p.reasons?.length ? `<div class="reasons">${p.reasons.slice(0, 3).map((r) => `<span>${esc(r)}</span>`).join('')}</div>` : ''}
     ${!locked && p.resale ? `<span class="resale">Revente conseillée : ${money(p.resale.low, p.currency)} – ${money(p.resale.high, p.currency)}</span>` : ''}
@@ -401,23 +400,92 @@ $('#spyForm').addEventListener('submit', (e) => {
   runSpy(new FormData(e.target).get('store'));
 });
 
+// ---------- Suivi des concurrents (sur cet appareil) ----------
+const WATCH_MAX = { test: 0, basic: 0, pro: 5, scale: 20 };
+const watchList = () => store.get('sl_watch') || {};
+function renderWatch() {
+  const w = watchList(); const hosts = Object.keys(w);
+  const ex = (state.config?.spyExamples || []).filter((h) => !w[h]);
+  $('#spyShortcuts').innerHTML = `${hosts.length ? `<div class="chips"><span>${icon('bell')} Suivies</span>${hosts.map((h) => `<button type="button" class="chip-btn on" data-spy-go="${esc(h)}">${esc(w[h].name || h)}</button>`).join('')}</div>` : ''}
+    ${ex.length ? `<div class="chips"><span>${icon('eye')} Essaie avec</span>${ex.map((h) => `<button type="button" class="chip-btn" data-spy-go="${esc(h)}">${esc(h.replace(/^www\./, ''))}</button>`).join('')}</div>` : ''}`;
+}
+document.addEventListener('click', (e) => {
+  const go = e.target.closest('[data-spy-go]');
+  if (go) { $('#spyForm input').value = go.dataset.spyGo; runSpy(go.dataset.spyGo); }
+  const f = e.target.closest('[data-watch]');
+  if (f && state.spy) {
+    const w = watchList(); const h = state.spy.host;
+    if (w[h]) { delete w[h]; store.set('sl_watch', w); toast('Boutique retirée de ton suivi.'); }
+    else {
+      const max = WATCH_MAX[state.me.plan] || 0;
+      if (!max) return openUpgrade('Le suivi des concurrents est inclus dans l’offre Pro : tu vois leurs nouveautés à chaque visite.');
+      if (Object.keys(w).length >= max) return openUpgrade(`Tu suis déjà ${max} boutiques. L’offre Scale en suit jusqu’à 20.`);
+      w[h] = { name: state.spy.name, at: Date.now(), seen: [...state.spy.bestsellers, ...state.spy.launches].map((p) => p.handle).filter(Boolean) };
+      store.set('sl_watch', w); toast('Boutique suivie : ses nouveautés seront signalées à ta prochaine visite.', 'ok');
+    }
+    f.outerHTML = watchButton(h); renderWatch();
+  }
+});
+const watchButton = (h) => `<button type="button" class="pc-btn ${watchList()[h] ? '' : 'main'}" data-watch>${icon('bell')} ${watchList()[h] ? 'Suivie' : 'Suivre cette boutique'}</button>`;
+
+// Barres simples (graphiques de l'espion).
+function bars(list, { unit = '', horizontal = false } = {}) {
+  const max = Math.max(1, ...list.map((x) => x.count || 0));
+  if (horizontal) return `<div class="hbars">${list.map((x, i) => `<div><span>${esc(x.label)}</span><i style="--w:${Math.max(3, (x.count / max) * 100)}%;--d:${i * 0.07}s"></i><b>${x.count}</b></div>`).join('')}</div>`;
+  return `<div class="vbars">${list.map((x, i) => `<div><b>${x.count}</b><i style="--h:${Math.max(4, (x.count / max) * 100)}%;--d:${i * 0.07}s"></i><span>${esc(x.label)}${unit}</span></div>`).join('')}</div>`;
+}
+
 async function runSpy(storeInput, connected = null) {
   const out = $('#spyOut');
-  const done = loader(out, ['Connexion à la boutique', 'Lecture des best-sellers', 'Détection des nouveautés', 'Analyse des prix']);
+  const done = loader(out, ['Connexion à la boutique', 'Lecture du catalogue et des best-sellers', 'Détection des nouveautés et des outils', 'Analyse de sa stratégie']);
   const [r] = await Promise.all([api('/api/spy', { store: storeInput, connected }), wait(1800)]);
   done();
   if (!r.ok) { out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error)}</div>`; return; }
   const s = r.data.report;
   state.spy = s;
+  // Nouveautés depuis la dernière visite (boutique suivie).
+  const w = watchList(); const watched = w[s.host];
+  let fresh = 0;
+  if (watched) {
+    const seen = new Set(watched.seen || []);
+    for (const p of [...s.bestsellers, ...s.launches]) if (p.handle && !p.locked && !seen.has(p.handle)) { p.isNew = true; fresh++; }
+    const since = new Date(watched.at).toLocaleDateString('fr-FR');
+    w[s.host] = { ...watched, name: s.name, at: Date.now(), seen: [...new Set([...(watched.seen || []), ...[...s.bestsellers, ...s.launches].map((p) => p.handle).filter(Boolean)])] };
+    store.set('sl_watch', w);
+    s.freshNote = fresh ? `${fresh} nouveau${fresh > 1 ? 'x' : ''} produit${fresh > 1 ? 's' : ''} depuis ta dernière visite (${since})` : `Rien de nouveau depuis ta dernière visite (${since})`;
+  }
+  const cur = s.currency; const st = s.stats;
+  const bestTitle = { sales: 'Ses best-sellers', collection: 'Ses best-sellers', home: 'Mis en avant sur son accueil' }[s.bestSource || 'sales'];
+  const insight = (x, i) => (x.locked
+    ? `<div class="card insight locked" style="--d:${i * 0.05}s"><span class="ins-ic">${icon(x.icon)}</span><div><b>${esc(x.title)}</b><p>Conseil inclus dès l’offre Basique.</p></div></div>`
+    : `<div class="card insight ${x.tone}" style="--d:${i * 0.05}s"><span class="ins-ic">${icon(x.icon)}</span><div><b>${esc(x.title)}</b><p>${esc(x.text)}</p></div></div>`);
+  const upsell = s.level === 'teaser'
+    ? `<div class="card unlock-banner"><h3>${icon('eye')} Vois toute sa stratégie</h3><p>Basique : tous les conseils, les graphiques et son top 3. Pro : ses 12 best-sellers, ses nouveautés, les fournisseurs et le suivi de 5 concurrents.</p><button class="btn btn-main" data-open-upgrade>Voir les offres</button></div>`
+    : s.level === 'insights' ? `<div class="card unlock-banner"><h3>${icon('eye')} Tous ses produits gagnants</h3><p>Pro : ses 12 best-sellers et 12 nouveautés avec les fournisseurs, et le suivi de ses nouveautés à chaque visite.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>` : '';
   out.innerHTML = `
-    <div class="h3">${esc(s.name)} <span class="muted" style="font-size:13px">${esc(s.host)}</span></div>
-    <div class="spy-stats"><div class="card"><b>${s.stats.products}</b><span>produits</span></div><div class="card"><b>${money(s.stats.avgPrice, s.currency)}</b><span>prix moyen</span></div><div class="card"><b>${s.stats.launches30}</b><span>lancés /30 j</span></div>
-    <div class="card"><b>${money(s.stats.minPrice, s.currency)}</b><span>prix min</span></div><div class="card"><b>${money(s.stats.maxPrice, s.currency)}</b><span>prix max</span></div><div class="card"><b>${s.stats.discounted}%</b><span>en promo</span></div></div>
-    ${s.topTypes.length ? `<div class="strengths">${s.topTypes.map((t) => `<span>${esc(t.name)} · ${t.count}</span>`).join('')}</div>` : ''}
+    <div class="card spy-head">
+      <div><span class="eyebrow">Concurrent analysé</span><h2>${esc(s.name)}</h2><p class="muted">${esc(s.host)}${s.theme ? ` · thème ${esc(s.theme)}` : ''}</p></div>
+      <div class="spy-actions">${watchButton(s.host)}</div>
+      ${s.freshNote ? `<p class="fresh ${fresh ? 'on' : ''}">${icon('bell')} ${esc(s.freshNote)}</p>` : ''}
+    </div>
+    <div class="spy-stats">
+      <div class="card"><b>${st.products}</b><span>produits</span></div>
+      <div class="card"><b>${money(st.avgPrice, cur)}</b><span>prix moyen</span></div>
+      <div class="card"><b>${st.launches30 ?? '—'}</b><span>lancés /30 j</span></div>
+      <div class="card"><b>${money(st.minPrice, cur)} – ${money(st.maxPrice, cur)}</b><span>gamme de prix</span></div>
+      <div class="card"><b>${st.discounted}%</b><span>en promo${st.avgDiscount ? ` (-${st.avgDiscount}%)` : ''}</span></div>
+      <div class="card"><b>${st.psychological ?? 0}%</b><span>prix en ,99</span></div>
+    </div>
+    ${s.insights?.length ? `<div class="h3">${icon('zap')} Ce qu’il faut retenir</div><div class="insights">${s.insights.map(insight).join('')}</div>` : ''}
+    ${s.charts ? `<div class="spy-charts">
+      <div class="card chart"><h4>Répartition de ses prix <small>(${esc(cur)})</small></h4>${bars(s.charts.priceBuckets)}</div>
+      ${s.charts.launchesByMonth.some((m) => m.count) ? `<div class="card chart"><h4>Ses lancements par mois</h4>${bars(s.charts.launchesByMonth)}</div>` : ''}
+      ${s.topTypes?.length ? `<div class="card chart"><h4>Ses catégories</h4>${bars(s.topTypes.map((t) => ({ label: t.name, count: t.count })), { horizontal: true })}</div>` : ''}
+    </div>` : `<div class="card chart-lock"><span>${icon('lock')}</span><div><b>Graphiques de sa stratégie</b><p>Prix, lancements par mois et catégories : inclus dès l’offre Basique.</p></div><button class="btn btn-ghost" data-open-upgrade>Débloquer</button></div>`}
     ${s.stack ? `<div class="h3">${icon('zap')} Outils marketing détectés</div>${s.stack.length ? `<div class="stack left">${s.stack.map((t) => `<span>${icon('check')} ${esc(t)}</span>`).join('')}</div>` : '<p class="muted">Aucun outil marketing repéré sur sa page d’accueil.</p>'}` : ''}
-    <div class="h3">${icon('award')} Best-sellers</div>${s.bestsellers.length ? `<div class="pgrid">${s.bestsellers.map((p, i) => pCard(p, i, s.currency)).join('')}</div>` : '<p class="muted">Classement des ventes non disponible sur cette boutique.</p>'}
-    <div class="h3">${icon('rocket')} Derniers lancements</div><div class="pgrid">${s.launches.map((p, i) => pCard(p, i, s.currency)).join('')}</div>
-    ${s.locked ? '<div class="card unlock-banner"><h3>' + icon('eye') + ' Vois tout chez tes concurrents</h3><p>Best-sellers, nouveautés et liens directs avec l’offre Pro.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}
+    <div class="h3">${icon('award')} ${bestTitle}</div>${s.bestsellers.length ? `<div class="pgrid">${s.bestsellers.map((p, i) => pCard(p, i, cur)).join('')}</div>` : '<p class="muted">Classement des ventes non disponible sur cette boutique.</p>'}
+    <div class="h3">${icon('rocket')} ${st.launches30 === null ? 'Ses derniers ajouts' : 'Ses derniers lancements'}</div><div class="pgrid">${s.launches.map((p, i) => pCard(p, i, cur)).join('')}</div>
+    ${upsell}
     ${exportButton('spy')}`;
   bindExport('spy', 'spy', () => ({ spy: s }));
 }
@@ -435,7 +503,7 @@ $('#compareForm').addEventListener('submit', async (e) => {
   const best = (k, max = true) => rows.reduce((b, x) => ((max ? x[k] > b : x[k] < b) ? x[k] : b), max ? -Infinity : Infinity);
   const cols = [['products', 'Produits', true], ['avgPrice', 'Prix moyen', true], ['launches30', 'Lancés /30 j', true], ['discounted', '% en promo', true], ['avgScore', 'Score fiches', true]];
   out.innerHTML = `<div class="card table-wrap"><table><thead><tr><th>Boutique</th>${cols.map((c) => `<th>${c[1]}</th>`).join('')}<th>Best-seller n°1</th></tr></thead><tbody>
-    ${rows.map((x) => `<tr><td><b>${esc(x.name)}</b><br><small class="muted">${esc(x.host)}</small></td>${cols.map(([k, , m]) => `<td class="${x[k] === best(k, m) ? 'win' : ''}">${k === 'avgPrice' ? money(x[k], x.currency) : k === 'discounted' ? `${x[k]}%` : x[k]}</td>`).join('')}<td>${x.top ? `<a href="${esc(x.top.url)}" target="_blank" rel="noopener nofollow">${esc(x.top.title)}</a>` : '—'}</td></tr>`).join('')}
+    ${rows.map((x) => `<tr><td><b>${esc(x.name)}</b><br><small class="muted">${esc(x.host)}</small></td>${cols.map(([k, , m]) => `<td class="${x[k] === best(k, m) ? 'win' : ''}">${k === 'avgPrice' ? money(x[k], x.currency) : k === 'discounted' ? `${x[k]}%` : x[k] ?? '—'}</td>`).join('')}<td>${x.top ? `<a href="${esc(x.top.url)}" target="_blank" rel="noopener nofollow">${esc(x.top.title)}</a>` : '—'}</td></tr>`).join('')}
   </tbody></table></div>${r.data.failed.length ? `<p class="muted" style="margin-top:8px">Non analysées : ${r.data.failed.map(esc).join(', ')}</p>` : ''}
   <div style="margin-top:12px">${exportButton('compare')}</div>`;
   bindExport('compare', 'compare', () => ({ rows, cols }));
@@ -550,6 +618,7 @@ async function detectBackend() {
   const cfg = await detectBackend();
   await loadMe();
   state.config = cfg.data;
+  renderWatch();
   $('#niches').innerHTML = Object.entries(cfg.data?.niches || {}).map(([id, n]) => `<button class="seg ${id === state.niche ? 'on' : ''}" data-niche="${id}">${esc(n.label)}</button>`).join('');
   $$('#niches .seg').forEach((b) => b.addEventListener('click', () => loadRadar(b.dataset.niche)));
   show(location.hash.slice(1) || 'audit');

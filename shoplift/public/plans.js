@@ -10,13 +10,18 @@ export const PLANS = {
 export const FEATURES = {
   fullAudit: 'basic',
   allProducts: 'basic',
-  spy: 'pro',
+  spyInsights: 'basic', // conseils + graphiques de l'espion
+  spy: 'pro',           // espion complet (12 best-sellers, 12 nouveautés, fournisseurs)
+  watch: 'pro',         // suivi des boutiques concurrentes
   radar: 'pro',
   compare: 'scale',
   export: 'scale',
 };
 
 export const TEST_LIMITS = { audits: 1, fixes: 3, products: 3, teaser: 3 };
+// Espion : ce que chaque offre voit, et combien de boutiques elle peut suivre.
+export const SPY_LIMITS = { test: { items: 1, insights: 2 }, basic: { items: 3, insights: 99 }, pro: { items: 99, insights: 99 }, scale: { items: 99, insights: 99 } };
+export const WATCH_LIMITS = { test: 0, basic: 0, pro: 5, scale: 20 };
 
 export const can = (plan, feature) => (PLANS[plan]?.rank ?? 0) >= PLANS[FEATURES[feature]].rank;
 
@@ -28,3 +33,15 @@ export function lockAudit(report) {
 }
 
 export const lockItems = (items, keep) => items.map((item, i) => (i < keep ? item : { image: item.image, score: item.score, locked: true }));
+
+// Espion selon l'offre : Test = aperçu, Basique = conseils + graphiques + top 3, Pro/Scale = tout.
+export function lockSpy(report, plan) {
+  const lim = SPY_LIMITS[plan] || SPY_LIMITS.test;
+  const r = { ...report, level: can(plan, 'spy') ? 'full' : can(plan, 'spyInsights') ? 'insights' : 'teaser' };
+  r.bestsellers = lockItems(report.bestsellers, lim.items);
+  r.launches = lockItems(report.launches, lim.items);
+  r.insights = (report.insights || []).map((x, i) => (i < lim.insights ? x : { icon: x.icon, title: x.title, locked: true }));
+  if (!can(plan, 'spyInsights')) r.charts = null;
+  r.locked = r.level !== 'full';
+  return r;
+}

@@ -1,7 +1,7 @@
 import { auditStore, compareStores, radarFrom, spyStore } from '../public/analyze.js';
 import { cookie, readCookie, secretOf, sign, verify } from './auth.js';
-import { can, lockAudit, lockItems, PLANS, TEST_LIMITS } from '../public/plans.js';
-import { NICHES } from '../public/seeds.js';
+import { can, lockAudit, lockItems, lockSpy, PLANS, TEST_LIMITS } from '../public/plans.js';
+import { kindOf, NICHES, SPY_EXAMPLES } from '../public/seeds.js';
 import { fetchStoreFull, fetchStoreLite, normalizeStore, StoreError } from './shopify.js';
 import { accessFromCheckout, accessFromEmail, changePlan, createCheckout, portalUrl, refreshAccess } from './stripe.js';
 
@@ -90,15 +90,17 @@ async function consumeTrial(request, ctx) {
 // Radar : résultat frais 6 h (relevé automatique 4 fois par jour) + dernier résultat valide gardé 30 jours.
 async function scanNiche(niche) {
   const results = await Promise.allSettled(NICHES[niche].stores.map((host) => fetchStoreLite(host)));
-  const items = radarFrom(results.filter((r) => r.status === 'fulfilled').map((r) => r.value));
+  const items = radarFrom(results.filter((r) => r.status === 'fulfilled').map((r) => r.value), { kind: (p) => kindOf(niche, p) });
   const scan = { at: new Date().toISOString(), items };
-  if (items.length) await cached(`radar-backup/${niche}`, 2_592_000, async () => scan, true);
+  if (items.length) await cached(`radar-v2-backup/${niche}`, 2_592_000, async () => scan, true);
   return scan;
 }
 
+// Clés versionnées : un ancien cache (autre format, produits non filtrés) n'est jamais relu.
+const scanOf = (v) => (Array.isArray(v) ? { at: null, items: v } : v && Array.isArray(v.items) ? v : { at: null, items: [] });
 async function radar(niche, fresh = false) {
-  const scan = fresh ? await scanNiche(niche) : await cached(`radar/${niche}`, 21600, () => scanNiche(niche));
-  return scan.items?.length ? scan : cached(`radar-backup/${niche}`, 2_592_000, async () => ({ at: null, items: [] }));
+  const scan = scanOf(fresh ? await scanNiche(niche) : await cached(`radar-v2/${niche}`, 21600, () => scanNiche(niche)));
+  return scan.items.length ? scan : scanOf(await cached(`radar-v2-backup/${niche}`, 2_592_000, async () => ({ at: null, items: [] })));
 }
 
 // mode : 'full' (audit), 'spy' (catalogue + page d'accueil), 'lite' (catalogue seul)
@@ -116,7 +118,7 @@ async function route(request, env, ctx) {
   const origin = env.PUBLIC_URL || url.origin;
 
   if (pathname === '/api/config') {
-    return json({ stripe: !!env.STRIPE_SECRET_KEY, plans: PLANS, niches: Object.fromEntries(Object.entries(NICHES).map(([k, v]) => [k, { label: v.label }])) });
+    return json({ stripe: !!env.STRIPE_SECRET_KEY, plans: PLANS, niches: Object.fromEntries(Object.entries(NICHES).map(([k, v]) => [k, { label: v.label }])), spyExamples: SPY_EXAMPLES });
   }
 
   if (pathname === '/api/me') {
@@ -137,12 +139,7 @@ async function route(request, env, ctx) {
   if (pathname === '/api/spy' && method === 'POST') {
     const { store } = await body(request);
     const access = await getAccess(request, env, ctx);
-    const report = spyStore(await loadStore(store, 'spy'));
-    if (!can(access.plan, 'spy')) {
-      report.bestsellers = lockItems(report.bestsellers, 1);
-      report.launches = lockItems(report.launches, 1);
-      report.locked = true;
-    }
+    const report = lockSpy(spyStore(await loadStore(store, 'spy')), access.plan);
     return json({ plan: access.plan, report });
   }
 
@@ -227,9 +224,12 @@ async function route(request, env, ctx) {
 }
 
 export default {
-  // Tâche planifiée (gratuite, toutes les 6 h) : rafraîchit le radar de chaque niche.
+  // Tâche planifiée gratuite, chaque heure : une niche à la fois (limite de 50 requêtes par exécution
+  // sur l'offre gratuite Cloudflare). 6 niches → chacune est rafraîchie toutes les 6 h.
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(Promise.allSettled(Object.keys(NICHES).map((niche) => radar(niche, true))));
+    const niches = Object.keys(NICHES);
+    const niche = niches[new Date(event.scheduledTime || Date.now()).getUTCHours() % niches.length];
+    ctx.waitUntil(radar(niche, true));
   },
 
   async fetch(request, env) {
