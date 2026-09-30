@@ -60,7 +60,7 @@ function matchConnected(input) {
   const names = [connected.host, connected.meta?.name, String(connected.host).split('.')[0]].map(clean);
   return typed && names.includes(typed) ? connected : null;
 }
-const UNVERIFIABLE = () => 'Sur cet aperçu, seule ta boutique Shopify connectée peut être analysée : clique sur « Analyser ma vraie boutique ». Sur le site en ligne, toutes les boutiques Shopify le sont.';
+const UNVERIFIABLE = () => 'Sur cet aperçu, seule ta boutique Shopify connectée (connecteur Shopify de claude.ai) peut être analysée. Sur le site en ligne, toutes les boutiques Shopify le sont.';
 
 const mem = {};
 const read = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return mem[k] ?? d; } };

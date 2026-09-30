@@ -7,6 +7,9 @@ const safeImg = (src) => {
   if (!/^https?:\/\//.test(src || '')) return '';
   try { const u = new URL(src); if (u.hostname === 'cdn.shopify.com') u.searchParams.set('width', '400'); return esc(u.href); } catch { return ''; }
 };
+// Photo illisible (supprimée, ou bloquée par la page d'aperçu) : visuel neutre au lieu d'une image cassée.
+const NO_PHOTO = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#241f42"/><path d="M130 250l50-60 40 45 30-30 50 45z" fill="#5a5190"/><circle cx="250" cy="160" r="22" fill="#5a5190"/></svg>')}`;
+document.addEventListener('error', (e) => { const img = e.target; if (img.tagName === 'IMG' && !img.src.startsWith('data:')) img.src = NO_PHOTO; }, true);
 const money = (n, cur = 'EUR') => { try { return Number(n).toLocaleString('fr-FR', { style: 'currency', currency: cur, maximumFractionDigits: 2 }); } catch { return `${n} €`; } };
 const store = { get: (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* stockage indisponible */ } } };
 
@@ -402,9 +405,21 @@ function bindExport(id, rows, name) {
   $(`#export-${id}`)?.addEventListener('click', () => downloadCsv(name, rows()));
 }
 
-function downloadCsv(name, rows) {
-  const csv = rows.map((r) => r.map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(';')).join('\n');
-  const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' })), download: name });
+async function downloadCsv(name, rows) {
+  const csv = '\ufeff' + rows.map((r) => r.map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(';')).join('\n');
+  // Aperçu claude.ai : les téléchargements passent par la plateforme (le lien direct y est bloqué).
+  const downloads = demoApi && window.claude?.use ? await window.claude.use('downloads').catch(() => null) : null;
+  if (downloads) {
+    try { await downloads.save({ filename: name, data: csv }); toast('Fichier CSV enregistré.'); } catch (error) {
+      if (error?.code !== 'declined') toast('Téléchargement impossible ici. Réessaie dans quelques secondes.', 'err');
+    }
+    return;
+  }
+  if (demoApi) { // aperçu sans téléchargement : on copie le tableau
+    try { await navigator.clipboard.writeText(csv); toast('Tableau copié : colle-le dans Excel ou Google Sheets.'); } catch { toast('Export indisponible sur cet aperçu : il fonctionne sur le site en ligne.', 'err'); }
+    return;
+  }
+  const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([csv], { type: 'text/csv' })), download: name });
   a.click();
   URL.revokeObjectURL(a.href);
 }

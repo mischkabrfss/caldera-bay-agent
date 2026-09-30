@@ -48,7 +48,7 @@ npx wrangler secret put STRIPE_SECRET_KEY   # colle ta clé Stripe
 
 ```bash
 npm install
-npm test                        # 23 tests (moteur, sécurité, Stripe simulé)
+npm test                        # 24 tests (moteur, sécurité, Stripe simulé)
 node test/mock-shop.mjs &       # faux Shopify local
 printf 'DEV_UNLOCK=true\nSHOPIFY_MOCK=http://127.0.0.1:8790\n' > .dev.vars
 npm run dev                     # http://localhost:8787 (/api/dev-login?plan=scale pour tout débloquer)

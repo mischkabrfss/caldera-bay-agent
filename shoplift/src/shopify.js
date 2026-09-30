@@ -11,6 +11,7 @@ export class StoreError extends Error {
 
 // Adresse inexistante (aucune réponse) ≠ site existant qui n'est pas une boutique Shopify.
 function notFound(host, status) {
+  if (status === 403 || status === 429) return new StoreError('blocked', `« ${host} » bloque les lectures automatiques (protection anti-robots). Réessaie dans quelques minutes ou analyse une autre boutique.`);
   return status === 0
     ? new StoreError('not_found', `« ${host} » n’existe pas ou ne répond pas. Vérifie l’orthographe de l’adresse.`)
     : new StoreError('not_shopify', `« ${host} » existe mais ce n’est pas une boutique Shopify ouverte (autre plateforme, boutique fermée ou protégée par mot de passe).`);

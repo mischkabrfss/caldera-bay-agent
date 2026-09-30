@@ -273,3 +273,12 @@ test('API : l’espion (Pro) détecte les outils marketing de la page d’accuei
   assert.equal(report.locked, undefined);
   assert.ok(report.launches.length > 0);
 });
+
+test('boutique connectée : produit à 0 € et produit non publié signalés', () => {
+  const p = { ...products[0], url: '', variants: [{ price: 0, compareAt: 0, available: true }] };
+  const report = auditStore({ ...fakeStore(), html: null, products: [p], admin: { description: '', seoCustom: 0, pages: 5 } });
+  const titles = report.fixes.map((f) => f.title);
+  assert.ok(titles.includes('Produits à 0 €'));
+  assert.ok(titles.includes('Produits visibles sur la boutique en ligne'));
+  assert.ok(!titles.includes('Panier moyen potentiel')); // pas de « prix moyen 0 € » absurde
+});

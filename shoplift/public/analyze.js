@@ -103,7 +103,7 @@ export function detect(html) {
   const has = (...needles) => needles.some((n) => h.includes(n));
   return {
     // apiClientId = app Shopify officielle installée en « Web Pixel » (Facebook & Instagram, TikTok, Google & YouTube).
-    metaPixel: has('fbevents.js', 'facebook-pixel', 'fbq(', 'facebook_pixel', '"apiclientid":2329312', '"facebookcapienabled":true'),
+    metaPixel: has('fbevents.js', 'facebook-pixel', 'fbq(', 'facebook_pixel', '"apiclientid":2329312', '"facebookcapienabled":true', '"facebookcapienabled":"true"'),
     tiktokPixel: has('analytics.tiktok.com', 'ttq.load', '"apiclientid":4383523'),
     google: has('googletagmanager.com', 'gtag(', 'google-analytics.com', '"apiclientid":1780363'),
     pinterest: has('pintrk', 's.pinimg.com/ct'),
@@ -140,6 +140,8 @@ export function auditStore(store, { now = Date.now() } = {}) {
     add('seo', (adm.description || '').length >= 70, 'élevé', 'Méta-description de la boutique', adm.description ? `${adm.description.length} caractères.` : 'Aucune description de boutique : Google invente un extrait au hasard.', 'Boutique en ligne → Préférences : rédige 120–160 caractères avec ton offre et un bénéfice.');
     const seoRate = pct(adm.seoCustom, products.length);
     add('seo', seoRate >= 50, 'moyen', 'Titres SEO des fiches produit', `${seoRate}% de tes fiches ont un titre ou une description SEO personnalisés.`, 'Sur chaque fiche : « Référencement sur les moteurs de recherche » → titre avec le mot-clé principal + description qui donne envie de cliquer.');
+    const hidden = products.filter((p) => !p.url).length;
+    add('catalog', hidden === 0, 'élevé', 'Produits visibles sur la boutique en ligne', `${hidden} produit(s) actif(s) absent(s) de ta boutique en ligne : aucun client ne peut les voir ni les acheter.`, 'Produits → ouvre le produit → « Publication » : coche le canal « Boutique en ligne ».');
     add('trust', adm.pages >= 3, 'moyen', 'Pages d’information (FAQ, livraison, à propos)', `${adm.pages} page(s) publiée(s).`, 'Crée au minimum : Contact, FAQ, Livraison, Retours, Notre histoire.');
   }
 
@@ -183,7 +185,9 @@ export function auditStore(store, { now = Date.now() } = {}) {
   const avgPrice = avg(prices);
   const discounted = analyzed.filter((p) => p.discount >= 10).length;
   const bundles = products.filter((p) => /\b(pack|lot|bundle|kit|coffret|duo|trio|x2|x3)\b/i.test(p.title)).length;
-  add('offer', avgPrice >= 20, 'élevé', 'Panier moyen potentiel', `Prix moyen : ${avgPrice.toFixed(2)} ${store.meta?.currency || '€'}.`, 'Sous 20 €, la pub est rarement rentable : crée des lots et des bundles.');
+  const free = analyzed.filter((p) => p.price <= 0).length;
+  add('offer', free === 0, 'élevé', 'Produits à 0 €', `${free} produit(s) affiché(s) gratuit(s) : erreur de prix qui fait perdre de l’argent ou bloque la vente.`, 'Renseigne le vrai prix de chaque variante (Produits → le produit → Prix).');
+  if (prices.length) add('offer', avgPrice >= 20, 'élevé', 'Panier moyen potentiel', `Prix moyen : ${avgPrice.toFixed(2)} ${store.meta?.currency || '€'}.`, 'Sous 20 €, la pub est rarement rentable : crée des lots et des bundles.');
   add('offer', pct(discounted, n) >= 20, 'moyen', 'Prix barrés / promotions', `${discounted} produit(s) avec un prix barré.`, 'Ajoute un prix comparatif honnête sur tes best-sellers pour créer l’urgence.');
   add('offer', bundles > 0, 'élevé', 'Lots & bundles', bundles ? `${bundles} offre(s) groupée(s) détectée(s).` : 'Aucun lot ni bundle détecté.', 'Crée un « Pack x2 -15 % » et un « Kit complet » : +20 à 40 % de panier moyen.');
   web('offer', d.freeShipping, 'moyen', 'Livraison offerte mise en avant', 'La livraison payante est la 1re cause d’abandon de panier.', 'Affiche « Livraison offerte dès X € » dans une barre d’annonce.');
