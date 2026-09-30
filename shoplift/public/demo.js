@@ -7,7 +7,7 @@ import { NICHES } from './seeds.js';
 import { SNAPSHOT, SNAPSHOT_DATE } from './radar-snapshot.js';
 
 const NAMES = ['Lampe coucher de soleil', 'Gourde isotherme inox', 'Coque magnétique iPhone', 'Masseur cervical chauffant', 'Tapis de yoga antidérapant', 'Brosse nettoyante visage', 'Collier prénom personnalisé', 'Harnais anti-traction chien', 'Mini projecteur galaxie', 'Organisateur de voiture', 'Sweat oversize brodé', 'Bague ajustable acier', 'Diffuseur huiles essentielles', 'Poêle céramique 28 cm', 'Couverture lestée', 'Lunettes anti-lumière bleue', 'Montre connectée sport', 'Legging gainant sculptant', 'Pistolet de massage', 'Veilleuse nuage enfant'];
-const COLORS = ['#00f5a0', '#8b5cff', '#ff4fd8', '#ffd166', '#00c2ff', '#ff5c7a'];
+const COLORS = ['#ffd23f', '#3fae82', '#ff7a59', '#ffe68a', '#ffb020', '#ff6b5b'];
 
 export function seeded(str) {
   let h = 2166136261;
@@ -19,7 +19,7 @@ export function imageSvg(name) {
   const rnd = seeded(name);
   const a = COLORS[Math.floor(rnd() * COLORS.length)];
   const b = COLORS[Math.floor(rnd() * COLORS.length)];
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="400" height="400" fill="#15122a"/><circle cx="200" cy="190" r="${Math.round(90 + rnd() * 50)}" fill="url(#g)" opacity=".85"/><rect x="120" y="300" width="160" height="18" rx="9" fill="#fff" opacity=".2"/></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="400" height="400" fill="#0f3325"/><circle cx="200" cy="190" r="${Math.round(90 + rnd() * 50)}" fill="url(#g)" opacity=".85"/><rect x="120" y="300" width="160" height="18" rx="9" fill="#fff" opacity=".2"/></svg>`;
 }
 
 // Catalogue d'exemple au format interne (celui de shopify.js).

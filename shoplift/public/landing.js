@@ -104,7 +104,7 @@ if (canvas && !reduced) {
       c.y += c.v; c.r += c.vr;
       if (c.y > h + 40) Object.assign(c, spawn(false));
       ctx.save(); ctx.globalAlpha = c.a; ctx.translate(c.x, c.y); ctx.rotate(c.r);
-      ctx.font = `800 ${c.s}px Sora, sans-serif`; ctx.fillStyle = '#00f5a0'; ctx.fillText(c.g, 0, 0); ctx.restore();
+      ctx.font = `800 ${c.s}px Sora, sans-serif`; ctx.fillStyle = '#ffd23f'; ctx.fillText(c.g, 0, 0); ctx.restore();
     }
     requestAnimationFrame(draw);
   };

@@ -215,7 +215,7 @@
     const c = root.querySelector('.quiz-confetti');
     const ctx = c.getContext('2d');
     c.width = innerWidth; c.height = innerHeight;
-    const colors = ['#00f5a0', '#00c2ff', '#8b5cff', '#ff4fd8', '#ffd166'];
+    const colors = ['#ffd23f', '#ffb020', '#3fae82', '#ff7a59', '#ffe68a'];
     const parts = Array.from({ length: 180 }, () => ({ x: innerWidth / 2, y: innerHeight * 0.3, vx: (Math.random() - 0.5) * 18, vy: Math.random() * -16 - 4, s: 4 + Math.random() * 7, c: colors[Math.floor(Math.random() * 5)], r: Math.random() * 6, vr: (Math.random() - 0.5) * 0.3 }));
     let f = 0;
     (function draw() {

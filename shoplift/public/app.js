@@ -8,7 +8,7 @@ const safeImg = (src) => {
   try { const u = new URL(src); if (u.hostname === 'cdn.shopify.com') u.searchParams.set('width', '400'); return esc(u.href); } catch { return ''; }
 };
 // Photo illisible (supprimée, ou bloquée par la page d'aperçu) : visuel neutre au lieu d'une image cassée.
-const NO_PHOTO = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#241f42"/><path d="M130 250l50-60 40 45 30-30 50 45z" fill="#5a5190"/><circle cx="250" cy="160" r="22" fill="#5a5190"/></svg>')}`;
+const NO_PHOTO = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#153c2c"/><path d="M130 250l50-60 40 45 30-30 50 45z" fill="#3f7a60"/><circle cx="250" cy="160" r="22" fill="#3f7a60"/></svg>')}`;
 document.addEventListener('error', (e) => { const img = e.target; if (img.tagName === 'IMG' && !img.src.startsWith('data:')) img.src = NO_PHOTO; }, true);
 const money = (n, cur = 'EUR') => { try { return Number(n).toLocaleString('fr-FR', { style: 'currency', currency: cur, maximumFractionDigits: 2 }); } catch { return `${n} €`; } };
 const store = { get: (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* stockage indisponible */ } } };
@@ -173,7 +173,7 @@ async function runAudit(input, connected = null) {
 }
 
 const gradeClass = (s) => (s >= 80 ? 'g-a' : s >= 65 ? 'g-b' : s >= 45 ? 'g-c' : 'g-d');
-const colorOf = (s) => (s >= 75 ? 'var(--green)' : s >= 55 ? 'var(--orange)' : 'var(--red)');
+const colorOf = (s) => (s >= 75 ? 'var(--good)' : s >= 55 ? 'var(--orange)' : 'var(--red)');
 const impactPill = { élevé: 'hi', moyen: 'md', faible: 'lo' };
 const STACK = { metaPixel: 'Pixel Meta', tiktokPixel: 'Pixel TikTok', google: 'Google Analytics', pinterest: 'Pinterest', snapchat: 'Snapchat', klaviyo: 'Klaviyo', newsletter: 'Newsletter', reviews: 'Avis clients', trustText: 'Réassurance', freeShipping: 'Livraison offerte', upsell: 'Upsell', chat: 'Chat', social: 'Réseaux sociaux', currencyConverter: 'Multi-devises' };
 
@@ -482,7 +482,7 @@ function confetti() {
   const c = $('#confetti');
   const ctx = c.getContext('2d');
   c.width = innerWidth; c.height = innerHeight;
-  const colors = ['#00f5a0', '#00c2ff', '#8b5cff', '#ff4fd8', '#ffd166'];
+  const colors = ['#ffd23f', '#ffb020', '#3fae82', '#ff7a59', '#ffe68a'];
   const parts = Array.from({ length: 160 }, () => ({ x: innerWidth / 2, y: innerHeight / 3, vx: (Math.random() - 0.5) * 16, vy: Math.random() * -14 - 4, s: 4 + Math.random() * 6, c: colors[Math.floor(Math.random() * 5)], r: Math.random() * 6, vr: (Math.random() - 0.5) * 0.3 }));
   let frames = 0;
   (function draw() {
