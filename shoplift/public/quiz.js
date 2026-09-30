@@ -1,7 +1,7 @@
 // Quiz d'arrivée : combien ta boutique pourrait gagner. Estimation indicative, calculée dans le navigateur.
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
-  const fmt = (n) => Math.round(n).toLocaleString('fr-FR');
+  const fmt = (n) => Math.round(n).toLocaleString('fr-FR').replace(/\u202f/g, '\u00a0'); // espace insécable normale : reste visible en gros caractères
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const PLANS = { basic: ['Basique', 19], pro: ['Pro', 49], scale: ['Scale', 99] };
   const BENCH = 2.5; // taux de conversion e-commerce de référence (%)
@@ -51,12 +51,13 @@
     addEventListener('keydown', (e) => e.key === 'Escape' && root.classList.contains('open') && close());
   }
 
-  function open(first = false) {
+  function open() {
     if (!root) build();
     step = 0;
+    root.classList.remove('bam');
     root.classList.add('open');
-    const ready = first && root.querySelector('.quiz-start');
-    if (ready) bindIntro(root.querySelector('.quiz-stage')); else intro();
+    scrollTo(0, 0);
+    question();
   }
 
   function close() {
@@ -71,30 +72,6 @@
     void stage.offsetWidth;
     stage.classList.add('in');
     return stage;
-  }
-
-  function intro() {
-    root.querySelector('.quiz-bar i').style.width = '0%';
-    const stage = swap(`<div class="quiz-intro"><div class="slot" aria-hidden="true"><span>+</span><b></b><b></b><b></b><b></b><span>€</span></div><span class="eyebrow">Quiz · 30 secondes</span>
-      <h2>Combien ta boutique <span class="grad-text">pourrait te rapporter</span> ?</h2>
-      <p class="muted">6 questions rapides. Ton résultat personnalisé s’affiche à la fin.</p>
-      <button class="btn btn-main quiz-start" type="button">C’est parti <span class="arrow">→</span></button>
-      <button class="quiz-skip" type="button">Pas maintenant</button></div>`);
-    spinSlot(stage.querySelector('.slot'));
-    bindIntro(stage);
-  }
-
-  function bindIntro(stage) {
-    stage.querySelector('.quiz-start').onclick = () => question();
-    stage.querySelector('.quiz-skip').onclick = close;
-  }
-
-  function spinSlot(slot) {
-    const cells = [...slot.querySelectorAll('b')];
-    cells.forEach((c, i) => {
-      c.innerHTML = `<i>${Array.from({ length: 12 }, (_, k) => (k + i * 3) % 10).join('<br>')}</i>`;
-      c.style.setProperty('--d', `${i * 0.18}s`);
-    });
   }
 
   function question() {
@@ -123,9 +100,10 @@
     }
   }
 
-  const nav = (withNext) => `<div class="quiz-nav">${step ? '<button type="button" class="quiz-back">← Retour</button>' : '<span></span>'}${withNext ? '<button type="button" class="btn btn-main quiz-next">Suivant <span class="arrow">→</span></button>' : ''}</div>`;
+  const nav = (withNext) => `<div class="quiz-nav">${step ? '<button type="button" class="quiz-back">← Retour</button>' : '<button type="button" class="quiz-back quiz-pass">Passer</button>'}${withNext ? '<button type="button" class="btn btn-main quiz-next">Suivant <span class="arrow">→</span></button>' : ''}</div>`;
   function bindNav(stage) {
-    stage.querySelector('.quiz-back')?.addEventListener('click', () => { step--; question(); });
+    stage.querySelector('.quiz-pass')?.addEventListener('click', close);
+    stage.querySelector('.quiz-back:not(.quiz-pass)')?.addEventListener('click', () => { step--; question(); });
     stage.querySelector('.quiz-next')?.addEventListener('click', next);
   }
   function next() {
@@ -156,63 +134,67 @@
       <div class="loader-lines">${lines.map((l) => `<p>${l}</p>`).join('')}</div></div>`);
     const ps = stage.querySelectorAll('.loader-lines p');
     ps.forEach((p, i) => setTimeout(() => p.classList.add('on'), 450 * i));
-    setTimeout(result, reduced ? 300 : 2300);
+    setTimeout(bam, reduced ? 300 : 2000);
   }
 
-  function result() {
+  // Fin du quiz : flash « bam », le quiz s'efface et la page s'ouvre avec le résultat en haut.
+  function bam() {
     const r = compute();
+    const reveal = () => {
+      close();
+      recap(r);
+      document.body.classList.add('bam-in');
+      setTimeout(() => document.body.classList.remove('bam-in'), 1000);
+    };
+    if (reduced) return reveal();
+    root.classList.add('bam');
+    const flash = document.createElement('div');
+    flash.className = 'bam-flash';
+    document.body.append(flash);
+    setTimeout(reveal, 380);
+    setTimeout(() => flash.remove(), 900);
+  }
+
+  function recap(r) {
     const [planName, planPrice] = PLANS[r.plan];
-    const stage = swap(`<div class="quiz-result">
+    document.querySelector('.quiz-recap')?.remove();
+    const col = document.querySelector('.hero-grid > div');
+    if (!col) return;
+    col.insertAdjacentHTML('afterbegin', `<div class="card quiz-recap">
       <div class="boom"><span></span><span></span><span></span></div>
       <span class="eyebrow">Ton potentiel estimé</span>
       <div class="quiz-big">+<b data-to="${Math.round(r.gain)}">0</b> €<small>/mois</small></div>
-      <p class="quiz-year">soit <b>+${fmt(r.gain * 12)} €</b> par an</p>
-      <div class="quiz-bars">
-        <div><span>Aujourd’hui</span><div class="bar"><i style="--w:${Math.max(4, (r.current / Math.max(r.potential, 1)) * 100)}%"></i></div><b>${fmt(r.current)} €</b></div>
-        <div><span>Potentiel</span><div class="bar hot"><i style="--w:100%"></i></div><b>${fmt(r.potential)} €</b></div>
-      </div>
-      <div class="quiz-kpis">
-        <div><b>${String(r.cr).replace('.', ',')} %</b><span>ta conversion</span></div>
-        <div><b>${BENCH.toString().replace('.', ',')} %</b><span>moyenne marché</span></div>
-        <div><b>${r.newCr.toFixed(1).replace('.', ',')} %</b><span>ton objectif</span></div>
-      </div>
-      <div class="quiz-actions"><h3>Tes 3 actions prioritaires</h3><ol>${ACTIONS[answers.blocker || 'conversion'].map((a) => `<li>${a}</li>`).join('')}</ol></div>
-      <div class="quiz-plan"><span class="badge-hot">RECOMMANDÉ POUR TOI</span><b>Shoplift ${planName} · ${planPrice} €/mois</b>
-        ${r.days ? `<p>Rentabilisé en <b>${r.days} jour${r.days > 1 ? 's' : ''}</b> si tu atteins ce potentiel.</p>` : ''}</div>
-      <button class="btn btn-main quiz-go" type="button">Analyser ma boutique gratuitement <span class="arrow">→</span></button>
-      <button class="quiz-skip quiz-plans" type="button">Voir l’offre ${planName}</button>
-      <button class="btn btn-ghost quiz-redo" type="button">${window.icon('refresh')} Refaire le quiz</button>
-      <p class="quiz-legal">Estimation indicative basée sur des moyennes e-commerce, pas une promesse de résultat.</p>
+      <p class="quiz-year">soit <b>+${fmt(r.gain * 12)} €</b> par an · de ${fmt(r.current)} € à ${fmt(r.potential)} € par mois</p>
+      <ol class="recap-actions">${ACTIONS[answers.blocker || 'conversion'].map((a) => `<li>${a}</li>`).join('')}</ol>
+      <div class="recap-cta"><button class="btn btn-ghost recap-plan" type="button">Offre conseillée : ${planName} · ${planPrice}\u00a0€/mois</button><button class="quiz-skip recap-redo" type="button">${window.icon('refresh')} Refaire le quiz</button></div>
+      <p class="quiz-legal">Estimation indicative basée sur des moyennes e-commerce${r.days ? ` · rentabilisé en ${r.days} jour${r.days > 1 ? 's' : ''} si tu atteins ce potentiel` : ''}. Analyse ta boutique ci-dessous pour ton vrai plan d’action.</p>
     </div>`);
-    const big = stage.querySelector('[data-to]');
+    const card = col.querySelector('.quiz-recap');
+    const big = card.querySelector('[data-to]');
     const target = Number(big.dataset.to);
     const start = performance.now();
     const tick = (t) => {
-      const p = Math.min(1, (t - start) / 1800);
+      const p = reduced ? 1 : Math.min(1, (t - start) / 1800);
       big.textContent = fmt(target * (1 - Math.pow(1 - p, 4)));
       if (p < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
     confetti();
-    stage.querySelector('.quiz-redo').onclick = () => { step = 0; Object.assign(answers, { visitors: 3000, aov: 40 }); ['stage', 'cr', 'goal', 'blocker'].forEach((k) => delete answers[k]); question(); };
-    stage.querySelector('.quiz-go').onclick = () => {
-      close();
-      const input = document.querySelector('.hero input[name=store]');
-      document.querySelector('#analyser')?.scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => input?.focus(), 500);
-    };
-    stage.querySelector('.quiz-plans').onclick = () => {
-      close();
+    card.querySelector('.recap-redo').onclick = () => open();
+    card.querySelector('.recap-plan').onclick = () => {
       document.querySelector('#tarifs')?.scrollIntoView({ behavior: 'smooth' });
-      const card = document.querySelector(`[data-plan="${r.plan}"]`)?.closest('.plan');
-      card?.classList.add('spot-plan');
-      setTimeout(() => card?.classList.remove('spot-plan'), 4000);
+      const plan = document.querySelector(`[data-plan="${r.plan}"]`)?.closest('.plan');
+      plan?.classList.add('spot-plan');
+      setTimeout(() => plan?.classList.remove('spot-plan'), 4000);
     };
+    document.querySelector('[data-store-form]')?.classList.add('spot-form');
   }
 
   function confetti() {
     if (reduced) return;
-    const c = root.querySelector('.quiz-confetti');
+    const c = document.createElement('canvas');
+    c.className = 'quiz-confetti';
+    document.body.append(c);
     const ctx = c.getContext('2d');
     c.width = innerWidth; c.height = innerHeight;
     const colors = ['#ffd23f', '#ffb020', '#3fae82', '#ff7a59', '#ffe68a'];
@@ -221,13 +203,13 @@
     (function draw() {
       ctx.clearRect(0, 0, c.width, c.height);
       for (const p of parts) { p.vy += 0.35; p.x += p.vx; p.y += p.vy; p.vx *= 0.99; p.r += p.vr; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); ctx.restore(); }
-      if (f++ < 200) requestAnimationFrame(draw); else ctx.clearRect(0, 0, c.width, c.height);
+      if (f++ < 200) requestAnimationFrame(draw); else c.remove();
     })();
   }
 
   document.addEventListener('click', (e) => { if (e.target.closest('[data-quiz]')) { e.preventDefault(); open(); } });
   let paid = false;
   try { paid = !!localStorage.getItem('sl_paid'); } catch { /* stockage indisponible */ }
-  if (paid) build(); else open(true); // abonné : pas de quiz ; sinon déjà affiché par la page, on branche les boutons
+  if (paid) build(); else open(); // abonné : pas de quiz ; sinon la 1re question s'affiche tout de suite
   window.shopliftQuiz = { open, compute: () => compute() };
 })();

@@ -21,7 +21,7 @@
 .tabbar a.on span { transform: translateY(-2px) scale(1.18); }
 
 /* Segments */
-.toolbar { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 .seg { flex: none; padding: 10px 16px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); font-weight: 700; font-size: 14px; color: var(--muted); transition: all .25s; }
 .seg.on { color: #0a2419; background: var(--green); border-color: var(--green); }
 .lock-tag { font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 6px; background: rgba(255,230,138,.2); color: var(--gold); margin-left: 4px; }
@@ -84,7 +84,7 @@
 /* Produits */
 .prod { display: grid; grid-template-columns: 76px 1fr; gap: 14px; padding: 14px; animation: pop .5s both; animation-delay: var(--d, 0s); }
 .prod-img { width: 76px; height: 76px; border-radius: 14px; object-fit: cover; background: rgba(255,255,255,.06); }
-.prod h3 { font: 700 15px/1.3 var(--font); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.prod h3 { font: 700 15px/1.3 var(--font); overflow-wrap: break-word; } /* titre complet, jamais tronqué */
 .prod-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; font-size: 13px; color: var(--muted); }
 .ring { --p: 50; --c: var(--green); flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font: 800 14px var(--display); background: radial-gradient(closest-side, var(--bg2) 76%, transparent 78%), conic-gradient(var(--c) calc(var(--p) * 1%), rgba(255,255,255,.08) 0); }
 .prod-head { display: flex; gap: 10px; align-items: flex-start; justify-content: space-between; }
@@ -98,7 +98,7 @@
 .con-line em { display: block; font-style: normal; color: #d8f7e4; font-size: 13px; margin-top: 4px; }
 
 /* Radar / espion : grille produits */
-.niches { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 14px; scrollbar-width: none; }
+.niches { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; } /* toutes les niches visibles, aucun libellé coupé */
 .niches::-webkit-scrollbar { display: none; }
 .pgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .pcard { position: relative; overflow: hidden; display: flex; flex-direction: column; animation: pop .55s both; animation-delay: var(--d, 0s); transition: transform .3s; }
@@ -110,7 +110,7 @@
 .pcard .score-badge.hot { background: var(--grad); color: #0a2419; animation: pulse 1.6s infinite; }
 @keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(255,210,63,.2); } }
 .pcard .body { padding: 10px 12px 12px; display: grid; gap: 6px; flex: 1; }
-.pcard h3 { font: 700 13px/1.3 var(--font); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.pcard h3 { font: 700 13px/1.3 var(--font); overflow-wrap: break-word; } /* titre complet, jamais tronqué */
 .pcard .price { font: 800 16px var(--display); }
 .pcard .price s { font: 600 12px var(--font); color: var(--muted); margin-left: 4px; }
 .reasons { display: flex; flex-wrap: wrap; gap: 4px; }
@@ -136,13 +136,13 @@ td b { font-family: var(--display); }
 .win { color: var(--good); font-weight: 800; }
 
 /* Compte */
-.account-card { padding: 22px; display: grid; gap: 14px; }
+.account-card { padding: 22px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
 .account-card .big { font: 800 30px var(--display); }
 .account-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .plans-mini { display: grid; gap: 10px; }
 .pm { display: flex; align-items: center; gap: 12px; padding: 16px; transition: all .3s; }
 .pm.feat { border-color: rgba(63,174,130,.6); background: linear-gradient(135deg, rgba(63,174,130,.2), rgba(255,210,63,.06)); }
-.pm .info { flex: 1; }
+.pm .info { flex: 1; min-width: 0; }
 .pm .info b { font: 800 18px var(--display); }
 .pm .info p { font-size: 13px; color: var(--muted); }
 .pm .btn { min-height: 44px; padding: 0 16px; font-size: 14px; }
@@ -220,3 +220,11 @@ img.noimg { visibility: hidden; }
 .export-btn { margin: 0 0 12px; min-height: 42px; font-size: 14px; }
 .stack.left { justify-content: flex-start; }
 .pcard .price .off { font: 800 11px var(--font); font-style: normal; margin-left: 6px; padding: 3px 7px; border-radius: 99px; background: rgba(255,107,91,.16); color: var(--red); vertical-align: middle; }
+
+/* Petits téléphones (iPhone SE…) : une carte produit par ligne, rien de coupé */
+@media (max-width: 359px) {
+  .pgrid { grid-template-columns: 1fr; }
+  .pm { flex-wrap: wrap; }
+  .pm .btn { width: 100%; }
+}
+.pcard .body, .prod > div { min-width: 0; }
