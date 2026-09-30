@@ -44,6 +44,15 @@ npx wrangler secret put STRIPE_SECRET_KEY   # colle ta clé Stripe
 - Boutiques scannées par le radar : `public/seeds.js` (puis `npm run snapshot` pour l’aperçu).
 - **À faire avant de vendre** : complète les `[À COMPLÉTER]` dans `public/mentions-legales.html`, `public/cgv.html` et `public/confidentialite.html`.
 
+## Connexion des clients (tous appareils)
+- Après le paiement, le client choisit un mot de passe (fenêtre de bienvenue ou onglet Compte).
+- Le mot de passe est haché (PBKDF2-SHA256, 100 000 itérations, sel aléatoire) et rangé dans la fiche client **Stripe** (`metadata.sl_pw`) : aucune base de données à gérer.
+- Connexion : e-mail + mot de passe, n'importe quel appareil. Mot de passe oublié : e-mail + 4 derniers chiffres de la carte, puis nouveau mot de passe.
+
+## Agents de sourcing
+- Liste dans `public/agents.js` (1 agent en Basique, 3 en Pro, 10 en Scale). Le fichier n'est jamais servi tel quel : le serveur le bloque et ne renvoie que les agents de l'offre du client (`/api/agents`).
+- Coordonnées vérifiées le 30/09/2026 : e-mails et adresses sur les fiches officielles du Shopify App Store, numéros WhatsApp/téléphone sur les sites officiels. À revérifier de temps en temps (les agents peuvent changer de numéro).
+
 ## Développement local
 
 ```bash

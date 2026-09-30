@@ -64,9 +64,52 @@ export function subscriptionToAccess(subscription, email) {
 }
 
 export async function accessFromCheckout(env, sessionId) {
-  const session = await stripe(env, 'GET', `checkout/sessions/${encodeURIComponent(sessionId)}`, { expand: ['subscription'] });
+  const session = await stripe(env, 'GET', `checkout/sessions/${encodeURIComponent(sessionId)}`, { expand: ['subscription', 'customer'] });
   if (session.status !== 'complete') return null;
-  return subscriptionToAccess(session.subscription, session.customer_details?.email || session.customer_email);
+  const access = subscriptionToAccess(session.subscription, session.customer_details?.email || session.customer_email);
+  return access && { ...access, pw: !!session.customer?.metadata?.sl_pw };
+}
+
+// ---------- Connexion e-mail + mot de passe (sans base de données : le mot de passe haché vit dans la fiche client Stripe) ----------
+const te = new TextEncoder();
+const b64 = (u8) => btoa(String.fromCharCode(...u8));
+const unb64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+const ITERATIONS = 100000; // maximum accepté par Cloudflare Workers
+async function derive(password, salt, iterations = ITERATIONS) {
+  const key = await crypto.subtle.importKey('raw', te.encode(password), 'PBKDF2', false, ['deriveBits']);
+  return new Uint8Array(await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt, iterations }, key, 256));
+}
+export async function hashPassword(password) {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  return `v1$${ITERATIONS}$${b64(salt)}$${b64(await derive(password, salt))}`;
+}
+export async function checkPassword(password, stored) {
+  const [v, it, salt, hash] = String(stored || '').split('$');
+  if (v !== 'v1' || !salt || !hash) return false;
+  const got = await derive(password, unb64(salt), Number(it));
+  const want = unb64(hash);
+  if (got.length !== want.length) return false;
+  let diff = 0; for (let i = 0; i < got.length; i++) diff |= got[i] ^ want[i]; // comparaison à temps constant
+  return diff === 0;
+}
+export async function setPassword(env, customer, password) {
+  await stripe(env, 'POST', `customers/${encodeURIComponent(customer)}`, { metadata: { sl_pw: await hashPassword(password) } });
+}
+// Connexion : client trouvé par e-mail, mot de passe vérifié, abonnement actif.
+export async function accessFromLogin(env, email, password) {
+  const variants = [...new Set([email, email.toLowerCase()])];
+  const found = [];
+  for (const variant of variants) found.push(...((await stripe(env, 'GET', 'customers', { email: variant, limit: 5 })).data || []));
+  for (const customer of found) {
+    if (!(await checkPassword(password, customer.metadata?.sl_pw))) continue;
+    const subs = await stripe(env, 'GET', 'subscriptions', { customer: customer.id, status: 'all', limit: 10 });
+    for (const sub of subs.data || []) {
+      const access = subscriptionToAccess(sub, customer.email || email);
+      if (access) return { ...access, pw: true };
+    }
+    return { expired: true };
+  }
+  return null;
 }
 
 export async function refreshAccess(env, access) {
@@ -90,7 +133,7 @@ export async function accessFromEmail(env, email, last4) {
         const methods = await stripe(env, 'GET', 'payment_methods', { customer: customer.id, type: 'card', limit: 5 });
         if ((methods.data || []).some((m) => m.card?.last4 === last4)) card = last4;
       }
-      if (card === last4) return access;
+      if (card === last4) return { ...access, pw: !!customer.metadata?.sl_pw };
     }
   }
   return null;

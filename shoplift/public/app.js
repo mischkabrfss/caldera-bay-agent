@@ -22,9 +22,9 @@ const RANK = { test: 0, basic: 1, pro: 2, scale: 3 };
 // Ce que chaque offre inclut, dit simplement.
 const INCLUDED = {
   test: ['1 analyse gratuite de ta boutique', 'Ton score et tes 3 corrections les plus importantes', 'Un aperçu de l’espion sur n’importe quel concurrent'],
-  basic: ['Analyses illimitées de ta boutique', 'Le plan d’action complet, du plus important au moins important', 'La note de chacun de tes produits, avec quoi corriger', 'L’espion : stratégie, conseils et graphiques de tes concurrents'],
-  pro: ['Tout ce qu’il y a dans Basique', 'Le radar des produits qui se vendent le mieux, mis à jour toutes les 6 h', 'Pour chaque produit : 7 fournisseurs connectables à Shopify', 'L’espion complet : 12 best-sellers et 12 nouveautés par concurrent', 'Le suivi de 5 concurrents : leurs nouveautés signalées à chaque visite'],
-  scale: ['Tout ce qu’il y a dans Pro', 'Le suivi de 20 concurrents', 'Le comparateur de 4 boutiques côte à côte', 'Tes analyses en rapport PDF pro et en fichier Excel avec photos'],
+  basic: ['Analyses illimitées de ta boutique', 'Le plan d’action complet, du plus important au moins important', 'La note de chacun de tes produits, avec quoi corriger', 'L’espion : stratégie, conseils et graphiques de tes concurrents', '1 agent de sourcing vérifié et connectable à Shopify (WhatsApp + e-mail)', 'Ton compte accessible sur tous tes appareils'],
+  pro: ['Tout ce qu’il y a dans Basique', 'Le radar des produits qui se vendent le mieux, mis à jour toutes les 6 h', 'Pour chaque produit : 7 fournisseurs connectables à Shopify', 'L’espion complet : 12 best-sellers et 12 nouveautés par concurrent', 'Le suivi de 5 concurrents : leurs nouveautés signalées à chaque visite', '3 agents de sourcing vérifiés (WhatsApp + e-mail)'],
+  scale: ['Tout ce qu’il y a dans Pro', 'Les 10 meilleurs agents de sourcing, coordonnées vérifiées', 'Le suivi de 20 concurrents', 'Le comparateur de 4 boutiques côte à côte', 'Tes analyses en rapport PDF pro et en fichier Excel avec photos'],
 };
 const FIRST_STEPS = {
   basic: [['audit', 'Analyse ta boutique', 'Tu obtiens ton score et la liste de ce qu’il faut corriger.'], ['produits', 'Corrige tes produits', 'Commence par les produits notés en rouge.']],
@@ -41,6 +41,7 @@ function welcome(plan) {
     <p class="muted">Tout est débloqué, tu peux commencer tout de suite.</p>
     <h3 class="sub-title">Par où commencer</h3>
     <ol class="steps-list">${FIRST_STEPS[plan].map(([tab, t, d], i) => `<li><button type="button" data-go="${tab}"><b>${i + 1}</b><span><strong>${t}</strong><small>${d}</small></span>${icon('arrow')}</button></li>`).join('')}</ol>
+    ${state.me.canSetPw && !state.me.pw ? pwForm('pwFormWelcome', !state.me.email) : ''}
     <h3 class="sub-title">Ce qui est inclus</h3>${list(INCLUDED[plan])}
     <button class="btn btn-main" type="button" data-go="audit" style="width:100%;margin-top:18px">Commencer <span class="arrow">→</span></button>
     <p class="plan-note">Factures, carte bancaire, changement d’offre ou résiliation : onglet Compte.</p>`;
@@ -88,6 +89,7 @@ function show(tab) {
   if (tab === 'radar' && !$('#radarOut').dataset.loaded) loadRadar(state.niche);
   if (tab === 'produits') renderProducts();
   if (tab === 'compte') renderAccount();
+  if (tab === 'agents') loadAgents();
 }
 addEventListener('hashchange', () => show(location.hash.slice(1)));
 
@@ -218,11 +220,11 @@ function renderAudit() {
     <div>
       <div class="h3">${icon('target')} Ton plan d’action <span class="muted" style="font-size:13px">${a.fixes.length} points</span></div>
       <div class="list">${a.fixes.map((f, i) => f.locked ? `
-        <div class="card fix locked" style="--d:${i * 0.05}s"><div class="fix-top blur"><span class="pill ${impactPill[f.impact]}">${esc(f.impact.toUpperCase())}</span><span class="t">${esc(f.title)}</span></div>
-        <div class="lock-over" style="background:none;place-content:center end;padding-right:14px">${icon('lock')}</div></div>` : `
+        <div class="card fix locked" style="--d:${i * 0.05}s"><div class="fix-top"><span class="pill ${impactPill[f.impact]}">${esc(f.impact.toUpperCase())}</span><span class="t">${esc(f.title)}</span>${icon('lock')}</div>
+        <div class="fix-teaser"><p aria-hidden="true">Pourquoi ce point te fait perdre des ventes, et la correction exacte à faire en quelques minutes dans ton admin Shopify.</p><button class="pc-btn main" data-open-upgrade data-reason="Débloque la correction « ${esc(f.title)} » et tout ton plan d’action avec l’offre Basique.">${icon('unlock')} Voir comment corriger</button></div></div>` : `
         <div class="card fix ${i === 0 ? 'open' : ''}" style="--d:${i * 0.05}s"><div class="fix-top"><span class="pill ${impactPill[f.impact]}">${esc(f.impact.toUpperCase())}</span><span class="t">${esc(f.title)}</span><span class="chev">⌄</span></div>
         <div class="fix-body"><div><p><b>Pourquoi c’est important</b>${esc(f.why)}</p><p class="how"><b>Comment corriger</b>${esc(f.fix)}</p></div></div></div>`).join('')}</div>
-      ${locked ? `<div class="card unlock-banner"><h3>${icon('unlock')} ${locked} corrections cachées</h3><p>Débloque le plan d’action complet et l’analyse de toutes tes fiches produit.</p><button class="btn btn-main" data-open-upgrade>Tout débloquer <span class="arrow">→</span></button></div>` : ''}
+      ${locked ? `<div class="card unlock-banner"><h3>${icon('unlock')} ${locked} corrections cachées${(() => { const hi = a.fixes.filter((f) => f.locked && f.impact === 'élevé').length; return hi ? ` dont ${hi} à fort impact` : ''; })()}</h3><p>Chaque correction te dit pourquoi elle te coûte des ventes et comment la faire. Débloque aussi la note de toutes tes fiches produit et ton agent de sourcing.</p><button class="btn btn-main" data-open-upgrade>Tout débloquer <span class="arrow">→</span></button></div>` : ''}
       ${a.strengths.length ? `<div class="h3">${icon('star')} Ce qui est déjà top</div><div class="strengths">${a.strengths.map((s) => `<span>${icon('check')} ${esc(s)}</span>`).join('')}</div>` : ''}
       <a class="btn btn-ghost" style="width:100%;margin-top:18px" href="#produits">Voir l’analyse produit par produit →</a>
     </div>
@@ -333,7 +335,7 @@ function pCard(p, i, cur) {
     ${!locked && p.resale ? `<span class="resale">Revente conseillée : ${money(p.resale.low, p.currency)} – ${money(p.resale.high, p.currency)}</span>` : ''}
     ${!locked && p.store ? `<span class="src">chez ${esc(p.store)}</span>` : ''}
     ${!locked && p.verdict ? `<span class="src">${esc(p.verdict)}${p.age !== null && p.age !== undefined ? ` · il y a ${p.age} j` : ''}</span>` : ''}`;
-  if (locked) return `<div class="card pcard is-locked" style="--d:${i * 0.05}s"><div class="img">${media}</div><div class="body">${body}</div><div class="lock-over"><span>${icon('lock')}</span><button class="btn btn-main" data-open-upgrade data-reason="Le radar et l’espion sont inclus dans l’offre Pro.">Pro</button></div></div>`;
+  if (locked) return `<div class="card pcard is-locked" style="--d:${i * 0.05}s"><div class="img">${media}</div><div class="body">${body}</div><div class="lock-over"><span>${icon('lock')}</span><p class="lock-tease">${p.kind ? `<b>${esc(p.kind)}</b>` : '<b>Produit gagnant</b>'}${p.sellers > 1 ? `<small>Vendu par ${p.sellers} boutiques</small>` : ''}<small>Score ${p.score}/100${p.discount ? ` · promo -${p.discount}%` : ''}</small></p><button class="btn btn-main" data-open-upgrade data-reason="Vois le nom, le prix, le lien et les fournisseurs de chaque produit gagnant avec l’offre Pro.">Débloquer</button></div></div>`;
   const id = cards.push(p) - 1;
   const link = (inner, cls) => (p.url ? `<a class="${cls}" href="${esc(p.url)}" target="_blank" rel="noopener nofollow">${inner}</a>` : `<div class="${cls}">${inner}</div>`);
   return `<div class="card pcard tilt" style="--d:${i * 0.05}s">${link(media, 'img')}<div class="body">${body}
@@ -357,6 +359,7 @@ async function openSuppliers(p) {
     <div class="sup-list">${list.map((s, k) => `<div class="sup-row" style="--d:${k * 0.04}s"><span class="sup-logo sup-${s.id}">${esc(s.name[0])}</span>
       <div class="sup-info"><b>${esc(s.name)}</b><span>${esc(s.tag)} · livraison ${esc(s.delay)}</span></div>
       <div class="sup-go"><a class="pc-btn main" href="${esc(s.url)}" target="_blank" rel="noopener nofollow">${s.open ? `${icon('eye')} Ouvrir` : `${icon('search')} Chercher`}</a><a class="pc-btn" href="${esc(s.app)}" target="_blank" rel="noopener nofollow">${icon('plug')} ${esc(s.via)}</a></div></div>`).join('')}</div>
+    <button type="button" class="btn btn-main sup-agent" data-to-agent="${cards.indexOf(p)}">${icon('truck')} Demander un devis à un agent de sourcing</button>
     <p class="sup-tip">${icon('check')} Commande toujours un échantillon avant de lancer la pub : tu vérifies la qualité, le délai et tu fais tes propres photos.</p>`;
   m.classList.remove('hidden');
 }
@@ -532,8 +535,115 @@ async function runExport(btn, kind, data) {
   }
 }
 
+// ---------- Agents de sourcing ----------
+const PLAN_NAME = { basic: 'Basique', pro: 'Pro', scale: 'Scale' };
+const digits = (v) => String(v || '').replace(/\D/g, '');
+function quoteText() {
+  const prod = ($('#qProduct')?.value || '').trim() || '[product name / link]';
+  return `Hello! I run a Shopify store and I am looking for a reliable supplier for this product:\n${prod}\n\nCould you please send me:\n- your best price per unit\n- shipping cost and delivery time to ${$('#qCountry').value}\n- the minimum order quantity\n\nExpected volume: ${$('#qVolume').value} orders per month.\nI can connect your app to my Shopify store. Thank you!`;
+}
+function refreshQuote() { const m = $('#qMessage'); if (m && !m.dataset.edited) m.value = quoteText(); }
+['#qProduct', '#qCountry', '#qVolume'].forEach((id) => $(id)?.addEventListener('input', refreshQuote));
+$('#qMessage')?.addEventListener('input', (e) => { e.target.dataset.edited = '1'; });
+async function copy(text, label) {
+  try { await navigator.clipboard.writeText(text); toast(`${label} copié.`, 'ok'); } catch { toast(`${label} : ${text}`); }
+}
+function agentCard(a, i) {
+  const contact = (ic, label, value, action) => `<div class="ag-row"><span class="ag-ic">${icon(ic)}</span><div><small>${label}</small><b>${esc(value)}</b></div>${action || ''}</div>`;
+  const head = `<div class="ag-head"><span class="ag-rank">#${i + 1}</span><div><h3>${esc(a.name)}</h3><p class="muted">${'★'.repeat(Math.round(a.rating))} ${a.rating.toFixed(1).replace('.', ',')} · ${a.reviews.toLocaleString('fr-FR')} avis Shopify · ${esc(a.hq)}</p></div></div>
+    <p class="ag-pitch">${esc(a.pitch)}</p>
+    <div class="ag-tags">${a.strengths.map((t) => `<span>${esc(t)}</span>`).join('')}<span class="delay">${icon('truck')} ${esc(a.delay)}</span></div>`;
+  if (!a.open) {
+    return `<div class="card agent locked" style="--d:${i * 0.05}s">${head}
+      <div class="ag-contacts blurred">${a.whatsapp ? contact('phone', 'WhatsApp', a.whatsapp) : ''}${contact('mail', 'E-mail', a.email)}</div>
+      <div class="ag-lock"><span>${icon('lock')} Coordonnées vérifiées de ${esc(a.name)}</span><button class="btn btn-main" data-open-upgrade data-reason="${esc(`Débloque ${a.name} et ses coordonnées vérifiées avec l’offre ${PLAN_NAME[a.unlock]}.`)}">Débloquer avec ${PLAN_NAME[a.unlock]}</button></div></div>`;
+  }
+  const wa = a.whatsapp ? `https://wa.me/${digits(a.whatsapp)}?text=${encodeURIComponent($('#qMessage')?.value || quoteText())}` : '';
+  return `<div class="card agent" style="--d:${i * 0.05}s">${head}
+    <div class="ag-contacts">
+      ${a.whatsapp ? contact('phone', 'WhatsApp', a.whatsapp, `<button class="pc-btn" data-copy="${esc(a.whatsapp)}" data-copy-label="Numéro">${icon('copy')}</button>`) : ''}
+      ${a.whatsapp2 ? contact('phone', 'WhatsApp (2ᵉ ligne)', a.whatsapp2, `<button class="pc-btn" data-copy="${esc(a.whatsapp2)}" data-copy-label="Numéro">${icon('copy')}</button>`) : ''}
+      ${a.phone && a.phone !== a.whatsapp ? contact('phone', 'Téléphone', a.phone, `<button class="pc-btn" data-copy="${esc(a.phone)}" data-copy-label="Numéro">${icon('copy')}</button>`) : ''}
+      ${contact('mail', 'E-mail', a.email, `<button class="pc-btn" data-copy="${esc(a.email)}" data-copy-label="E-mail">${icon('copy')}</button>`)}
+      ${a.email2 ? contact('mail', 'E-mail commercial', a.email2, `<button class="pc-btn" data-copy="${esc(a.email2)}" data-copy-label="E-mail">${icon('copy')}</button>`) : ''}
+      ${!a.whatsapp ? '<p class="ag-note">Pas de numéro public : contact par e-mail ou par le chat de son app (réponse sous 24 h).</p>' : ''}
+      <p class="ag-note">${icon('clock')} ${esc(a.hours)}</p>
+    </div>
+    <div class="ag-actions">
+      ${wa ? `<a class="pc-btn main" data-wa="${esc(digits(a.whatsapp))}" href="${esc(wa)}" target="_blank" rel="noopener">${icon('phone')} Demander un devis sur WhatsApp</a>` : `<button class="pc-btn main" data-copy-msg="${esc(a.email)}">${icon('mail')} Copier le message et l’e-mail</button>`}
+      <a class="pc-btn" href="${esc(a.app)}" target="_blank" rel="noopener">${icon('plug')} Connecter à Shopify</a>
+      <a class="pc-btn" href="${esc(a.site)}" target="_blank" rel="noopener">${icon('eye')} Site officiel</a>
+    </div>
+    <p class="ag-source">${icon('check')} Vérifié le ${new Date(state.agentsChecked).toLocaleDateString('fr-FR')} · ${esc(a.source)}</p></div>`;
+}
+async function loadAgents() {
+  refreshQuote();
+  const out = $('#agentsOut');
+  const r = await api('/api/agents');
+  if (!r.ok) { out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error || 'Agents indisponibles.')}</div>`; return; }
+  state.agentsChecked = r.data.checked;
+  const open = r.data.agents.filter((a) => a.open).length;
+  const next = { test: ['basic', 1], basic: ['pro', 3], pro: ['scale', 10] }[state.me.plan];
+  out.innerHTML = `<p class="src-badge real" style="margin:14px 0">${icon('check')} ${open ? `${open} agent${open > 1 ? 's' : ''} débloqué${open > 1 ? 's' : ''} avec ton offre` : 'Les agents sont inclus dès l’offre Basique'}${next ? ` · ${next[1]} avec l’offre ${PLAN_NAME[next[0]]}` : ''}</p>
+    <div class="agents">${r.data.agents.map(agentCard).join('')}</div>`;
+}
+document.addEventListener('click', (e) => {
+  const c = e.target.closest('[data-copy]'); if (c) copy(c.dataset.copy, c.dataset.copyLabel || 'Texte');
+  const m = e.target.closest('[data-copy-msg]'); if (m) copy(`${m.dataset.copyMsg}\n\n${$('#qMessage').value}`, 'Message et e-mail');
+  const w = e.target.closest('[data-wa]'); if (w) w.href = `https://wa.me/${w.dataset.wa}?text=${encodeURIComponent($('#qMessage').value)}`;
+  const s = e.target.closest('[data-to-agent]');
+  if (s) { const p = cards[Number(s.dataset.toAgent)]; $('#qProduct').value = p.url ? `${p.title} - ${p.url}` : p.title; delete $('#qMessage').dataset.edited; $('#quoteBox').open = true; $('#supplierModal')?.classList.add('hidden'); location.hash = 'agents'; }
+});
+
 // ---------- Compte ----------
+// Connexion sur tous les appareils : e-mail + mot de passe (créé après le paiement).
+function pwForm(id, needEmail) {
+  return `<form class="card login-card" id="${id}">
+    <h3>${icon('lock')} Crée ton mot de passe</h3>
+    <p class="muted">Tu pourras te connecter sur ton téléphone, ta tablette ou n’importe quel ordinateur avec ${needEmail ? 'ton e-mail' : `<b>${esc(state.me.email)}</b>`} et ce mot de passe.</p>
+    ${needEmail ? '<input name="email" type="email" placeholder="Ton e-mail" autocomplete="email" required>' : ''}
+    <input name="password" type="password" placeholder="Mot de passe (8 caractères minimum)" autocomplete="new-password" minlength="8" required>
+    <input name="confirm" type="password" placeholder="Confirme le mot de passe" autocomplete="new-password" minlength="8" required>
+    <button class="btn btn-main" type="submit">Enregistrer mon mot de passe</button></form>`;
+}
+function renderLogin() {
+  const { plan, pw, canSetPw, email } = state.me;
+  const box = $('#loginBox');
+  if (plan === 'test') {
+    box.innerHTML = `<form class="card login-card" id="loginForm">
+      <h3>${icon('user')} Déjà client ? Connecte-toi</h3>
+      <input name="email" type="email" placeholder="E-mail utilisé au paiement" autocomplete="email" required>
+      <input name="password" type="password" placeholder="Mot de passe" autocomplete="current-password" required>
+      <button class="btn btn-main" type="submit">Me connecter <span class="arrow">→</span></button>
+      <p class="muted login-links"><a href="#forgot" data-scroll="forgot">Mot de passe oublié ?</a> · Pas encore client ? Ton compte est créé au paiement.</p></form>`;
+  } else if (!pw && canSetPw) box.innerHTML = pwForm('pwForm', !email);
+  else box.innerHTML = pw ? `<div class="card login-card on"><p>${icon('check')} Connecté${email ? ` : <b>${esc(email)}</b>` : ''} · accès sur tous tes appareils</p></div>` : '';
+}
+document.addEventListener('submit', async (e) => {
+  const f = e.target;
+  if (f.id === 'loginForm') {
+    e.preventDefault();
+    const d = new FormData(f);
+    const r = await api('/api/login', { email: d.get('email'), password: d.get('password') });
+    if (!r.ok) return toast(r.data.error || 'Connexion impossible.', 'err');
+    toast('Connecté : ton offre est active sur cet appareil.', 'ok');
+    await loadMe(); renderAccount(); renderAudit(); $('#radarOut').dataset.loaded = '';
+  }
+  if (f.id === 'pwForm' || f.id === 'pwFormWelcome') {
+    e.preventDefault();
+    const d = new FormData(f);
+    if (d.get('password') !== d.get('confirm')) return toast('Les deux mots de passe ne sont pas identiques.', 'err');
+    const r = await api('/api/password', { password: d.get('password'), email: d.get('email') || state.me.email });
+    if (!r.ok) return toast(r.data.error || 'Enregistrement impossible.', 'err');
+    toast('Mot de passe enregistré : connecte-toi où tu veux avec ton e-mail.', 'ok');
+    await loadMe(); renderAccount();
+    if (f.isConnected) f.outerHTML = `<p class="src-badge real">${icon('check')} Mot de passe enregistré</p>`; // le formulaire du Compte est déjà redessiné
+  }
+});
+document.addEventListener('click', (e) => { const a = e.target.closest('[data-scroll]'); if (a) { e.preventDefault(); $(`#${a.dataset.scroll}`)?.scrollIntoView({ behavior: 'smooth' }); } });
+
 function renderAccount() {
+  renderLogin();
   const { plan, email, portal } = state.me;
   const isScale = RANK[plan] >= 3;
   const paid = plan !== 'test';
@@ -547,7 +657,7 @@ function renderAccount() {
       ${!portal && state.me.portalLogin ? `<a class="btn btn-ghost" href="${esc(state.me.portalLogin)}" target="_blank" rel="noopener">Gérer mon abonnement</a>` : ''}
       ${!paid ? '<button class="btn btn-main" data-open-upgrade>Choisir une offre</button>' : ''}
       ${state.audit && isScale ? `<div class="export-audit"><p class="muted">Ton dernier audit (${esc(state.audit.name)}) en rapport pro :</p>${exportButton('audit')}</div>` : ''}
-      ${paid && !state.me.demo ? '<button class="btn btn-ghost" id="logoutBtn">Se déconnecter</button>' : ''}
+      ${paid ? '<button class="btn btn-ghost" id="logoutBtn">Se déconnecter</button>' : ''}
       ${state.me.demo ? `<button class="btn btn-ghost" id="resetDemo">${icon('refresh')} Réinitialiser l’aperçu</button>` : ''}
     </div>
     ${portal ? '<p class="plan-note" style="text-align:left;margin:0">Factures, carte bancaire, changement d’offre ou résiliation en 1 clic. Tu gardes l’accès jusqu’à la fin du mois payé.</p>' : ''}`;
@@ -574,9 +684,11 @@ $('#restoreForm').addEventListener('submit', async (e) => {
   const f = new FormData(e.target);
   const r = await api('/api/restore', { email: f.get('email'), last4: f.get('last4') });
   if (!r.ok) return toast(r.data.error || 'Introuvable.', 'err');
-  toast('Accès récupéré', 'ok');
+  toast('Accès récupéré : choisis maintenant ton nouveau mot de passe.', 'ok');
   await loadMe();
+  state.me.pw = false; // « mot de passe oublié » : on propose toujours d'en créer un nouveau
   renderAccount();
+  $('#loginBox').scrollIntoView({ behavior: 'smooth' });
 });
 
 // ---------- Confettis ----------
@@ -599,7 +711,8 @@ function confetti() {
 async function loadMe() {
   const r = await api('/api/me');
   if (r.ok) state.me = r.data;
-  try { if (state.me.plan && state.me.plan !== 'test') localStorage.setItem('sl_paid', state.me.plan); else localStorage.removeItem('sl_paid'); } catch { /* stockage indisponible */ }
+  // Client abonné : pas de quiz sur l'accueil. L'aperçu (offres simulées) ne compte pas : le quiz y reste toujours visible.
+  try { if (state.me.plan && state.me.plan !== 'test' && !state.me.demo) localStorage.setItem('sl_member', state.me.plan); else localStorage.removeItem('sl_member'); } catch { /* stockage indisponible */ }
   paintPlan();
   if (state.me.expired) toast('Ton abonnement a pris fin : retour à l’offre Test.', 'err');
 }

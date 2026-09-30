@@ -3,6 +3,7 @@
 // catalog/homeHtml/imageSvg servent au faux Shopify local (test/mock-shop.mjs).
 import { auditStore, spyStore } from './analyze.js';
 import { SPY_SNAPSHOT } from './spy-snapshot.js';
+import { agentsFor, AGENTS_CHECKED } from './agents.js';
 import { can, lockAudit, lockItems, lockSpy, PLANS, TEST_LIMITS } from './plans.js';
 import { NICHES } from './seeds.js';
 import { SNAPSHOT, SNAPSHOT_DATE } from './radar-snapshot.js';
@@ -79,8 +80,24 @@ export function demoApi(path, body = {}) {
   switch (url.pathname) {
     case '/api/config':
       return ok({ stripe: false, demo: true, plans: PLANS, niches: Object.fromEntries(Object.entries(NICHES).map(([k, v]) => [k, { label: v.label }])), spyExamples: Object.keys(SPY_SNAPSHOT) });
-    case '/api/me':
-      return ok({ plan, email: '', trialLeft: Math.max(0, TEST_LIMITS.audits - used), portal: false, demo: true });
+    case '/api/me': {
+      const acc = read('pr_demo_account', null);
+      return ok({ plan, email: plan !== 'test' && acc ? acc.email : '', trialLeft: Math.max(0, TEST_LIMITS.audits - used), portal: false, demo: true, pw: plan !== 'test' && !!acc, canSetPw: plan !== 'test' });
+    }
+    // Aperçu : compte simulé dans ce navigateur (sur le site en ligne, le mot de passe est haché et rangé chez Stripe).
+    case '/api/password': {
+      if (plan === 'test') return fail(403, 'Choisis une offre pour créer ton compte.');
+      if (!String(body.email || '').includes('@')) return fail(400, 'Entre ton e-mail.');
+      if (String(body.password || '').length < 8) return fail(400, 'Ton mot de passe doit faire au moins 8 caractères.');
+      write('pr_demo_account', { email: body.email.trim().toLowerCase(), pw: body.password, plan });
+      return ok({ ok: true });
+    }
+    case '/api/login': {
+      const acc = read('pr_demo_account', null);
+      if (!acc || acc.email !== String(body.email || '').trim().toLowerCase() || acc.pw !== body.password) return fail(401, 'E-mail ou mot de passe incorrect.');
+      write('pr_demo_plan', acc.plan);
+      return ok({ plan: acc.plan });
+    }
     case '/api/audit': {
       if (plan === 'test' && used >= TEST_LIMITS.audits) return fail(402, `Ton analyse gratuite est utilisée. Choisis une offre pour continuer.`);
       if (body.connected) connected = body.connected;
@@ -99,11 +116,13 @@ export function demoApi(path, body = {}) {
       if (!real) return fail(422, `Sur cet aperçu, l’espion fonctionne sur ces vraies boutiques : ${Object.keys(SPY_SNAPSHOT).join(', ')}, ou sur ta boutique connectée. Sur le site en ligne, toutes les boutiques Shopify sont analysables.`, { code: 'unverifiable' });
       return ok({ plan, report: lockSpy(spyStore(real), plan) });
     }
+    case '/api/agents':
+      return ok({ plan, checked: AGENTS_CHECKED, agents: agentsFor(plan) });
     case '/api/radar': {
       const niche = NICHES[url.searchParams.get('niche')] ? url.searchParams.get('niche') : 'mode';
       // Aperçu : vrais produits relevés sur les boutiques du radar (npm run snapshot), liens directs vers leur page.
       const items = (SNAPSHOT[niche] || []).map((i) => ({ ...i, snapshot: SNAPSHOT_DATE }));
-      return ok({ plan, niche, locked: !can(plan, 'radar'), items: can(plan, 'radar') ? items : lockItems(items.slice(0, 8), 1) });
+      return ok({ plan, niche, locked: !can(plan, 'radar'), items: can(plan, 'radar') ? items : lockItems(items.slice(0, 12), TEST_LIMITS.radar) });
     }
     case '/api/compare':
       if (!can(plan, 'compare')) return fail(403, 'Le comparateur multi-boutiques est inclus dans l’offre Scale.');
@@ -113,9 +132,11 @@ export function demoApi(path, body = {}) {
         if (rows.length < 2) return fail(422, `Sur cet aperçu, compare ces vraies boutiques : ${Object.keys(SPY_SNAPSHOT).join(', ')}. Sur le site en ligne, toutes les boutiques Shopify fonctionnent.`, { code: 'unverifiable' });
         return ok({ rows, failed: hosts.filter((h) => !SPY_SNAPSHOT[h]) });
       }
-    case '/api/checkout':
+    case '/api/checkout': {
       write('pr_demo_plan', body.plan);
+      const acc = read('pr_demo_account', null); if (acc) write('pr_demo_account', { ...acc, plan: body.plan });
       return ok({ changed: true, plan: body.plan });
+    }
     case '/api/logout':
       write('pr_demo_plan', 'test');
       return ok({ ok: true });

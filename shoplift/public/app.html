@@ -69,13 +69,32 @@
   </section>
 
   <!-- COMPTE -->
+  <!-- AGENTS DE SOURCING -->
+  <section class="view" id="v-agents">
+    <div class="view-head"><span class="eyebrow">Agents de sourcing</span><h1>Ton agent trouve, <span class="grad-text">négocie et expédie</span></h1>
+      <p class="muted">Un agent de sourcing achète tes produits à l’usine, contrôle la qualité et expédie à tes clients. Il se connecte à ta boutique Shopify : tes commandes lui arrivent automatiquement.</p></div>
+    <ol class="agent-steps"><li><b>1</b><span>Installe son app Shopify</span></li><li><b>2</b><span>Envoie-lui ton produit sur WhatsApp</span></li><li><b>3</b><span>Il te fait un devis et gère l’expédition</span></li></ol>
+    <details class="card quote-box" id="quoteBox">
+      <summary><h3>Personnalise ton message de devis</h3><small>Produit, pays de livraison, volume : il part pré-rempli sur WhatsApp</small></summary>
+      <div class="quote-fields">
+        <label>Produit (nom ou lien)<input id="qProduct" placeholder="ex : No Pull Dog Harness ou https://…"></label>
+        <label>Livraison vers<select id="qCountry"><option>France</option><option>Belgium</option><option>Switzerland</option><option>Canada</option><option>United States</option><option>Germany</option><option>Spain</option><option>Italy</option><option>United Kingdom</option></select></label>
+        <label>Volume / mois<select id="qVolume"><option>50-100</option><option>10-50</option><option>100-500</option><option>500+</option></select></label>
+      </div>
+      <textarea id="qMessage" rows="6" aria-label="Message pour l’agent"></textarea>
+      <p class="muted quote-note">Message en anglais, la langue des agents. Il part pré-rempli avec le bouton WhatsApp de chaque agent.</p>
+    </details>
+    <div id="agentsOut"></div>
+  </section>
+
   <section class="view" id="v-compte">
     <div class="view-head"><span class="eyebrow">Mon compte</span><h1>Ton <span class="grad-text">abonnement</span></h1></div>
+    <div id="loginBox"></div>
     <div class="card account-card" id="accountCard"></div>
     <h2 class="sub-title">Changer d’offre</h2>
     <div class="plans-mini" id="plansMini"></div>
-    <h2 class="sub-title">Tu as payé mais tu n’as pas accès ?</h2>
-    <p class="muted" style="margin:-4px 0 10px;font-size:14px">Nouvel appareil, navigateur fermé pendant le paiement : entre l’e-mail utilisé au paiement et les 4 derniers chiffres de ta carte.</p>
+    <h2 class="sub-title" id="forgot">Mot de passe oublié ou pas encore créé ?</h2>
+    <p class="muted" style="margin:-4px 0 10px;font-size:14px">Entre l’e-mail utilisé au paiement et les 4 derniers chiffres de ta carte : tu retrouves ton accès et tu choisis un nouveau mot de passe.</p>
     <form class="card restore" id="restoreForm">
       <input name="email" type="email" placeholder="E-mail utilisé au paiement" required autocomplete="email">
       <input name="last4" placeholder="4 derniers chiffres de ta carte" inputmode="numeric" pattern="\d{4}" maxlength="4" required>
@@ -89,6 +108,7 @@
   <a href="#produits" data-tab="produits"><span><i data-i="box"></i></span>Produits</a>
   <a href="#radar" data-tab="radar"><span><i data-i="radar"></i></span>Radar</a>
   <a href="#espion" data-tab="espion"><span><i data-i="eye"></i></span>Espion</a>
+  <a href="#agents" data-tab="agents"><span><i data-i="truck"></i></span>Agents</a>
   <a href="#compte" data-tab="compte"><span><i data-i="user"></i></span>Compte</a>
 </nav>
 

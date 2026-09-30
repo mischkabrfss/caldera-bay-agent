@@ -292,7 +292,7 @@ test('espion : ce que voit chaque offre', async () => {
   const report = spyStore({ ...fakeStore(), products });
   const test_ = lockSpy(report, 'test'); const basic = lockSpy(report, 'basic'); const pro = lockSpy(report, 'pro');
   assert.equal(test_.level, 'teaser'); assert.equal(test_.charts, null);
-  assert.ok(test_.insights.slice(2).every((i) => i.locked) && test_.launches.slice(1).every((p) => p.locked));
+  assert.ok(test_.insights.slice(2).every((i) => i.locked) && test_.launches.slice(2).every((p) => p.locked) && !test_.launches[1].locked);
   assert.equal(basic.level, 'insights'); assert.ok(basic.charts && basic.insights.every((i) => !i.locked));
   assert.ok(basic.launches.slice(0, 3).every((p) => !p.locked));
   assert.equal(pro.level, 'full'); assert.ok(pro.launches.every((p) => !p.locked));
@@ -324,4 +324,43 @@ test('radar : 2e photo et type transmis, heure du relevé renvoyée', async () =
   const res = await call('/api/radar?niche=mode');
   const data = await res.json();
   assert.ok('updatedAt' in data);
+});
+
+test('connexion : mot de passe stocké haché chez Stripe, login sur un autre appareil, erreurs claires', async () => {
+  const e = env({ STRIPE_SECRET_KEY: 'sk_test_x' });
+  let saved = '';
+  installFetch({ stripe: {
+    'customers/cus_1': (url, init) => { saved = decodeURIComponent(new URLSearchParams(init.body).get('metadata[sl_pw]')); return [200, { id: 'cus_1' }]; },
+    customers: () => [200, { data: [{ id: 'cus_1', email: 'ana@shop.fr', metadata: { sl_pw: saved } }] }],
+    subscriptions: () => [200, { data: [{ id: 'sub_1', status: 'active', customer: 'cus_1', metadata: { plan: 'pro' } }] }],
+  } });
+  // 1) client payant sur l'appareil du paiement : il choisit son mot de passe
+  const token = await sign({ plan: 'pro', sub: 'sub_1', cus: 'cus_1', email: 'ana@shop.fr', chk: Date.now(), exp: Date.now() + 1e9 }, 'sk_test_x');
+  let res = await call('/api/password', { method: 'POST', body: { password: 'court' }, cookie: `pr_session=${token}`, e });
+  assert.equal(res.status, 400);
+  res = await call('/api/password', { method: 'POST', body: { password: 'MonMotDePasse!2026' }, cookie: `pr_session=${token}`, e });
+  assert.equal(res.status, 200);
+  assert.ok(saved.startsWith('v1$100000$') && !saved.includes('MonMotDePasse'));
+  // 2) autre appareil : connexion
+  res = await call('/api/login', { method: 'POST', body: { email: 'ana@shop.fr', password: 'mauvais-mot' }, e });
+  assert.equal(res.status, 401);
+  res = await call('/api/login', { method: 'POST', body: { email: 'ana@shop.fr', password: 'MonMotDePasse!2026' }, e });
+  assert.equal(res.status, 200);
+  const me = await (await call('/api/me', { cookie: cookiesOf(res), e })).json();
+  assert.equal(me.plan, 'pro'); assert.equal(me.pw, true); assert.equal(me.portal, true);
+});
+
+test('agents de sourcing : 0 / 1 / 3 / 10 selon l’offre, coordonnées masquées sinon, fichier brut bloqué', async () => {
+  const { agentsFor, AGENTS } = await import('../public/agents.js');
+  const open = (plan) => agentsFor(plan).filter((a) => a.open).length;
+  assert.deepEqual(['test', 'basic', 'pro', 'scale'].map(open), [0, 1, 3, 10]);
+  const locked = agentsFor('basic')[1];
+  assert.ok(!locked.open && locked.whatsapp.includes('•') && !locked.site && !locked.app && locked.unlock === 'pro');
+  assert.equal(AGENTS.length, 10);
+  for (const a of AGENTS) {
+    assert.ok(/^[\w.+-]+@[\w-]+\.[a-z.]+$/.test(a.email) && a.app.startsWith('https://apps.shopify.com/') && a.source);
+    for (const n of [a.whatsapp, a.whatsapp2, a.phone].filter(Boolean)) assert.ok(/^\+\d[\d ]{7,17}\d$/.test(n), n);
+  }
+  const res = await call('/agents.js');
+  assert.equal(res.status, 404);
 });

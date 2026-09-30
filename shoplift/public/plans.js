@@ -18,9 +18,9 @@ export const FEATURES = {
   export: 'scale',
 };
 
-export const TEST_LIMITS = { audits: 1, fixes: 3, products: 3, teaser: 3 };
+export const TEST_LIMITS = { audits: 1, fixes: 3, products: 3, teaser: 3, radar: 3 };
 // Espion : ce que chaque offre voit, et combien de boutiques elle peut suivre.
-export const SPY_LIMITS = { test: { items: 1, insights: 2 }, basic: { items: 3, insights: 99 }, pro: { items: 99, insights: 99 }, scale: { items: 99, insights: 99 } };
+export const SPY_LIMITS = { test: { items: 2, insights: 2 }, basic: { items: 3, insights: 99 }, pro: { items: 99, insights: 99 }, scale: { items: 99, insights: 99 } };
 export const WATCH_LIMITS = { test: 0, basic: 0, pro: 5, scale: 20 };
 
 export const can = (plan, feature) => (PLANS[plan]?.rank ?? 0) >= PLANS[FEATURES[feature]].rank;
@@ -32,7 +32,8 @@ export function lockAudit(report) {
   return { ...report, fixes, products };
 }
 
-export const lockItems = (items, keep) => items.map((item, i) => (i < keep ? item : { image: item.image, score: item.score, locked: true }));
+// Aperçu verrouillé qui donne envie : on voit le type, le score et la demande, pas le nom, le prix ni le lien.
+export const lockItems = (items, keep) => items.map((item, i) => (i < keep ? item : { image: item.image, score: item.score, kind: item.kind || '', sellers: item.sellers || 0, discount: item.discount || 0, locked: true }));
 
 // Espion selon l'offre : Test = aperçu, Basique = conseils + graphiques + top 3, Pro/Scale = tout.
 export function lockSpy(report, plan) {

@@ -209,7 +209,7 @@
 
   document.addEventListener('click', (e) => { if (e.target.closest('[data-quiz]')) { e.preventDefault(); open(); } });
   let paid = false;
-  try { paid = !!localStorage.getItem('sl_paid'); } catch { /* stockage indisponible */ }
+  try { paid = !!localStorage.getItem('sl_member'); } catch { /* stockage indisponible */ }
   if (paid) build(); else open(); // abonné : pas de quiz ; sinon la 1re question s'affiche tout de suite
   window.shopliftQuiz = { open, compute: () => compute() };
 })();

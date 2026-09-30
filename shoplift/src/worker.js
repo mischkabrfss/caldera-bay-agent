@@ -2,8 +2,9 @@ import { auditStore, compareStores, radarFrom, spyStore } from '../public/analyz
 import { cookie, readCookie, secretOf, sign, verify } from './auth.js';
 import { can, lockAudit, lockItems, lockSpy, PLANS, TEST_LIMITS } from '../public/plans.js';
 import { kindOf, NICHES, SPY_EXAMPLES } from '../public/seeds.js';
+import { agentsFor, AGENTS_CHECKED } from '../public/agents.js';
 import { fetchStoreFull, fetchStoreLite, normalizeStore, StoreError } from './shopify.js';
-import { accessFromCheckout, accessFromEmail, changePlan, createCheckout, portalUrl, refreshAccess } from './stripe.js';
+import { accessFromCheckout, accessFromEmail, accessFromLogin, changePlan, createCheckout, portalUrl, refreshAccess, setPassword } from './stripe.js';
 
 const MONTH = 30 * 86_400_000;
 const RECHECK = 12 * 3_600_000;
@@ -65,7 +66,8 @@ async function getAccess(request, env, ctx) {
   if (access.dev || !env.STRIPE_SECRET_KEY || Date.now() - access.chk < RECHECK) return access;
   try {
     let fresh = await refreshAccess(env, access);
-    if (fresh && access.restored) fresh = { ...fresh, cus: undefined, restored: true };
+    if (fresh && access.restored) fresh = { ...fresh, cid: fresh.cus, cus: undefined, restored: true };
+    if (fresh) fresh.pw = access.pw;
     if (!fresh) {
       ctx.cookies.push(cookie(SESSION, '', 0));
       return { plan: 'test', expired: true };
@@ -124,7 +126,7 @@ async function route(request, env, ctx) {
   if (pathname === '/api/me') {
     const access = await getAccess(request, env, ctx);
     const trial = (await verify(readCookie(request, TRIAL), ctx.secret)) || { n: 0 };
-    return json({ plan: access.plan, email: access.email || '', expired: !!access.expired, trialLeft: Math.max(0, TEST_LIMITS.audits - trial.n), portal: !!access.cus, portalLogin: access.restored ? env.PORTAL_LOGIN_URL || '' : '' });
+    return json({ plan: access.plan, email: access.email || '', expired: !!access.expired, trialLeft: Math.max(0, TEST_LIMITS.audits - trial.n), portal: !!access.cus, pw: !!access.pw, canSetPw: !!(access.cus || access.cid), portalLogin: access.restored ? env.PORTAL_LOGIN_URL || '' : '' });
   }
 
   if (pathname === '/api/audit' && method === 'POST') {
@@ -143,12 +145,17 @@ async function route(request, env, ctx) {
     return json({ plan: access.plan, report });
   }
 
+  if (pathname === '/api/agents') {
+    const access = await getAccess(request, env, ctx);
+    return json({ plan: access.plan, checked: AGENTS_CHECKED, agents: agentsFor(access.plan) });
+  }
+
   if (pathname === '/api/radar') {
     const niche = NICHES[url.searchParams.get('niche')] ? url.searchParams.get('niche') : 'mode';
     const access = await getAccess(request, env, ctx);
     const { at, items } = await radar(niche);
     const allowed = can(access.plan, 'radar');
-    return json({ plan: access.plan, niche, updatedAt: at, locked: !allowed, items: allowed ? items : lockItems(items.slice(0, 8), 1) });
+    return json({ plan: access.plan, niche, updatedAt: at, locked: !allowed, items: allowed ? items : lockItems(items.slice(0, 12), TEST_LIMITS.radar) });
   }
 
   if (pathname === '/api/compare' && method === 'POST') {
@@ -198,8 +205,35 @@ async function route(request, env, ctx) {
     const access = await accessFromEmail(env, mail, String(last4));
     if (!access) throw new HttpError(404, 'Aucun abonnement actif ne correspond à ces informations.');
     // Accès récupéré : fonctionnalités oui, facturation non (elle passe par le lien e-mail sécurisé de Stripe).
-    await issue(ctx, { ...access, cus: undefined, restored: true });
+    await issue(ctx, { ...access, cid: access.cus, cus: undefined, restored: true });
+    return json({ plan: access.plan, pw: access.pw });
+  }
+
+  // Connexion sur n'importe quel appareil : e-mail + mot de passe.
+  if (pathname === '/api/login' && method === 'POST') {
+    const { email, password } = await body(request);
+    if (!env.STRIPE_SECRET_KEY) throw new HttpError(503, 'Paiement non configuré.');
+    if (typeof email !== 'string' || !email.includes('@') || typeof password !== 'string' || !password) throw new HttpError(400, 'Entre ton e-mail et ton mot de passe.');
+    const mail = email.trim();
+    if (!(await allowAttempt(`login/${encodeURIComponent(mail.toLowerCase())}`, 8))) throw new HttpError(429, 'Trop de tentatives. Réessaie dans une heure ou utilise « Mot de passe oublié ».');
+    const access = await accessFromLogin(env, mail, password);
+    if (!access) throw new HttpError(401, 'E-mail ou mot de passe incorrect.');
+    if (access.expired) throw new HttpError(402, 'Ton abonnement n’est plus actif. Choisis une offre pour retrouver ton accès.', { upgrade: 'basic' });
+    await issue(ctx, access);
     return json({ plan: access.plan });
+  }
+
+  // Création / changement du mot de passe (client payant, sur cet appareil).
+  if (pathname === '/api/password' && method === 'POST') {
+    const { password } = await body(request);
+    const access = await getAccess(request, env, ctx);
+    const customer = access.cus || access.cid;
+    if (!customer) throw new HttpError(403, 'Connecte-toi d’abord à ton abonnement.');
+    if (typeof password !== 'string' || password.length < 8 || password.length > 200) throw new HttpError(400, 'Ton mot de passe doit faire au moins 8 caractères.');
+    await setPassword(env, customer, password);
+    // Mot de passe choisi : accès complet sur cet appareil (facturation comprise).
+    await issue(ctx, { ...access, cus: customer, cid: undefined, restored: undefined, pw: true });
+    return json({ ok: true });
   }
 
   if (pathname === '/api/portal' && method === 'POST') {
@@ -234,6 +268,8 @@ export default {
 
   async fetch(request, env) {
     const url = new URL(request.url);
+    // Coordonnées des agents : jamais servies en fichier brut, seulement via /api/agents (filtré selon l'offre).
+    if (url.pathname === '/agents.js') return new Response('Not found', { status: 404 });
     if (!url.pathname.startsWith('/api/')) return env.ASSETS.fetch(request);
     globalThis.SHOPIFY_MOCK = env.SHOPIFY_MOCK || '';
     const ctx = { cookies: [], secret: secretOf(env) };
