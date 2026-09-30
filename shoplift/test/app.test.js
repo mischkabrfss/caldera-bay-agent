@@ -282,3 +282,22 @@ test('boutique connectée : produit à 0 € et produit non publié signalés', 
   assert.ok(titles.includes('Produits visibles sur la boutique en ligne'));
   assert.ok(!titles.includes('Panier moyen potentiel')); // pas de « prix moyen 0 € » absurde
 });
+
+test('fournisseurs : recherche propre et 7 liens valides', async () => {
+  const { supplierQuery, supplierLinks } = await import('../public/suppliers.js');
+  assert.equal(supplierQuery({ title: 'Zee.Dog | Leash Hanger', store: 'Zee.Dog' }), 'leash hanger');
+  assert.equal(supplierQuery({ title: 'Office Beauty Of The Week Collar Midi Dress - Heather Grey', store: 'Fashion Nova' }), 'collar midi dress');
+  const links = supplierLinks({ title: 'Easy Fit Harness', store: 'Wild One', type: 'Harness' });
+  assert.equal(links.length, 7);
+  for (const l of links) { assert.ok(new URL(l.url).protocol === 'https:'); assert.ok(l.app.startsWith('https://apps.shopify.com/')); }
+  assert.ok(links[0].url.includes('easy-fit-harness'));
+});
+
+test('radar : 2e photo et type transmis, heure du relevé renvoyée', async () => {
+  const store = { ...fakeStore(), products };
+  const item = radarFrom([store])[0];
+  assert.ok('image2' in item && 'type' in item);
+  const res = await call('/api/radar?niche=mode');
+  const data = await res.json();
+  assert.ok('updatedAt' in data);
+});

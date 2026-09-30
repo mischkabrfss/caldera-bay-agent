@@ -16,7 +16,10 @@ const words = (text) => (text ? text.split(' ').filter(Boolean).length : 0);
 const avg = (list) => (list.length ? list.reduce((a, b) => a + b, 0) / list.length : 0);
 const pct = (part, total) => (total ? Math.round((part / total) * 100) : 0);
 const clamp = (value, min = 0, max = 100) => Math.max(min, Math.min(max, Math.round(value)));
-const tag = (html, re) => (html.match(re) || [])[1]?.trim() || '';
+// Texte lu dans le HTML : entités décodées (« &amp; » → « & »).
+const ENT = { amp: '&', quot: '"', apos: "'", lt: '<', gt: '>', nbsp: ' ' };
+const decode = (t) => t.replace(/&(#x?[0-9a-f]+|[a-z]+);/gi, (m, e) => (e[0] === '#' ? String.fromCodePoint(parseInt(e[1].toLowerCase() === 'x' ? e.slice(2) : e.slice(1), e[1].toLowerCase() === 'x' ? 16 : 10)) : ENT[e.toLowerCase()] ?? m));
+const tag = (html, re) => decode((html.match(re) || [])[1]?.trim() || '');
 const round2 = (n) => Math.round(n * 100) / 100;
 
 export function priceOf(product) {
@@ -92,7 +95,7 @@ export function analyzeProduct(product, { now = Date.now(), rank = null } = {}) 
   score = clamp(score);
   const verdict = score >= 75 ? 'Produit fort' : score >= 55 ? 'À optimiser' : 'Faible';
   return {
-    id: product.id, title, handle: product.handle, image: product.images[0]?.src || '', price: round2(price), discount,
+    id: product.id, title, handle: product.handle, image: product.images[0]?.src || '', image2: product.images[1]?.src || '', type: product.type || '', price: round2(price), discount,
     available: !!available, score, verdict, pros, cons, age, rank,
   };
 }
@@ -128,7 +131,7 @@ export function auditStore(store, { now = Date.now() } = {}) {
   const html = store.html || '';
   const products = store.products || [];
   const rankOf = new Map((store.bestsellers || []).map((h, i) => [h, i]));
-  const analyzed = products.map((p) => analyzeProduct(p, { now, rank: rankOf.has(p.handle) ? rankOf.get(p.handle) : null }));
+  const analyzed = products.map((p) => ({ ...analyzeProduct(p, { now, rank: rankOf.has(p.handle) ? rankOf.get(p.handle) : null }), url: p.url !== undefined ? p.url : `https://${store.host}/products/${p.handle}` }));
   const d = detect(html);
   const checks = [];
   const add = (cat, ok, impact, title, why, fix, detail = '') => checks.push({ cat, ok, impact, title, why, fix, detail });
@@ -302,7 +305,7 @@ export function radarFrom(stores, { now = Date.now(), limit = 24, perStore = 6 }
       const { score, reasons } = winningScore(p, { rank, now });
       const price = priceOf(p);
       items.push({
-        title: p.title, image: p.images[0]?.src || '', price: round2(price), currency: store.meta?.currency || 'EUR',
+        title: p.title, image: p.images[0]?.src || '', image2: p.images[1]?.src || '', type: p.type || '', price: round2(price), currency: store.meta?.currency || 'EUR',
         discount: discountOf(p), store: store.meta?.name || store.host, host: store.host,
         url: `https://${store.host}/products/${p.handle}`, score, reasons,
         resale: { low: round2(price * 0.85), high: round2(price * 1.15) },

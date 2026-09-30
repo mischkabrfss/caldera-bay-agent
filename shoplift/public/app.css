@@ -83,7 +83,8 @@
 
 /* Produits */
 .prod { display: grid; grid-template-columns: 76px 1fr; gap: 14px; padding: 14px; animation: pop .5s both; animation-delay: var(--d, 0s); }
-.prod-img { width: 76px; height: 76px; border-radius: 14px; object-fit: cover; background: rgba(255,255,255,.06); }
+.prod-img { width: 76px; height: 95px; border-radius: 14px; object-fit: cover; background: linear-gradient(160deg, #f6f1e4, #e4dcc6); box-shadow: 0 8px 20px -10px rgba(0,0,0,.6); transition: transform .4s; }
+.prod:hover .prod-img { transform: scale(1.04) rotate(-1deg); }
 .prod h3 { font: 700 15px/1.3 var(--font); overflow-wrap: break-word; } /* titre complet, jamais tronqué */
 .prod-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; font-size: 13px; color: var(--muted); }
 .ring { --p: 50; --c: var(--green); flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font: 800 14px var(--display); background: radial-gradient(closest-side, var(--bg2) 76%, transparent 78%), conic-gradient(var(--c) calc(var(--p) * 1%), rgba(255,255,255,.08) 0); }
@@ -103,10 +104,23 @@
 .pgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .pcard { position: relative; overflow: hidden; display: flex; flex-direction: column; animation: pop .55s both; animation-delay: var(--d, 0s); transition: transform .3s; }
 .pcard:hover { transform: translateY(-4px); }
-.pcard .img { position: relative; aspect-ratio: 1; background: rgba(255,255,255,.05); overflow: hidden; }
-.pcard .img img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
-.pcard:hover .img img { transform: scale(1.07); }
-.pcard .score-badge { position: absolute; top: 8px; left: 8px; font: 800 12px var(--display); padding: 5px 9px; border-radius: 10px; background: rgba(10,36,25,.75); backdrop-filter: blur(8px); color: var(--green); }
+.pcard .img { position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden; background: linear-gradient(160deg, #f6f1e4, #e4dcc6); } /* fond « studio » clair : les photos sur fond blanc s'y fondent */
+.pcard .img::before { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.55) 50%, transparent 70%) -150% 0 / 200% 100% no-repeat; animation: shimmer 1.4s linear infinite; } /* reflet pendant le chargement */
+.pcard .img::after { content: ''; position: absolute; inset: auto 0 0; height: 38%; background: linear-gradient(transparent, rgba(10,36,25,.35)); pointer-events: none; }
+@keyframes shimmer { to { background-position: 250% 0; } }
+.pcard .ph { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.04); transition: opacity .6s ease, transform 1.2s cubic-bezier(.2,.8,.2,1); z-index: 1; }
+.pcard .ph.loaded { opacity: 1; transform: none; }
+.pcard .ph2, .pcard .ph2.loaded { opacity: 0; }
+.pcard:hover .ph.loaded { transform: scale(1.06); }
+.pcard:hover .ph2.loaded { opacity: 1; } /* 2e photo au survol */
+.pcard .deal { position: absolute; top: 8px; right: 8px; z-index: 2; font: 800 11px var(--display); padding: 5px 8px; border-radius: 10px; background: var(--red); color: #fff; box-shadow: 0 6px 16px -6px rgba(255,107,91,.8); }
+.pc-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 6px; margin-top: auto; padding-top: 6px; }
+.pc-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; padding: 0 10px; border-radius: 11px; font: 800 12px var(--font); background: var(--card-hi); border: 1px solid var(--line); color: var(--text); transition: transform .2s, background .2s; white-space: nowrap; }
+.pc-btn .ic { width: 15px; height: 15px; }
+.pc-btn.main { background: var(--green); border-color: var(--green); color: #0a2419; }
+.pc-btn:hover { transform: translateY(-2px); }
+.pc-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+.pcard .score-badge { position: absolute; z-index: 2; top: 8px; left: 8px; font: 800 12px var(--display); padding: 5px 9px; border-radius: 10px; background: rgba(10,36,25,.75); backdrop-filter: blur(8px); color: var(--green); }
 .pcard .score-badge.hot { background: var(--grad); color: #0a2419; animation: pulse 1.6s infinite; }
 @keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(255,210,63,.2); } }
 .pcard .body { padding: 10px 12px 12px; display: grid; gap: 6px; flex: 1; }
@@ -116,7 +130,7 @@
 .reasons { display: flex; flex-wrap: wrap; gap: 4px; }
 .reasons span { font-size: 10px; font-weight: 700; padding: 3px 7px; border-radius: 99px; background: rgba(255,230,138,.12); color: var(--gold); }
 .pcard .src { font-size: 11px; color: var(--muted); }
-.pcard.is-locked .img img { filter: blur(10px) saturate(.6); }
+.pcard.is-locked .img img, .pcard.is-locked .ph { filter: blur(10px) saturate(.6); }
 .pcard.is-locked .body { filter: blur(5px); }
 .spy-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 16px 0; }
 .spy-stats div { padding: 14px 8px; text-align: center; }
@@ -228,3 +242,33 @@ img.noimg { visibility: hidden; }
   .pm .btn { width: 100%; }
 }
 .pcard .body, .prod > div { min-width: 0; }
+
+/* Fenêtre fournisseurs */
+.sup-box { display: grid; gap: 14px; }
+.sup-head { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 14px; align-items: center; padding-right: 30px; }
+.sup-img { width: 76px; height: 95px; object-fit: cover; border-radius: 14px; background: #efe8d6; opacity: 0; transition: opacity .4s; }
+.sup-img.loaded { opacity: 1; }
+.sup-head h2 { font-size: 19px; margin: 4px 0; overflow-wrap: break-word; }
+.sup-head .muted { font-size: 13px; }
+.sup-query { font-size: 13px; color: var(--muted); } .sup-query b { color: var(--text); }
+.sup-list { display: grid; gap: 8px; }
+.sup-row { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 4px 12px; align-items: center; padding: 12px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); animation: pop .45s both; animation-delay: var(--d, 0s); }
+.sup-logo { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font: 800 18px var(--display); color: #fff; }
+.sup-aliexpress { background: #e8412c; } .sup-cj { background: #1f5fd6; } .sup-spocket { background: #6c3bdb; } .sup-zendrop { background: #111; } .sup-autods { background: #1b8f6e; } .sup-syncee { background: #0a7bd6; } .sup-alibaba { background: #ff6a00; }
+.sup-info { display: grid; min-width: 0; } .sup-info b { font-size: 15px; } .sup-info span { font-size: 12px; color: var(--muted); }
+.sup-go { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+@media (min-width: 560px) { .sup-row { grid-template-columns: 40px minmax(0, 1fr) auto; } .sup-go { grid-column: auto; } }
+.sup-tip { display: flex; gap: 8px; font-size: 13px; color: var(--muted); padding: 12px; border-radius: 14px; background: rgba(111,227,165,.08); }
+.sup-tip .ic { flex: none; width: 16px; height: 16px; color: var(--good); margin-top: 2px; }
+@media (prefers-reduced-motion: reduce) { .pcard .img::before { animation: none; } }
+
+/* Barre d'export PDF / Excel */
+.export-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 14px; padding: 8px 8px 8px 14px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); }
+.export-bar > span { display: inline-flex; align-items: center; gap: 6px; margin-right: auto; font-size: 13px; font-weight: 800; color: var(--muted); }
+.export-bar > span .ic { width: 16px; height: 16px; }
+.export-bar .pc-btn { min-height: 38px; padding: 0 14px; }
+.export-bar .pc-btn.busy { opacity: .85; pointer-events: none; }
+.export-audit { display: grid; gap: 8px; width: 100%; }
+.spin { width: 14px; height: 14px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin .7s linear infinite; }
+.src-badge.live { display: inline-flex; align-items: center; gap: 8px; }
+.src-badge.live .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 0 var(--good); animation: ping 1.8s infinite; }

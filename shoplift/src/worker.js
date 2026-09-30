@@ -29,7 +29,8 @@ async function cached(key, ttl, load, overwrite = false) {
     if (hit) return hit.json();
   }
   const value = await load();
-  if (cache && !(Array.isArray(value) && !value.length)) await cache.put(request, new Response(JSON.stringify(value), { headers: { 'Cache-Control': `max-age=${ttl}` } }));
+  const empty = (Array.isArray(value) && !value.length) || (Array.isArray(value?.items) && !value.items.length);
+  if (cache && !empty) await cache.put(request, new Response(JSON.stringify(value), { headers: { 'Cache-Control': `max-age=${ttl}` } }));
   return value;
 }
 
@@ -86,17 +87,18 @@ async function consumeTrial(request, ctx) {
   return TEST_LIMITS.audits - next.n;
 }
 
-// Radar : résultat frais 12 h + dernier résultat valide gardé 30 jours (si les boutiques ne répondent plus).
+// Radar : résultat frais 6 h (relevé automatique 4 fois par jour) + dernier résultat valide gardé 30 jours.
 async function scanNiche(niche) {
   const results = await Promise.allSettled(NICHES[niche].stores.map((host) => fetchStoreLite(host)));
   const items = radarFrom(results.filter((r) => r.status === 'fulfilled').map((r) => r.value));
-  if (items.length) await cached(`radar-backup/${niche}`, 2_592_000, async () => items, true);
-  return items;
+  const scan = { at: new Date().toISOString(), items };
+  if (items.length) await cached(`radar-backup/${niche}`, 2_592_000, async () => scan, true);
+  return scan;
 }
 
 async function radar(niche, fresh = false) {
-  const items = fresh ? await scanNiche(niche) : await cached(`radar/${niche}`, 43200, () => scanNiche(niche));
-  return items.length ? items : cached(`radar-backup/${niche}`, 2_592_000, async () => []);
+  const scan = fresh ? await scanNiche(niche) : await cached(`radar/${niche}`, 21600, () => scanNiche(niche));
+  return scan.items?.length ? scan : cached(`radar-backup/${niche}`, 2_592_000, async () => ({ at: null, items: [] }));
 }
 
 // mode : 'full' (audit), 'spy' (catalogue + page d'accueil), 'lite' (catalogue seul)
@@ -147,9 +149,9 @@ async function route(request, env, ctx) {
   if (pathname === '/api/radar') {
     const niche = NICHES[url.searchParams.get('niche')] ? url.searchParams.get('niche') : 'mode';
     const access = await getAccess(request, env, ctx);
-    const items = await radar(niche);
+    const { at, items } = await radar(niche);
     const allowed = can(access.plan, 'radar');
-    return json({ plan: access.plan, niche, locked: !allowed, items: allowed ? items : lockItems(items.slice(0, 8), 1) });
+    return json({ plan: access.plan, niche, updatedAt: at, locked: !allowed, items: allowed ? items : lockItems(items.slice(0, 8), 1) });
   }
 
   if (pathname === '/api/compare' && method === 'POST') {
@@ -225,7 +227,7 @@ async function route(request, env, ctx) {
 }
 
 export default {
-  // Tâche quotidienne (gratuite) : rafraîchit le radar de chaque niche.
+  // Tâche planifiée (gratuite, toutes les 6 h) : rafraîchit le radar de chaque niche.
   async scheduled(event, env, ctx) {
     ctx.waitUntil(Promise.allSettled(Object.keys(NICHES).map((niche) => radar(niche, true))));
   },

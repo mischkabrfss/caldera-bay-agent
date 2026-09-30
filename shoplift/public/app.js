@@ -16,15 +16,15 @@ const store = { get: (k) => { try { return JSON.parse(localStorage.getItem(k)); 
 const PLAN_INFO = {
   basic: { name: 'Basique', price: '19 €', pitch: 'Audit complet illimité + toutes les fiches notées' },
   pro: { name: 'Pro', price: '49 €', pitch: 'Radar produits gagnants + espion concurrents', feat: true },
-  scale: { name: 'Scale', price: '99 €', pitch: 'Comparateur 4 boutiques + export CSV' },
+  scale: { name: 'Scale', price: '99 €', pitch: 'Comparateur 4 boutiques + rapports PDF & Excel' },
 };
 const RANK = { test: 0, basic: 1, pro: 2, scale: 3 };
 // Ce que chaque offre inclut, dit simplement.
 const INCLUDED = {
   test: ['1 analyse gratuite de ta boutique', 'Ton score et tes 3 corrections les plus importantes'],
   basic: ['Analyses illimitées de ta boutique', 'Le plan d’action complet, du plus important au moins important', 'La note de chacun de tes produits, avec quoi corriger'],
-  pro: ['Tout ce qu’il y a dans Basique', 'Le radar des produits qui se vendent le mieux', 'L’espion : les best-sellers et nouveautés de tes concurrents'],
-  scale: ['Tout ce qu’il y a dans Pro', 'Le comparateur de 4 boutiques côte à côte', 'L’export de tes analyses en fichier Excel (CSV)'],
+  pro: ['Tout ce qu’il y a dans Basique', 'Le radar des produits qui se vendent le mieux, mis à jour toutes les 6 h', 'Pour chaque produit : 7 fournisseurs connectables à Shopify', 'L’espion : les best-sellers et nouveautés de tes concurrents'],
+  scale: ['Tout ce qu’il y a dans Pro', 'Le comparateur de 4 boutiques côte à côte', 'Tes analyses en rapport PDF pro et en fichier Excel avec photos'],
 };
 const FIRST_STEPS = {
   basic: [['audit', 'Analyse ta boutique', 'Tu obtiens ton score et la liste de ce qu’il faut corriger.'], ['produits', 'Corrige tes produits', 'Commence par les produits notés en rouge.']],
@@ -306,7 +306,7 @@ function renderProducts() {
   const list = [...a.products].sort((x, y) => (state.sort === 'asc' ? x.score - y.score : y.score - x.score));
   const hidden = a.products.filter((p) => p.locked).length;
   out.innerHTML = `${exportButton('products')}<div class="list">${list.slice(0, 120).map((p, i) => productCard(p, i, a.currency)).join('')}</div>${hidden ? `<div class="card unlock-banner"><h3>${icon('unlock')} ${hidden} fiches à débloquer</h3><p>Vois pour chaque produit ce qui cloche, pourquoi, et comment le corriger.</p><button class="btn btn-main" data-open-upgrade>Débloquer toutes les fiches</button></div>` : ''}`;
-  bindExport('products', () => [['Produit', 'Note', 'Verdict', 'Prix', 'À corriger', 'Points forts'], ...a.products.filter((p) => !p.locked).map((p) => [p.title, p.score, p.verdict, p.price, p.cons.map((c) => `${c.t} : ${c.fix}`).join(' | '), p.pros.join(' | ')])], `produits-${a.host}.csv`);
+  bindExport('products', 'products', () => ({ audit: a }));
 }
 $$('[data-sort]').forEach((b) => b.addEventListener('click', () => {
   state.sort = b.dataset.sort;
@@ -315,19 +315,58 @@ $$('[data-sort]').forEach((b) => b.addEventListener('click', () => {
 }));
 
 // ---------- Cartes produit (radar / espion) ----------
+// Photo produit nette sur tous les écrans : versions 400/800 px servies par le CDN Shopify.
+function photo(src, cls = 'ph') {
+  const url = safeImg(src);
+  if (!url) return '';
+  let srcset = '';
+  try { const u = new URL(src); if (u.hostname === 'cdn.shopify.com') srcset = [400, 800].map((w) => { u.searchParams.set('width', w); return `${esc(u.href)} ${w}w`; }).join(', '); } catch { /* image locale */ }
+  return `<img class="${cls}" src="${url}"${srcset ? ` srcset="${srcset}" sizes="(max-width: 720px) 50vw, 25vw"` : ''} alt="" loading="lazy" decoding="async">`;
+}
+const cards = []; // produits affichés, pour la fenêtre fournisseurs
+
 function pCard(p, i, cur) {
   const locked = p.locked;
-  const inner = `<div class="img">${p.image ? `<img src="${safeImg(p.image)}" alt="" loading="lazy">` : ''}<span class="score-badge ${p.score >= 80 ? 'hot' : ''}">${p.score >= 80 ? '' + icon('trend') + ' ' : ''}${p.score}</span></div>
-    <div class="body"><h3>${esc(locked ? 'Produit gagnant caché' : p.title)}</h3>
-    <div class="price">${locked ? '••,•• €' : money(p.price, p.currency || cur)}${!locked && p.discount ? `<em class="off">-${p.discount}%</em>` : ''}</div>
+  const media = `${p.image ? photo(p.image) : ''}${!locked && p.image2 ? photo(p.image2, 'ph ph2') : ''}<span class="score-badge ${p.score >= 80 ? 'hot' : ''}">${p.score >= 80 ? '' + icon('trend') + ' ' : ''}${p.score}</span>${!locked && p.discount ? `<span class="deal">-${p.discount}%</span>` : ''}`;
+  const body = `<h3>${esc(locked ? 'Produit gagnant caché' : p.title)}</h3>
+    <div class="price">${locked ? '••,•• €' : money(p.price, p.currency || cur)}</div>
     ${p.reasons?.length ? `<div class="reasons">${p.reasons.slice(0, 3).map((r) => `<span>${esc(r)}</span>`).join('')}</div>` : ''}
     ${!locked && p.resale ? `<span class="resale">Revente conseillée : ${money(p.resale.low, p.currency)} – ${money(p.resale.high, p.currency)}</span>` : ''}
     ${!locked && p.store ? `<span class="src">chez ${esc(p.store)}</span>` : ''}
-    ${!locked && p.verdict ? `<span class="src">${esc(p.verdict)}${p.age !== null && p.age !== undefined ? ` · il y a ${p.age} j` : ''}</span>` : ''}</div>`;
-  if (locked) return `<div class="card pcard is-locked" style="--d:${i * 0.05}s">${inner}<div class="lock-over"><span>${icon('lock')}</span><button class="btn btn-main" data-open-upgrade data-reason="Le radar et l’espion sont inclus dans l’offre Pro.">Pro</button></div></div>`;
-  if (!p.url) return `<div class="card pcard tilt" style="--d:${i * 0.05}s">${inner}</div>`; // pas de lien = pas de page morte
-  return `<a class="card pcard tilt" style="--d:${i * 0.05}s" href="${esc(p.url)}" target="_blank" rel="noopener nofollow">${inner}</a>`;
+    ${!locked && p.verdict ? `<span class="src">${esc(p.verdict)}${p.age !== null && p.age !== undefined ? ` · il y a ${p.age} j` : ''}</span>` : ''}`;
+  if (locked) return `<div class="card pcard is-locked" style="--d:${i * 0.05}s"><div class="img">${media}</div><div class="body">${body}</div><div class="lock-over"><span>${icon('lock')}</span><button class="btn btn-main" data-open-upgrade data-reason="Le radar et l’espion sont inclus dans l’offre Pro.">Pro</button></div></div>`;
+  const id = cards.push(p) - 1;
+  const link = (inner, cls) => (p.url ? `<a class="${cls}" href="${esc(p.url)}" target="_blank" rel="noopener nofollow">${inner}</a>` : `<div class="${cls}">${inner}</div>`);
+  return `<div class="card pcard tilt" style="--d:${i * 0.05}s">${link(media, 'img')}<div class="body">${body}
+    <div class="pc-actions">${p.url ? `<a class="pc-btn" href="${esc(p.url)}" target="_blank" rel="noopener nofollow">${icon('eye')} Voir</a>` : ''}<button class="pc-btn main" type="button" data-suppliers="${id}">${icon('truck')} Fournisseurs</button></div></div></div>`;
 }
+
+// Fenêtre fournisseurs : recherche du produit chez chaque fournisseur + app pour le connecter à Shopify.
+async function openSuppliers(p) {
+  const { supplierLinks } = await import('./suppliers.js');
+  const list = supplierLinks(p);
+  let m = $('#supplierModal');
+  if (!m) {
+    document.body.insertAdjacentHTML('beforeend', '<div class="modal hidden" id="supplierModal" role="dialog" aria-modal="true" aria-labelledby="supTitle"><div class="modal-box card sup-box"></div></div>');
+    m = $('#supplierModal');
+    m.addEventListener('click', (e) => { if (e.target === m || e.target.closest('[data-close]')) m.classList.add('hidden'); });
+  }
+  $('.sup-box', m).innerHTML = `<button class="modal-x" data-close aria-label="Fermer">${icon('x')}</button>
+    <div class="sup-head">${p.image ? photo(p.image, 'sup-img') : ''}<div><span class="eyebrow">Fournisseurs connectables à Shopify</span><h2 id="supTitle">${esc(p.title)}</h2>
+    <p class="muted">Vendu ${money(p.price, p.currency)}${p.resale ? ` · revente conseillée ${money(p.resale.low, p.currency)} – ${money(p.resale.high, p.currency)}` : ''}</p></div></div>
+    <p class="sup-query">Recherche : <b>« ${esc(list[0].query)} »</b></p>
+    <div class="sup-list">${list.map((s, k) => `<div class="sup-row" style="--d:${k * 0.04}s"><span class="sup-logo sup-${s.id}">${esc(s.name[0])}</span>
+      <div class="sup-info"><b>${esc(s.name)}</b><span>${esc(s.tag)} · livraison ${esc(s.delay)}</span></div>
+      <div class="sup-go"><a class="pc-btn main" href="${esc(s.url)}" target="_blank" rel="noopener nofollow">${s.open ? `${icon('eye')} Ouvrir` : `${icon('search')} Chercher`}</a><a class="pc-btn" href="${esc(s.app)}" target="_blank" rel="noopener nofollow">${icon('plug')} ${esc(s.via)}</a></div></div>`).join('')}</div>
+    <p class="sup-tip">${icon('check')} Commande toujours un échantillon avant de lancer la pub : tu vérifies la qualité, le délai et tu fais tes propres photos.</p>`;
+  m.classList.remove('hidden');
+}
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-suppliers]');
+  if (b) openSuppliers(cards[Number(b.dataset.suppliers)]);
+});
+// Photos : apparition en fondu une fois chargées.
+document.addEventListener('load', (e) => { if (e.target.classList?.contains('ph') || e.target.classList?.contains('sup-img')) e.target.classList.add('loaded'); }, true);
 
 // ---------- Radar ----------
 async function loadRadar(niche) {
@@ -341,9 +380,12 @@ async function loadRadar(niche) {
   if (!r.ok) { out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error)}</div>`; return; }
   if (!r.data.items.length) { out.innerHTML = '<div class="card empty"><b>' + icon('radar') + '</b>Le radar se recharge pour cette niche. Réessaie dans quelques minutes.</div>'; return; }
   const snap = r.data.items[0]?.snapshot;
-  const note = snap ? `<p class="src-badge" style="margin:0 0 12px">Vrais produits relevés le ${new Date(snap).toLocaleDateString('fr-FR')} (sur le site en ligne : mis à jour chaque jour).</p>` : '';
+  const at = r.data.updatedAt ? new Date(r.data.updatedAt) : null;
+  const ago = at ? Math.max(0, Math.round((Date.now() - at) / 3_600_000)) : null;
+  const note = at ? `<p class="src-badge live" style="margin:0 0 12px"><span class="dot"></span>Relevé en direct ${ago < 1 ? 'il y a moins d’une heure' : `il y a ${ago} h`} · actualisé toutes les 6 h</p>`
+    : snap ? `<p class="src-badge" style="margin:0 0 12px">Vrais produits relevés le ${new Date(snap).toLocaleDateString('fr-FR')} · sur le site en ligne, le radar s’actualise toutes les 6 h.</p>` : '';
   out.innerHTML = `${note}${exportButton('radar')}<div class="pgrid">${r.data.items.map((p, i) => pCard(p, i)).join('')}</div>${r.data.locked ? '<div class="card unlock-banner"><h3>' + icon('radar') + ' Débloque le radar complet</h3><p>24 produits gagnants par niche, avec leurs raisons et le lien direct.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}`;
-  bindExport('radar', () => [['Produit', 'Boutique', 'Prix', 'Revente conseillée min', 'Revente conseillée max', 'Score', 'Raisons', 'Lien'], ...r.data.items.filter((p) => !p.locked).map((p) => [p.title, p.store, p.price, p.resale?.low, p.resale?.high, p.score, (p.reasons || []).join(' · '), p.url])], `radar-${niche}.csv`);
+  bindExport('radar', 'radar', () => ({ items: r.data.items.filter((p) => !p.locked), niche: state.config?.niches?.[niche]?.label || niche, date: r.data.updatedAt || r.data.items[0]?.snapshot ? new Date(r.data.updatedAt || r.data.items[0].snapshot).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : undefined }));
 }
 
 // ---------- Espion & comparateur ----------
@@ -351,7 +393,7 @@ $$('[data-spy-tab]').forEach((b) => b.addEventListener('click', () => {
   $$('[data-spy-tab]').forEach((x) => x.classList.toggle('on', x === b));
   $('#spyPane').classList.toggle('hidden', b.dataset.spyTab !== 'spy');
   $('#comparePane').classList.toggle('hidden', b.dataset.spyTab !== 'compare');
-  if (b.dataset.spyTab === 'compare' && RANK[state.me.plan] < 3) openUpgrade('Le comparateur multi-boutiques et l’export CSV sont inclus dans l’offre Scale.');
+  if (b.dataset.spyTab === 'compare' && RANK[state.me.plan] < 3) openUpgrade('Le comparateur multi-boutiques et les rapports PDF & Excel sont inclus dans l’offre Scale.');
 }));
 
 $('#spyForm').addEventListener('submit', (e) => {
@@ -377,7 +419,7 @@ async function runSpy(storeInput, connected = null) {
     <div class="h3">${icon('rocket')} Derniers lancements</div><div class="pgrid">${s.launches.map((p, i) => pCard(p, i, s.currency)).join('')}</div>
     ${s.locked ? '<div class="card unlock-banner"><h3>' + icon('eye') + ' Vois tout chez tes concurrents</h3><p>Best-sellers, nouveautés et liens directs avec l’offre Pro.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}
     ${exportButton('spy')}`;
-  bindExport('spy', () => [['Liste', 'Produit', 'Prix', 'Promo %', 'Note', 'Lien'], ...s.bestsellers.map((p) => ['Best-seller', p.title, p.price, p.discount, p.score, p.url]), ...s.launches.map((p) => ['Nouveauté', p.title, p.price, p.discount, p.score, p.url])], `espion-${s.host}.csv`);
+  bindExport('spy', 'spy', () => ({ spy: s }));
 }
 
 $('#compareForm').addEventListener('submit', async (e) => {
@@ -395,33 +437,31 @@ $('#compareForm').addEventListener('submit', async (e) => {
   out.innerHTML = `<div class="card table-wrap"><table><thead><tr><th>Boutique</th>${cols.map((c) => `<th>${c[1]}</th>`).join('')}<th>Best-seller n°1</th></tr></thead><tbody>
     ${rows.map((x) => `<tr><td><b>${esc(x.name)}</b><br><small class="muted">${esc(x.host)}</small></td>${cols.map(([k, , m]) => `<td class="${x[k] === best(k, m) ? 'win' : ''}">${k === 'avgPrice' ? money(x[k], x.currency) : k === 'discounted' ? `${x[k]}%` : x[k]}</td>`).join('')}<td>${x.top ? `<a href="${esc(x.top.url)}" target="_blank" rel="noopener nofollow">${esc(x.top.title)}</a>` : '—'}</td></tr>`).join('')}
   </tbody></table></div>${r.data.failed.length ? `<p class="muted" style="margin-top:8px">Non analysées : ${r.data.failed.map(esc).join(', ')}</p>` : ''}
-  <button class="btn btn-ghost" style="margin-top:12px" id="csvBtn">⬇ Exporter en CSV</button>`;
-  $('#csvBtn').onclick = () => downloadCsv('comparatif.csv', [['Boutique', 'Adresse', ...cols.map((c) => c[1]), 'Best-seller'], ...rows.map((x) => [x.name, x.host, ...cols.map(([k]) => x[k]), x.top?.title || ''])]);
+  <div style="margin-top:12px">${exportButton('compare')}</div>`;
+  bindExport('compare', 'compare', () => ({ rows, cols }));
 });
 
-// Export CSV (offre Scale) : un bouton par écran, rien pour les autres offres.
-const exportButton = (id) => (RANK[state.me.plan] >= 3 ? `<button class="btn btn-ghost export-btn" type="button" id="export-${id}">${icon('download')} Exporter en CSV</button>` : '');
-function bindExport(id, rows, name) {
-  $(`#export-${id}`)?.addEventListener('click', () => downloadCsv(name, rows()));
+// Exports pro (offre Scale) : rapport PDF ou classeur Excel, aux couleurs Shoplift.
+const exportButton = (id) => (RANK[state.me.plan] >= 3 ? `<div class="export-bar" id="export-${id}"><span>${icon('download')} Exporter</span><button type="button" class="pc-btn main" data-fmt="pdf">${icon('file')} Rapport PDF</button><button type="button" class="pc-btn" data-fmt="xlsx">${icon('columns')} Excel</button></div>` : '');
+function bindExport(id, kind, data) {
+  $(`#export-${id}`)?.addEventListener('click', (e) => { const b = e.target.closest('[data-fmt]'); if (b) runExport(b, kind, data()); });
 }
-
-async function downloadCsv(name, rows) {
-  const csv = '\ufeff' + rows.map((r) => r.map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(';')).join('\n');
-  // Aperçu claude.ai : les téléchargements passent par la plateforme (le lien direct y est bloqué).
-  const downloads = demoApi && window.claude?.use ? await window.claude.use('downloads').catch(() => null) : null;
-  if (downloads) {
-    try { await downloads.save({ filename: name, data: csv }); toast('Fichier CSV enregistré.'); } catch (error) {
-      if (error?.code !== 'declined') toast('Téléchargement impossible ici. Réessaie dans quelques secondes.', 'err');
-    }
-    return;
+async function runExport(btn, kind, data) {
+  if (btn.classList.contains('busy')) return;
+  const fmt = btn.dataset.fmt;
+  btn.classList.add('busy');
+  const label = btn.innerHTML;
+  btn.innerHTML = `<span class="spin"></span> ${fmt === 'pdf' ? 'Création du PDF…' : 'Création du fichier…'}`;
+  try {
+    const { exportReport } = await import('./export.js');
+    await exportReport(kind, fmt, data);
+    toast(fmt === 'pdf' ? 'Rapport PDF prêt.' : 'Fichier Excel prêt.', 'ok');
+  } catch (error) {
+    if (error?.code !== 'declined') toast(error?.message && !error.code ? error.message : 'Export impossible pour le moment. Réessaie dans quelques secondes.', 'err');
+  } finally {
+    btn.classList.remove('busy');
+    btn.innerHTML = label;
   }
-  if (demoApi) { // aperçu sans téléchargement : on copie le tableau
-    try { await navigator.clipboard.writeText(csv); toast('Tableau copié : colle-le dans Excel ou Google Sheets.'); } catch { toast('Export indisponible sur cet aperçu : il fonctionne sur le site en ligne.', 'err'); }
-    return;
-  }
-  const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([csv], { type: 'text/csv' })), download: name });
-  a.click();
-  URL.revokeObjectURL(a.href);
 }
 
 // ---------- Compte ----------
@@ -438,7 +478,7 @@ function renderAccount() {
       ${portal ? `<button class="btn btn-main" id="portalBtn">Gérer mon abonnement</button>` : ''}
       ${!portal && state.me.portalLogin ? `<a class="btn btn-ghost" href="${esc(state.me.portalLogin)}" target="_blank" rel="noopener">Gérer mon abonnement</a>` : ''}
       ${!paid ? '<button class="btn btn-main" data-open-upgrade>Choisir une offre</button>' : ''}
-      ${state.audit && isScale ? `<button class="btn btn-ghost" id="exportAudit">${icon('download')} Exporter mon dernier audit</button>` : ''}
+      ${state.audit && isScale ? `<div class="export-audit"><p class="muted">Ton dernier audit (${esc(state.audit.name)}) en rapport pro :</p>${exportButton('audit')}</div>` : ''}
       ${paid && !state.me.demo ? '<button class="btn btn-ghost" id="logoutBtn">Se déconnecter</button>' : ''}
       ${state.me.demo ? `<button class="btn btn-ghost" id="resetDemo">${icon('refresh')} Réinitialiser l’aperçu</button>` : ''}
     </div>
@@ -458,12 +498,7 @@ function renderAccount() {
     toast('Démo réinitialisée : ton analyse gratuite est disponible.', 'ok');
   });
   $('#logoutBtn')?.addEventListener('click', async () => { await api('/api/logout', {}); location.reload(); });
-  $('#exportAudit')?.addEventListener('click', () => {
-    const a = state.audit;
-    downloadCsv(`audit-${a.host}.csv`, [['Type', 'Titre', 'Impact / Score', 'Pourquoi', 'Correction'],
-      ...a.fixes.map((f) => ['Boutique', f.title, f.impact, f.why, f.fix]),
-      ...a.products.flatMap((p) => p.cons.map((c) => [`Produit : ${p.title}`, c.t, p.score, c.why, c.fix]))]);
-  });
+  bindExport('audit', 'audit', () => ({ audit: state.audit }));
 }
 
 $('#restoreForm').addEventListener('submit', async (e) => {
