@@ -16,8 +16,8 @@
   --good: #6fe3a5; /* états positifs (score, points OK) */
   --radius: 22px;
   --grad: linear-gradient(90deg, var(--green), var(--green2) 30%, #fff1b8 50%, var(--green2) 70%, var(--green)); /* reflet doré d'étiquette de prix */
-  --font: 'Inter', system-ui, -apple-system, sans-serif;
-  --display: 'Sora', 'Inter', system-ui, sans-serif;
+  --font: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --display: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
   color-scheme: dark;
 }
 
@@ -75,11 +75,11 @@ img { max-width: 100%; display: block; }
 .nav { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); background: rgba(10,36,25, .6); border-bottom: 1px solid transparent; transition: border-color .3s; }
 .nav.scrolled { border-color: var(--line); }
 .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 12px; }
-.logo { display: inline-flex; align-items: center; gap: 10px; font: 800 19px/1 var(--display); letter-spacing: -.02em; }
-.logo-mark { position: relative; width: 32px; height: 32px; border-radius: 10px; background: conic-gradient(from 0deg, transparent 0 270deg, var(--green) 360deg), #0d2b1f; border: 1px solid rgba(255,210,63,.4); animation: spin 2.4s linear infinite; box-shadow: 0 0 24px rgba(255,210,63,.35); }
-.logo-mark::after { content: ''; position: absolute; inset: 11px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px var(--green); }
+.logo { display: inline-flex; align-items: center; gap: 9px; font: 800 20px/1 var(--display); letter-spacing: -.035em; }
+.logo-mark { position: relative; width: 34px; height: 34px; background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20d%3D%22M3.5%2016%2011%206.5h16a2.5%202.5%200%200%201%202.5%202.5v14a2.5%202.5%200%200%201-2.5%202.5H11z%22%20fill%3D%22%23ffd23f%22/%3E%3Ccircle%20cx%3D%2210.5%22%20cy%3D%2216%22%20r%3D%222%22%20fill%3D%22%230a2419%22/%3E%3Cpath%20d%3D%22M15.5%2021%2022%2012.5m-5%200h5v5%22%20fill%3D%22none%22%20stroke%3D%22%230a2419%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") center / contain no-repeat; transform-origin: 30% 50%; animation: swing 3.2s ease-in-out infinite; filter: drop-shadow(0 4px 14px rgba(255,210,63,.35)); }
+@keyframes swing { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(6deg); } } /* l'étiquette se balance */
 @keyframes spin { to { transform: rotate(360deg); } }
-.logo b { color: var(--green); }
+.logo b { color: inherit; font-weight: inherit; }
 .logo span:not(.logo-mark) { display: inline; }
 .nav-links { display: flex; gap: 8px; align-items: center; }
 .nav-links .btn { min-height: 40px; padding: 0 14px; font-size: 13px; border-radius: 12px; }
