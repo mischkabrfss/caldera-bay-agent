@@ -163,7 +163,7 @@ section { padding: 70px 0; position: relative; }
 .feature .tag-plan { position: absolute; top: 20px; right: 20px; font-size: 11px; font-weight: 800; letter-spacing: .08em; padding: 5px 10px; border-radius: 99px; background: rgba(255,255,255,.08); color: var(--muted); }
 .f-ic { position: relative; width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; font-size: 24px; background: linear-gradient(135deg, rgba(255,210,63,.2), rgba(255,176,32,0.1)); border: 1px solid var(--line); }
 .viz { position: relative; margin-top: 18px; height: 110px; border-radius: 16px; background: rgba(0,0,0,.28); border: 1px solid var(--line); overflow: hidden; }
-.viz-bars { display: flex; align-items: flex-end; gap: 7px; height: 100%; padding: 14px; }
+.viz-bars { display: flex; align-items: flex-end; gap: 7px; padding: 14px; }
 .viz-bars i { flex: 1; border-radius: 6px 6px 3px 3px; background: var(--grad); background-size: 100% 300%; height: 10%; transition: height 1.2s cubic-bezier(.2,.8,.2,1); }
 .in .viz-bars i { height: var(--h); }
 .viz-radar { display: grid; place-items: center; }
@@ -443,3 +443,13 @@ body.bam-in #site { animation: bamIn .9s cubic-bezier(.2,1.3,.3,1); }
 .trial-go { margin-top: auto; justify-content: center; font-size: 16px; padding: 16px 18px; white-space: normal; animation: pulseCta 2.4s ease-in-out 1.6s infinite; }
 @keyframes pulseCta { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,210,63,.45); } 50% { box-shadow: 0 0 0 12px rgba(255,210,63,0); } }
 @media (prefers-reduced-motion: reduce) { .trial-card, .trial-go { animation: none; } }
+
+/* ---------- Téléphones : effets allégés pour un défilement net (pas de cartes qui clignotent ou se découpent) ---------- */
+@media (hover: none), (max-width: 720px) {
+  .card, .chip, .toast { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .bg-fx::after { animation: none; mix-blend-mode: normal; opacity: .04; }
+  .blob, .quiz-bg i { animation: none; filter: blur(70px); }
+  .reveal { transform: translateY(24px); }
+  .feature:hover, .feature.tilt:hover { transform: none; z-index: auto; }
+  .feature:hover::before { transform: none; }
+}
