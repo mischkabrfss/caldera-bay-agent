@@ -39,6 +39,8 @@ export function createCheckout(env, plan, origin, email) {
     customer_email: email || undefined,
     success_url: `${origin}/api/activate?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${origin}/#tarifs`,
+    // Renonciation expresse au droit de rétractation (contenu numérique fourni immédiatement, art. L221-28 13° C. conso).
+    custom_text: { submit: { message: `En payant, tu acceptes les CGV (${origin}/cgv.html), tu demandes l’accès immédiat au service et tu renonces à ton droit de rétractation. Sans engagement : résiliable à tout moment depuis ton espace.` } },
     line_items: {
       0: {
         quantity: 1,
