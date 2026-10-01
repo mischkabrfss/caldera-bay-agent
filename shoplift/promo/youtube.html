@@ -5,6 +5,11 @@
 :root{--y:#ffd23f;--o:#ffb020;--k:#0a0a0a;--w:#f4f1ea;--mu:#8f8a80;--g:#3ddc84;--r:#ff5a4e;--line:rgba(255,255,255,.12)}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:1920px;height:1080px;overflow:hidden;background:var(--k)}
+html.v,html.v body{width:1080px;height:1920px}
+.step{display:flex;align-items:center;gap:34px;margin-top:34px}.step>b{flex:none;width:118px;height:118px;border-radius:30px;background:var(--y);color:var(--k);display:grid;place-items:center;font:800 68px M}.step .h{font-size:100px;white-space:nowrap}
+html.v .step>b{width:104px;height:104px;font-size:58px;border-radius:26px}html.v .step .h{font-size:70px}html.v .step{gap:24px;margin-top:28px}
+.xr{display:grid;grid-template-columns:2.2fr .8fr .8fr 1.4fr;border-bottom:1px solid #e3e6e4;height:58px;align-items:center;font:600 17px M;color:#1d2a22}.xr>*{padding:0 14px;border-right:1px solid #e3e6e4;height:100%;display:flex;align-items:center;gap:10px}
+.xr img{width:40px;height:40px;object-fit:cover;border-radius:6px}.xr i{display:block;height:9px;border-radius:5px;background:#d5dbd7}
 body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
 .a{position:absolute}.full{position:absolute;inset:0}
 .sc{position:absolute;inset:0;visibility:hidden;overflow:hidden}
@@ -27,6 +32,7 @@ body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
 .card .kd{display:block;padding:13px 16px 0;font:800 23px M;letter-spacing:-.01em;white-space:nowrap}
 .card .sl{display:block;padding:3px 16px 14px;font:700 16px M;color:var(--g);white-space:nowrap}
 .issue{position:absolute;display:flex;flex-direction:column;gap:9px;padding:18px 24px;border-radius:20px;background:#141414;border:1.5px solid var(--line);font:700 27px M;white-space:nowrap;box-shadow:0 30px 60px -25px rgba(0,0,0,.9)}
+.pb{display:block;height:10px;border-radius:5px;background:#ffd23f;margin-top:-6px;transform-origin:left}
 .pill{width:fit-content;font:700 15px J;letter-spacing:.12em;padding:5px 10px;border-radius:8px}
 .hi{background:rgba(255,90,78,.16);color:var(--r)}.md{background:rgba(255,176,32,.16);color:var(--o)}
 .ring{position:absolute;border-radius:50%;border:1.5px solid rgba(255,255,255,.1)}
@@ -60,8 +66,8 @@ body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
    <i id="aU" class="a" style="left:.02em;right:.02em;bottom:-.1em;height:.085em;background:var(--y);transform-origin:left;transform:scaleX(0)"></i>
  </div></div>
  <div class="full" id="aLine" style="display:grid;place-items:center;text-align:center"><div>
-   <div class="h split" style="font-size:168px">Et tu ne sais</div>
-   <div class="h" style="font-size:168px;margin-top:8px"><span class="split">même pas</span> <span id="aOu" class="y" style="position:relative;display:inline-block;margin-left:.12em"><span class="split">où.</span>
+   <div class="h split aL" style="font-size:168px">Et tu ne sais</div>
+   <div class="h aL" style="font-size:168px;margin-top:8px"><span class="split">même pas</span> <span id="aOu" class="y" style="position:relative;display:inline-block;margin-left:.12em"><span class="split">où.</span>
      <svg class="a" viewBox="0 0 300 140" preserveAspectRatio="none" style="left:-18%;top:-12%;width:140%;height:130%;overflow:visible"><path id="aCirc" pathLength="1" d="M40 78 C30 30 170 8 250 34 C302 52 292 112 170 124 C84 132 18 112 22 72 C26 40 92 22 150 20" fill="none" stroke="#ffd23f" stroke-width="7" stroke-linecap="round" stroke-dasharray="1 1" stroke-dashoffset="1"/></svg></span></div>
  </div></div>
  <div class="full" id="aIris" style="background:var(--y);clip-path:circle(0px at 50% 50%)"></div>
@@ -127,7 +133,7 @@ body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
 <div class="sc" id="sD">
  <div class="a h bgw" id="bgD" style="top:650px">ESPION · AGENTS · ESPION · AGENTS</div>
  <div class="full" id="d1">
-   <div class="a" style="left:120px;top:250px;width:760px">
+   <div class="a" id="d1T" style="left:120px;top:250px;width:760px">
      <div class="mono lbl y" id="dLbl">03 — Espion concurrents</div>
      <div class="h split" style="font-size:150px;margin-top:30px">Espionne</div>
      <div class="h split" style="font-size:66px;margin-top:10px">n’importe quel <span class="y">concurrent.</span></div>
@@ -145,7 +151,7 @@ body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
    </div>
  </div>
  <div class="full" id="d2" style="visibility:hidden">
-   <div class="a" style="left:120px;top:236px;width:800px">
+   <div class="a" id="d2T" style="left:120px;top:236px;width:800px">
      <div class="mono lbl y" id="eLbl">04 — Agents de sourcing</div>
      <div class="h" style="font-size:156px;margin-top:30px"><span class="m"><span class="mi y" id="dN" style="font-variant-numeric:tabular-nums">10</span></span> <span class="split">agents</span></div>
      <div class="h split" style="font-size:156px">vérifiés.</div>
@@ -169,8 +175,8 @@ body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
 <div class="sc" id="sE">
  <div class="full" style="background:var(--w)"></div>
  <div class="a" id="eRing" style="border-radius:50%;border:12px solid var(--k);opacity:0"></div>
- <div class="a" style="left:130px;top:190px;color:var(--k)">
-   <div class="mono lbl" id="eLb" style="color:rgba(10,10,10,.6)">05 — Tarifs</div>
+ <div class="a" id="eT" style="left:130px;top:190px;color:var(--k)">
+   <div class="mono lbl" id="eLb" style="color:rgba(10,10,10,.6)">06 — Tarifs</div>
    <div class="h split" style="font-size:96px;margin-top:26px">Tout ça dès</div>
    <div id="ePrice" style="display:flex;align-items:flex-start;height:420px;margin-top:4px">
      <div id="eCol" style="height:420px;overflow:hidden;filter:url(#fbE)"><div id="eStrip" class="h" style="font-size:470px;line-height:420px;letter-spacing:-.06em;font-variant-numeric:tabular-nums"></div></div>
@@ -181,21 +187,61 @@ body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
    <div class="mono" id="eNote" style="font-size:19px;margin-top:40px;color:rgba(10,10,10,.65)">Sans engagement · résiliable en 1 clic · paiement Stripe</div>
  </div>
  <div class="a" id="ePlans" style="left:1150px;top:290px;width:640px;display:grid;gap:22px"></div>
- <div class="a" id="shT" style="left:0;right:0;top:0;height:541px;background:var(--k);transform:translateY(-100%)"></div>
- <div class="a" id="shB" style="left:0;right:0;bottom:0;height:541px;background:var(--k);transform:translateY(100%)"></div>
+ <div class="a" id="shT" style="left:0;right:0;top:0;height:50.1%;background:var(--k);transform:translateY(-100%)"></div>
+ <div class="a" id="shB" style="left:0;right:0;bottom:0;height:50.1%;background:var(--k);transform:translateY(100%)"></div>
+</div>
+
+<!-- G · rapports PDF & Excel -->
+<div class="sc" id="sG">
+ <div class="a h bgw" id="bgG" style="top:650px">PDF · EXCEL · PDF · EXCEL · PDF</div>
+ <div class="a" id="gT" style="left:120px;top:236px;width:780px">
+   <div class="mono lbl y" id="gLbl">05 — Rapports pro</div>
+   <div class="h split" style="font-size:150px;margin-top:30px">Exporte</div>
+   <div class="h split" style="font-size:150px">en <span class="y">1 clic.</span></div>
+   <div class="sub" id="gSub" style="margin-top:36px;max-width:640px">Rapports PDF et fichiers Excel avec photos, prêts à envoyer à tes clients.</div>
+   <div style="display:flex;gap:14px;margin-top:38px"><div class="chip" id="gC1">PDF</div><div class="chip" id="gC2">Excel</div><div class="chip" id="gC3" style="background:var(--y);color:var(--k);border:0">Offre Scale</div></div>
+ </div>
+ <div class="a" id="xl" style="left:930px;top:300px;width:780px;height:480px;border-radius:18px;background:#fff;overflow:hidden;box-shadow:0 60px 100px -40px rgba(0,0,0,.95)">
+   <div style="height:50px;background:#1f7244;display:flex;align-items:center;gap:12px;padding:0 20px;color:#fff;font:600 17px J"><b style="background:#fff;color:#1f7244;border-radius:5px;padding:2px 7px;font:800 15px M">X</b>rapport-shoplift.xlsx</div>
+   <div class="xr" style="background:#e9f2ec;font-weight:800"><span>Produit</span><span>Score</span><span>Prix</span><span>Fournisseur</span></div>
+   <div id="xlRows"></div>
+   <div class="a" style="left:0;right:0;bottom:0;height:42px;background:#f1f3f2;border-top:1px solid #dfe3e1;display:flex;font:700 15px M;color:#4b5a51"><span style="padding:11px 20px;background:#fff;color:#1f7244;border-bottom:3px solid #1f7244">Produits</span><span style="padding:11px 20px">Conseils</span><span style="padding:11px 20px">Fournisseurs</span></div>
+ </div>
+ <div class="a" id="pdf" style="left:1250px;top:190px;width:440px;height:622px;border-radius:10px;background:#fff;color:#0a0a0a;overflow:hidden;box-shadow:0 70px 120px -40px rgba(0,0,0,.95);transform-origin:50% 100%">
+   <div style="height:92px;background:#0a0a0a;display:flex;align-items:center;gap:14px;padding:0 26px"><span class="logo" style="width:36px;height:36px"></span><div><div class="mono" style="color:#ffd23f;font-size:15px">Rapport Shoplift</div><div style="color:#8f8a80;font:600 15px M;margin-top:3px">ta-boutique.com</div></div></div>
+   <div style="display:flex;align-items:center;gap:26px;padding:26px 26px 10px">
+     <div style="position:relative;width:130px;height:130px"><svg width="130" height="130" viewBox="0 0 130 130" style="transform:rotate(-90deg)"><circle cx="65" cy="65" r="52" fill="none" stroke="#eee" stroke-width="12"/><circle id="pdfArc" cx="65" cy="65" r="52" fill="none" stroke="#ffb020" stroke-width="12" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg><div class="full" style="display:grid;place-items:center;font:800 42px M;letter-spacing:-.04em" id="pdfN">0</div></div>
+     <div style="flex:1;display:grid;gap:12px;font:700 13px J;letter-spacing:.06em">SEO<i class="pb" data-w="82"></i>CONFIANCE<i class="pb" data-w="58"></i>FICHES<i class="pb" data-w="71"></i></div>
+   </div>
+   <div class="mono" style="padding:16px 26px 8px;font-size:13px;color:#777">Top produits</div>
+   <div id="pdfRows" style="padding:0 26px"></div>
+   <div class="a" style="left:26px;right:26px;bottom:20px;border-top:1px solid #eee;padding-top:10px;font:600 12px J;color:#999;display:flex;justify-content:space-between"><span>shoplift · rapport</span><span>1 / 6</span></div>
+ </div>
+ <div class="a chip" id="gToast" style="left:1080px;top:862px;background:#141414"><span style="width:30px;height:30px;border-radius:50%;background:var(--g);color:#0a0a0a;display:grid;place-items:center;font-size:18px">✓</span>rapport-shoplift.pdf · téléchargé</div>
+</div>
+
+<!-- H · 3 étapes -->
+<div class="sc" id="sH">
+ <div class="a h bgw" id="bgH" style="top:640px">3 ÉTAPES · 3 ÉTAPES · 3 ÉTAPES</div>
+ <div class="full" style="display:grid;place-items:center"><div id="hT">
+   <div class="mono lbl y" id="hLbl">Comment ça marche</div>
+   <div class="step"><b>1</b><span class="h split">Colle ton lien.</span></div>
+   <div class="step"><b>2</b><span class="h split">Corrige ce qui bloque.</span></div>
+   <div class="step"><b>3</b><span class="h split">Trouve tes best-sellers.</span></div>
+ </div></div>
 </div>
 
 <!-- F · CTA -->
 <div class="sc" id="sF">
  <div class="full" style="background:radial-gradient(ellipse 60% 55% at 50% 60%,rgba(255,210,63,.09),transparent 70%)"></div>
- <div class="a" style="left:0;right:0;top:150px;display:flex;justify-content:center;align-items:center;gap:34px">
+ <div class="a" id="fLogo" style="left:0;right:0;top:150px;display:flex;justify-content:center;align-items:center;gap:34px">
    <span class="logo" id="fTag" style="width:150px;height:150px;transform-origin:30% 50%"></span>
    <div class="h" id="fWord" style="font-size:176px">Shoplift</div>
  </div>
  <div class="a h" id="fLine" style="left:0;right:0;top:430px;text-align:center;font-size:84px"><span class="split">Ta</span> <span class="m"><span class="mi">1<span style="font-size:.55em;vertical-align:.7em;letter-spacing:0">re</span></span></span> <span class="split">analyse est</span></div>
  <div class="a" id="fStamp" style="left:0;right:0;top:535px;text-align:center"><span class="h" style="display:inline-block;font-size:150px;background:var(--y);color:var(--k);padding:.02em .16em .06em;border-radius:14px">OFFERTE.</span></div>
  <div class="a" id="fParts" style="left:960px;top:640px"></div>
- <div class="a" style="left:0;right:0;top:790px;text-align:center"><div id="fCta" style="display:inline-block;position:relative">
+ <div class="a" id="fCtaW" style="left:0;right:0;top:790px;text-align:center"><div id="fCta" style="display:inline-block;position:relative">
    <i class="a" id="fP0" style="inset:0;border-radius:66px;border:3px solid var(--y);opacity:0"></i><i class="a" id="fP1" style="inset:0;border-radius:66px;border:3px solid var(--y);opacity:0"></i>
    <div class="btn">Analyser ma boutique <span>→</span><i class="a" id="fShine" style="top:-20%;bottom:-20%;width:120px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);transform:skewX(-20deg);left:-30%"></i></div></div></div>
  <div class="a mono" id="fNote" style="left:0;right:0;top:962px;text-align:center;font-size:21px;color:rgba(244,241,234,.75)">↓ Lien en description · sans carte bancaire</div>
@@ -241,19 +287,31 @@ const wipeIn = (el, t, a, d = .4) => { el.style.clipPath = `inset(-20% ${(1 - ez
 
 // --- données réelles du radar (radar-snapshot) ---
 const PROD = [['sport-0', 'Legging', 92, 5], ['animaux-0', 'Lit pour animal', 92, 4], ['beaute-0', 'Lèvres', 99, 6], ['animaux-2', 'Harnais', 92, 5], ['bijoux-0', 'Lunettes de soleil', 88, 4], ['mode-0', 'Haut', 78, 8]];
-const RX = 1340, RY = 515, POS = [[1340, 296], [1600, 336], [1606, 712], [1336, 742], [1074, 706], [1080, 330]];
+const V = /[?&]v\b/.test(location.search); if (V) document.documentElement.classList.add('v');
+const W = V ? 1080 : 1920, H = V ? 1920 : 1080;
+const L = V ? { cx: 540, barTop: 830, barW: 940, btn: [869, 895], cur1: [1000, 1350, 869, 901], gauge: [540, 1010], issues: [[120, 1300], [120, 1412], [120, 1524]],
+  RX: 540, RY: 1260, POS: [[540, 1085], [800, 1105], [806, 1450], [536, 1475], [274, 1445], [280, 1100]], ring: [470, 540], cur2: [1000, 1750, 870, 1236], pillsR: 480, pillsY: [900, 1022, 1144] }
+  : { cx: 960, barTop: 495, barW: 980, btn: [1336, 560], cur1: [1560, 930, 1336, 566], gauge: [1110, 560], issues: [[1430, 250], [1470, 482], [1430, 714]],
+  RX: 1340, RY: 515, POS: [[1340, 296], [1600, 336], [1606, 712], [1336, 742], [1074, 706], [1080, 330]], ring: [470, 560], cur2: [1760, 1100, 1232, 846], pillsR: 650, pillsY: [330, 452, 574] };
+const RX = L.RX, RY = L.RY, POS = L.POS;
+const BCY = L.barTop + 65;
+// positions propres au format vertical (TikTok 1080×1920)
+const VPOS = { bHead: { top: '560px', fontSize: '100px' }, bLeft: { left: '80px', top: '190px', width: '920px' }, bgB: { top: '1500px' }, cLeft: { left: '80px', top: '190px', width: '920px' }, bgC: { top: '1520px' },
+  d1T: { left: '80px', top: '190px', width: '920px' }, d2T: { left: '80px', top: '190px', width: '920px' }, br: { left: '110px', top: '800px' }, dChart: { left: '70px', top: '1330px' }, ph: { left: '640px', top: '820px' }, bgD: { top: '1520px' },
+  eT: { left: '90px', top: '170px' }, ePlans: { left: '80px', top: '1120px', width: '920px' }, gT: { left: '80px', top: '190px', width: '920px' }, xl: { left: '60px', top: '880px' }, pdf: { left: '580px', top: '800px' }, gToast: { left: '150px', top: '1480px' }, bgG: { top: '1520px' }, bgH: { top: '1400px' },
+  fLogo: { top: '470px' }, fLine: { top: '790px' }, fStamp: { top: '895px' }, fParts: { left: '540px', top: '1000px' }, fCtaW: { top: '1170px' }, fNote: { top: '1352px' } };
 const SPY = ['sport-3.webp', 'sport-8.webp', 'sport-2.webp', 'mode-8.jpg', 'mode-7.webp', 'mode-4.webp', 'mode-2.jpg', 'mode-1.webp'];
-const SECT = ['Audit', 'Radar', 'Espion', 'Agents', 'Tarifs'];
 let R = {};
 
 async function init() {
+  if (V) { for (const [id, st] of Object.entries(VPOS)) Object.assign($(id).style, st); document.querySelectorAll('.aL').forEach((e) => { e.style.fontSize = '112px'; }); const bb = $('bBar'); bb.style.top = L.barTop + 'px'; bb.style.width = L.barW + 'px'; $('bLines').style.display = 'none'; $('fNote').textContent = '↓ Lien en bio · sans carte bancaire'; }
   await document.fonts.load('800 100px M'); await document.fonts.load('500 20px J');
   // grain animé (6 tuiles de bruit)
   R.grain = [...Array(6)].map((_, k) => { const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d'); const d = x.createImageData(256, 256); let s = k * 9973 + 17; for (let i = 0; i < d.data.length; i += 4) { s = (s * 16807) % 2147483647; const v = s & 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } x.putImageData(d, 0, 0); return `url(${c.toDataURL()})`; });
   // A
   R.hook = [['TA', '#0a0a0a', '#f4f1ea', 0], ['BOUTIQUE', '#ffd23f', '#0a0a0a', .25], ['PERD', '#0a0a0a', '#ffd23f', .5], ['DE', '#f4f1ea', '#0a0a0a', .75], ['L’ARGENT.', '#0a0a0a', '#f4f1ea', 1]];
   const meas = document.createElement('span'); meas.className = 'h'; meas.style.cssText = 'position:absolute;visibility:hidden;font-size:100px;white-space:nowrap'; document.body.append(meas);
-  R.hookSize = R.hook.map(([w]) => { meas.textContent = w; return Math.min(560, 1660 * 100 / meas.getBoundingClientRect().width); }); meas.remove();
+  R.hookSize = R.hook.map(([w]) => { meas.textContent = w; return Math.min(560, (W - 260) * 100 / meas.getBoundingClientRect().width); }); meas.remove();
   R.aLine = [...document.querySelectorAll('#aLine .split')].flatMap(split);
   const ou = $('aOu').getBoundingClientRect(); R.ouC = [ou.left + ou.width / 2, ou.top + ou.height / 2];
   // B
@@ -262,8 +320,8 @@ async function init() {
   const g = $('gTicks'); for (let i = 0; i < 72; i++) { const a = i / 72 * Math.PI * 2; const l = document.createElementNS('http://www.w3.org/2000/svg', 'line'); l.setAttribute('x1', 260 + Math.sin(a) * 244); l.setAttribute('y1', 260 - Math.cos(a) * 244); l.setAttribute('x2', 260 + Math.sin(a) * (i % 6 ? 252 : 258)); l.setAttribute('y2', 260 - Math.cos(a) * (i % 6 ? 252 : 258)); l.setAttribute('stroke-width', i % 6 ? 2 : 3); l.setAttribute('stroke-linecap', 'round'); g.append(l); }
   R.ticks = [...g.children]; R.C = 2 * Math.PI * 210;
   $('gTrack').setAttribute('stroke-dasharray', R.C); $('gArc').setAttribute('stroke-dasharray', R.C);
-  R.GX = 1110; R.GY = 560;
-  R.issues = [[1430, 250], [1470, 482], [1430, 714]];
+  [R.GX, R.GY] = L.gauge;
+  R.issues = L.issues;
   const ln = $('bLines'); R.issueLines = R.issues.map(([x, y], i) => { const ty = y + 52; const a = Math.atan2(ty - R.GY, x - R.GX); const sx = R.GX + Math.cos(a) * 276, sy = R.GY + Math.sin(a) * 276; const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('d', `M${sx} ${sy} L${x - 14} ${ty}`); p.setAttribute('stroke', 'rgba(255,210,63,.7)'); p.setAttribute('stroke-width', 2); p.setAttribute('fill', 'none'); p.setAttribute('stroke-dasharray', '1 1'); p.setAttribute('pathLength', 1); ln.append(p); const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); c.setAttribute('cx', sx); c.setAttribute('cy', sy); c.setAttribute('r', 7); c.setAttribute('fill', '#ffd23f'); ln.append(c); return [p, c]; });
   R.issues.forEach(([x, y], i) => { const k = $('k' + i); k.style.left = x + 'px'; k.style.top = y + 'px'; });
   // C
@@ -283,8 +341,8 @@ async function init() {
   R.msg = ['Hello! I run a Shopify store and I am looking for a reliable supplier for this product:', '<b>Dog harness — no pull</b>', 'Could you please send me your best price per unit, shipping cost and delivery time to France?', 'Expected volume: 100 orders per month.'];
   $('msg').innerHTML = R.msg.map((l) => `<div class="ml" style="margin-bottom:8px">${l}</div>`).join('') + '<span class="a" id="tick" style="right:12px;bottom:8px;font:600 15px M;color:#8696a0">13:37 ✓✓</span>';
   R.ml = [...document.querySelectorAll('#msg .ml')];
-  R.pills = [['WhatsApp direct', 330, '#25d366'], ['E-mail vérifié', 452, '#ffd23f'], ['Connecté à Shopify', 574, '#3ddc84']].map(([txt, y, c]) => { const d = document.createElement('div'); d.className = 'chip a'; d.innerHTML = `<span class="dot" style="background:${c};box-shadow:0 0 14px ${c}"></span>${txt}`; d.style.right = 1920 - 1270 + 'px'; d.style.top = y + 'px'; $('pills').append(d); return d; });
-  R.bars = [...Array(6)].map((_, i) => { const d = document.createElement('div'); d.className = 'a'; d.style.cssText = `left:0;width:1920px;top:${i * 180}px;height:181px;background:#ffd23f`; $('bars').append(d); return d; });
+  R.pills = [['WhatsApp direct', L.pillsY[0], '#25d366'], ['E-mail vérifié', L.pillsY[1], '#ffd23f'], ['Connecté à Shopify', L.pillsY[2], '#3ddc84']].map(([txt, y, c]) => { const d = document.createElement('div'); d.className = 'chip a'; d.innerHTML = `<span class="dot" style="background:${c};box-shadow:0 0 14px ${c}"></span>${txt}`; d.style.right = L.pillsR + 'px'; d.style.top = y + 'px'; $('pills').append(d); return d; });
+  R.bars = [...Array(6)].map((_, i) => { const d = document.createElement('div'); d.className = 'a'; d.style.cssText = `left:0;width:${W}px;top:${i * H / 6}px;height:${H / 6 + 1}px;background:#ffd23f`; $('bars').append(d); return d; });
   // E
   $('eStrip').innerHTML = [...Array(10)].map((_, d) => `<div style="height:420px">${d}</div>`).join('');
   R.eH = split(document.querySelector('#sE .split'));
@@ -293,18 +351,25 @@ async function init() {
   R.fW = splitChars($('fWord'));
   [...document.querySelectorAll('#fLine .split')].forEach(split); R.fH = [...document.querySelectorAll('#fLine .mi')];
   R.parts = [...Array(26)].map((_, i) => { const d = document.createElement('i'); d.className = 'a'; const s = 8 + rnd(i) * 14; d.style.cssText = `width:${s}px;height:${s * (rnd(i + 3) > .5 ? 1 : 2.2)}px;background:${['#ffd23f', '#f4f1ea', '#ffb020'][i % 3]};border-radius:2px;opacity:0`; $('fParts').append(d); return { el: d, a: rnd(i + 7) * Math.PI * 2, v: 500 + rnd(i + 1) * 900, r: (rnd(i + 9) - .5) * 1400 }; });
+  // G
+  R.gH = [...document.querySelectorAll('#gT .split')].flatMap(split);
+  const XL = [['sport-0.webp', 'Legging', 92, '70,00 $'], ['animaux-0.webp', 'Lit pour animal', 92, '34,99 $'], ['beaute-0.webp', 'Lèvres', 99, '22,00 $'], ['animaux-2.webp', 'Harnais', 92, '38,98 $'], ['bijoux-0.webp', 'Lunettes de soleil', 88, '40,00 $'], ['mode-0.webp', 'Haut', 78, '34,80 $']];
+  $('xlRows').innerHTML = XL.map(([img, k, sc, pr]) => `<div class="xr"><span><img src="../public/radar-img/${img}">${k}</span><span style="color:${sc >= 90 ? '#1f7244' : '#a86a00'};font-weight:800">${sc}</span><span>${pr}</span><span style="color:#1f5fa8;text-decoration:underline">7 liens →</span></div>`).join('');
+  R.xlRows = [...$('xlRows').children];
+  $('pdfRows').innerHTML = XL.slice(0, 3).map(([img, k, sc]) => `<div style="display:flex;align-items:center;gap:14px;padding:9px 0;border-bottom:1px solid #f0f0f0"><img src="../public/radar-img/${img}" style="width:48px;height:48px;object-fit:cover;border-radius:8px"><b style="flex:1;font:800 17px M">${k}</b><span style="background:#0a0a0a;color:#ffd23f;font:800 15px M;padding:4px 10px;border-radius:8px">${sc}</span></div>`).join('');
+  R.pdfRows = [...$('pdfRows').children]; R.pb = [...document.querySelectorAll('#pdf .pb')];
+  // H
+  R.steps = [...document.querySelectorAll('#hT .step')].map((st) => ({ b: st.querySelector('b'), w: split(st.querySelector('.split')) }));
   await Promise.all([...document.images].map((i) => i.decode().catch(() => {})));
   window.__ready = true;
 }
 
-function shake(t) { let x = 0, y = 0; for (const [ti, A] of [[0, .5], [.25, .5], [.5, .7], [.75, .5], [1, 1.4], [2.5, .5], [3.05, .25], [5.5, .6], [8.5, .5], [9.8, .4], [11, .7], [12, 1], [13, .8], [13.6, 1.3], [14, .35], [14.72, .25]]) { const s = t - ti; if (s < 0 || s > .5) continue; const e = A * 18 * Math.exp(-s * 13); x += e * Math.sin(s * 97 + ti * 3); y += e * Math.cos(s * 83 + ti * 5); } return [x, y]; }
+function shake(t, list = null) { let x = 0, y = 0; for (const [ti, A] of list || [[0, .5], [.25, .5], [.5, .7], [.75, .5], [1, 1.4], [2.5, .5], [3.05, .25], [5.5, .6], [8.5, .5], [9.8, .4], [11, .7], [12, 1], [13, .8], [13.6, 1.3], [14, .35], [14.72, .25]]) { const s = t - ti; if (s < 0 || s > .5) continue; const e = A * 18 * Math.exp(-s * 13); x += e * Math.sin(s * 97 + ti * 3); y += e * Math.cos(s * 83 + ti * 5); } return [x, y]; }
 function catmull(pts, u) { const n = pts.length - 1, s = Math.min(n - 1e-6, u * n), i = Math.floor(s), f = s - i; const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(n, i + 2)]; const c = (a, b, c2, d) => .5 * (2 * b + (-a + c2) * f + (2 * a - 5 * b + 4 * c2 - d) * f * f + (-a + 3 * b - 3 * c2 + d) * f * f * f); return [c(p0[0], p1[0], p2[0], p3[0]), c(p0[1], p1[1], p2[1], p3[1])]; }
 const dirBlur = (el, g, v) => { if (v < .4) { el.style.filter = 'none'; return; } $(g).setAttribute('stdDeviation', `${v} 0`); el.style.filter = `url(#${g === 'gC' ? 'fbC' : 'fbD'})`; };
 
-function render(t) {
+function core(t) {
   [['sA', 0, 2.5], ['sB', 2.5, 5.5], ['sC', 5.5, 8.5], ['sD', 8.5, 11], ['sE', 11, 13], ['sF', 13, 99]].forEach(([id, a, b]) => { $(id).style.visibility = t >= a && t < b ? 'inherit' : 'hidden'; });
-  const [sx, sy] = shake(t); $('world').style.transform = `translate(${sx}px,${sy}px)`;
-  const gi = Math.floor(t * 24); $('grain').style.backgroundImage = R.grain[gi % 6]; $('grain').style.backgroundPosition = `${rnd(gi) * 256}px ${rnd(gi + 1) * 256}px`;
   let fl = 0; for (const [ti, A] of [[5.5, .15], [8.5, .18], [9.8, .15], [13, .22], [13.6, .18]]) fl = Math.max(fl, A * (1 - P(t, ti, ti + .12)) * (t >= ti ? 1 : 0)); $('flash').style.opacity = fl;
 
   // ---------- A · accroche ----------
@@ -333,22 +398,22 @@ function render(t) {
   // ---------- B · audit ----------
   if (t >= 2.5 && t < 5.5) {
     words(R.bHead, t, 2.5, { st: .05, d: .42, out: 3.1, od: .22 });
-    const pb = ez.snap(P(t, 2.55, 2.92)); const m = ez.smooth(P(t, 3.12, 3.32)); const bw = lerp(980, 130, m);
-    const bar = $('bBar'); bar.style.width = bw + 'px'; bar.style.left = 960 - bw / 2 + 'px';
+    const pb = ez.snap(P(t, 2.55, 2.92)); const m = ez.smooth(P(t, 3.12, 3.32)); const bw = lerp(L.barW, 130, m);
+    const bar = $('bBar'); bar.style.width = bw + 'px'; bar.style.left = L.cx - bw / 2 + 'px';
     css(bar, cl(pb * 2) * (t < 3.6 ? 1 : 0), `translateY(${(1 - pb) * 90}px) scale(${lerp(.9, 1, pb)})`);
     $('bIn').style.opacity = 1 - P(t, 3.1, 3.17);
     const txt = 'ta-boutique.com', n = Math.floor(P(t, 2.74, 3) * txt.length); $('bTyped').textContent = txt.slice(0, n);
     $('bCaret').style.opacity = n < txt.length || Math.floor(t * 5) % 2 === 0 ? 1 : 0;
     const press = Math.sin(Math.PI * P(t, 3.03, 3.13)); $('bBtn').style.transform = `scale(${1 - press * .08})`;
-    const cp = ez.smooth(P(t, 2.72, 3.0)); const cx = lerp(1560, 1336, cp), cy = lerp(930, 566, cp);
+    const cp = ez.smooth(P(t, 2.72, 3.0)); const cx = lerp(L.cur1[0], L.cur1[2], cp), cy = lerp(L.cur1[1], L.cur1[3], cp);
     css('cur1', P(t, 2.72, 2.8) * (1 - P(t, 3.15, 3.22)), `translate(${cx}px,${cy}px) scale(${1 - press * .2})`);
-    const rp = P(t, 3.04, 3.42); css('bRip', rp > 0 && rp < 1 ? (1 - rp) * .9 : 0, `translate(${1336 - 20}px,${560 - 20}px) scale(${1 + ez.outExpo(rp) * 7})`);
-    const ir = ez.smooth(P(t, 3.3, 3.62)); $('bIris').style.clipPath = `circle(${t < 3.3 ? 0 : lerp(65, 2300, ir)}px at 960px 560px)`;
+    const rp = P(t, 3.04, 3.42); css('bRip', rp > 0 && rp < 1 ? (1 - rp) * .9 : 0, `translate(${L.btn[0] - 20}px,${L.btn[1] - 20}px) scale(${1 + ez.outExpo(rp) * 7})`);
+    const ir = ez.smooth(P(t, 3.3, 3.62)); $('bIris').style.clipPath = `circle(${t < 3.3 ? 0 : lerp(65, 2300, ir)}px at ${L.cx}px ${BCY}px)`;
     $('bY').style.visibility = ir >= 1 ? 'hidden' : 'inherit';
     $('bgB').style.transform = `translateX(${-(t - 2.5) * 140}px)`; $('bgB').style.opacity = P(t, 3.4, 3.8);
     // jauge
-    const mv = ez.smooth(P(t, 3.92, 4.42)); const gx = lerp(960, R.GX, mv);
-    $('gauge').style.left = gx - 260 + 'px'; $('gauge').style.top = R.GY - 260 + 'px';
+    const mv = ez.smooth(P(t, 3.92, 4.42)); const gx = lerp(L.cx, R.GX, mv), gy = lerp(BCY, R.GY, mv);
+    $('gauge').style.left = gx - 260 + 'px'; $('gauge').style.top = gy - 260 + 'px';
     css('gauge', P(t, 3.2, 3.24), `scale(${lerp(.55, 1, ez.snap(P(t, 3.2, 3.75)))})`);
     $('gTrack').setAttribute('stroke-dashoffset', R.C * (1 - ez.smooth(P(t, 3.22, 3.7))));
     const fr = .64 * ez.out(P(t, 3.42, 4.45)); $('gArc').setAttribute('stroke-dashoffset', R.C * (1 - fr));
@@ -413,7 +478,7 @@ function render(t) {
       $('tick').style.color = t > 10.72 ? '#53bdeb' : '#8696a0'; $('phSt').textContent = t > 10.78 ? 'en train d’écrire…' : 'en ligne';
       R.pills.forEach((d, i) => { const q = ez.back(P(t, 10.32 + i * .11, 10.68 + i * .11)); css(d, cl(q * 3), `translateX(${(1 - q) * 80}px) translateY(${Math.sin(t * 2 + i) * 5}px) scale(${lerp(.6, 1, q)})`); });
     }
-    R.bars.forEach((b, i) => { const c = ez.smooth(P(t, 9.52 + i * .02, 9.7 + i * .02)), u = ez.smooth(P(t, 9.8 + i * .02, 9.98 + i * .02)); const dir = i % 2 ? 1 : -1; b.style.transform = `translateX(${dir * (1 - c) * 1920 - dir * u * 1920}px)`; });
+    R.bars.forEach((b, i) => { const c = ez.smooth(P(t, 9.52 + i * .02, 9.7 + i * .02)), u = ez.smooth(P(t, 9.8 + i * .02, 9.98 + i * .02)); const dir = i % 2 ? 1 : -1; b.style.transform = `translateX(${dir * (1 - c) * W - dir * u * W}px)`; });
   }
 
   // ---------- E · prix ----------
@@ -429,7 +494,7 @@ function render(t) {
     const act = t < 11.42 ? 2 : t < 11.8 ? 1 : 0;
     R.plans.forEach((c, i) => { const p = ez.outExpo(P(t, 11.05 + i * .08, 11.55 + i * .08)); const on = i === act ? 1 : 0;
       css(c, cl(p * 2), `perspective(1400px) translateX(${(1 - p) * 520 - on * 26}px) rotateY(${(1 - p) * -55}deg) scale(${1 + on * .04})`); c.style.outline = on ? '4px solid #0a0a0a' : '0'; c.style.outlineOffset = '6px'; });
-    const rg = P(t, 12, 12.65); const r = lerp(60, 720, ez.outExpo(rg)); css('eRing', rg > 0 && rg < 1 ? 1 - rg : 0, 'none'); Object.assign($('eRing').style, { left: 470 - r + 'px', top: 560 - r + 'px', width: 2 * r + 'px', height: 2 * r + 'px', borderWidth: lerp(16, 1, rg) + 'px' });
+    const rg = P(t, 12, 12.65); const r = lerp(60, 720, ez.outExpo(rg)); css('eRing', rg > 0 && rg < 1 ? 1 - rg : 0, 'none'); Object.assign($('eRing').style, { left: L.ring[0] - r + 'px', top: L.ring[1] - r + 'px', width: 2 * r + 'px', height: 2 * r + 'px', borderWidth: lerp(16, 1, rg) + 'px' });
     const sh = ez.inExpo(P(t, 12.72, 13)); $('shT').style.transform = `translateY(${(sh - 1) * 100}%)`; $('shB').style.transform = `translateY(${(1 - sh) * 100}%)`;
   }
 
@@ -445,19 +510,52 @@ function render(t) {
     ['fP0', 'fP1'].forEach((id, j) => { const s = ((t - 14.1 - j * .25) % .5 + .5) % .5 / .5; css(id, t > 14.1 + j * .25 ? (1 - s) * .7 : 0, `scale(${1 + ez.out(s) * .28},${1 + ez.out(s) * .55})`); });
     $('fShine').style.left = lerp(-30, 130, ez.smooth(P(t, 14.25, 14.7))) + '%';
     words([$('fNote')], t, 14.2, { d: .5, y: 0 }); css('fNote', P(t, 14.2, 14.45), `translateY(${(1 - ez.snap(P(t, 14.2, 14.6))) * 20}px)`);
-    const mp = ez.smooth(P(t, 14.32, 14.66)); css('cur2', P(t, 14.32, 14.4), `translate(${lerp(1760, 1232, mp)}px,${lerp(1100, 846, mp)}px) scale(${1 - press * .2})`);
-    const rp = P(t, 14.75, 15.1); css('fRip', rp > 0 && rp < 1 ? (1 - rp) * .9 : 0, `translate(${1232 - 20}px,${846 - 20}px) scale(${1 + ez.outExpo(rp) * 4})`);
+    const mp = ez.smooth(P(t, 14.32, 14.66)); css('cur2', P(t, 14.32, 14.4), `translate(${lerp(L.cur2[0], L.cur2[2], mp)}px,${lerp(L.cur2[1], L.cur2[3], mp)}px) scale(${1 - press * .2})`);
+    const rp = P(t, 14.75, 15.1); css('fRip', rp > 0 && rp < 1 ? (1 - rp) * .9 : 0, `translate(${L.cur2[2] - 20}px,${L.cur2[3] - 20}px) scale(${1 + ez.outExpo(rp) * 4})`);
   }
 
-  // ---------- HUD ----------
-  const hudOn = t >= 2.5; const light = (t >= 2.5 && t < 3.5) || (t >= 11 && t < 12.95);
-  $('vig').style.opacity = light ? .45 : 1; const hud = $('hud'); hud.style.opacity = hudOn ? 1 : 0; hud.style.color = light ? '#0a0a0a' : 'rgba(244,241,234,.75)';
-  const si = t < 5.5 ? 0 : t < 8.5 ? 1 : t < 9.8 ? 2 : t < 11 ? 3 : t < 13 ? 4 : 5;
-  $('hTR').textContent = si < 5 ? `0${si + 1} / 05 · ${SECT[si]}` : '1re analyse offerte';
-  $('hBL').innerHTML = SECT.map((s, i) => `<span style="opacity:${i === si ? 1 : .35}">${s}</span>`).join('');
+}
+
+// ---------- montage 20 s : scènes d'origine recalées + rapports (11–13,5 s) + 3 étapes (15,5–17 s) ----------
+const SECT = ['Audit', 'Radar', 'Espion', 'Agents', 'Rapports', 'Tarifs'];
+function sceneG(t) {
+  $('bgG').style.transform = `translateX(${-(t - 11) * 160}px)`;
+  $('sG').style.transform = `scale(${lerp(1.08, 1, ez.outExpo(P(t, 11, 11.35))) * (1 + .025 * ez.soft(P(t, 12.5, 13.5)))})`;
+  wipeIn($('gLbl'), t, 11.04); words(R.gH, t, 11.08, { st: .06 }); rise($('gSub'), t, 11.35); ['gC1', 'gC2', 'gC3'].forEach((id, i) => rise($(id), t, 11.5 + i * .08));
+  const x = ez.outExpo(P(t, 11.08, 11.6)); css('xl', cl(x * 3), `perspective(1600px) translateX(${(1 - x) * 520}px) rotateY(${lerp(-50, -10, x)}deg) rotateZ(${lerp(5, -2, x)}deg)`);
+  R.xlRows.forEach((r, i) => { const q = ez.snap(P(t, 11.4 + i * .07, 11.72 + i * .07)); css(r, q, `translateX(${(1 - q) * 30}px)`); });
+  const pd = ez.back(P(t, 11.32, 11.85)); css('pdf', P(t, 11.32, 11.4), `translateY(${(1 - pd) * -820}px) rotate(${lerp(-18, -3, ez.snap(P(t, 11.32, 12.0)))}deg)`);
+  const sc = ez.out(P(t, 11.75, 12.45)); $('pdfArc').setAttribute('stroke-dashoffset', 326.7 * (1 - .64 * sc)); $('pdfN').textContent = Math.round(64 * sc);
+  R.pb.forEach((b, i) => { b.style.transform = `scaleX(${+b.dataset.w / 100 * ez.snap(P(t, 11.85 + i * .08, 12.3 + i * .08))})`; });
+  R.pdfRows.forEach((r, i) => { const q = ez.snap(P(t, 12.0 + i * .08, 12.3 + i * .08)); css(r, q, `translateY(${(1 - q) * 14}px)`); });
+  const q = ez.back(P(t, 12.4, 12.75)); css('gToast', cl(q * 3), `translateY(${(1 - q) * 60}px) scale(${lerp(.7, 1, q)})`);
+}
+function sceneH(t) {
+  $('bgH').style.transform = `translateX(${-(t - 15.5) * 160}px)`;
+  wipeIn($('hLbl'), t, 15.52, .3);
+  R.steps.forEach((s, i) => { const t0 = 15.56 + i * .38; const q = ez.back(P(t, t0, t0 + .35)), o = ez.smooth(P(t, 16.72 + i * .03, 16.95 + i * .03));
+    css(s.b, cl(q * 3) * (1 - o), `scale(${lerp(.3, 1, q) * (1 - o * .6)}) rotate(${(1 - q) * -25}deg)`);
+    words(s.w, t, t0 + .04, { st: .05, out: 16.72 + i * .03, od: .25 }); });
+}
+function render(t) {
+  const o = t < 11 ? t : t < 13.5 ? -1 : t < 15.5 ? t - 2.5 : t < 17 ? -1 : t - 4;
+  core(o);
+  $('sG').style.visibility = t >= 11 && t < 13.5 ? 'inherit' : 'hidden'; $('sH').style.visibility = t >= 15.5 && t < 17 ? 'inherit' : 'hidden';
+  if (t >= 11 && t < 13.5) sceneG(t);
+  if (t >= 15.5 && t < 17) sceneH(t);
+  const [a, b] = shake(o), [c, d] = shake(t, [[11, .6], [11.85, .55], [15.56, .45], [15.94, .45], [16.32, .6]]);
+  $('world').style.transform = `translate(${a + c}px,${b + d}px)`;
+  let fl = o >= 0 ? +$('flash').style.opacity : 0; for (const [ti, A] of [[11, .2], [13.5, .12]]) fl = Math.max(fl, A * (1 - P(t, ti, ti + .12)) * (t >= ti ? 1 : 0)); $('flash').style.opacity = fl;
+  const gi = Math.floor(t * 24); $('grain').style.backgroundImage = R.grain[gi % 6]; $('grain').style.backgroundPosition = `${rnd(gi) * 256}px ${rnd(gi + 1) * 256}px`;
+  // HUD
+  const light = (t >= 2.5 && t < 3.5) || (t >= 13.5 && t < 15.45);
+  $('vig').style.opacity = light ? .45 : 1; const hud = $('hud'); hud.style.opacity = t >= 2.5 ? 1 : 0; hud.style.color = light ? '#0a0a0a' : 'rgba(244,241,234,.75)';
+  const si = t < 5.5 ? 0 : t < 8.5 ? 1 : t < 9.8 ? 2 : t < 11 ? 3 : t < 13.5 ? 4 : t < 15.5 ? 5 : 6;
+  $('hTR').textContent = si < 6 ? `0${si + 1} / 06 · ${SECT[si]}` : t < 17 ? 'En 3 étapes' : '1re analyse offerte';
+  $('hBL').innerHTML = (V ? [] : SECT).map((s, i) => `<span style="opacity:${i === si ? 1 : .35}">${s}</span>`).join('');
   const fr = Math.floor(t * 30); $('hBR').textContent = `TC 00:00:${String(Math.floor(fr / 30)).padStart(2, '0')}:${String(fr % 30).padStart(2, '0')}`;
-  $('prog').style.width = t / 15 * 100 + '%';
+  $('prog').style.width = t / 20 * 100 + '%';
 }
 window.render = render;
-init().then(() => { if (!navigator.webdriver) { const s = performance.now(); (function loop() { render(((performance.now() - s) / 1000) % 15); requestAnimationFrame(loop); })(); } });
+init().then(() => { if (!navigator.webdriver) { const s = performance.now(); (function loop() { render(((performance.now() - s) / 1000) % 20); requestAnimationFrame(loop); })(); } });
 </script></body></html>
