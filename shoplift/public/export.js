@@ -3,7 +3,7 @@
 import { supplierLinks } from './suppliers.js';
 import { STACK_LABELS } from './analyze.js';
 
-const C = { ink: '#0a2419', ink2: '#123a2b', cream: '#f7f2e3', paper: '#fffdf7', gold: '#ffd23f', amber: '#ffb020', good: '#1f9d63', mid: '#e39a12', bad: '#e0523f', text: '#16241d', muted: '#5f7466', line: '#e6dfcc', soft: '#f5f0e2', link: '#1f5fd6' };
+const C = { ink: '#0a0a0a', ink2: '#123a2b', cream: '#f7f2e3', paper: '#fffdf7', gold: '#ffd23f', amber: '#ffb020', good: '#1f9d63', mid: '#e39a12', bad: '#e0523f', text: '#16241d', muted: '#5f7466', line: '#e6dfcc', soft: '#f5f0e2', link: '#1f5fd6' };
 const scoreColor = (s) => (s >= 75 ? C.good : s >= 55 ? C.mid : C.bad);
 const IMPACT = { élevé: ['ÉLEVÉ', C.bad], moyen: ['MOYEN', C.mid], faible: ['FAIBLE', C.muted] };
 const today = () => new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -116,7 +116,7 @@ async function newPdf(landscape = false) {
       P.fill(C.ink); doc.rect(0, 0, W, 54, 'F');
       doc.addImage(logo, 'PNG', M, 15, 24, 24);
       P.font(14, true, C.cream); P.text('Shoplift', M + 32, 32);
-      P.font(9, false, '#a8bfae'); P.text(title, W - M, 32, { align: 'right' });
+      P.font(9, false, '#a8a39a'); P.text(title, W - M, 32, { align: 'right' });
       P.fill(C.gold); doc.rect(0, 54, W, 2.5, 'F');
       P.y = 84;
     },
@@ -132,8 +132,8 @@ async function newPdf(landscape = false) {
       P.font(20, true, C.cream); P.text('Shoplift', M + 44, M + 24);
       P.font(9, true, C.gold); P.text(kicker.toUpperCase(), M, 150, { charSpace: 1.2 });
       P.font(32, true, C.cream); const tl = P.lines(title, W - 2 * M); P.text(tl, M, 186); let y = 186 + tl.length * 36;
-      if (sub) { P.font(12, false, '#a8bfae'); const sl = P.lines(sub, W - 2 * M); P.text(sl, M, y); y += sl.length * 16; }
-      P.font(9, false, '#a8bfae'); P.text(meta || `Rapport généré le ${today()}`, M, y + 8);
+      if (sub) { P.font(12, false, '#a8a39a'); const sl = P.lines(sub, W - 2 * M); P.text(sl, M, y); y += sl.length * 16; }
+      P.font(9, false, '#a8a39a'); P.text(meta || `Rapport généré le ${today()}`, M, y + 8);
       return y + 40;
     },
     tiles(list, y, dark = true) { // chiffres clés
@@ -142,7 +142,7 @@ async function newPdf(landscape = false) {
         const x = M + i * (w + gap);
         P.fill(dark ? C.ink2 : C.soft); doc.roundedRect(x, y, w, 52, 8, 8, 'F');
         P.font(15, true, dark ? C.cream : C.ink); P.text(String(num(v)), x + w / 2, y + 24, { align: 'center' });
-        P.font(7.5, false, dark ? '#a8bfae' : C.muted); P.text(l, x + w / 2, y + 40, { align: 'center' });
+        P.font(7.5, false, dark ? '#a8a39a' : C.muted); P.text(l, x + w / 2, y + 40, { align: 'center' });
       });
       return y + 64;
     },
@@ -150,7 +150,7 @@ async function newPdf(landscape = false) {
       const n = doc.getNumberOfPages();
       for (let i = 1; i <= n; i++) {
         doc.setPage(i);
-        P.font(7.5, false, i === 1 ? '#a8bfae' : C.muted);
+        P.font(7.5, false, i === 1 ? '#a8a39a' : C.muted);
         P.text(`Shoplift · ${label} · ${today()}`, M, H - 22);
         P.text(`${i} / ${n}`, W - M, H - 22, { align: 'right' });
       }
@@ -262,7 +262,7 @@ async function auditPdf(a, { productsOnly = false } = {}) {
   // score
   doc.addImage(gaugePng(a.score), 'PNG', M, y, 120, 120);
   P.font(34, true, C.cream); P.text(String(a.score), M + 60, y + 66, { align: 'center' });
-  P.font(9, false, '#a8bfae'); P.text('/ 100', M + 60, y + 82, { align: 'center' });
+  P.font(9, false, '#a8a39a'); P.text('/ 100', M + 60, y + 82, { align: 'center' });
   P.font(20, true, scoreColor(a.score) === C.good ? '#6fe3a5' : scoreColor(a.score) === C.mid ? C.amber : '#ff8a78'); P.text(a.grade, M + 145, y + 48);
   P.font(9.5, false, '#cfdcd2'); P.text(P.lines(`${a.fixes.length} points à améliorer, classés du plus rentable au moins urgent. Chaque point explique pourquoi il te coûte des ventes et comment le corriger.`, W - 2 * M - 150), M + 145, y + 68);
   y += 140;
@@ -271,12 +271,12 @@ async function auditPdf(a, { productsOnly = false } = {}) {
   P.font(9, true, C.gold); P.text('SCORE PAR CATÉGORIE', M, y + 10, { charSpace: 1 }); y += 24;
   for (const c of a.categories) {
     P.font(9.5, true, C.cream); P.text(c.label, M, y + 9);
-    P.fill('#1d4634'); doc.roundedRect(M + 150, y, W - 2 * M - 190, 11, 5, 5, 'F');
+    P.fill('#262626'); doc.roundedRect(M + 150, y, W - 2 * M - 190, 11, 5, 5, 'F');
     P.fill(scoreColor(c.score) === C.good ? '#6fe3a5' : scoreColor(c.score) === C.mid ? C.amber : '#ff8a78'); doc.roundedRect(M + 150, y, Math.max(8, ((W - 2 * M - 190) * c.score) / 100), 11, 5, 5, 'F');
     P.font(9.5, true, C.cream); P.text(String(c.score), W - M, y + 9, { align: 'right' });
     y += 20;
   }
-  if (a.stack?.length) { P.font(8.5, false, '#a8bfae'); P.text(P.lines(`Outils détectés : ${tools(a.stack).join(' · ')}`, W - 2 * M), M, y + 12); }
+  if (a.stack?.length) { P.font(8.5, false, '#a8a39a'); P.text(P.lines(`Outils détectés : ${tools(a.stack).join(' · ')}`, W - 2 * M), M, y + 12); }
 
   if (!productsOnly) {
     P.page(label);
@@ -392,7 +392,7 @@ async function comparePdf(rows, cols) {
   y += 32;
   rows.forEach((r, n) => {
     P.fill(n % 2 ? C.ink : C.ink2); doc.roundedRect(M, y, W - 2 * M, 38, 6, 6, 'F');
-    P.font(10, true, C.cream); P.text(P.lines(r.name, 150)[0], M + 10, y + 16); P.font(7.5, false, '#a8bfae'); P.text(r.host, M + 10, y + 29);
+    P.font(10, true, C.cream); P.text(P.lines(r.name, 150)[0], M + 10, y + 16); P.font(7.5, false, '#a8a39a'); P.text(r.host, M + 10, y + 29);
     cols.forEach(([k], i) => {
       const v = k === 'avgPrice' ? money(r[k], r.currency) : k === 'discounted' ? `${r[k]}%` : String(r[k] ?? '—');
       const win = Number(r[k]) === best(k);
@@ -401,7 +401,7 @@ async function comparePdf(rows, cols) {
     if (r.top) { doc.setFont(doc.getFont().fontName, 'bold'); P.font(8, true, C.gold); doc.textWithLink(clean(P.lines(r.top.title, colW - 10)[0]), M + 170 + cols.length * colW + 6, y + 23, { url: r.top.url }); }
     y += 44;
   });
-  P.font(8, false, '#a8bfae'); P.text('En vert : la meilleure valeur de chaque colonne.', M, y + 10);
+  P.font(8, false, '#a8a39a'); P.text('En vert : la meilleure valeur de chaque colonne.', M, y + 10);
   return P.finish(label);
 }
 

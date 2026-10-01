@@ -8,7 +8,7 @@ const safeImg = (src) => {
   try { const u = new URL(src); if (u.hostname === 'cdn.shopify.com') u.searchParams.set('width', '400'); return esc(u.href); } catch { return ''; }
 };
 // Photo illisible (supprimée, ou bloquée par la page d'aperçu) : visuel neutre au lieu d'une image cassée.
-const NO_PHOTO = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#153c2c"/><path d="M130 250l50-60 40 45 30-30 50 45z" fill="#3f7a60"/><circle cx="250" cy="160" r="22" fill="#3f7a60"/></svg>')}`;
+const NO_PHOTO = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#1a1a1a"/><path d="M130 250l50-60 40 45 30-30 50 45z" fill="#4a4a4a"/><circle cx="250" cy="160" r="22" fill="#4a4a4a"/></svg>')}`;
 document.addEventListener('error', (e) => { const img = e.target; if (img.tagName === 'IMG' && !img.src.startsWith('data:')) img.src = NO_PHOTO; }, true);
 const money = (n, cur = 'EUR') => { try { return Number(n).toLocaleString('fr-FR', { style: 'currency', currency: cur, maximumFractionDigits: 2 }); } catch { return `${n} €`; } };
 const store = { get: (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* stockage indisponible */ } } };

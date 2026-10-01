@@ -21,7 +21,7 @@ export function imageSvg(name) {
   const rnd = seeded(name);
   const a = COLORS[Math.floor(rnd() * COLORS.length)];
   const b = COLORS[Math.floor(rnd() * COLORS.length)];
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="400" height="400" fill="#0f3325"/><circle cx="200" cy="190" r="${Math.round(90 + rnd() * 50)}" fill="url(#g)" opacity=".85"/><rect x="120" y="300" width="160" height="18" rx="9" fill="#fff" opacity=".2"/></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="400" height="400" fill="#131313"/><circle cx="200" cy="190" r="${Math.round(90 + rnd() * 50)}" fill="url(#g)" opacity=".85"/><rect x="120" y="300" width="160" height="18" rx="9" fill="#fff" opacity=".2"/></svg>`;
 }
 
 // Catalogue d'exemple au format interne (celui de shopify.js).
