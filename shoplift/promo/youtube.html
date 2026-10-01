@@ -1,0 +1,463 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Shoplift — promo YouTube 16:9</title>
+<style>
+@font-face{font-family:M;font-weight:200 800;src:url(../public/fonts/manrope-latin.woff2) format('woff2')}
+@font-face{font-family:J;font-weight:100 800;src:url(fonts/jetbrains-mono.woff2) format('woff2')}
+:root{--y:#ffd23f;--o:#ffb020;--k:#0a0a0a;--w:#f4f1ea;--mu:#8f8a80;--g:#3ddc84;--r:#ff5a4e;--line:rgba(255,255,255,.12)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--k)}
+body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
+.a{position:absolute}.full{position:absolute;inset:0}
+.sc{position:absolute;inset:0;visibility:hidden;overflow:hidden}
+.mono{font-family:J,monospace;font-weight:500;letter-spacing:.1em;text-transform:uppercase}
+.h{font-weight:800;letter-spacing:-.05em;line-height:.95}
+.m{display:inline-block;overflow:hidden;vertical-align:top;padding:.06em .04em .17em;margin:-.06em -.04em -.17em}
+.mi{display:inline-block;transform:translateY(120%)}
+.y{color:var(--y)}.mu{color:var(--mu)}
+.logo{display:inline-block;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20d%3D%22M3.5%2016%2011%206.5h16a2.5%202.5%200%200%201%202.5%202.5v14a2.5%202.5%200%200%201-2.5%202.5H11z%22%20fill%3D%22%23ffd23f%22/%3E%3Ccircle%20cx%3D%2210.5%22%20cy%3D%2216%22%20r%3D%222%22%20fill%3D%22%230a2419%22/%3E%3Cpath%20d%3D%22M15.5%2021%2022%2012.5m-5%200h5v5%22%20fill%3D%22none%22%20stroke%3D%22%230a2419%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") center/contain no-repeat}
+.blk{position:relative;display:inline-block;isolation:isolate;color:var(--k);padding:0 .1em}
+.blk>i{position:absolute;left:0;right:0;top:.12em;bottom:-.03em;background:var(--y);z-index:-1;transform-origin:left;transform:scaleX(0)}
+.lbl{font-size:21px;display:flex;align-items:center;gap:14px}
+.lbl::before{content:'';width:34px;height:2px;background:currentColor}
+.sub{font:500 31px/1.42 M;color:var(--mu);letter-spacing:-.01em}
+.chip{display:inline-flex;align-items:center;gap:12px;padding:14px 22px;border-radius:99px;border:1.5px solid var(--line);background:#121212;font:700 25px M;white-space:nowrap}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--g);box-shadow:0 0 14px var(--g)}
+.card{position:absolute;width:230px;border-radius:22px;background:#141414;border:1.5px solid var(--line);overflow:hidden;box-shadow:0 40px 70px -24px rgba(0,0,0,.95)}
+.card img{display:block;width:230px;height:230px;object-fit:cover}
+.card .sb{position:absolute;top:12px;left:12px;background:rgba(10,10,10,.86);color:var(--y);font:800 26px M;padding:4px 12px;border-radius:12px;font-variant-numeric:tabular-nums}
+.card .kd{display:block;padding:13px 16px 0;font:800 23px M;letter-spacing:-.01em;white-space:nowrap}
+.card .sl{display:block;padding:3px 16px 14px;font:700 16px M;color:var(--g);white-space:nowrap}
+.issue{position:absolute;display:flex;flex-direction:column;gap:9px;padding:18px 24px;border-radius:20px;background:#141414;border:1.5px solid var(--line);font:700 27px M;white-space:nowrap;box-shadow:0 30px 60px -25px rgba(0,0,0,.9)}
+.pill{width:fit-content;font:700 15px J;letter-spacing:.12em;padding:5px 10px;border-radius:8px}
+.hi{background:rgba(255,90,78,.16);color:var(--r)}.md{background:rgba(255,176,32,.16);color:var(--o)}
+.ring{position:absolute;border-radius:50%;border:1.5px solid rgba(255,255,255,.1)}
+.tile{position:absolute;width:190px}
+.tile img{display:block;width:190px;height:160px;object-fit:cover;border-radius:12px}
+.tile i{display:block;height:9px;border-radius:5px;background:rgba(255,255,255,.14);margin-top:12px;width:140px}
+.tile b{display:block;height:9px;border-radius:5px;background:rgba(255,210,63,.55);margin-top:8px;width:56px}
+.tag{position:absolute;font:700 17px J;letter-spacing:.08em;padding:9px 14px;border-radius:10px;white-space:nowrap;box-shadow:0 14px 30px -10px rgba(0,0,0,.8)}
+.plan{display:flex;align-items:center;justify-content:space-between;padding:30px 36px;border-radius:26px;background:#0f0f0f;color:var(--w);box-shadow:0 30px 60px -30px rgba(0,0,0,.7)}
+.plan b{display:block;font:800 46px M;letter-spacing:-.03em}.plan small{display:block;font:600 21px M;opacity:.6;margin-top:4px}
+.plan .pr{font:800 58px M;letter-spacing:-.04em;white-space:nowrap}.plan .pr span{font-size:22px;opacity:.6;letter-spacing:0}
+.btn{position:relative;display:inline-flex;align-items:center;gap:22px;padding:0 64px;height:132px;border-radius:66px;background:var(--y);color:var(--k);font:800 54px M;letter-spacing:-.03em;overflow:hidden;white-space:nowrap}
+.bgw{left:0;font-size:400px;white-space:nowrap;color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.055);letter-spacing:-.04em}
+.cm{position:absolute;width:26px;height:26px;border-color:currentColor;border-style:solid;border-width:0}
+</style></head><body>
+<svg class="a" width="0" height="0" style="position:absolute"><defs>
+ <filter id="fbC" x="-15%" y="0" width="130%" height="100%" color-interpolation-filters="sRGB"><feGaussianBlur id="gC" stdDeviation="0 0"/></filter>
+ <filter id="fbD" x="-15%" y="0" width="130%" height="100%" color-interpolation-filters="sRGB"><feGaussianBlur id="gD" stdDeviation="0 0"/></filter>
+ <filter id="fbE" x="0" y="-20%" width="100%" height="140%" color-interpolation-filters="sRGB"><feGaussianBlur id="gE" stdDeviation="0 0"/></filter>
+ <linearGradient id="gg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ffe68a"/><stop offset=".5" stop-color="#ffd23f"/><stop offset="1" stop-color="#ffb020"/></linearGradient>
+</defs></svg>
+<div id="world" class="full">
+
+<!-- A · accroche -->
+<div class="sc" id="sA">
+ <div class="full" id="aBg"></div>
+ <div class="full" style="display:grid;place-items:center"><div id="aWrap" style="position:relative;display:inline-block">
+   <div class="a h" id="aE0" style="inset:0;color:transparent;-webkit-text-stroke:3px var(--y);white-space:nowrap"></div>
+   <div class="a h" id="aE1" style="inset:0;color:transparent;-webkit-text-stroke:3px var(--y);white-space:nowrap"></div>
+   <div class="h" id="aW" style="position:relative;white-space:nowrap"></div>
+   <i id="aU" class="a" style="left:.02em;right:.02em;bottom:-.1em;height:.085em;background:var(--y);transform-origin:left;transform:scaleX(0)"></i>
+ </div></div>
+ <div class="full" id="aLine" style="display:grid;place-items:center;text-align:center"><div>
+   <div class="h split" style="font-size:168px">Et tu ne sais</div>
+   <div class="h" style="font-size:168px;margin-top:8px"><span class="split">même pas</span> <span id="aOu" class="y" style="position:relative;display:inline-block;margin-left:.12em"><span class="split">où.</span>
+     <svg class="a" viewBox="0 0 300 140" preserveAspectRatio="none" style="left:-18%;top:-12%;width:140%;height:130%;overflow:visible"><path id="aCirc" pathLength="1" d="M40 78 C30 30 170 8 250 34 C302 52 292 112 170 124 C84 132 18 112 22 72 C26 40 92 22 150 20" fill="none" stroke="#ffd23f" stroke-width="7" stroke-linecap="round" stroke-dasharray="1 1" stroke-dashoffset="1"/></svg></span></div>
+ </div></div>
+ <div class="full" id="aIris" style="background:var(--y);clip-path:circle(0px at 50% 50%)"></div>
+</div>
+
+<!-- B · audit -->
+<div class="sc" id="sB">
+ <div class="full" id="bY" style="background:var(--y)"></div>
+ <div class="a h" id="bHead" style="left:0;right:0;top:250px;text-align:center;font-size:132px;color:var(--k)"><span class="split">Colle ton lien.</span></div>
+ <div class="a" id="bBar" style="left:470px;top:495px;width:980px;height:130px;border-radius:65px;background:var(--k);overflow:hidden">
+   <div id="bIn" class="full" style="display:flex;align-items:center;gap:24px;padding:0 16px 0 44px">
+     <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#ffd23f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9M3 9h18M3 9v11h18V9M9 20v-6h6v6"/></svg>
+     <div style="flex:1;position:relative;font:700 50px M;letter-spacing:-.02em;white-space:nowrap"><span id="bTyped"></span><i id="bCaret" style="display:inline-block;width:4px;height:54px;background:var(--y);vertical-align:-10px;margin-left:4px"></i></div>
+     <div id="bBtn" style="background:var(--y);color:var(--k);font:800 36px M;padding:0 42px;height:98px;border-radius:49px;display:flex;align-items:center;white-space:nowrap">Analyser →</div>
+   </div>
+ </div>
+ <div class="a" id="bRip" style="width:40px;height:40px;border-radius:50%;border:4px solid var(--k);opacity:0"></div>
+ <div class="full" id="bIris" style="background:var(--k);clip-path:circle(0px at 960px 560px)"></div>
+ <div class="a h bgw" id="bgB" style="top:600px">AUDIT 360° · AUDIT 360° · AUDIT 360°</div>
+ <div class="a" id="bLeft" style="left:120px;top:250px;width:740px">
+   <div class="mono lbl y" id="bLbl">01 — Audit 360°</div>
+   <div class="h split" id="bH" style="font-size:150px;margin-top:30px">Ton score</div>
+   <div class="h split" style="font-size:150px">en <span class="y">30 s.</span></div>
+   <div class="sub" id="bSub" style="margin-top:36px;max-width:640px">30+ points vérifiés : SEO, confiance, fiches produit, offre, marketing.</div>
+   <div class="chip" id="bPlan" style="margin-top:40px;background:var(--y);color:var(--k);border:0">→ Plan d’action trié par impact</div>
+ </div>
+ <svg class="a" id="bLines" width="1920" height="1080" style="left:0;top:0;overflow:visible"></svg>
+ <div class="a" id="gauge" style="width:520px;height:520px">
+   <svg width="520" height="520" viewBox="0 0 520 520"><g id="gTicks"></g>
+     <circle id="gTrack" cx="260" cy="260" r="210" fill="none" stroke="#1c1c1c" stroke-width="26" transform="rotate(-90 260 260)"/>
+     <circle id="gArc" cx="260" cy="260" r="210" fill="none" stroke="url(#gg)" stroke-width="26" stroke-linecap="round" transform="rotate(-90 260 260)"/></svg>
+   <div class="full" style="display:grid;place-items:center;text-align:center"><div id="gNum">
+     <div class="mono mu" style="font-size:17px">Score Shoplift</div>
+     <div class="h" style="font-size:176px;font-variant-numeric:tabular-nums;letter-spacing:-.06em"><span id="gN">0</span><span style="font-size:52px;color:var(--mu);letter-spacing:0">/100</span></div></div></div>
+ </div>
+ <div class="issue" id="k0"><span class="pill hi">ÉLEVÉ</span>Aucun avis client visible</div>
+ <div class="issue" id="k1"><span class="pill md">MOYEN</span>Pas de pixel TikTok</div>
+ <div class="issue" id="k2"><span class="pill hi">ÉLEVÉ</span>1 seule photo par fiche</div>
+ <div class="a" id="cur1" style="left:0;top:0;opacity:0"><svg width="58" height="74" viewBox="0 0 30 38"><path d="M2 2 L2 31 L9.5 24.5 L14.5 35.5 L19.5 33.3 L14.6 22.5 L24.5 22.5 Z" fill="#fff" stroke="#0a0a0a" stroke-width="2" stroke-linejoin="round"/></svg></div>
+</div>
+
+<!-- C · radar -->
+<div class="sc" id="sC">
+ <div class="a h bgw" id="bgC" style="top:640px">RADAR · RADAR · RADAR · RADAR</div>
+ <div class="a" id="radar" style="width:1040px;height:1040px">
+   <div class="a" id="sweep" style="inset:20px;border-radius:50%;background:conic-gradient(from 0deg,rgba(255,210,63,0) 0deg,rgba(255,210,63,0) 280deg,rgba(255,210,63,.2) 359.4deg,rgba(255,210,63,0) 360deg)"></div>
+   <div class="a" id="sweepL" style="left:519px;top:20px;width:2px;height:500px;background:linear-gradient(rgba(255,210,63,.9),rgba(255,210,63,.1));transform-origin:50% 100%"></div>
+   <div class="a" style="left:0;right:0;top:519px;height:1.5px;background:rgba(255,255,255,.07)"></div>
+   <div class="a" style="top:0;bottom:0;left:519px;width:1.5px;background:rgba(255,255,255,.07)"></div>
+ </div>
+ <div class="a" id="cards"></div>
+ <div class="a" id="ret" style="opacity:0"></div>
+ <div class="a" id="cLeft" style="left:120px;top:236px;width:760px">
+   <div class="mono lbl y" id="cLbl">02 — Radar produits</div>
+   <div class="h split" style="font-size:74px;margin-top:34px">Les produits qui</div>
+   <div class="h" style="font-size:128px;margin-top:6px"><span class="blk" id="cBlk"><i></i>cartonnent.</span></div>
+   <div class="sub" id="cSub" style="margin-top:34px;max-width:620px">Repérés dans les meilleures boutiques Shopify, avec leur score de demande.</div>
+   <div style="display:flex;flex-direction:column;align-items:flex-start;gap:14px;margin-top:38px"><div class="chip" id="cC1"><span class="dot"></span>Mis à jour toutes les 6 h</div><div class="chip" id="cC2">7 fournisseurs connectables à Shopify</div></div>
+ </div>
+</div>
+
+<!-- D · espion + agents -->
+<div class="sc" id="sD">
+ <div class="a h bgw" id="bgD" style="top:650px">ESPION · AGENTS · ESPION · AGENTS</div>
+ <div class="full" id="d1">
+   <div class="a" style="left:120px;top:250px;width:760px">
+     <div class="mono lbl y" id="dLbl">03 — Espion concurrents</div>
+     <div class="h split" style="font-size:150px;margin-top:30px">Espionne</div>
+     <div class="h split" style="font-size:66px;margin-top:10px">n’importe quel <span class="y">concurrent.</span></div>
+     <div class="sub" id="dSub" style="margin-top:34px;max-width:600px">Ses best-sellers, ses nouveautés, ses prix, ses promos et ses outils.</div>
+   </div>
+   <div class="a" id="br" style="left:950px;top:225px;width:860px;height:600px;border-radius:24px;background:#111;border:1.5px solid var(--line);overflow:hidden;box-shadow:0 60px 100px -40px rgba(0,0,0,.95)">
+     <div style="height:60px;display:flex;align-items:center;gap:10px;padding:0 22px;border-bottom:1px solid rgba(255,255,255,.08)"><i style="width:13px;height:13px;border-radius:50%;background:#ff5f57"></i><i style="width:13px;height:13px;border-radius:50%;background:#febc2e"></i><i style="width:13px;height:13px;border-radius:50%;background:#28c840"></i><div class="mono" style="margin-left:22px;font-size:15px;color:var(--mu);background:#1b1b1b;border-radius:10px;padding:8px 18px;letter-spacing:.04em;text-transform:none">concurrent.com</div></div>
+     <div class="a" id="brC" style="left:0;top:60px;width:860px;height:540px"></div>
+     <div class="a" id="tags"></div>
+     <div class="a" id="lens" style="width:250px;height:250px;opacity:0"><div class="full" style="border-radius:50%;overflow:hidden;background:#111"><div class="a" id="lensC" style="left:0;top:0;width:860px;height:540px;transform-origin:0 0"></div></div><div class="full" style="border-radius:50%;border:7px solid var(--y);box-shadow:0 0 0 2px rgba(0,0,0,.4),0 24px 50px rgba(0,0,0,.6)"></div><i class="a" style="left:208px;top:208px;width:22px;height:90px;border-radius:11px;background:var(--y);transform:rotate(-45deg);transform-origin:50% 0"></i></div>
+   </div>
+   <div class="a" id="dChart" style="left:860px;top:690px;width:400px;height:270px;border-radius:24px;background:#151515;border:1.5px solid var(--line);padding:26px 30px;box-shadow:0 40px 80px -30px rgba(0,0,0,.95)">
+     <div class="mono mu" style="font-size:15px">Lancements par mois</div>
+     <div id="dBars" style="display:flex;align-items:flex-end;gap:12px;height:170px;margin-top:22px"></div>
+   </div>
+ </div>
+ <div class="full" id="d2" style="visibility:hidden">
+   <div class="a" style="left:120px;top:236px;width:800px">
+     <div class="mono lbl y" id="eLbl">04 — Agents de sourcing</div>
+     <div class="h" style="font-size:156px;margin-top:30px"><span class="m"><span class="mi y" id="dN" style="font-variant-numeric:tabular-nums">10</span></span> <span class="split">agents</span></div>
+     <div class="h split" style="font-size:156px">vérifiés.</div>
+     <div class="sub" id="d2Sub" style="margin-top:36px;max-width:640px">Leur WhatsApp et leur e-mail, en direct. Ton devis envoyé en 1 clic.</div>
+     <div class="mono" id="d2Plans" style="margin-top:36px;font-size:19px;display:flex;gap:12px"><span style="border:1.5px solid var(--line);border-radius:10px;padding:10px 14px">Basique · 1</span><span style="border:1.5px solid var(--line);border-radius:10px;padding:10px 14px">Pro · 3</span><span style="border-radius:10px;padding:10px 14px;background:var(--y);color:var(--k)">Scale · 10</span></div>
+   </div>
+   <div class="full" id="pills"></div>
+   <div class="a" id="ph" style="left:1300px;top:140px;width:390px;height:800px;border-radius:58px;background:#050505;border:10px solid #1e1e1e;overflow:hidden;box-shadow:0 70px 120px -40px rgba(0,0,0,.95)">
+     <div style="height:118px;background:#1f2c34;display:flex;align-items:flex-end;gap:16px;padding:0 20px 18px">
+       <span style="width:56px;height:56px;border-radius:50%;background:var(--y);display:grid;place-items:center"><span class="logo" style="width:34px;height:34px"></span></span>
+       <div><div style="font:700 23px M">Agent de sourcing <span style="color:var(--g)">✓</span></div><div id="phSt" style="font:500 17px M;color:#8696a0">en ligne</div></div></div>
+     <div class="a" style="left:0;right:0;top:118px;bottom:0;background:#0b141a;background-image:radial-gradient(rgba(255,255,255,.035) 1.5px,transparent 2px);background-size:22px 22px"></div>
+     <div class="a" id="msg" style="right:16px;top:150px;width:320px;padding:16px 18px 30px;border-radius:18px 4px 18px 18px;background:#005c4b;font:500 18px/1.42 M;color:#e9edef;transform-origin:100% 0"></div>
+     <div class="a" style="left:14px;right:14px;bottom:18px;height:62px;border-radius:31px;background:#1f2c34;display:flex;align-items:center;padding:0 22px;font:500 19px M;color:#8696a0">Message</div>
+   </div>
+ </div>
+ <div class="a" id="bars" style="inset:0;pointer-events:none"></div>
+</div>
+
+<!-- E · prix -->
+<div class="sc" id="sE">
+ <div class="full" style="background:var(--w)"></div>
+ <div class="a" id="eRing" style="border-radius:50%;border:12px solid var(--k);opacity:0"></div>
+ <div class="a" style="left:130px;top:190px;color:var(--k)">
+   <div class="mono lbl" id="eLb" style="color:rgba(10,10,10,.6)">05 — Tarifs</div>
+   <div class="h split" style="font-size:96px;margin-top:26px">Tout ça dès</div>
+   <div id="ePrice" style="display:flex;align-items:flex-start;height:420px;margin-top:4px">
+     <div id="eCol" style="height:420px;overflow:hidden;filter:url(#fbE)"><div id="eStrip" class="h" style="font-size:470px;line-height:420px;letter-spacing:-.06em;font-variant-numeric:tabular-nums"></div></div>
+     <div class="h" style="font-size:470px;line-height:420px;letter-spacing:-.06em;font-variant-numeric:tabular-nums">9</div>
+     <div class="h" id="eEur" style="font-size:230px;line-height:1;margin:34px 0 0 22px">€</div>
+   </div>
+   <div style="display:flex;align-items:center;gap:22px;margin-top:6px"><div class="h" id="eMois" style="font-size:62px">/mois</div><div class="mono" id="ePn" style="font-size:20px;background:var(--k);color:var(--y);padding:10px 16px;border-radius:10px"></div></div>
+   <div class="mono" id="eNote" style="font-size:19px;margin-top:40px;color:rgba(10,10,10,.65)">Sans engagement · résiliable en 1 clic · paiement Stripe</div>
+ </div>
+ <div class="a" id="ePlans" style="left:1150px;top:290px;width:640px;display:grid;gap:22px"></div>
+ <div class="a" id="shT" style="left:0;right:0;top:0;height:541px;background:var(--k);transform:translateY(-100%)"></div>
+ <div class="a" id="shB" style="left:0;right:0;bottom:0;height:541px;background:var(--k);transform:translateY(100%)"></div>
+</div>
+
+<!-- F · CTA -->
+<div class="sc" id="sF">
+ <div class="full" style="background:radial-gradient(ellipse 60% 55% at 50% 60%,rgba(255,210,63,.09),transparent 70%)"></div>
+ <div class="a" style="left:0;right:0;top:150px;display:flex;justify-content:center;align-items:center;gap:34px">
+   <span class="logo" id="fTag" style="width:150px;height:150px;transform-origin:30% 50%"></span>
+   <div class="h" id="fWord" style="font-size:176px">Shoplift</div>
+ </div>
+ <div class="a h" id="fLine" style="left:0;right:0;top:430px;text-align:center;font-size:84px"><span class="split">Ta</span> <span class="m"><span class="mi">1<span style="font-size:.55em;vertical-align:.7em;letter-spacing:0">re</span></span></span> <span class="split">analyse est</span></div>
+ <div class="a" id="fStamp" style="left:0;right:0;top:535px;text-align:center"><span class="h" style="display:inline-block;font-size:150px;background:var(--y);color:var(--k);padding:.02em .16em .06em;border-radius:14px">OFFERTE.</span></div>
+ <div class="a" id="fParts" style="left:960px;top:640px"></div>
+ <div class="a" style="left:0;right:0;top:790px;text-align:center"><div id="fCta" style="display:inline-block;position:relative">
+   <i class="a" id="fP0" style="inset:0;border-radius:66px;border:3px solid var(--y);opacity:0"></i><i class="a" id="fP1" style="inset:0;border-radius:66px;border:3px solid var(--y);opacity:0"></i>
+   <div class="btn">Analyser ma boutique <span>→</span><i class="a" id="fShine" style="top:-20%;bottom:-20%;width:120px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);transform:skewX(-20deg);left:-30%"></i></div></div></div>
+ <div class="a mono" id="fNote" style="left:0;right:0;top:962px;text-align:center;font-size:21px;color:rgba(244,241,234,.75)">↓ Lien en description · sans carte bancaire</div>
+ <div class="a" id="cur2" style="left:0;top:0;opacity:0"><svg width="58" height="74" viewBox="0 0 30 38"><path d="M2 2 L2 31 L9.5 24.5 L14.5 35.5 L19.5 33.3 L14.6 22.5 L24.5 22.5 Z" fill="#fff" stroke="#0a0a0a" stroke-width="2" stroke-linejoin="round"/></svg></div>
+ <div class="a" id="fRip" style="width:40px;height:40px;border-radius:50%;border:4px solid #fff;opacity:0"></div>
+</div>
+</div>
+
+<!-- surcouches -->
+<div class="full" id="flash" style="background:#fff;opacity:0"></div>
+<div class="full" id="hud" style="opacity:0">
+ <div class="a mono" style="left:66px;top:54px;font-size:18px;display:flex;align-items:center;gap:12px"><span class="logo" style="width:28px;height:28px"></span>Shoplift</div>
+ <div class="a mono" id="hTR" style="right:66px;top:58px;font-size:18px"></div>
+ <div class="a mono" id="hBL" style="left:66px;bottom:52px;font-size:16px;display:flex;gap:22px"></div>
+ <div class="a mono" id="hBR" style="right:66px;bottom:52px;font-size:16px"></div>
+ <i class="cm" style="left:30px;top:30px;border-left-width:2px;border-top-width:2px"></i><i class="cm" style="right:30px;top:30px;border-right-width:2px;border-top-width:2px"></i>
+ <i class="cm" style="left:30px;bottom:30px;border-left-width:2px;border-bottom-width:2px"></i><i class="cm" style="right:30px;bottom:30px;border-right-width:2px;border-bottom-width:2px"></i>
+ <i class="a" id="prog" style="left:0;bottom:0;height:4px;width:0;background:currentColor"></i>
+</div>
+<div class="full" id="vig" style="background:radial-gradient(ellipse 75% 75% at 50% 50%,transparent 55%,rgba(0,0,0,.42) 100%);pointer-events:none"></div>
+<div class="full" id="grain" style="opacity:.12;mix-blend-mode:overlay;pointer-events:none"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const cl = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const P = (t, a, b) => cl((t - a) / (b - a));
+const lerp = (a, b, x) => a + (b - a) * x;
+function bez(x1, y1, x2, y2) { const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by; const X = (t) => ((ax * t + bx) * t + cx) * t, Y = (t) => ((ay * t + by) * t + cy) * t; return (x) => { if (x <= 0) return 0; if (x >= 1) return 1; let lo = 0, hi = 1, t = x; for (let i = 0; i < 26; i++) { t = (lo + hi) / 2; if (X(t) < x) lo = t; else hi = t; } return Y(t); }; }
+const ez = { snap: bez(.16, 1, .3, 1), smooth: bez(.75, 0, .2, 1), soft: bez(.45, 0, .2, 1), out: bez(.2, .7, .3, 1),
+  back: (x) => { const c = 1.65; return x <= 0 ? 0 : x >= 1 ? 1 : 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); },
+  el: (x) => (x <= 0 ? 0 : x >= 1 ? 1 : Math.pow(2, -9 * x) * Math.sin((x * 9 - .75) * 2.0944) + 1),
+  inExpo: (x) => (x <= 0 ? 0 : Math.pow(2, 10 * x - 10)), outExpo: (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x)), in3: (x) => x * x * x };
+const rnd = (i) => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const css = (el, o, tr, f) => { el = typeof el === 'string' ? $(el) : el; if (o !== undefined) el.style.opacity = o; if (tr !== undefined) el.style.transform = tr; if (f !== undefined) el.style.filter = f; };
+
+// --- découpe en mots / lettres masqués ---
+function wrap(n) { const m = document.createElement('span'); m.className = 'm'; const i = document.createElement('span'); i.className = 'mi'; i.append(n); m.append(i); return m; }
+function split(el) { const out = []; for (const n of [...el.childNodes]) { if (n.nodeType === 3) { for (const w of n.textContent.split(/(\s+)/)) { if (!w) continue; out.push(/^\s+$/.test(w) ? document.createTextNode(w) : wrap(document.createTextNode(w))); } } else out.push(wrap(n)); } el.replaceChildren(...out); return [...el.querySelectorAll(':scope > .m > .mi')]; }
+function splitChars(el) { const t = el.textContent; el.textContent = ''; return [...t].map((c) => { const m = wrap(document.createTextNode(c)); el.append(m); return m.firstChild; }); }
+function words(items, t, a, { st = .045, d = .5, ease = ez.snap, out = null, od = .28, ost = .015, y = 120 } = {}) { items.forEach((el, i) => { let ty = (1 - ease(P(t, a + i * st, a + i * st + d))) * y; if (out !== null) ty -= ez.smooth(P(t, out + i * ost, out + i * ost + od)) * y; el.style.transform = `translateY(${ty}%)`; }); }
+const rise = (el, t, a, d = .45, dist = 40) => { const p = ez.snap(P(t, a, a + d)); css(el, cl(p * 1.6), `translateY(${(1 - p) * dist}px)`); };
+const wipeIn = (el, t, a, d = .4) => { el.style.clipPath = `inset(-20% ${(1 - ez.smooth(P(t, a, a + d))) * 100}% -20% 0)`; };
+
+// --- données réelles du radar (radar-snapshot) ---
+const PROD = [['sport-0', 'Legging', 92, 5], ['animaux-0', 'Lit pour animal', 92, 4], ['beaute-0', 'Lèvres', 99, 6], ['animaux-2', 'Harnais', 92, 5], ['bijoux-0', 'Lunettes de soleil', 88, 4], ['mode-0', 'Haut', 78, 8]];
+const RX = 1340, RY = 515, POS = [[1340, 296], [1600, 336], [1606, 712], [1336, 742], [1074, 706], [1080, 330]];
+const SPY = ['sport-3.webp', 'sport-8.webp', 'sport-2.webp', 'mode-8.jpg', 'mode-7.webp', 'mode-4.webp', 'mode-2.jpg', 'mode-1.webp'];
+const SECT = ['Audit', 'Radar', 'Espion', 'Agents', 'Tarifs'];
+let R = {};
+
+async function init() {
+  await document.fonts.load('800 100px M'); await document.fonts.load('500 20px J');
+  // grain animé (6 tuiles de bruit)
+  R.grain = [...Array(6)].map((_, k) => { const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d'); const d = x.createImageData(256, 256); let s = k * 9973 + 17; for (let i = 0; i < d.data.length; i += 4) { s = (s * 16807) % 2147483647; const v = s & 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } x.putImageData(d, 0, 0); return `url(${c.toDataURL()})`; });
+  // A
+  R.hook = [['TA', '#0a0a0a', '#f4f1ea', 0], ['BOUTIQUE', '#ffd23f', '#0a0a0a', .25], ['PERD', '#0a0a0a', '#ffd23f', .5], ['DE', '#f4f1ea', '#0a0a0a', .75], ['L’ARGENT.', '#0a0a0a', '#f4f1ea', 1]];
+  const meas = document.createElement('span'); meas.className = 'h'; meas.style.cssText = 'position:absolute;visibility:hidden;font-size:100px;white-space:nowrap'; document.body.append(meas);
+  R.hookSize = R.hook.map(([w]) => { meas.textContent = w; return Math.min(560, 1660 * 100 / meas.getBoundingClientRect().width); }); meas.remove();
+  R.aLine = [...document.querySelectorAll('#aLine .split')].flatMap(split);
+  const ou = $('aOu').getBoundingClientRect(); R.ouC = [ou.left + ou.width / 2, ou.top + ou.height / 2];
+  // B
+  R.bHead = split($('bHead').querySelector('.split'));
+  R.bH = [...document.querySelectorAll('#bLeft .split')].flatMap(split);
+  const g = $('gTicks'); for (let i = 0; i < 72; i++) { const a = i / 72 * Math.PI * 2; const l = document.createElementNS('http://www.w3.org/2000/svg', 'line'); l.setAttribute('x1', 260 + Math.sin(a) * 244); l.setAttribute('y1', 260 - Math.cos(a) * 244); l.setAttribute('x2', 260 + Math.sin(a) * (i % 6 ? 252 : 258)); l.setAttribute('y2', 260 - Math.cos(a) * (i % 6 ? 252 : 258)); l.setAttribute('stroke-width', i % 6 ? 2 : 3); l.setAttribute('stroke-linecap', 'round'); g.append(l); }
+  R.ticks = [...g.children]; R.C = 2 * Math.PI * 210;
+  $('gTrack').setAttribute('stroke-dasharray', R.C); $('gArc').setAttribute('stroke-dasharray', R.C);
+  R.GX = 1110; R.GY = 560;
+  R.issues = [[1430, 250], [1470, 482], [1430, 714]];
+  const ln = $('bLines'); R.issueLines = R.issues.map(([x, y], i) => { const ty = y + 52; const a = Math.atan2(ty - R.GY, x - R.GX); const sx = R.GX + Math.cos(a) * 276, sy = R.GY + Math.sin(a) * 276; const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('d', `M${sx} ${sy} L${x - 14} ${ty}`); p.setAttribute('stroke', 'rgba(255,210,63,.7)'); p.setAttribute('stroke-width', 2); p.setAttribute('fill', 'none'); p.setAttribute('stroke-dasharray', '1 1'); p.setAttribute('pathLength', 1); ln.append(p); const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); c.setAttribute('cx', sx); c.setAttribute('cy', sy); c.setAttribute('r', 7); c.setAttribute('fill', '#ffd23f'); ln.append(c); return [p, c]; });
+  R.issues.forEach(([x, y], i) => { const k = $('k' + i); k.style.left = x + 'px'; k.style.top = y + 'px'; });
+  // C
+  const rad = $('radar'); rad.style.left = RX - 520 + 'px'; rad.style.top = RY - 520 + 'px';
+  R.rings = [130, 260, 390, 500].map((r) => { const d = document.createElement('div'); d.className = 'ring'; d.style.cssText += `left:${520 - r}px;top:${520 - r}px;width:${2 * r}px;height:${2 * r}px`; rad.prepend(d); return d; });
+  R.cards = PROD.map(([img, kind, sc, n], i) => { const [cx, cy] = POS[i]; const ang = (Math.atan2(cx - RX, RY - cy) * 180 / Math.PI + 360) % 360; const c = document.createElement('div'); c.className = 'card'; c.innerHTML = `<img src="../public/radar-img/${img}.webp"><b class="sb">${sc}</b><span class="kd">${kind}</span><span class="sl">Vendu par ${n} boutiques</span>`; c.style.left = cx - 115 + 'px'; c.style.top = cy - 158 + 'px'; $('cards').append(c); const bl = document.createElement('div'); bl.className = 'a'; bl.style.cssText = `left:${cx - 60}px;top:${cy - 60}px;width:120px;height:120px;border-radius:50%;border:3px solid #ffd23f`; $('cards').prepend(bl); return { el: c, bl, sb: c.querySelector('.sb'), sc, cx, cy, tA: 5.66 + ang / 290, r0: (rnd(i + 4) - .5) * 6 }; });
+  R.cH = [...document.querySelectorAll('#cLeft .split')].flatMap(split);
+  const ret = $('ret'); ret.innerHTML = ['left:0;top:0;border-width:4px 0 0 4px', 'right:0;top:0;border-width:4px 4px 0 0', 'left:0;bottom:0;border-width:0 0 4px 4px', 'right:0;bottom:0;border-width:0 4px 4px 0'].map((s) => `<i class="a" style="width:34px;height:34px;border:solid #ffd23f;${s}"></i>`).join('') + '<div class="a mono" id="retL" style="left:0;top:100%;margin-top:14px;font-size:15px;background:#ffd23f;color:#0a0a0a;padding:8px 12px;border-radius:8px;white-space:nowrap"></div>';
+  // D
+  const store = () => `<div class="a mono" style="left:30px;top:22px;font-size:15px;letter-spacing:.3em;color:#f4f1ea">CONCURRENT</div><div class="a" style="left:300px;top:28px;display:flex;gap:16px">${[70, 54, 80, 60].map((w) => `<i style="width:${w}px;height:8px;border-radius:4px;background:rgba(255,255,255,.14)"></i>`).join('')}</div>` + SPY.map((s, i) => `<div class="tile" style="left:${25 + (i % 4) * 207}px;top:${70 + Math.floor(i / 4) * 232}px"><img src="../public/radar-img/${s}"><i></i><b></b></div>`).join('');
+  $('brC').innerHTML = store(); $('lensC').innerHTML = store();
+  R.tags = [[0, 0, '#1 Best-seller', '#ffd23f', '#0a0a0a', 9.04], [2, 0, 'Nouveau · 3 j', '#f4f1ea', '#0a0a0a', 9.24], [3, 1, 'Promo −20 %', '#ff5a4e', '#fff', 9.44]].map(([c, r, txt, bg, fg, tt]) => { const d = document.createElement('div'); d.className = 'tag'; d.textContent = txt; d.style.cssText += `left:${25 + c * 207 + 10}px;top:${60 + 70 + r * 232 - 22}px;background:${bg};color:${fg};transform-origin:0 100%`; $('tags').append(d); return { el: d, tt }; });
+  R.lensPts = [[120, 150], [326, 112], [532, 150], [690, 330], [744, 382]];
+  [38, 52, 45, 66, 58, 80, 72, 100].forEach((h) => { const b = document.createElement('i'); b.dataset.h = h; b.style.cssText = 'flex:1;border-radius:8px 8px 3px 3px;background:linear-gradient(#ffe68a,#ffb020);height:0'; $('dBars').append(b); });
+  R.dH = [...document.querySelectorAll('#d1 .split')].flatMap(split);
+  R.d2H = [$('dN'), ...[...document.querySelectorAll('#d2 .split')].flatMap(split)];
+  R.msg = ['Hello! I run a Shopify store and I am looking for a reliable supplier for this product:', '<b>Dog harness — no pull</b>', 'Could you please send me your best price per unit, shipping cost and delivery time to France?', 'Expected volume: 100 orders per month.'];
+  $('msg').innerHTML = R.msg.map((l) => `<div class="ml" style="margin-bottom:8px">${l}</div>`).join('') + '<span class="a" id="tick" style="right:12px;bottom:8px;font:600 15px M;color:#8696a0">13:37 ✓✓</span>';
+  R.ml = [...document.querySelectorAll('#msg .ml')];
+  R.pills = [['WhatsApp direct', 330, '#25d366'], ['E-mail vérifié', 452, '#ffd23f'], ['Connecté à Shopify', 574, '#3ddc84']].map(([txt, y, c]) => { const d = document.createElement('div'); d.className = 'chip a'; d.innerHTML = `<span class="dot" style="background:${c};box-shadow:0 0 14px ${c}"></span>${txt}`; d.style.right = 1920 - 1270 + 'px'; d.style.top = y + 'px'; $('pills').append(d); return d; });
+  R.bars = [...Array(6)].map((_, i) => { const d = document.createElement('div'); d.className = 'a'; d.style.cssText = `left:0;width:1920px;top:${i * 180}px;height:181px;background:#ffd23f`; $('bars').append(d); return d; });
+  // E
+  $('eStrip').innerHTML = [...Array(10)].map((_, d) => `<div style="height:420px">${d}</div>`).join('');
+  R.eH = split(document.querySelector('#sE .split'));
+  R.plans = [['Basique', '19', 'Audit complet · espion · 1 agent'], ['Pro', '49', 'Radar 6 h · espion complet · 3 agents'], ['Scale', '99', '10 agents · 20 concurrents · PDF & Excel']].map(([n, p, d], i) => { const c = document.createElement('div'); c.className = 'plan'; if (i === 1) c.style.cssText = 'background:#ffd23f;color:#0a0a0a'; c.innerHTML = `<div><b>${n}${i === 1 ? ' <span class="mono" style="font-size:14px;vertical-align:middle;background:#0a0a0a;color:#ffd23f;padding:6px 10px;border-radius:8px;letter-spacing:.1em">Recommandé</span>' : ''}</b><small>${d}</small></div><div class="pr">${p} €<span>/mois</span></div>`; $('ePlans').append(c); return c; });
+  // F
+  R.fW = splitChars($('fWord'));
+  [...document.querySelectorAll('#fLine .split')].forEach(split); R.fH = [...document.querySelectorAll('#fLine .mi')];
+  R.parts = [...Array(26)].map((_, i) => { const d = document.createElement('i'); d.className = 'a'; const s = 8 + rnd(i) * 14; d.style.cssText = `width:${s}px;height:${s * (rnd(i + 3) > .5 ? 1 : 2.2)}px;background:${['#ffd23f', '#f4f1ea', '#ffb020'][i % 3]};border-radius:2px;opacity:0`; $('fParts').append(d); return { el: d, a: rnd(i + 7) * Math.PI * 2, v: 500 + rnd(i + 1) * 900, r: (rnd(i + 9) - .5) * 1400 }; });
+  await Promise.all([...document.images].map((i) => i.decode().catch(() => {})));
+  window.__ready = true;
+}
+
+function shake(t) { let x = 0, y = 0; for (const [ti, A] of [[0, .5], [.25, .5], [.5, .7], [.75, .5], [1, 1.4], [2.5, .5], [3.05, .25], [5.5, .6], [8.5, .5], [9.8, .4], [11, .7], [12, 1], [13, .8], [13.6, 1.3], [14, .35], [14.72, .25]]) { const s = t - ti; if (s < 0 || s > .5) continue; const e = A * 18 * Math.exp(-s * 13); x += e * Math.sin(s * 97 + ti * 3); y += e * Math.cos(s * 83 + ti * 5); } return [x, y]; }
+function catmull(pts, u) { const n = pts.length - 1, s = Math.min(n - 1e-6, u * n), i = Math.floor(s), f = s - i; const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(n, i + 2)]; const c = (a, b, c2, d) => .5 * (2 * b + (-a + c2) * f + (2 * a - 5 * b + 4 * c2 - d) * f * f + (-a + 3 * b - 3 * c2 + d) * f * f * f); return [c(p0[0], p1[0], p2[0], p3[0]), c(p0[1], p1[1], p2[1], p3[1])]; }
+const dirBlur = (el, g, v) => { if (v < .4) { el.style.filter = 'none'; return; } $(g).setAttribute('stdDeviation', `${v} 0`); el.style.filter = `url(#${g === 'gC' ? 'fbC' : 'fbD'})`; };
+
+function render(t) {
+  [['sA', 0, 2.5], ['sB', 2.5, 5.5], ['sC', 5.5, 8.5], ['sD', 8.5, 11], ['sE', 11, 13], ['sF', 13, 99]].forEach(([id, a, b]) => { $(id).style.visibility = t >= a && t < b ? 'inherit' : 'hidden'; });
+  const [sx, sy] = shake(t); $('world').style.transform = `translate(${sx}px,${sy}px)`;
+  const gi = Math.floor(t * 24); $('grain').style.backgroundImage = R.grain[gi % 6]; $('grain').style.backgroundPosition = `${rnd(gi) * 256}px ${rnd(gi + 1) * 256}px`;
+  let fl = 0; for (const [ti, A] of [[5.5, .15], [8.5, .18], [9.8, .15], [13, .22], [13.6, .18]]) fl = Math.max(fl, A * (1 - P(t, ti, ti + .12)) * (t >= ti ? 1 : 0)); $('flash').style.opacity = fl;
+
+  // ---------- A · accroche ----------
+  if (t < 2.5) {
+    if (t < 1.5) {
+      $('aLine').style.visibility = 'hidden'; $('aWrap').style.visibility = 'inherit';
+      let i = R.hook.length - 1; while (i > 0 && t < R.hook[i][3]) i--;
+      const [w, bg, fg, t0] = R.hook[i]; $('aBg').style.background = bg;
+      if ($('aW').textContent !== w) { $('aW').textContent = w; $('aE0').textContent = w; $('aE1').textContent = w; }
+      $('aW').style.color = fg; $('aWrap').style.fontSize = R.hookSize[i] + 'px';
+      const p = ez.outExpo(P(t, t0, t0 + .16)); let s = lerp(1.32, 1, p), rot = (i % 2 ? 1 : -1) * 3 * (1 - p);
+      if (i === 4) { s = lerp(1.7, 1, ez.outExpo(P(t, 1, 1.2))) * (1 + .05 * ez.soft(P(t, 1.2, 1.5))); rot = 0; }
+      const ca = (1 - P(t, t0, t0 + .09)) * 14; $('aW').style.textShadow = ca > .3 ? `${-ca}px 0 rgba(255,40,90,.8),${ca}px 0 rgba(0,210,255,.8)` : 'none';
+      css('aWrap', 1, `scale(${s}) rotate(${rot}deg)`, `blur(${(1 - p) * 6}px)`);
+      $('aU').style.transform = `scaleX(${i === 4 ? ez.smooth(P(t, 1.1, 1.34)) : 0})`;
+      ['aE0', 'aE1'].forEach((id, k) => { const q = P(t, 1 + k * .09, 1.5 + k * .09); css(id, i === 4 && q > 0 && q < 1 ? (1 - q) * .7 : 0, `scale(${1 + ez.out(q) * .45})`); });
+    } else {
+      $('aWrap').style.visibility = 'hidden'; $('aLine').style.visibility = 'inherit'; $('aBg').style.background = '#0a0a0a';
+      words(R.aLine, t, 1.5, { st: .04, d: .42 });
+      $('aCirc').style.strokeDashoffset = 1 - ez.smooth(P(t, 1.8, 2.12));
+      css('aLine', 1, `scale(${1 + .04 * ez.soft(P(t, 1.5, 2.5))})`);
+    }
+    const ir = ez.inExpo(P(t, 2.12, 2.5)) * 2300; $('aIris').style.clipPath = `circle(${ir}px at ${R.ouC[0]}px ${R.ouC[1]}px)`;
+  }
+
+  // ---------- B · audit ----------
+  if (t >= 2.5 && t < 5.5) {
+    words(R.bHead, t, 2.5, { st: .05, d: .42, out: 3.1, od: .22 });
+    const pb = ez.snap(P(t, 2.55, 2.92)); const m = ez.smooth(P(t, 3.12, 3.32)); const bw = lerp(980, 130, m);
+    const bar = $('bBar'); bar.style.width = bw + 'px'; bar.style.left = 960 - bw / 2 + 'px';
+    css(bar, cl(pb * 2) * (t < 3.6 ? 1 : 0), `translateY(${(1 - pb) * 90}px) scale(${lerp(.9, 1, pb)})`);
+    $('bIn').style.opacity = 1 - P(t, 3.1, 3.17);
+    const txt = 'ta-boutique.com', n = Math.floor(P(t, 2.74, 3) * txt.length); $('bTyped').textContent = txt.slice(0, n);
+    $('bCaret').style.opacity = n < txt.length || Math.floor(t * 5) % 2 === 0 ? 1 : 0;
+    const press = Math.sin(Math.PI * P(t, 3.03, 3.13)); $('bBtn').style.transform = `scale(${1 - press * .08})`;
+    const cp = ez.smooth(P(t, 2.72, 3.0)); const cx = lerp(1560, 1336, cp), cy = lerp(930, 566, cp);
+    css('cur1', P(t, 2.72, 2.8) * (1 - P(t, 3.15, 3.22)), `translate(${cx}px,${cy}px) scale(${1 - press * .2})`);
+    const rp = P(t, 3.04, 3.42); css('bRip', rp > 0 && rp < 1 ? (1 - rp) * .9 : 0, `translate(${1336 - 20}px,${560 - 20}px) scale(${1 + ez.outExpo(rp) * 7})`);
+    const ir = ez.smooth(P(t, 3.3, 3.62)); $('bIris').style.clipPath = `circle(${t < 3.3 ? 0 : lerp(65, 2300, ir)}px at 960px 560px)`;
+    $('bY').style.visibility = ir >= 1 ? 'hidden' : 'inherit';
+    $('bgB').style.transform = `translateX(${-(t - 2.5) * 140}px)`; $('bgB').style.opacity = P(t, 3.4, 3.8);
+    // jauge
+    const mv = ez.smooth(P(t, 3.92, 4.42)); const gx = lerp(960, R.GX, mv);
+    $('gauge').style.left = gx - 260 + 'px'; $('gauge').style.top = R.GY - 260 + 'px';
+    css('gauge', P(t, 3.2, 3.24), `scale(${lerp(.55, 1, ez.snap(P(t, 3.2, 3.75)))})`);
+    $('gTrack').setAttribute('stroke-dashoffset', R.C * (1 - ez.smooth(P(t, 3.22, 3.7))));
+    const fr = .64 * ez.out(P(t, 3.42, 4.45)); $('gArc').setAttribute('stroke-dashoffset', R.C * (1 - fr));
+    $('gArc').style.opacity = fr > .002 ? 1 : 0;
+    R.ticks.forEach((l, i) => { const on = P(t, 3.3 + i * .004, 3.38 + i * .004); l.setAttribute('stroke', i / 72 < fr ? '#ffd23f' : 'rgba(255,255,255,.22)'); l.style.opacity = on; });
+    $('gN').textContent = Math.round(64 * ez.out(P(t, 3.42, 4.45)));
+    const np = ez.back(P(t, 3.3, 3.7)); css('gNum', cl(np * 2), `scale(${lerp(.6, 1, np)})`);
+    // texte + problèmes
+    wipeIn($('bLbl'), t, 4.02, .35); words(R.bH, t, 4.06, { st: .06, d: .5 });
+    rise($('bSub'), t, 4.3); const pp = ez.back(P(t, 4.62, 5.0)); css('bPlan', cl(pp * 2), `scale(${lerp(.7, 1, pp)})`);
+    R.issueLines.forEach(([p, c], i) => { const tk = 4.36 + i * .12; p.setAttribute('stroke-dashoffset', 1 - ez.smooth(P(t, tk, tk + .2))); c.setAttribute('r', 7 * ez.back(P(t, tk - .04, tk + .14))); const q = ez.back(P(t, tk + .12, tk + .48)); css('k' + i, cl(q * 3), `translate(${(1 - q) * 70}px,${Math.sin(t * 2.2 + i) * 5}px) scale(${lerp(.75, 1, q)})`); });
+    // zoom à travers la jauge
+    const z = P(t, 5.12, 5.5); $('sB').style.transformOrigin = `${R.GX}px ${R.GY}px`;
+    css('sB', 1, `scale(${(1 + Math.pow(z, 3) * 5) * (1 + .03 * ez.soft(P(t, 4.4, 5.15)))})`, z > 0 ? `blur(${Math.pow(z, 2) * 18}px)` : 'none');
+  }
+
+  // ---------- C · radar ----------
+  if (t >= 5.5 && t < 8.5) {
+    const e = ez.outExpo(P(t, 5.5, 5.95)); const w = Math.pow(P(t, 8.22, 8.5), 3);
+    $('sC').style.transformOrigin = `${RX}px ${RY}px`; $('sC').style.transform = `translateX(${-w * 1300}px) scale(${lerp(3, 1, e) * (1 + .035 * ez.soft(P(t, 6.4, 8.25)))})`;
+    if (e < 1) $('sC').style.filter = `blur(${(1 - e) * 16}px)`; else dirBlur($('sC'), 'gC', w * 90);
+    $('bgC').style.transform = `translateX(${-(t - 5.5) * 160}px)`;
+    R.rings.forEach((r, k) => { const q = ez.snap(P(t, 5.52 + k * .05, 5.95 + k * .05)); css(r, q, `scale(${lerp(.5, 1, q)})`); });
+    const S = (t - 5.62) * 290; $('sweep').style.transform = `rotate(${S}deg)`; $('sweepL').style.transform = `rotate(${S}deg)`;
+    $('sweep').style.opacity = $('sweepL').style.opacity = P(t, 5.55, 5.8);
+    R.cards.forEach((c, i) => { const p = P(t, c.tA, c.tA + .5); const s = lerp(.3, 1, ez.back(p)); const bob = Math.sin((t - c.tA) * 2.3 + i) * 6 * P(t, c.tA + .3, c.tA + .8);
+      css(c.el, cl(p * 4), `translateY(${bob}px) rotate(${lerp(c.r0 * 4, c.r0, ez.snap(p))}deg) scale(${s})`);
+      const b = P(t, c.tA - .05, c.tA + .55); css(c.bl, b > 0 && b < 1 ? (1 - b) * .9 : 0, `scale(${.1 + ez.outExpo(b) * 1.8})`);
+      c.sb.textContent = Math.round(c.sc * ez.out(P(t, c.tA + .1, c.tA + .8))); });
+    // viseur qui verrouille les meilleurs produits
+    const locks = [[7.3, 2, 'Score 99 · vendu par 6 boutiques'], [7.65, 5, 'Vendu par 8 boutiques'], [7.98, 0, 'Score 92 · vendu par 5 boutiques']];
+    let li = -1; locks.forEach((l, k) => { if (t >= l[0]) li = k; });
+    if (li >= 0) { const [t0, ci, label] = locks[li]; const prev = li > 0 ? R.cards[locks[li - 1][1]] : R.cards[ci]; const cur = R.cards[ci]; const q = ez.snap(P(t, t0, t0 + .2));
+      const x = lerp(prev.cx, cur.cx, q), y = lerp(prev.cy, cur.cy, q); const pulse = 1 + .18 * (1 - ez.outExpo(P(t, t0 + .1, t0 + .35)));
+      const ret = $('ret'); ret.style.width = '270px'; ret.style.height = '356px'; css(ret, P(t, 7.3, 7.36), `translate(${x - 135}px,${y - 178}px) scale(${pulse})`); $('retL').textContent = label; $('retL').style.top = cur.cy < RY ? '-58px' : '100%'; }
+    else $('ret').style.opacity = 0;
+    wipeIn($('cLbl'), t, 5.62); words(R.cH, t, 5.66, { st: .05 });
+    const bk = ez.smooth(P(t, 5.84, 6.12)); $('cBlk').firstChild.style.transform = `scaleX(${bk})`; $('cBlk').style.clipPath = `inset(-10% ${(1 - bk) * 100}% -10% 0)`;
+    rise($('cSub'), t, 6.08); rise($('cC1'), t, 6.3); rise($('cC2'), t, 6.42);
+  }
+
+  // ---------- D · espion + agents ----------
+  if (t >= 8.5 && t < 11) {
+    const e = ez.outExpo(P(t, 8.5, 8.86)); $('sD').style.transform = `translateX(${(1 - e) * 1300}px)`; dirBlur($('sD'), 'gD', (1 - e) * 90);
+    $('bgD').style.transform = `translateX(${-(t - 8.5) * 170}px)`;
+    const two = t >= 9.8; $('d1').style.visibility = two ? 'hidden' : 'inherit'; $('d2').style.visibility = two ? 'inherit' : 'hidden';
+    if (!two) {
+      wipeIn($('dLbl'), t, 8.52); words(R.dH, t, 8.55, { st: .05 }); rise($('dSub'), t, 8.8);
+      const b = ez.outExpo(P(t, 8.5, 8.98)); css('br', cl(b * 3), `perspective(1800px) translate(${(1 - b) * 260}px,${Math.sin(t * 1.6) * 4}px) rotateY(${lerp(-40, 0, b)}deg) rotateX(${lerp(14, 0, b)}deg) scale(${lerp(.82, 1, b)})`);
+      const u = ez.soft(P(t, 9.0, 9.62)); const [lx, ly] = catmull(R.lensPts, u); const ls = ez.back(P(t, 8.92, 9.12)) * (1 - ez.smooth(P(t, 9.6, 9.74)));
+      css('lens', ls > 0 ? 1 : 0, `translate(${lx - 125}px,${ly - 125 + 60}px) scale(${ls})`);
+      const Z = 1.9; $('lensC').style.transform = `translate(${125 - Z * lx}px,${125 - Z * ly}px) scale(${Z})`;
+      R.tags.forEach(({ el, tt }) => { const q = ez.back(P(t, tt, tt + .32)); css(el, cl(q * 3), `scale(${lerp(.4, 1, q)}) rotate(${(1 - q) * -8}deg)`); });
+      const c = ez.snap(P(t, 9.12, 9.55)); css('dChart', cl(c * 3), `translateY(${(1 - c) * 140}px) rotate(${(1 - c) * -6}deg)`);
+      [...$('dBars').children].forEach((b2, i) => { b2.style.height = +b2.dataset.h * ez.el(P(t, 9.2 + i * .035, 9.75 + i * .035)) + '%'; });
+    } else {
+      wipeIn($('eLbl'), t, 9.84); words(R.d2H, t, 9.86, { st: .06 }); $('dN').textContent = Math.round(10 * ez.out(P(t, 9.86, 10.25)));
+      rise($('d2Sub'), t, 10.08); rise($('d2Plans'), t, 10.22);
+      const p = ez.outExpo(P(t, 9.84, 10.3)); css('ph', cl(p * 3), `translate(0,${(1 - p) * 700 + Math.sin(t * 1.8) * 5}px) rotate(${lerp(14, 3, p)}deg)`);
+      const mb = ez.back(P(t, 10.26, 10.56)); css('msg', cl(mb * 3), `scale(${lerp(.3, 1, mb)})`);
+      R.ml.forEach((l, i) => { const q = ez.snap(P(t, 10.32 + i * .07, 10.62 + i * .07)); css(l, q, `translateY(${(1 - q) * 14}px)`); });
+      $('tick').style.color = t > 10.72 ? '#53bdeb' : '#8696a0'; $('phSt').textContent = t > 10.78 ? 'en train d’écrire…' : 'en ligne';
+      R.pills.forEach((d, i) => { const q = ez.back(P(t, 10.32 + i * .11, 10.68 + i * .11)); css(d, cl(q * 3), `translateX(${(1 - q) * 80}px) translateY(${Math.sin(t * 2 + i) * 5}px) scale(${lerp(.6, 1, q)})`); });
+    }
+    R.bars.forEach((b, i) => { const c = ez.smooth(P(t, 9.52 + i * .02, 9.7 + i * .02)), u = ez.smooth(P(t, 9.8 + i * .02, 9.98 + i * .02)); const dir = i % 2 ? 1 : -1; b.style.transform = `translateX(${dir * (1 - c) * 1920 - dir * u * 1920}px)`; });
+  }
+
+  // ---------- E · prix ----------
+  if (t >= 11 && t < 13) {
+    $('sE').style.transform = `scale(${lerp(1.07, 1, ez.outExpo(P(t, 11, 11.4))) * (1 + .025 * ez.soft(P(t, 12.2, 13)))})`;
+    wipeIn($('eLb'), t, 11.02); words(R.eH, t, 11.03, { st: .05 });
+    const D = (x) => (x < 11.25 ? 9 : x < 11.5 ? lerp(9, 4, ez.smooth(P(x, 11.25, 11.5))) : x < 11.6 ? 4 : lerp(4, 1, ez.back(P(x, 11.6, 12.0))));
+    const d = D(t), v = Math.abs(D(t + .004) - D(t - .004)) / .008 * 420;
+    $('eStrip').style.transform = `translateY(${-d * 420}px)`; $('gE').setAttribute('stdDeviation', `0 ${cl(v / 120 * .45, 0, 40)}`);
+    $('ePn').textContent = t < 11.42 ? 'Scale' : t < 11.8 ? 'Pro' : 'Basique';
+    rise($('ePrice'), t, 11.02, .4, 60); rise($('eMois'), t, 11.12); rise($('ePn'), t, 11.16); wipeIn($('eNote'), t, 12.1, .45);
+    const ae = $('eEur'); const ep = ez.back(P(t, 11.9, 12.2)); ae.style.transform = `scale(${1 + .25 * Math.sin(Math.PI * P(t, 11.95, 12.25))})`;
+    const act = t < 11.42 ? 2 : t < 11.8 ? 1 : 0;
+    R.plans.forEach((c, i) => { const p = ez.outExpo(P(t, 11.05 + i * .08, 11.55 + i * .08)); const on = i === act ? 1 : 0;
+      css(c, cl(p * 2), `perspective(1400px) translateX(${(1 - p) * 520 - on * 26}px) rotateY(${(1 - p) * -55}deg) scale(${1 + on * .04})`); c.style.outline = on ? '4px solid #0a0a0a' : '0'; c.style.outlineOffset = '6px'; });
+    const rg = P(t, 12, 12.65); const r = lerp(60, 720, ez.outExpo(rg)); css('eRing', rg > 0 && rg < 1 ? 1 - rg : 0, 'none'); Object.assign($('eRing').style, { left: 470 - r + 'px', top: 560 - r + 'px', width: 2 * r + 'px', height: 2 * r + 'px', borderWidth: lerp(16, 1, rg) + 'px' });
+    const sh = ez.inExpo(P(t, 12.72, 13)); $('shT').style.transform = `translateY(${(sh - 1) * 100}%)`; $('shB').style.transform = `translateY(${(1 - sh) * 100}%)`;
+  }
+
+  // ---------- F · CTA ----------
+  if (t >= 13) {
+    const d = ez.back(P(t, 13, 13.32)); const sw = t < 13.22 ? -16 * (1 - P(t, 13, 13.22)) : 20 * Math.exp(-(t - 13.22) * 3.1) * Math.cos((t - 13.22) * 12.5);
+    css('fTag', cl(d * 3), `translateY(${(1 - d) * -460}px) rotate(${sw}deg)`);
+    words(R.fW, t, 13.05, { st: .03, d: .5 }); words(R.fH, t, 13.36, { st: .05, d: .45 });
+    const sp = P(t, 13.55, 13.76); css('fStamp', cl(sp * 6), `scale(${lerp(2.6, 1, ez.outExpo(sp))}) rotate(${lerp(-12, -3, ez.outExpo(sp))}deg)`, sp < 1 ? `blur(${(1 - sp) * 8}px)` : 'none');
+    R.parts.forEach((q) => { const s = t - 13.6; if (s < 0 || s > .9) { q.el.style.opacity = 0; return; } const x = Math.cos(q.a) * q.v * s, y = Math.sin(q.a) * q.v * s * .6 + 1100 * s * s; css(q.el, 1 - s / .9, `translate(${x}px,${y}px) rotate(${q.r * s}deg)`); });
+    const cp = P(t, 13.95, 14.5); const press = Math.sin(Math.PI * P(t, 14.74, 14.86));
+    css('fCta', cl(cp * 5), `scale(${ez.el(cp) * (1 - press * .05)})`);
+    ['fP0', 'fP1'].forEach((id, j) => { const s = ((t - 14.1 - j * .25) % .5 + .5) % .5 / .5; css(id, t > 14.1 + j * .25 ? (1 - s) * .7 : 0, `scale(${1 + ez.out(s) * .28},${1 + ez.out(s) * .55})`); });
+    $('fShine').style.left = lerp(-30, 130, ez.smooth(P(t, 14.25, 14.7))) + '%';
+    words([$('fNote')], t, 14.2, { d: .5, y: 0 }); css('fNote', P(t, 14.2, 14.45), `translateY(${(1 - ez.snap(P(t, 14.2, 14.6))) * 20}px)`);
+    const mp = ez.smooth(P(t, 14.32, 14.66)); css('cur2', P(t, 14.32, 14.4), `translate(${lerp(1760, 1232, mp)}px,${lerp(1100, 846, mp)}px) scale(${1 - press * .2})`);
+    const rp = P(t, 14.75, 15.1); css('fRip', rp > 0 && rp < 1 ? (1 - rp) * .9 : 0, `translate(${1232 - 20}px,${846 - 20}px) scale(${1 + ez.outExpo(rp) * 4})`);
+  }
+
+  // ---------- HUD ----------
+  const hudOn = t >= 2.5; const light = (t >= 2.5 && t < 3.5) || (t >= 11 && t < 12.95);
+  $('vig').style.opacity = light ? .45 : 1; const hud = $('hud'); hud.style.opacity = hudOn ? 1 : 0; hud.style.color = light ? '#0a0a0a' : 'rgba(244,241,234,.75)';
+  const si = t < 5.5 ? 0 : t < 8.5 ? 1 : t < 9.8 ? 2 : t < 11 ? 3 : t < 13 ? 4 : 5;
+  $('hTR').textContent = si < 5 ? `0${si + 1} / 05 · ${SECT[si]}` : '1re analyse offerte';
+  $('hBL').innerHTML = SECT.map((s, i) => `<span style="opacity:${i === si ? 1 : .35}">${s}</span>`).join('');
+  const fr = Math.floor(t * 30); $('hBR').textContent = `TC 00:00:${String(Math.floor(fr / 30)).padStart(2, '0')}:${String(fr % 30).padStart(2, '0')}`;
+  $('prog').style.width = t / 15 * 100 + '%';
+}
+window.render = render;
+init().then(() => { if (!navigator.webdriver) { const s = performance.now(); (function loop() { render(((performance.now() - s) / 1000) % 15); requestAnimationFrame(loop); })(); } });
+</script></body></html>
