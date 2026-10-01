@@ -1,0 +1,200 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Shoplift promo</title>
+<style>
+@font-face { font-family: M; font-weight: 400 800; src: url(fonts/manrope-latin.woff2) format('woff2'); }
+:root { --y: #ffd23f; --o: #ffb020; --w: #f7f2e3; --m: #a8a39a; --g: #6fe3a5; --r: #ff6b5b; }
+* { margin: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #060606; font-family: M, sans-serif; color: var(--w); -webkit-font-smoothing: antialiased; }
+#cam { position: absolute; inset: 0; transform-origin: 50% 50%; }
+.abs { position: absolute; }
+.scene { position: absolute; inset: 0; opacity: 0; }
+.dots { position: absolute; inset: -100px; background-image: radial-gradient(rgba(255,255,255,.16) 2px, transparent 2.6px); background-size: 52px 52px; -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, #000 10%, transparent 75%); }
+.light { position: absolute; width: 1400px; height: 1400px; left: -160px; top: -900px; border-radius: 50%; background: radial-gradient(rgba(255,255,255,.13), transparent 65%); }
+.grain { position: absolute; inset: -200px; opacity: .09; mix-blend-mode: overlay; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.big { font-weight: 800; letter-spacing: -.045em; line-height: .92; }
+.hl { background: var(--y); color: #0a0a0a; padding: 0 .12em; border-radius: .12em; }
+.grad { background: linear-gradient(100deg, #ffe68a, var(--y) 40%, var(--o)); -webkit-background-clip: text; color: transparent; }
+.chip { display: inline-flex; align-items: center; gap: 14px; padding: 16px 28px; border-radius: 99px; border: 2px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05); font-size: 34px; font-weight: 700; color: var(--w); }
+.chip i { width: 16px; height: 16px; border-radius: 50%; background: var(--g); box-shadow: 0 0 18px var(--g); }
+.card { border-radius: 36px; background: #111; border: 2px solid rgba(255,255,255,.1); }
+.logo { width: 1em; height: 1em; background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20d%3D%22M3.5%2016%2011%206.5h16a2.5%202.5%200%200%201%202.5%202.5v14a2.5%202.5%200%200%201-2.5%202.5H11z%22%20fill%3D%22%23ffd23f%22/%3E%3Ccircle%20cx%3D%2210.5%22%20cy%3D%2216%22%20r%3D%222%22%20fill%3D%22%230a2419%22/%3E%3Cpath%20d%3D%22M15.5%2021%2022%2012.5m-5%200h5v5%22%20fill%3D%22none%22%20stroke%3D%22%230a2419%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") center/contain no-repeat; display: inline-block; }
+.pill { font-size: 24px; font-weight: 800; padding: 8px 16px; border-radius: 99px; letter-spacing: .04em; }
+.pill.hi { background: rgba(255,107,91,.18); color: var(--r); }
+.pill.md { background: rgba(255,165,61,.18); color: #ffa53d; }
+.pill.ok { background: rgba(111,227,165,.16); color: var(--g); }
+.row { display: flex; align-items: center; gap: 20px; padding: 24px 28px; border-radius: 24px; background: rgba(255,255,255,.05); font-size: 34px; font-weight: 700; }
+.prod { width: 300px; height: 420px; border-radius: 30px; overflow: hidden; background: #151515; border: 2px solid rgba(255,255,255,.12); box-shadow: 0 40px 80px -20px rgba(0,0,0,.8); }
+.prod img { width: 100%; height: 310px; object-fit: cover; display: block; }
+.prod b { position: absolute; top: 14px; left: 14px; background: rgba(8,8,8,.82); color: var(--y); font-size: 30px; padding: 6px 14px; border-radius: 14px; }
+.prod span { display: block; padding: 18px 20px 0; font-size: 28px; font-weight: 800; }
+.prod em { display: block; padding: 4px 20px; font-style: normal; color: var(--g); font-size: 22px; font-weight: 700; }
+.btn { display: inline-flex; align-items: center; gap: 22px; padding: 40px 70px; border-radius: 36px; background: linear-gradient(100deg, #ffe68a, var(--y) 40%, var(--o)); color: #0a0a0a; font-size: 56px; font-weight: 800; letter-spacing: -.02em; }
+.flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+.wipe { position: absolute; left: -40%; width: 180%; height: 700px; background: var(--y); transform-origin: center; }
+</style></head><body>
+<div id="cam">
+  <div class="dots" id="dots"></div><div class="light"></div>
+
+  <!-- S1 : accroche -->
+  <div class="scene" id="s1">
+    <div class="abs" id="coins" style="inset:0"></div>
+    <div class="abs big" id="h1a" style="left:80px;top:560px;font-size:150px">TA BOUTIQUE</div>
+    <div class="abs big" id="h1b" style="left:80px;top:735px;font-size:150px">PERD DE</div>
+    <div class="abs big" id="h1c" style="left:80px;top:925px;font-size:178px"><span class="hl">L’ARGENT.</span></div>
+    <div class="abs" id="h1d" style="left:84px;top:1150px;font-size:44px;font-weight:700;color:var(--m)">Et tu ne sais même pas où.</div>
+  </div>
+
+  <!-- S2 : audit -->
+  <div class="scene" id="s2">
+    <div class="abs big" id="h2" style="left:80px;top:170px;font-size:110px">Colle ton lien.<br><span class="grad">Score en 30 s.</span></div>
+    <div class="abs card" id="url" style="left:80px;top:500px;width:920px;height:140px;display:flex;align-items:center;gap:20px;padding:0 20px 0 40px;font-size:46px;font-weight:700">
+      <span id="typed" style="flex:1"></span><span id="caret" style="width:4px;height:56px;background:var(--y);position:absolute;left:0"></span>
+      <span id="go" style="background:var(--y);color:#0a0a0a;border-radius:24px;padding:24px 32px;font-size:36px;font-weight:800">Analyser →</span></div>
+    <div class="abs card" id="audit" style="left:80px;top:700px;width:920px;height:960px;padding:50px">
+      <div style="display:flex;align-items:center;gap:46px">
+        <svg width="300" height="300" viewBox="0 0 120 120" style="transform:rotate(-90deg)"><defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#ffd23f"/><stop offset="1" stop-color="#ffb020"/></linearGradient></defs><circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="11"/><circle id="arc" cx="60" cy="60" r="52" fill="none" stroke="url(#gg)" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
+        <div><div style="font-size:30px;color:var(--m);font-weight:700;letter-spacing:.1em">SCORE SHOPLIFT</div><div class="big" style="font-size:190px"><span id="score">0</span><span style="font-size:60px;color:var(--m)">/100</span></div></div>
+      </div>
+      <div style="display:grid;gap:20px;margin-top:50px">
+        <div class="row" id="r1"><span class="pill hi">ÉLEVÉ</span>Aucun avis client visible</div>
+        <div class="row" id="r2"><span class="pill md">MOYEN</span>Pas de pixel TikTok</div>
+        <div class="row" id="r3"><span class="pill hi">ÉLEVÉ</span>Fiches avec 1 seule photo</div>
+        <div class="row" id="r4" style="background:rgba(255,210,63,.12);color:var(--y)">→ Plan d’action trié par impact</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3 : radar -->
+  <div class="scene" id="s3">
+    <div class="abs big" id="radarTxt" style="top:1330px;left:0;font-size:430px;white-space:nowrap;color:transparent;-webkit-text-stroke:3px rgba(255,210,63,.22)">RADAR RADAR RADAR RADAR</div>
+    <div class="abs" id="sweep" style="left:40px;top:400px;width:1000px;height:1000px;border-radius:50%;background:conic-gradient(from 0deg, rgba(255,210,63,.28), transparent 22%);border:2px solid rgba(255,210,63,.18)"></div>
+    <div class="abs big" id="h3" style="left:80px;top:150px;font-size:104px">Les produits qui<br><span class="grad">cartonnent.</span></div>
+    <div class="abs prod" id="p0" style="left:60px;top:470px"><img src="radar-img/sport-0.webp"><b>92</b><span>Legging</span><em>Vendu par 5 boutiques</em></div>
+    <div class="abs prod" id="p1" style="left:390px;top:470px"><img src="radar-img/animaux-0.webp"><b>92</b><span>Lit pour chien</span><em>Vendu par 4 boutiques</em></div>
+    <div class="abs prod" id="p2" style="left:720px;top:470px"><img src="radar-img/beaute-0.webp"><b>99</b><span>Gloss</span><em>Vendu par 6 boutiques</em></div>
+    <div class="abs prod" id="p3" style="left:60px;top:930px"><img src="radar-img/maison-0.webp"><b>85</b><span>Bougie</span><em>Vendu par 4 boutiques</em></div>
+    <div class="abs prod" id="p4" style="left:390px;top:930px"><img src="radar-img/bijoux-0.webp"><b>88</b><span>Lunettes</span><em>Vendu par 4 boutiques</em></div>
+    <div class="abs prod" id="p5" style="left:720px;top:930px"><img src="radar-img/mode-0.webp"><b>78</b><span>Top</span><em>Vendu par 8 boutiques</em></div>
+    <div class="abs" id="c3" style="left:80px;top:1440px"><span class="chip"><i></i>Mis à jour toutes les 6 h</span></div>
+    <div class="abs" id="c3b" style="left:80px;top:1550px"><span class="chip">7 fournisseurs connectables à Shopify</span></div>
+  </div>
+
+  <!-- S4 : espion + agents -->
+  <div class="scene" id="s4">
+    <div class="abs big" id="h4" style="left:80px;top:170px;font-size:110px">Espionne<br><span class="grad">tes concurrents.</span></div>
+    <div class="abs card" id="chart" style="left:80px;top:500px;width:920px;height:520px;padding:44px">
+      <div style="font-size:30px;color:var(--m);font-weight:700;letter-spacing:.1em">LANCEMENTS PAR MOIS</div>
+      <div id="bars" style="display:flex;align-items:flex-end;gap:22px;height:330px;margin-top:40px"></div>
+    </div>
+    <div class="abs big" id="h4b" style="left:80px;top:1080px;font-size:76px;line-height:1.05">+ <span class="grad">10 agents</span><br>de sourcing vérifiés</div>
+    <div class="abs card" id="a0" style="left:80px;top:1300px;width:920px;padding:30px 36px;display:flex;align-items:center;gap:26px;font-size:36px;font-weight:800"><span style="width:84px;height:84px;border-radius:24px;background:#25d366;display:grid;place-items:center;font-size:44px">✆</span><div>WhatsApp direct<div style="font-size:28px;color:var(--m);font-weight:600">+86 180 •••• •••• · ★ 4.9</div></div></div>
+    <div class="abs card" id="a1" style="left:80px;top:1470px;width:920px;padding:30px 36px;display:flex;align-items:center;gap:26px;font-size:36px;font-weight:800"><span style="width:84px;height:84px;border-radius:24px;background:#25d366;display:grid;place-items:center;font-size:44px">✆</span><div>Connecté à Shopify<div style="font-size:28px;color:var(--m);font-weight:600">+852 66•• •••• · ★ 5.0</div></div></div>
+  </div>
+
+  <!-- S5 : prix -->
+  <div class="scene" id="s5">
+    <div class="abs big" id="h5a" style="left:80px;top:360px;font-size:90px;color:var(--m)">Tout ça dès</div>
+    <div class="abs big" style="left:60px;top:480px;font-size:420px;height:420px;overflow:hidden;display:flex"><div id="roll" style="display:flex;flex-direction:column"><span class="grad">99</span><span class="grad">49</span><span class="grad">19</span></div><span style="font-size:200px;margin-top:40px">€</span></div>
+    <div class="abs big" id="h5b" style="left:80px;top:880px;font-size:70px">par mois.</div>
+    <div class="abs" id="plans" style="left:80px;top:1080px;width:920px;display:grid;gap:20px"></div>
+    <div class="abs" id="h5c" style="left:80px;top:1630px;font-size:38px;font-weight:700;color:var(--m)">Sans engagement · résiliable en 1 clic</div>
+  </div>
+
+  <!-- S6 : CTA -->
+  <div class="scene" id="s6">
+    <div class="abs" id="burst" style="left:540px;top:820px;width:0;height:0"></div>
+    <div class="abs" id="lg" style="left:0;right:0;top:420px;text-align:center;font-size:120px;font-weight:800;letter-spacing:-.04em"><span class="logo" id="tag" style="vertical-align:-.12em;margin-right:24px"></span>Shoplift</div>
+    <div class="abs big" id="h6" style="left:0;right:0;top:640px;text-align:center;font-size:118px;line-height:1.12">Ta 1<sup style="font-size:.5em">re</sup> analyse<br><span class="hl">OFFERTE.</span></div>
+    <div class="abs" id="cta" style="left:0;right:0;top:1080px;text-align:center"><span class="btn">Tester gratuitement →</span></div>
+    <div class="abs" id="h6b" style="left:0;right:0;top:1290px;text-align:center;font-size:38px;font-weight:700;color:var(--m)">Sans carte bancaire · rien à installer</div>
+  </div>
+</div>
+<div class="wipe" id="wipe"></div>
+<div class="flash" id="flash"></div>
+<div class="grain" id="grain"></div>
+<div class="abs" style="left:0;top:0;height:10px;width:100%;background:rgba(255,255,255,.08)"><div id="bar" style="height:100%;background:var(--y)"></div></div>
+<script>
+const $ = (id) => document.getElementById(id);
+const cl = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const P = (t, a, b) => cl((t - a) / (b - a));
+const eo = (x) => 1 - Math.pow(1 - x, 3);
+const ex = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
+const bk = (x) => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const el = (x) => (x <= 0 ? 0 : x >= 1 ? 1 : Math.pow(2, -10 * x) * Math.sin((x * 10 - .75) * 2.094) + 1);
+const set = (e, o, tf, f = '') => { e = typeof e === 'string' ? $(e) : e; e.style.opacity = o; e.style.transform = tf; e.style.filter = f; };
+const rnd = (i) => { const x = Math.sin(i * 127.1) * 43758.5; return x - Math.floor(x); };
+const SC = [[0, 2.4], [2.4, 5.5], [5.5, 8.5], [8.5, 11], [11, 13.1], [13.1, 15.1]];
+// éléments générés
+const coins = $('coins'); for (let i = 0; i < 16; i++) { const c = document.createElement('div'); c.className = 'abs'; c.textContent = '€'; c.style.cssText = 'width:90px;height:90px;border-radius:50%;display:grid;place-items:center;font:800 50px M;color:#0a0a0a;background:radial-gradient(circle at 35% 30%,#fff3b0,#ffd23f 45%,#e09a10)'; coins.append(c); }
+const bars = $('bars'); [30, 42, 38, 55, 48, 70, 64, 92].forEach((h) => { const b = document.createElement('i'); b.dataset.h = h; b.style.cssText = 'flex:1;border-radius:14px 14px 6px 6px;background:linear-gradient(#ffe68a,#ffb020)'; bars.append(b); });
+const plans = $('plans'); [['Basique', 19, 'Audit complet · espion · 1 agent'], ['Pro', 49, 'Radar 6 h · 3 agents · suivi concurrents'], ['Scale', 99, '10 agents · rapports PDF & Excel']].forEach(([n, p, d], i) => { const r = document.createElement('div'); r.className = 'card'; r.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:28px 36px;font-size:40px;font-weight:800' + (i === 1 ? ';border-color:#ffd23f;background:rgba(255,210,63,.1)' : ''); r.innerHTML = '<div>' + n + (i === 1 ? ' <span class="pill ok" style="font-size:20px;vertical-align:middle">RECOMMANDÉ</span>' : '') + '<div style="font-size:26px;color:var(--m);font-weight:600;margin-top:4px">' + d + '</div></div><span>' + p + ' €</span>'; plans.append(r); });
+const burst = $('burst'); for (let i = 0; i < 28; i++) { const s = document.createElement('i'); s.className = 'abs'; s.style.cssText = 'width:' + (10 + rnd(i) * 22) + 'px;height:' + (22 + rnd(i + 9) * 30) + 'px;border-radius:6px;background:' + ['#ffd23f', '#ffb020', '#f7f2e3', '#6fe3a5'][i % 4]; burst.append(s); }
+
+function render(t) {
+  // caméra : petites secousses aux impacts + zoom lent continu
+  let shake = 0;
+  for (const h of [0.15, 0.5, 0.85, 2.45, 5.55, 8.55, 11.05, 13.15]) shake += Math.max(0, 1 - (t - h) / 0.28) * (t >= h ? 1 : 0);
+  const sx = Math.sin(t * 91) * 14 * shake, sy = Math.cos(t * 77) * 14 * shake;
+  $('cam').style.transform = 'translate(' + sx + 'px,' + sy + 'px) scale(' + (1 + 0.02 * Math.sin(t * .6)) + ')';
+  $('dots').style.transform = 'translateY(' + (-t * 26 % 52) + 'px)';
+  $('grain').style.transform = 'translate(' + (rnd(Math.floor(t * 24)) * 120 - 60) + 'px,' + (rnd(Math.floor(t * 24) + 3) * 120 - 60) + 'px)';
+  $('bar').style.width = (t / 15 * 100) + '%';
+  // scènes : entrée zoom-flou, sortie rapide
+  SC.forEach(([a, b], i) => { const e = $('s' + (i + 1)); const inn = ex(P(t, a, a + .35)), out = P(t, b - .18, b); const on = t >= a - .01 && t < b; e.style.opacity = on ? inn * (1 - out) : 0; e.style.transform = 'scale(' + (1.12 - .12 * inn + .25 * out) + ')'; e.style.filter = 'blur(' + ((1 - inn) * 18 + out * 22) + 'px)'; });
+  // flash + balayage jaune entre les scènes
+  let fl = 0; for (const [a] of SC.slice(1)) fl = Math.max(fl, 1 - Math.abs(t - a) / 0.07); $('flash').style.opacity = cl(fl) * .55;
+  const w = P(t, 2.1, 2.55); set('wipe', w > 0 && w < 1 ? 1 : 0, 'translateY(' + (2400 - w * 3600) + 'px) rotate(-14deg)');
+
+  // S1
+  [['h1a', .1], ['h1b', .45], ['h1c', .8]].forEach(([id, d]) => { const p = P(t, d, d + .32); set(id, p > 0 ? 1 : 0, 'scale(' + (2.4 - 1.4 * bk(p)) + ') rotate(' + ((1 - eo(p)) * -6) + 'deg)', 'blur(' + (1 - p) * 14 + 'px)'); });
+  set('h1d', eo(P(t, 1.3, 1.7)), 'translateY(' + (1 - eo(P(t, 1.3, 1.7))) * 40 + 'px)');
+  [...coins.children].forEach((c, i) => { const y = ((t * (380 + rnd(i) * 420) + rnd(i + 5) * 2200) % 2300) - 200; c.style.left = (rnd(i + 2) * 1000) + 'px'; c.style.top = y + 'px'; c.style.opacity = .18 + rnd(i) * .3; c.style.transform = 'rotateY(' + (t * 300 + i * 40) + 'deg) scale(' + (.6 + rnd(i + 7) * .8) + ')'; c.style.filter = 'blur(' + (rnd(i + 3) > .5 ? 4 : 0) + 'px)'; });
+
+  // S2
+  const t2 = t - 2.4;
+  set('h2', ex(P(t2, .05, .5)), 'translateX(' + (1 - ex(P(t2, .05, .5))) * -120 + 'px)');
+  set('url', ex(P(t2, .15, .55)), 'translateY(' + (1 - ex(P(t2, .15, .55))) * 80 + 'px)');
+  const txt = 'ta-boutique.com'; const n = Math.floor(P(t2, .45, 1.15) * txt.length); $('typed').textContent = txt.slice(0, n);
+  $('caret').style.left = (40 + n * 25.5) + 'px'; $('caret').style.opacity = t2 < 1.25 && Math.floor(t * 4) % 2 === 0 ? 1 : 0;
+  const pr = P(t2, 1.2, 1.35); $('go').style.transform = 'scale(' + (1 - Math.sin(pr * Math.PI) * .12) + ')';
+  const pa = eo(P(t2, 1.3, 1.7)); set('audit', pa, 'translateY(' + (1 - pa) * 300 + 'px) scale(' + (.9 + .1 * pa) + ')');
+  const sc = eo(P(t2, 1.5, 2.5)); $('arc').style.strokeDashoffset = 326.7 * (1 - .64 * sc); $('score').textContent = Math.round(64 * sc);
+  ['r1', 'r2', 'r3', 'r4'].forEach((id, i) => { const p = P(t2, 1.75 + i * .2, 2.05 + i * .2); set(id, p, 'translateX(' + (1 - bk(p)) * 140 + 'px)'); });
+
+  // S3
+  const t3 = t - 5.5;
+  set('h3', ex(P(t3, .05, .45)), 'translateY(' + (1 - ex(P(t3, .05, .45))) * -60 + 'px)');
+  $('sweep').style.transform = 'rotate(' + t3 * 220 + 'deg)'; $('sweep').style.opacity = .9;
+  $('radarTxt').style.transform = 'translateX(' + (-t3 * 420) + 'px)';
+  for (let i = 0; i < 6; i++) { const p = P(t3, .25 + i * .12, .75 + i * .12); const e = bk(p); set('p' + i, p > 0 ? cl(p * 3) : 0, 'translate(' + (1 - e) * (i % 3 - 1) * 260 + 'px,' + (1 - e) * 500 + 'px) rotate(' + (1 - e) * (i % 2 ? 18 : -18) + 'deg) scale(' + (.6 + .4 * e) + ')'); const b = $('p' + i).querySelector('b'); b.textContent = Math.round(+b.dataset.v * eo(P(t3, .5 + i * .12, 1.4 + i * .12))); }
+  set('c3', eo(P(t3, 1.5, 1.9)), 'translateY(' + (1 - eo(P(t3, 1.5, 1.9))) * 50 + 'px)');
+  set('c3b', eo(P(t3, 1.75, 2.15)), 'translateY(' + (1 - eo(P(t3, 1.75, 2.15))) * 50 + 'px)');
+
+  // S4
+  const t4 = t - 8.5;
+  set('h4', ex(P(t4, .05, .45)), 'translateX(' + (1 - ex(P(t4, .05, .45))) * 140 + 'px)');
+  set('chart', eo(P(t4, .2, .55)), 'translateY(' + (1 - eo(P(t4, .2, .55))) * 120 + 'px)');
+  [...bars.children].forEach((b, i) => { b.style.height = (+b.dataset.h * el(P(t4, .4 + i * .07, 1.2 + i * .07))) + '%'; });
+  set('h4b', ex(P(t4, 1.2, 1.55)), 'scale(' + (1.3 - .3 * ex(P(t4, 1.2, 1.55))) + ')');
+  ['a0', 'a1'].forEach((id, i) => { const p = P(t4, 1.45 + i * .18, 1.85 + i * .18); set(id, p, 'translateX(' + (1 - bk(p)) * 900 + 'px)'); });
+
+  // S5
+  const t5 = t - 11;
+  set('h5a', eo(P(t5, .05, .4)), 'translateY(' + (1 - eo(P(t5, .05, .4))) * 40 + 'px)');
+  $('roll').style.transform = 'translateY(' + (-840 * bk(P(t5, .2, 1.0))) + 'px)';
+  set('h5b', eo(P(t5, .9, 1.2)), 'none');
+  [...plans.children].forEach((c, i) => { const p = P(t5, 1.0 + i * .14, 1.4 + i * .14); set(c, p, 'translateY(' + (1 - bk(p)) * 120 + 'px)'); });
+  set('h5c', eo(P(t5, 1.5, 1.8)), 'none');
+
+  // S6
+  const t6 = t - 13.1;
+  set('lg', eo(P(t6, .05, .4)), 'translateY(' + (1 - eo(P(t6, .05, .4))) * -60 + 'px)');
+  $('tag').style.transform = 'rotate(' + Math.sin(t6 * 7) * 14 * Math.exp(-t6 * 1.6) + 'deg)';
+  const ph = P(t6, .15, .5); set('h6', ph > 0 ? 1 : 0, 'scale(' + (2 - bk(ph)) + ')', 'blur(' + (1 - ph) * 12 + 'px)');
+  const pc = el(P(t6, .5, 1.2)); set('cta', P(t6, .5, .6), 'scale(' + (pc * (1 + .045 * Math.sin(Math.max(0, t6 - 1.2) * 9))) + ')');
+  set('h6b', eo(P(t6, .9, 1.2)), 'none');
+  [...burst.children].forEach((s, i) => { const p = P(t6, .5, 1.9); const a = rnd(i + 11) * Math.PI * 2, d = eo(p) * (300 + rnd(i) * 420); s.style.left = Math.cos(a) * d + 'px'; s.style.top = Math.sin(a) * d + p * p * 420 + 360 + 'px'; s.style.opacity = p > 0 ? 1 - p : 0; s.style.transform = 'rotate(' + (p * 720 * (rnd(i) - .5)) + 'deg)'; });
+}
+document.querySelectorAll('.prod b').forEach((b) => { b.dataset.v = b.textContent; });
+window.render = render;
+if (!navigator.webdriver) { const s = performance.now(); (function loop() { render(((performance.now() - s) / 1000) % 15); requestAnimationFrame(loop); })(); }
+</script></body></html>
