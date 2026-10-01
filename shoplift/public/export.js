@@ -266,7 +266,7 @@ async function auditPdf(a, { productsOnly = false } = {}) {
   P.font(20, true, scoreColor(a.score) === C.good ? '#6fe3a5' : scoreColor(a.score) === C.mid ? C.amber : '#ff8a78'); P.text(a.grade, M + 145, y + 48);
   P.font(9.5, false, '#cfdcd2'); P.text(P.lines(`${a.fixes.length} points à améliorer, classés du plus rentable au moins urgent. Chaque point explique pourquoi il te coûte des ventes et comment le corriger.`, W - 2 * M - 150), M + 145, y + 68);
   y += 140;
-  y = P.tiles([[a.stats.products, 'produits'], [a.fixes.length, 'corrections'], [a.stats.avgImages, 'photos / fiche'], [a.stats.avgWords, 'mots / fiche'], [a.stats.soldOut, 'ruptures'], [money(a.stats.avgPrice, a.currency), 'prix moyen']], y);
+  y = P.tiles([[a.stats.products, 'produits'], [a.fixes.length, 'corrections'], [String(Math.round(a.stats.avgImages * 10) / 10).replace('.', ','), 'photos / fiche'], [a.stats.avgWords, 'mots / fiche'], [a.stats.soldOut, 'ruptures'], [money(a.stats.avgPrice, a.currency), 'prix moyen']], y);
   // catégories
   P.font(9, true, C.gold); P.text('SCORE PAR CATÉGORIE', M, y + 10, { charSpace: 1 }); y += 24;
   for (const c of a.categories) {

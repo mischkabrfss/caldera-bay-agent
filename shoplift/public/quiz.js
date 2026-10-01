@@ -188,6 +188,43 @@
       setTimeout(() => plan?.classList.remove('spot-plan'), 4000);
     };
     document.querySelector('[data-store-form]')?.classList.add('spot-form');
+    trial(r, planName, planPrice);
+  }
+
+  // Bloc « essai gratuit » juste après le résultat : ce qui est offert maintenant + ce que l'offre débloque.
+  const PERKS = {
+    basic: ['Audits illimités et toutes les corrections', 'Espion de concurrents', '1 agent de sourcing avec son WhatsApp'],
+    pro: ['Radar des produits gagnants mis à jour toutes les 6\u00a0h', 'Espion complet + suivi de 5 concurrents', '3 agents de sourcing avec leurs coordonnées'],
+    scale: ['Les 10 agents de sourcing', 'Suivi de 20 concurrents + comparateur', 'Rapports PDF et Excel prêts à envoyer'],
+  };
+  function trial(r, planName, planPrice) {
+    document.querySelector('.trial-zone')?.remove();
+    const hero = document.querySelector('#analyser');
+    if (!hero) return;
+    hero.insertAdjacentHTML('afterend', `<section class="trial-zone" id="essai"><div class="wrap"><div class="trial-card">
+      <div class="trial-ticket">
+        <span class="trial-stamp">Offert</span>
+        <span class="eyebrow">Ton essai gratuit est prêt</span>
+        <h2>Vérifie ces <span class="grad-text">+${fmt(r.gain)} €</span> sur ta vraie boutique.</h2>
+        <ul class="trial-list">
+          <li><b>1</b> analyse complète de ta boutique</li>
+          <li><b>3</b> corrections expliquées pas à pas</li>
+          <li><b>3</b> produits gagnants du radar</li>
+        </ul>
+        <form class="store-form" data-store-form>
+          <label class="store-input"><input name="store" placeholder="maboutique.com" autocomplete="url" inputmode="url" aria-label="Adresse de ta boutique Shopify" required></label>
+          <button class="btn btn-main" type="submit">Lancer mon essai gratuit <span class="arrow">→</span></button>
+        </form>
+        <p class="trial-micro">Sans carte bancaire · sans inscription · résultat en 30 secondes</p>
+      </div>
+      <div class="trial-buy">
+        <span class="eyebrow">Ou débloque tout de suite</span>
+        <div class="trial-price"><b>${planPrice} €</b><span>/mois · offre ${planName}</span></div>
+        <ul class="trial-perks">${PERKS[r.plan].map((p) => `<li>${p}</li>`).join('')}</ul>
+        <button class="btn btn-main trial-go" data-plan="${r.plan}" type="button">Débloquer ${planName} <span class="arrow">→</span></button>
+        <p class="trial-micro">Sans engagement · résiliable en 1 clic · paiement sécurisé par Stripe${r.days ? ` · rentabilisé en ${r.days} jour${r.days > 1 ? "s" : ""} au potentiel estimé` : ''}</p>
+      </div>
+    </div></div></section>`);
   }
 
   function confetti() {

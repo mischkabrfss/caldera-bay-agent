@@ -1,5 +1,5 @@
 :root {
-  --bg: #0a0a0a;
+  --bg: #060606;
   --bg2: #111111;
   --card: rgba(255, 255, 255, .045);
   --card-hi: rgba(255, 255, 255, .08);
@@ -32,11 +32,15 @@ img { max-width: 100%; display: block; }
 
 /* ---------- Fond animé ---------- */
 .bg-fx { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
-.bg-fx::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size: 44px 44px; mask-image: radial-gradient(ellipse at 50% 0%, #000 20%, transparent 75%); }
-.blob { position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%; filter: blur(90px); opacity: .35; animation: float 18s ease-in-out infinite alternate; }
-.blob.b1 { background: var(--green); top: -30vmax; left: -20vmax; opacity: .07; }
-.blob.b2 { background: var(--green2); top: 10vh; right: -35vmax; opacity: .05; animation-delay: -6s; }
-.blob.b3 { background: var(--pink); bottom: -40vmax; left: 10vw; opacity: .04; animation-delay: -12s; }
+.bg-fx::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.16) 1px, transparent 1.4px); background-size: 26px 26px; mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 10%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 10%, transparent 70%); }
+/* Grain argentique très léger : casse l'aplat numérique */
+.bg-fx::after { content: ''; position: absolute; inset: -50%; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); opacity: .07; mix-blend-mode: overlay; animation: grain 1.2s steps(4) infinite; }
+@keyframes grain { 0% { transform: translate(0,0); } 25% { transform: translate(-3%,2%); } 50% { transform: translate(2%,-3%); } 75% { transform: translate(-2%,-1%); } 100% { transform: translate(0,0); } }
+.blob { position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%; filter: blur(110px); animation: float 18s ease-in-out infinite alternate; }
+/* Lumière blanche douce en haut, comme un projecteur de studio */
+.blob.b1 { background: #fff; top: -42vmax; left: 50%; margin-left: -30vmax; opacity: .085; }
+.blob.b2 { background: #fff; top: 40vh; right: -45vmax; opacity: .03; animation-delay: -6s; }
+.blob.b3 { background: var(--green); bottom: -50vmax; left: -20vw; opacity: .025; animation-delay: -12s; }
 @keyframes float { to { transform: translate3d(8vw, 6vh, 0) scale(1.15) rotate(40deg); } }
 #coins { position: absolute; inset: 0; width: 100%; height: 100%; }
 
@@ -283,7 +287,8 @@ footer a:hover { color: var(--text); }
 .card { --mx: 50%; --my: 0%; position: relative; }
 .card::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s; background: radial-gradient(420px circle at var(--mx) var(--my), rgba(255,210,63,.13), transparent 45%); }
 .card:hover::after { opacity: 1; }
-.tilt { transition: transform .25s ease-out, border-color .35s; will-change: transform; }
+.tilt { position: relative; transition: transform .25s ease-out, border-color .35s; }
+.tilt:hover { z-index: 2; } /* la carte survolée passe devant ses voisines */
 .btn-main.magnet { transition: transform .2s ease-out, box-shadow .2s; }
 
 /* Barre de progression de lecture */
@@ -322,9 +327,9 @@ footer a:hover { color: var(--text); }
 @keyframes quizIn { from { opacity: 0; transform: scale(1.04); } }
 .quiz-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 .quiz-bg i { position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%; filter: blur(100px); opacity: .35; animation: float 14s ease-in-out infinite alternate; }
-.quiz-bg i:nth-child(1) { background: var(--green); top: -35vmax; left: -25vmax; opacity: .08; }
-.quiz-bg i:nth-child(2) { background: var(--green2); bottom: -40vmax; right: -30vmax; opacity: .06; animation-delay: -5s; }
-.quiz-bg i:nth-child(3) { background: var(--pink); top: 30%; left: 40%; width: 40vmax; height: 40vmax; opacity: .04; animation-delay: -9s; }
+.quiz-bg i:nth-child(1) { background: #fff; top: -45vmax; left: 50%; margin-left: -35vmax; opacity: .08; }
+.quiz-bg i:nth-child(2) { background: #fff; bottom: -40vmax; right: -30vmax; opacity: .06; animation-delay: -5s; }
+.quiz-bg i:nth-child(3) { background: var(--green); top: 30%; left: 40%; width: 40vmax; height: 40vmax; opacity: .04; animation-delay: -9s; }
 .quiz-confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; }
 .quiz-top { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; padding: 16px; }
 .quiz-x { width: 40px; height: 40px; border-radius: 50%; background: var(--card-hi); border: 1px solid var(--line); font-size: 16px; }
@@ -407,3 +412,34 @@ body.bam-in #site { animation: bamIn .9s cubic-bezier(.2,1.3,.3,1); }
 
 /* Anti-débordement : un contenu long ne peut plus élargir sa colonne */
 .hero-grid > *, .bento > *, .pricing > *, .faq > * { min-width: 0; }
+
+/* ---------- Bloc essai gratuit (après le quiz) ---------- */
+.trial-zone { padding: 6px 0 40px; }
+.trial-card { display: grid; gap: 18px; animation: slam .7s cubic-bezier(.2,1.4,.4,1) .5s both; }
+@media (min-width: 900px) { .trial-card { grid-template-columns: 1.35fr 1fr; align-items: stretch; } }
+.trial-ticket, .trial-buy { position: relative; border-radius: 22px; padding: 26px 22px; min-width: 0; }
+.trial-ticket { background: #f4f1ea; color: #0b0b0b; overflow: hidden; }
+.trial-ticket::before, .trial-ticket::after { content: ''; position: absolute; width: 26px; height: 26px; border-radius: 50%; background: var(--bg); top: 50%; margin-top: -13px; }
+.trial-ticket::before { left: -13px; } .trial-ticket::after { right: -13px; }
+.trial-ticket .eyebrow { color: #6b665c; }
+.trial-ticket h2 { font-size: clamp(26px, 6.4vw, 40px); line-height: 1.08; letter-spacing: -.03em; margin: 8px 0 14px; max-width: 18ch; }
+.trial-ticket .grad-text { background: #0b0b0b; color: #ffd23f; -webkit-text-fill-color: #ffd23f; padding: 0 .18em; border-radius: 8px; }
+.trial-stamp { position: absolute; top: 18px; right: -34px; transform: rotate(35deg); background: #0b0b0b; color: #ffd23f; font-weight: 800; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; padding: 6px 42px; }
+.trial-list { list-style: none; padding: 0; display: grid; gap: 8px; margin-bottom: 18px; font-weight: 600; }
+.trial-list li { display: flex; align-items: center; gap: 10px; border-top: 1px dashed rgba(0,0,0,.18); padding-top: 8px; }
+.trial-list b { display: inline-grid; place-items: center; min-width: 30px; height: 30px; border-radius: 9px; background: #0b0b0b; color: #ffd23f; }
+.trial-ticket .store-form { margin: 0; }
+.trial-ticket .store-input { background: #fff; border-color: rgba(0,0,0,.15); color: #0b0b0b; }
+.trial-ticket .store-input input { color: #0b0b0b; }
+.trial-ticket .btn-main { background: #0b0b0b; color: #fff; box-shadow: none; }
+.trial-micro { font-size: 12.5px; opacity: .7; margin-top: 10px; }
+.trial-buy { border: 1px solid rgba(255,210,63,.5); background: radial-gradient(120% 90% at 100% 0%, rgba(255,210,63,.16), transparent 60%), #0d0d0d; display: flex; flex-direction: column; gap: 12px; }
+.trial-price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px; }
+.trial-price b { font-size: clamp(40px, 10vw, 56px); letter-spacing: -.04em; line-height: 1; }
+.trial-price span { color: var(--muted); }
+.trial-perks { list-style: none; padding: 0; display: grid; gap: 8px; color: var(--text); }
+.trial-perks li { padding-left: 26px; position: relative; }
+.trial-perks li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 800; }
+.trial-go { margin-top: auto; justify-content: center; font-size: 16px; padding: 16px 18px; white-space: normal; animation: pulseCta 2.4s ease-in-out 1.6s infinite; }
+@keyframes pulseCta { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,210,63,.45); } 50% { box-shadow: 0 0 0 12px rgba(255,210,63,0); } }
+@media (prefers-reduced-motion: reduce) { .trial-card, .trial-go { animation: none; } }

@@ -27,8 +27,10 @@
     const y = (e.clientY - r.top) / r.height;
     card.style.setProperty('--mx', `${x * 100}%`);
     card.style.setProperty('--my', `${y * 100}%`);
-    if (card.matches('.tilt')) card.style.transform = `perspective(900px) rotateY(${(x - 0.5) * 8}deg) rotateX(${(0.5 - y) * 8}deg) translateY(-4px)`;
+    // Inclinaison 3D à la souris uniquement : au doigt, la carte resterait penchée et passerait sous la suivante.
+    if (card.matches('.tilt') && e.pointerType === 'mouse') card.style.transform = `perspective(900px) rotateY(${(x - 0.5) * 8}deg) rotateX(${(0.5 - y) * 8}deg) translateY(-4px)`;
   });
+  addEventListener('scroll', () => { for (const c of document.querySelectorAll('.tilt[style*="perspective"]')) c.style.transform = ''; }, { passive: true });
   document.addEventListener('pointerout', (e) => {
     const card = e.target.closest('.tilt');
     if (card && !card.contains(e.relatedTarget)) card.style.transform = '';

@@ -111,17 +111,21 @@ if (canvas && !reduced) {
   reset(); addEventListener('resize', reset); draw();
 }
 
-// Formulaire boutique → app
-$$('[data-store-form]').forEach((form) => form.addEventListener('submit', (e) => {
+// Formulaire boutique → app (délégué : le bloc d'essai ajouté après le quiz en profite aussi)
+document.addEventListener('submit', (e) => {
+  const form = e.target.closest('[data-store-form]');
+  if (!form) return;
   e.preventDefault();
   const store = new FormData(form).get('store').trim();
   if (!store) return;
   try { sessionStorage.setItem('pr_store', store); } catch { /* stockage indisponible */ }
   location.href = `app.html?store=${encodeURIComponent(store)}`;
-}));
+});
 
 // Achat d'une offre
-$$('[data-plan]').forEach((button) => button.addEventListener('click', async () => {
+document.addEventListener('click', async (e) => {
+  const button = e.target.closest('[data-plan]');
+  if (!button || button.disabled) return;
   const label = button.innerHTML;
   button.disabled = true;
   button.textContent = 'Ouverture du paiement…';
@@ -137,7 +141,7 @@ $$('[data-plan]').forEach((button) => button.addEventListener('click', async () 
   }
   button.disabled = false;
   button.innerHTML = label;
-}));
+});
 
 function note(button, text) {
   let el = button.parentElement.querySelector('.plan-msg');

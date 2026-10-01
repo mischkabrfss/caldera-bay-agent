@@ -3,7 +3,7 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const safeImg = (src) => {
-  if (/^data:image\/svg\+xml,/.test(src || '') || /^(radar|spy)-img\/[\w.-]+$/.test(src || '')) return esc(src); // miniatures locales de l'aperçu
+  if (/^data:image\/(svg\+xml,|(webp|jpeg|png|gif);base64,)/.test(src || '') || /^(radar|spy)-img\/[\w.-]+$/.test(src || '')) return esc(src); // miniatures locales de l'aperçu
   if (!/^https?:\/\//.test(src || '')) return '';
   try { const u = new URL(src); if (u.hostname === 'cdn.shopify.com') u.searchParams.set('width', '400'); return esc(u.href); } catch { return ''; }
 };
@@ -162,7 +162,8 @@ async function runAudit(input, connected = null) {
   const [r] = await Promise.all([api('/api/audit', { store: input, connected }), wait(2600)]);
   done();
   if (!r.ok) {
-    if (r.status === 402) { out.innerHTML = ''; openUpgrade(r.data.error); } else out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error || 'Analyse impossible.')}</div>`;
+    if (r.status === 402) { out.innerHTML = ''; openUpgrade(r.data.error); } else out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error || 'Analyse impossible.')}${r.data.examples ? `<div class="chips" style="justify-content:center;margin-top:12px">${r.data.examples.map((h) => `<button class="chip-btn" type="button" data-try="${esc(h)}">${esc(h)}</button>`).join('')}</div>` : ''}</div>`;
+    out.querySelectorAll('[data-try]').forEach((b) => { b.onclick = () => { const i = $('#auditForm input[name=store]'); if (i) i.value = b.dataset.try; runAudit(b.dataset.try); }; });
     return;
   }
   state.audit = r.data.report;
@@ -210,7 +211,7 @@ function renderAudit() {
         ${a.source === 'shopify' ? '<p class="src-badge real">' + icon('check') + ' Analyse réelle · via ta connexion Shopify</p>' : ''}
         <h2>${esc(a.name)}</h2><p class="muted" style="font-size:13px">${esc(a.host)}${a.theme ? ` · thème ${esc(a.theme)}` : ''}</p>
         <div class="stats">
-          <div><b data-n="${a.stats.products}">0</b><span>produits</span></div><div><b data-n="${a.fixes.length}">0</b><span>corrections</span></div><div><b>${a.stats.avgImages}</b><span>photos/fiche</span></div>
+          <div><b data-n="${a.stats.products}">0</b><span>produits</span></div><div><b data-n="${a.fixes.length}">0</b><span>corrections</span></div><div><b>${String(Math.round(a.stats.avgImages * 10) / 10).replace(".", ",")}</b><span>photos/fiche</span></div>
           <div><b data-n="${a.stats.avgWords}">0</b><span>mots/fiche</span></div><div><b data-n="${a.stats.soldOut}">0</b><span>ruptures</span></div><div><b>${money(a.stats.avgPrice, a.currency)}</b><span>prix moyen</span></div>
         </div>
         ${a.stack.length ? `<div class="stack">${a.stack.map((s) => `<span>${icon('check')} ${esc(STACK[s] || s)}</span>`).join('')}</div>` : ''}

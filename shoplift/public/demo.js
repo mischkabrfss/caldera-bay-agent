@@ -62,7 +62,7 @@ function matchConnected(input) {
   const names = [connected.host, connected.meta?.name, String(connected.host).split('.')[0]].map(clean);
   return typed && names.includes(typed) ? connected : null;
 }
-const UNVERIFIABLE = () => 'Sur cet aperçu, seule ta boutique Shopify connectée (connecteur Shopify de claude.ai) peut être analysée. Sur le site en ligne, toutes les boutiques Shopify le sont.';
+const UNVERIFIABLE = () => 'Sur cet aperçu, l’essai gratuit fonctionne sur ta boutique connectée ou sur ces vraies boutiques Shopify. Sur le site en ligne, toutes les boutiques Shopify sont analysables.';
 
 const mem = {};
 const read = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return mem[k] ?? d; } };
@@ -102,10 +102,17 @@ export function demoApi(path, body = {}) {
       if (plan === 'test' && used >= TEST_LIMITS.audits) return fail(402, `Ton analyse gratuite est utilisée. Choisis une offre pour continuer.`);
       if (body.connected) connected = body.connected;
       const real = body.connected || matchConnected(body.store);
-      if (!real) return fail(422, UNVERIFIABLE(body.store), { code: 'unverifiable' });
-      const report = auditStore(real);
-      if (plan === 'test') write('pr_demo_trial', { n: used + 1, day: today });
-      return ok({ plan, trialLeft: plan === 'test' ? TEST_LIMITS.audits - used - 1 : null, report: can(plan, 'fullAudit') ? report : lockAudit(report) });
+      const send = (report) => {
+        if (plan === 'test') write('pr_demo_trial', { n: used + 1, day: today });
+        return ok({ plan, trialLeft: plan === 'test' ? TEST_LIMITS.audits - used - 1 : null, report: can(plan, 'fullAudit') ? report : lockAudit(report) });
+      };
+      if (real) return send(auditStore(real));
+      // Vraies analyses figées des boutiques exemples (chargées à la demande : photos intégrées).
+      return import('./audit-snapshot.js').then(({ AUDIT_SNAPSHOT }) => {
+        const snap = AUDIT_SNAPSHOT[clean(body.store)];
+        if (snap) return send(structuredClone(snap));
+        return fail(422, UNVERIFIABLE(body.store), { code: 'unverifiable', examples: Object.keys(AUDIT_SNAPSHOT) });
+      });
     }
     case '/api/spy': {
       // Aperçu : vraies analyses figées de 6 concurrents, ou la boutique Shopify connectée.
