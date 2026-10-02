@@ -364,3 +364,23 @@ test('agents de sourcing : 0 / 1 / 3 / 10 selon l’offre, coordonnées masquée
   const res = await call('/agents.js');
   assert.equal(res.status, 404);
 });
+
+test('charge : 300 analyses simultanées de la même boutique → un seul chargement Shopify', async () => {
+  const store = new Map();
+  const tick = () => new Promise((r) => setTimeout(r, 1));
+  globalThis.caches = { default: {
+    match: async (r) => { await tick(); return store.has(r.url) ? new Response(store.get(r.url)) : undefined; },
+    put: async (r, res) => { await tick(); store.set(r.url, await res.text()); },
+    delete: async (r) => { await tick(); store.delete(r.url); },
+  } };
+  installFetch();
+  const real = globalThis.fetch; let shop = 0;
+  globalThis.fetch = async (input, init) => { if (String(input instanceof Request ? input.url : input).includes('demo.myshopify.com')) shop++; await new Promise((r) => setTimeout(r, 20)); return real(input, init); };
+  const one = (i) => worker.fetch(new Request('https://app.test/api/audit', { method: 'POST', headers: { 'Content-Type': 'application/json', 'CF-Connecting-IP': `10.0.${i >> 8}.${i & 255}` }, body: JSON.stringify({ store: 'demo.myshopify.com' }) }), env());
+  const first = await one(9999); assert.equal(first.status, 200);
+  const single = shop; shop = 0; store.clear();
+  const codes = (await Promise.all([...Array(300)].map((_, i) => one(i)))).map((r) => r.status);
+  delete globalThis.caches;
+  assert.ok(codes.every((c) => c === 200), JSON.stringify(codes.filter((c) => c !== 200)));
+  assert.equal(shop, single);
+});

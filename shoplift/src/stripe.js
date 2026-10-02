@@ -16,11 +16,18 @@ function form(data, prefix = '', out = new URLSearchParams()) {
 export async function stripe(env, method, path, data) {
   const url = new URL(`https://api.stripe.com/v1/${path}`);
   if (method === 'GET' && data) for (const [k, v] of form(data)) url.searchParams.append(k, v);
-  const response = await fetch(url, {
+  // Délai maximal de 10 s, et une seconde tentative pour les lectures si Stripe sature (429) ou hoquette (5xx).
+  const call = () => fetch(url, {
     method,
     headers: { Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`, 'Content-Type': 'application/x-www-form-urlencoded' },
     body: method === 'GET' ? undefined : form(data || {}),
+    signal: AbortSignal.timeout(10_000),
   });
+  let response = await call();
+  if (method === 'GET' && (response.status === 429 || response.status >= 500)) {
+    await new Promise((r) => setTimeout(r, 400 + Math.random() * 400));
+    response = await call();
+  }
   const json = await response.json();
   if (!response.ok) {
     console.error('Stripe error', path, json.error?.type, json.error?.code, json.error?.message);

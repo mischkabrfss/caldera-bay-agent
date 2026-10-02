@@ -60,14 +60,20 @@ document.addEventListener('error', (e) => { if (e.target.tagName === 'IMG') e.ta
 
 let demoApi = null; // Mode démo : chargé seulement si le serveur est absent (aperçu statique).
 
+// Pic de trafic ou réseau instable : nouvelle tentative automatique (2 max) sur les routes sans effet de bord.
+const RETRY = /^\/api\/(me|config|audit|spy|radar|compare|agents)\b/;
 async function api(path, body) {
   if (demoApi) return demoApi(path, body);
-  try {
-    const res = await fetch(path, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {});
-    const data = await res.json().catch(() => ({}));
-    return { ok: res.ok, status: res.status, data };
-  } catch {
-    return { ok: false, status: 0, data: { error: 'Connexion impossible. Vérifie ton réseau.' } };
+  for (let attempt = 0; ; attempt++) {
+    try {
+      const res = await fetch(path, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {});
+      if ([500, 502, 503, 504].includes(res.status) && attempt < 2 && RETRY.test(path)) throw new Error('retry');
+      const data = await res.json().catch(() => ({}));
+      return { ok: res.ok, status: res.status, data };
+    } catch {
+      if (attempt >= 2 || !RETRY.test(path)) return { ok: false, status: 0, data: { error: 'Connexion impossible. Vérifie ton réseau puis réessaie.' } };
+      await new Promise((r) => setTimeout(r, 700 * (attempt + 1) + Math.random() * 500));
+    }
   }
 }
 

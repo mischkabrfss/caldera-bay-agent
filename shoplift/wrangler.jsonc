@@ -9,5 +9,7 @@
     "not_found_handling": "404-page"
   },
   "triggers": { "crons": ["17 * * * *"] },
+  // Anti-abus intégré à Cloudflare (gratuit) : 20 analyses par minute et par IP sur les routes coûteuses.
+  "ratelimits": [{ "name": "LIMITER", "namespace_id": "1001", "simple": { "limit": 20, "period": 60 } }],
   "observability": { "enabled": true }
 }

@@ -22,17 +22,70 @@ class HttpError extends Error {
   }
 }
 
-async function cached(key, ttl, load, overwrite = false) {
-  const cache = globalThis.caches?.default;
-  const request = new Request(`https://cache.shoplift.internal/${key}`);
-  if (cache && !overwrite) {
-    const hit = await cache.match(request);
-    if (hit) return hit.json();
+// Cache tenu sous forte charge (sans promesse partagée entre requêtes, interdit par Cloudflare) :
+// - verrou en cache : une seule requête calcule une clé, les autres relisent le cache jusqu'à ce que le résultat arrive ;
+// - « stale-while-revalidate » : passé `ttl`, l'ancien résultat est servi tout de suite pendant qu'un seul
+//   rafraîchissement tourne en arrière-plan (personne n'attend, Shopify n'est pas inondé) ;
+// - au plus 4 catalogues chargés en même temps par instance (128 Mo de mémoire) : les autres patientent.
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+let running = 0;
+const computing = new Set(); // clés en cours de calcul dans cette instance (simple texte, pas de promesse partagée)
+async function heavy(fn) {
+  for (let i = 0; running >= 4; i++) {
+    if (i > 240) throw new HttpError(503, 'Forte affluence : réessaie dans quelques secondes.');
+    await sleep(50);
   }
-  const value = await load();
-  const empty = (Array.isArray(value) && !value.length) || (Array.isArray(value?.items) && !value.items.length);
-  if (cache && !empty) await cache.put(request, new Response(JSON.stringify(value), { headers: { 'Cache-Control': `max-age=${ttl}` } }));
-  return value;
+  running++;
+  try { return await fn(); } finally { running--; }
+}
+async function cached(key, ttl, load, { overwrite = false, stale = 0, wait = null } = {}) {
+  const cache = globalThis.caches?.default;
+  if (!cache) return load();
+  const request = new Request(`https://cache.shoplift.internal/v3/${key}`);
+  const lock = new Request(`https://cache.shoplift.internal/v3-lock/${key}`);
+  const read = async () => { const hit = await cache.match(request); return hit ? hit.json() : null; };
+  // save() suppose la clé déjà réservée dans `computing` (réservation synchrone : aucune requête ne peut s'intercaler).
+  const save = async () => {
+    try {
+      await cache.put(lock, new Response('1', { headers: { 'Cache-Control': 'max-age=20' } }));
+      let value;
+      try {
+        value = await load();
+      } catch (error) {
+        // Boutique introuvable ou bloquée : réponse gardée 2 min pour ne pas relancer l'analyse à chaque requête.
+        if (error instanceof StoreError) await cache.put(request, new Response(JSON.stringify({ at: Date.now(), e: { message: error.message, code: error.code } }), { headers: { 'Cache-Control': 'max-age=120' } }));
+        throw error;
+      }
+      const empty = (Array.isArray(value) && !value.length) || (Array.isArray(value?.items) && !value.items.length);
+      if (!empty) await cache.put(request, new Response(JSON.stringify({ at: Date.now(), v: value }), { headers: { 'Cache-Control': `max-age=${ttl + stale}` } }));
+      return value;
+    } finally {
+      computing.delete(key);
+      await cache.delete(lock);
+    }
+  };
+  const claim = () => !computing.has(key) && !!computing.add(key);
+  if (overwrite) { computing.add(key); return save(); }
+  const fail = (e) => { throw new StoreError(e.code, e.message); };
+  let entry = await read();
+  if (entry?.e) fail(entry.e);
+  if (entry && Date.now() - entry.at < ttl * 1000) return entry.v;
+  if (entry && stale && wait) {
+    if (claim()) wait(save().catch(() => {}));
+    return entry.v;
+  }
+  for (let i = 0, waited = 0; waited < 15_000; i++) {
+    if (claim()) {
+      if (!(await cache.match(lock))) return save();
+      computing.delete(key); // une autre instance calcule déjà : on attend son résultat
+    }
+    const pause = Math.min(1200, 150 * 1.5 ** i) * (.75 + Math.random() * .5); // attente croissante, étalée
+    waited += pause; await sleep(pause);
+    entry = await read();
+    if (entry?.e) fail(entry.e);
+    if (entry && Date.now() - entry.at < (ttl + stale) * 1000) return entry.v;
+  }
+  throw new HttpError(503, 'Forte affluence : réessaie dans quelques secondes.');
 }
 
 // Limiteur simple (cache Cloudflare, 1 h) : suffisant contre le forçage des 4 chiffres.
@@ -91,26 +144,36 @@ async function consumeTrial(request, ctx) {
 
 // Radar : résultat frais 6 h (relevé automatique 4 fois par jour) + dernier résultat valide gardé 30 jours.
 async function scanNiche(niche) {
-  const results = await Promise.allSettled(NICHES[niche].stores.map((host) => fetchStoreLite(host)));
+  const results = await Promise.allSettled(NICHES[niche].stores.map((host) => heavy(() => fetchStoreLite(host))));
   const items = radarFrom(results.filter((r) => r.status === 'fulfilled').map((r) => r.value), { kind: (p) => kindOf(niche, p) });
   const scan = { at: new Date().toISOString(), items };
-  if (items.length) await cached(`radar-v2-backup/${niche}`, 2_592_000, async () => scan, true);
+  if (items.length) await cached(`radar-backup/${niche}`, 2_592_000, async () => scan, { overwrite: true });
   return scan;
 }
 
 // Clés versionnées : un ancien cache (autre format, produits non filtrés) n'est jamais relu.
 const scanOf = (v) => (Array.isArray(v) ? { at: null, items: v } : v && Array.isArray(v.items) ? v : { at: null, items: [] });
-async function radar(niche, fresh = false) {
-  const scan = scanOf(fresh ? await scanNiche(niche) : await cached(`radar-v2/${niche}`, 21600, () => scanNiche(niche)));
-  return scan.items.length ? scan : scanOf(await cached(`radar-v2-backup/${niche}`, 2_592_000, async () => ({ at: null, items: [] })));
+async function radar(niche, { fresh = false, wait = null } = {}) {
+  const scan = scanOf(fresh ? await cached(`radar/${niche}`, 21600, () => scanNiche(niche), { overwrite: true }) : await cached(`radar/${niche}`, 21600, () => scanNiche(niche), { stale: 2_592_000, wait }));
+  return scan.items.length ? scan : scanOf(await cached(`radar-backup/${niche}`, 2_592_000, async () => ({ at: null, items: [] })));
 }
 
 // mode : 'full' (audit), 'spy' (catalogue + page d'accueil), 'lite' (catalogue seul)
-async function loadStore(input, mode) {
+async function loadStore(input, mode, wait) {
   const host = normalizeStore(input);
-  if (mode === 'full') return cached(`full/${host}`, 1800, () => fetchStoreFull(host));
   const withHome = mode === 'spy';
-  return cached(`${mode}/${host}`, 21600, () => fetchStoreLite(host, { withHome }));
+  return cached(`${mode}/${host}`, 21600, () => heavy(() => fetchStoreLite(host, { withHome })), { stale: 86_400, wait });
+}
+// Rapports déjà calculés en cache (et non la boutique brute) : moins de CPU et de mémoire par visite.
+const auditOf = (host) => cached(`audit/${host}`, 1800, () => heavy(async () => auditStore(await fetchStoreFull(host))));
+const spyOf = (input, wait) => { const host = normalizeStore(input); return cached(`spy/${host}`, 21600, () => heavy(async () => spyStore(await fetchStoreLite(host, { withHome: true }))), { stale: 86_400, wait }); };
+
+// Anti-abus par adresse IP sur les routes coûteuses (analyse, espion, comparateur, connexion).
+// Utilise le limiteur intégré de Cloudflare (binding LIMITER) s'il est configuré, sinon un compteur en cache.
+async function limitIp(request, env, kind, perHour = 120) {
+  const ip = request.headers.get('CF-Connecting-IP') || 'local';
+  const ok = env.LIMITER ? (await env.LIMITER.limit({ key: `${kind}:${ip}` })).success : await allowAttempt(`ip/${kind}/${ip}`, perHour);
+  if (!ok) throw new HttpError(429, 'Beaucoup de demandes d’un coup : réessaie dans une minute.');
 }
 
 async function route(request, env, ctx) {
@@ -131,17 +194,20 @@ async function route(request, env, ctx) {
 
   if (pathname === '/api/audit' && method === 'POST') {
     const { store } = await body(request);
+    await limitIp(request, env, 'audit');
     const access = await getAccess(request, env, ctx);
     const host = normalizeStore(store);
-    const report = auditStore(await loadStore(host, 'full'));
+    if (access.plan === 'test' && ((await verify(readCookie(request, TRIAL), ctx.secret))?.n || 0) >= TEST_LIMITS.audits) await consumeTrial(request, ctx); // essai épuisé : refus avant d'appeler Shopify
+    const report = await auditOf(host);
     const trialLeft = access.plan === 'test' ? await consumeTrial(request, ctx) : null;
     return json({ plan: access.plan, trialLeft, report: can(access.plan, 'fullAudit') ? report : lockAudit(report) });
   }
 
   if (pathname === '/api/spy' && method === 'POST') {
     const { store } = await body(request);
+    await limitIp(request, env, 'spy');
     const access = await getAccess(request, env, ctx);
-    const report = lockSpy(spyStore(await loadStore(store, 'spy')), access.plan);
+    const report = lockSpy(await spyOf(store, ctx.wait), access.plan);
     return json({ plan: access.plan, report });
   }
 
@@ -153,7 +219,7 @@ async function route(request, env, ctx) {
   if (pathname === '/api/radar') {
     const niche = NICHES[url.searchParams.get('niche')] ? url.searchParams.get('niche') : 'mode';
     const access = await getAccess(request, env, ctx);
-    const { at, items } = await radar(niche);
+    const { at, items } = await radar(niche, { wait: ctx.wait });
     const allowed = can(access.plan, 'radar');
     return json({ plan: access.plan, niche, updatedAt: at, locked: !allowed, items: allowed ? items : lockItems(items.slice(0, 12), TEST_LIMITS.radar) });
   }
@@ -162,9 +228,10 @@ async function route(request, env, ctx) {
     const access = await getAccess(request, env, ctx);
     if (!can(access.plan, 'compare')) throw new HttpError(403, 'Le comparateur multi-boutiques est inclus dans l’offre Scale.', { upgrade: 'scale' });
     const { stores } = await body(request);
+    await limitIp(request, env, 'compare');
     const hosts = [...new Set((Array.isArray(stores) ? stores : []).filter(Boolean).map(normalizeStore))].slice(0, 4);
     if (hosts.length < 2) throw new HttpError(400, 'Entre au moins 2 boutiques à comparer.');
-    const results = await Promise.allSettled(hosts.map((h) => loadStore(h, 'lite')));
+    const results = await Promise.allSettled(hosts.map((h) => loadStore(h, 'lite', ctx.wait)));
     const ok = results.filter((r) => r.status === 'fulfilled').map((r) => r.value);
     const failed = hosts.filter((_, i) => results[i].status === 'rejected');
     return json({ rows: compareStores(ok), failed });
@@ -215,6 +282,7 @@ async function route(request, env, ctx) {
     if (!env.STRIPE_SECRET_KEY) throw new HttpError(503, 'Paiement non configuré.');
     if (typeof email !== 'string' || !email.includes('@') || typeof password !== 'string' || !password) throw new HttpError(400, 'Entre ton e-mail et ton mot de passe.');
     const mail = email.trim();
+    await limitIp(request, env, 'login', 30);
     if (!(await allowAttempt(`login/${encodeURIComponent(mail.toLowerCase())}`, 8))) throw new HttpError(429, 'Trop de tentatives. Réessaie dans une heure ou utilise « Mot de passe oublié ».');
     const access = await accessFromLogin(env, mail, password);
     if (!access) throw new HttpError(401, 'E-mail ou mot de passe incorrect.');
@@ -263,16 +331,16 @@ export default {
   async scheduled(event, env, ctx) {
     const niches = Object.keys(NICHES);
     const niche = niches[new Date(event.scheduledTime || Date.now()).getUTCHours() % niches.length];
-    ctx.waitUntil(radar(niche, true));
+    ctx.waitUntil(radar(niche, { fresh: true }));
   },
 
-  async fetch(request, env) {
+  async fetch(request, env, exec) {
     const url = new URL(request.url);
     // Coordonnées des agents : jamais servies en fichier brut, seulement via /api/agents (filtré selon l'offre).
     if (url.pathname === '/agents.js') return new Response('Not found', { status: 404 });
     if (!url.pathname.startsWith('/api/')) return env.ASSETS.fetch(request);
     globalThis.SHOPIFY_MOCK = env.SHOPIFY_MOCK || '';
-    const ctx = { cookies: [], secret: secretOf(env) };
+    const ctx = { cookies: [], secret: secretOf(env), wait: (p) => exec?.waitUntil ? exec.waitUntil(p) : p };
     let response;
     try {
       response = await route(request, env, ctx);

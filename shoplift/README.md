@@ -53,6 +53,19 @@ npx wrangler secret put STRIPE_SECRET_KEY   # colle ta clé Stripe
 - Liste dans `public/agents.js` (1 agent en Basique, 3 en Pro, 10 en Scale). Le fichier n'est jamais servi tel quel : le serveur le bloque et ne renvoie que les agents de l'offre du client (`/api/agents`).
 - Coordonnées vérifiées le 30/09/2026 : e-mails et adresses sur les fiches officielles du Shopify App Store, numéros WhatsApp/téléphone sur les sites officiels. À revérifier de temps en temps (les agents peuvent changer de numéro).
 
+## Montée en charge (1 000+ visiteurs simultanés)
+
+- Pages, images et scripts : servis par le CDN de Cloudflare, sans limite.
+- Analyses : chaque boutique est chargée **une seule fois** même si 1 000 personnes la demandent en même temps (verrou en cache), puis gardée en cache (audit 30 min, espion et radar 6 h).
+- Radar et espion : passé ce délai, l'ancien résultat est servi tout de suite pendant qu'un seul rafraîchissement tourne en arrière-plan.
+- Boutique introuvable : réponse gardée 2 min (pas de nouvel essai à chaque visiteur).
+- Mémoire : 4 catalogues au plus chargés en même temps par instance, les autres patientent.
+- Anti-abus : 20 analyses par minute et par IP (limiteur Cloudflare `LIMITER`, gratuit, déjà dans `wrangler.jsonc`).
+- Stripe : délai maximal de 10 s et seconde tentative sur les lectures ; l'appli relance d'elle-même une requête en cas de coupure ou de saturation passagère.
+- Test : `npm test` vérifie que 300 analyses simultanées de la même boutique ne font qu'un seul chargement Shopify.
+
+**Offre Cloudflare conseillée dès le lancement : Workers Paid (5 $/mois).** L'offre gratuite limite à 100 000 appels d'API par jour et à 10 ms de calcul par requête : la connexion par mot de passe (hachage sécurisé) et l'audit des gros catalogues peuvent dépasser ce temps. L'offre payante passe à 10 millions de requêtes par mois et 30 s de calcul, sans rien changer au code.
+
 ## Développement local
 
 ```bash
