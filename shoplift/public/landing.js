@@ -5,14 +5,20 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const fmt = (n) => Math.round(n).toLocaleString('fr-FR');
 
 // Apparition au scroll
-const io = new IntersectionObserver((entries) => entries.forEach((e) => {
-  if (!e.isIntersecting) return;
-  e.target.classList.add('in');
-  e.target.querySelectorAll('[data-count]').forEach(countUp);
-  if (e.target.matches('[data-count]')) countUp(e.target);
-  io.unobserve(e.target);
-}), { threshold: 0.15 });
-$$('.reveal, .stat b').forEach((el) => io.observe(el));
+function reveal(el) {
+  el.classList.add('in');
+  el.querySelectorAll('[data-count]').forEach(countUp);
+  if (el.matches('[data-count]')) countUp(el);
+  io.unobserve(el);
+}
+const io = new IntersectionObserver((entries) => entries.forEach((e) => e.isIntersecting && reveal(e.target)), { threshold: 0.15 });
+let pending = $$('.reveal, .stat b');
+pending.forEach((el) => io.observe(el));
+// Défilement très rapide ou appareil lent : un bloc dépassé sans avoir été « vu » apparaît quand même (jamais de trou).
+let raf = 0;
+const sweep = () => { raf = 0; pending = pending.filter((el) => { if (el.classList.contains('in')) return false; if (el.getBoundingClientRect().top < innerHeight) { reveal(el); return false; } return true; }); };
+addEventListener('scroll', () => { if (!raf && pending.length) raf = requestAnimationFrame(sweep); }, { passive: true });
+addEventListener('resize', sweep);
 
 function countUp(el) {
   if (el.dataset.done) return;

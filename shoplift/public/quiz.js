@@ -40,7 +40,8 @@
   let answers = { visitors: 3000, aov: 40 };
   let touched = {}; // curseurs déjà réglés à la main : on ne les écrase plus
   let step = 0;
-  let busy = false; // anti double-clic : une seule avancée par question
+  let busy = false; // anti double-clic : une seule réponse par question
+  let moving = false; // transition en cours : ni double « Valider » ni double « Retour »
   let root;
 
   function compute(a = answers) {
@@ -69,18 +70,21 @@
       root.setAttribute('aria-modal', 'true');
       document.body.prepend(root);
     }
-    root.innerHTML = `<div class="quiz-bg"><i></i><i></i></div>
+    const floaters = ['€', '%', '↑', '€', '+', '€', '%', '↑', '€', '+'].map((c, i) => `<em style="--x:${(i * 97) % 100}%;--s:${0.7 + ((i * 37) % 10) / 10};--t:${14 + ((i * 53) % 10)}s;--d:-${(i * 41) % 14}s">${c}</em>`).join('');
+    root.innerHTML = `<div class="quiz-bg"><i></i><i></i>${floaters}</div>
       <div class="quiz-top"><span class="logo"><span class="logo-mark"></span><span>Shop<b>lift</b></span></span>
         <div class="quiz-tease" aria-hidden="true"><small>Ton potentiel</small><b>+<span>••••</span> €</b></div>
         <button class="quiz-x" type="button" aria-label="Fermer le quiz">${window.icon('x')}</button></div>
       <div class="quiz-steps">${STEPS.map(() => '<i></i>').join('')}</div>
       <div class="quiz-stage"></div>`;
     root.querySelector('.quiz-x').onclick = skip;
+    // Lumière qui suit la souris (ordinateur)
+    root.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse') { root.style.setProperty('--px', `${e.clientX}px`); root.style.setProperty('--py', `${e.clientY}px`); } });
   }
 
   function open() {
     build();
-    answers = { visitors: 3000, aov: 40 }; touched = {}; step = 0; busy = false;
+    answers = { visitors: 3000, aov: 40 }; touched = {}; step = 0; busy = false; moving = false; lastTease = null;
     root.classList.remove('done', 'bam');
     root.classList.add('open');
     document.documentElement.classList.add('quiz-on');
@@ -114,11 +118,33 @@
 
   function swap(html) {
     const stage = root.querySelector('.quiz-stage');
-    stage.classList.remove('in');
+    stage.classList.remove('in', 'out');
     stage.innerHTML = html;
+    words(stage.querySelector('h2'));
     void stage.offsetWidth;
     stage.classList.add('in');
     return stage;
+  }
+  // Titre révélé mot par mot (le mot surligné compte pour un mot).
+  function words(h) {
+    if (!h || reduced) return;
+    let i = 0;
+    const wrap = (node) => { const w = document.createElement('span'); w.className = 'w'; const inner = document.createElement('span'); inner.style.setProperty('--i', i++); inner.append(node); w.append(inner); return w; };
+    for (const n of [...h.childNodes]) {
+      if (n.nodeType === 3) {
+        const parts = n.textContent.split(/(\s+)/).filter(Boolean);
+        n.replaceWith(...parts.map((p) => (/^\s+$/.test(p) ? document.createTextNode(p) : wrap(document.createTextNode(p)))));
+      } else n.replaceWith(wrap(n.cloneNode(true)));
+    }
+    h.style.setProperty('--n', i);
+  }
+  // Sortie de la question : glisse + flou, puis la suivante arrive.
+  function leave(then) {
+    const stage = root.querySelector('.quiz-stage');
+    if (reduced) return then();
+    stage.classList.remove('in');
+    stage.classList.add('out');
+    setTimeout(then, 200);
   }
 
   function progress() {
@@ -126,11 +152,29 @@
     // Teaser : un montant flou qui bouge à chaque réponse, dévoilé seulement à la fin.
     const tease = root.querySelector('.quiz-tease');
     tease.classList.toggle('show', step >= 1);
-    tease.querySelector('span').textContent = step >= 1 ? fmt(compute({ ...answers, blocker: answers.blocker || 'conversion', cr: answers.cr || '1.2' }).gain) : '••••';
+    if (step < 1) { tease.querySelector('span').textContent = '••••'; return; }
+    const val = Math.round(compute({ ...answers, blocker: answers.blocker || 'conversion', cr: answers.cr || '1.2' }).gain);
+    scramble(tease, val);
+  }
+  let lastTease = null; let scrambleTimer = 0;
+  function scramble(tease, val) {
+    const span = tease.querySelector('span');
+    if (val === lastTease) return;
+    const up = lastTease !== null && val > lastTease;
+    lastTease = val;
+    clearInterval(scrambleTimer);
+    tease.classList.remove('bump'); void tease.offsetWidth; tease.classList.add('bump');
+    if (up && !reduced) { const a = document.createElement('i'); a.className = 'tease-up'; a.textContent = '↑'; tease.append(a); setTimeout(() => a.remove(), 1100); }
+    if (reduced) { span.textContent = fmt(val); return; }
+    const len = fmt(val).length; let n = 0;
+    scrambleTimer = setInterval(() => {
+      span.textContent = n++ < 9 ? Array.from({ length: len }, (_, k) => (fmt(val)[k] === '\u00a0' ? '\u00a0' : Math.floor(Math.random() * 10))).join('') : fmt(val);
+      if (n > 9) clearInterval(scrambleTimer);
+    }, 45);
   }
 
   function question() {
-    busy = false;
+    busy = false; moving = false;
     const s = STEPS[step];
     if (s.id === 'visitors' && answers.stage && !touched.visitors) answers.visitors = DEFAULT_VISITORS[answers.stage];
     progress();
@@ -138,13 +182,18 @@
     const head = `<p class="quiz-kicker"><b>${step + 1}/${STEPS.length}</b>${step === 0 ? 'Ton chiffre en 30 secondes' : left === 1 ? 'Dernière question' : `Plus que ${left} questions`}</p><h2>${s.q}</h2>${s.hint ? `<p class="quiz-hint">${s.hint}</p>` : ''}`;
     if (s.type === 'choice') {
       const stage = swap(`${head}<div class="quiz-choices${s.options.length > 4 ? ' six' : ''}">${s.options.map(([v, ic, l], i) => `<button type="button" class="quiz-choice${answers[s.id] === v ? ' on' : ''}" data-v="${v}" style="--d:${i * 0.05}s"><kbd>${'ABCDEF'[i]}</kbd><span class="qi">${window.icon(ic)}</span><span class="ql">${l}</span><span class="qc">${window.icon('check')}</span></button>`).join('')}</div>${nav(false)}`);
-      stage.querySelectorAll('.quiz-choice').forEach((b) => (b.onclick = () => {
+      stage.querySelectorAll('.quiz-choice').forEach((b) => (b.onclick = (e) => {
         if (busy) return;
         busy = true;
         answers[s.id] = b.dataset.v;
-        stage.querySelectorAll('.quiz-choice').forEach((x) => x.classList.toggle('on', x === b));
+        stage.querySelectorAll('.quiz-choice').forEach((x) => { x.classList.toggle('on', x === b); x.classList.toggle('dim', x !== b); });
+        if (!reduced) {
+          const r = b.getBoundingClientRect(); const rip = document.createElement('span'); rip.className = 'rip';
+          rip.style.left = `${(e.clientX || r.left + r.width / 2) - r.left}px`; rip.style.top = `${(e.clientY || r.top + r.height / 2) - r.top}px`;
+          b.append(rip);
+        }
         progress();
-        setTimeout(next, reduced ? 80 : 300);
+        setTimeout(next, reduced ? 80 : 380);
       }));
       bindNav(stage);
     } else {
@@ -153,9 +202,11 @@
         <input type="range" min="0" max="1000" value="${toPos(s, v)}" aria-label="${s.q.replace(/<[^>]+>/g, '')}">
         <div class="quiz-presets">${s.presets.map((p) => `<button type="button" data-p="${p}">${fmt(p)}${s.unit === '€' ? ' €' : ''}</button>`).join('')}</div></div>${nav(true)}`);
       const input = stage.querySelector('input');
+      const out = stage.querySelector('output b');
       const setVal = (val) => {
         answers[s.id] = val; touched[s.id] = true;
-        stage.querySelector('output b').textContent = fmt(val);
+        out.textContent = fmt(val);
+        out.classList.remove('bump'); void out.offsetWidth; out.classList.add('bump');
         stage.querySelectorAll('[data-p]').forEach((b) => b.classList.toggle('on', Number(b.dataset.p) === val));
         progress();
       };
@@ -168,20 +219,21 @@
   const nav = (withNext) => `<div class="quiz-nav">${step ? '<button type="button" class="quiz-back">← Retour</button>' : '<button type="button" class="quiz-back quiz-pass">Passer le quiz</button>'}${withNext ? '<button type="button" class="btn btn-main quiz-next">Valider <span class="arrow">→</span></button>' : '<span class="quiz-keys">Touche A, B, C…</span>'}</div>`;
   function bindNav(stage) {
     stage.querySelector('.quiz-pass')?.addEventListener('click', skip);
-    stage.querySelector('.quiz-back:not(.quiz-pass)')?.addEventListener('click', () => { if (step > 0) { step--; question(); } });
+    stage.querySelector('.quiz-back:not(.quiz-pass)')?.addEventListener('click', () => { if (step > 0 && !moving) { moving = true; busy = true; step--; leave(question); } });
     stage.querySelector('.quiz-next')?.addEventListener('click', next);
   }
   function next() {
-    if (step >= STEPS.length) return;
+    if (moving || step >= STEPS.length) return;
+    moving = true; busy = true;
     step++;
-    if (step < STEPS.length) question(); else analyzing();
+    leave(() => (step < STEPS.length ? question() : analyzing()));
   }
 
   function analyzing() {
     progress();
     root.querySelector('.quiz-tease').classList.remove('show');
     const lines = ['Ton chiffre d’affaires actuel', 'Comparaison avec les boutiques qui convertissent', 'Ton potentiel caché', 'Ton plan d’action'];
-    const stage = swap(`<div class="quiz-analyzing"><div class="qa-num"><b>0</b>%</div><div class="qa-bar"><i></i></div>
+    const stage = swap(`<div class="quiz-analyzing"><div class="qa-num"><span class="qa-ring"></span><b>0</b>%</div><div class="qa-bar"><i></i></div>
       <ul>${lines.map((l) => `<li>${window.icon('check')}${l}</li>`).join('')}</ul></div>`);
     const total = reduced ? 300 : 2200; const t0 = performance.now();
     const tick = (t) => {
