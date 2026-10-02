@@ -180,10 +180,13 @@ async function radarTick(env, when) {
     console.error('radar', host, error?.message); // boutique momentanément injoignable : on garde sa dernière lecture
   }
   const stores = (await Promise.all(NICHES[niche].stores.map((h) => env.DATA.get(`store:${h}`, 'json')))).filter(Boolean);
+  // Publié seulement quand la niche est assez couverte (juste après la mise en ligne, une seule boutique relue
+  // donnerait 2 ou 3 produits) : d'ici là, les vrais produits du dernier relevé figé restent affichés.
+  if (stores.length < Math.ceil(NICHES[niche].stores.length / 2)) return;
   const items = radarFrom(stores, { kind: (p) => kindOf(niche, p) });
-  if (items.length) await env.DATA.put(`radar:${niche}`, JSON.stringify({ at: new Date(when).toISOString(), items }));
+  if (items.length >= 12) await env.DATA.put(`radar:${niche}`, JSON.stringify({ at: new Date(when).toISOString(), items }));
 }
-const snapshotRadar = (niche) => ({ at: `${SNAPSHOT_DATE}T00:00:00.000Z`, items: SNAPSHOT[niche] || [] });
+const snapshotRadar = (niche) => ({ at: null, items: (SNAPSHOT[niche] || []).map((i) => ({ ...i, snapshot: SNAPSHOT_DATE })) });
 // Lecture KV mise en cache 10 min par centre de données (les lectures KV gratuites sont limitées à 100 000/jour).
 const radar = (niche, env) => cached(`radar/${niche}`, 600, async () => (env.DATA && (await env.DATA.get(`radar:${niche}`, 'json'))) || snapshotRadar(niche));
 

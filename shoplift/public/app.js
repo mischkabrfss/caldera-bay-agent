@@ -208,7 +208,7 @@ function renderAudit() {
   const out = $('#auditOut');
   if (!a) { out.innerHTML = '<div class="card empty"><b>' + icon('radar') + '</b>Entre l’adresse de ta boutique Shopify pour lancer ton premier audit.</div>'; return; }
   const locked = a.fixes.filter((f) => f.locked).length;
-  out.innerHTML = `
+  out.innerHTML = `${exportButton('audit-top')}
   <div class="result-grid">
     <div>
       <div class="card result-hero">
@@ -249,6 +249,7 @@ function renderAudit() {
     requestAnimationFrame(tick);
   });
   setTimeout(() => $$('.cat-row .bar i', out).forEach((b, i) => setTimeout(() => (b.style.width = `${b.dataset.w}%`), i * 120)), 200);
+  bindExport('audit-top', 'audit', () => ({ audit: state.audit })); // Scale : rapport de l'audit exportable directement ici
 }
 
 async function runConnected() {
@@ -393,7 +394,7 @@ async function loadRadar(niche) {
   const at = r.data.updatedAt ? new Date(r.data.updatedAt) : null;
   const ago = at ? Math.max(0, Math.round((Date.now() - at) / 3_600_000)) : null;
   const note = at ? `<p class="src-badge live" style="margin:0 0 12px"><span class="dot"></span>Relevé en direct ${ago < 1 ? 'il y a moins d’une heure' : `il y a ${ago} h`} · actualisé toutes les 6 h</p>`
-    : snap ? `<p class="src-badge" style="margin:0 0 12px">Vrais produits relevés le ${new Date(snap).toLocaleDateString('fr-FR')} · sur le site en ligne, le radar s’actualise toutes les 6 h.</p>` : '';
+    : snap ? `<p class="src-badge" style="margin:0 0 12px">Vrais produits relevés le ${new Date(snap).toLocaleDateString('fr-FR')} · le relevé automatique (toutes les 6 h environ) prend le relais.</p>` : '';
   out.innerHTML = `${note}${exportButton('radar')}<div class="pgrid">${r.data.items.map((p, i) => pCard(p, i)).join('')}</div>${r.data.locked ? '<div class="card unlock-banner"><h3>' + icon('radar') + ' Débloque le radar complet</h3><p>24 produits gagnants par niche, avec leurs raisons et le lien direct.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}`;
   bindExport('radar', 'radar', () => ({ items: r.data.items.filter((p) => !p.locked), niche: state.config?.niches?.[niche]?.label || niche, date: r.data.updatedAt || r.data.items[0]?.snapshot ? new Date(r.data.updatedAt || r.data.items[0].snapshot).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : undefined }));
 }

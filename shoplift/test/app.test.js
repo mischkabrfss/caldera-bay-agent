@@ -249,15 +249,19 @@ test('Radar : tâche planifiée (une boutique / 7 min dans KV), lecture KV puis 
   const DATA = { get: async (k, type) => (kv.has(k) ? (type === 'json' ? JSON.parse(kv.get(k)) : kv.get(k)) : null), put: async (k, v) => { kv.set(k, v); } };
   // Sans KV rempli : vrais produits du dernier relevé figé
   const before = await (await call('/api/radar?niche=mode', { e: env({ DATA, APP_SECRET: 'test-secret' }) })).json();
-  assert.ok(before.items.length > 0 && before.updatedAt.startsWith('2026-'));
+  assert.ok(before.items.length > 0 && before.updatedAt === null && before.items[0].snapshot);
   // Une boutique de la niche déjà relue, la boutique du tour est injoignable : la niche est quand même recomposée
   const titles = ['Legging sculptant', 'Robe midi satin', 'Sweat oversize', 'Jean droit', 'Brassière sport', 'Jupe plissée'];
-  kv.set('store:edikted.com', JSON.stringify({ host: 'edikted.com', meta: { name: 'Edikted', currency: 'USD' }, bestsellers: [], products: products.slice(0, 6).map((p, i) => ({ ...p, title: titles[i], handle: `h${i}` })) }));
+  const extra = ['Legging taille haute', 'Robe longue fleurie', 'Sweat zippé', 'Jean large', 'Brassière dos nu', 'Jupe midi'];
+  for (const [k, host] of ['edikted.com', 'us.princesspolly.com', 'showpo.com', 'honeylove.com'].entries()) {
+    // la tâche publie la niche dès que la moitié de ses boutiques est relue (ici 4 sur 8, la boutique du tour étant injoignable)
+    kv.set(`store:${host}`, JSON.stringify({ host, meta: { name: host, currency: 'USD' }, bestsellers: [], products: products.slice(0, 6).map((p, i) => ({ ...p, title: `${(k % 2 ? extra : titles)[i]} ${host}`, handle: `h${k}${i}` })) }));
+  }
   const jobs = [];
   await worker.scheduled({ scheduledTime: 0 }, env({ DATA, APP_SECRET: 'test-secret' }), { waitUntil: (p) => jobs.push(p) });
   await Promise.all(jobs);
   const stored = JSON.parse(kv.get('radar:mode'));
-  assert.ok(stored.items.length > 0 && stored.items.every((x) => x.host === 'edikted.com'));
+  assert.ok(stored.items.length >= 12 && stored.items.every((x) => x.host !== 'fashionnova.com'));
   const res = await (await call('/api/radar?niche=mode', { e: env({ DATA, APP_SECRET: 'test-secret' }) })).json();
   assert.equal(res.updatedAt, stored.at);
 });
