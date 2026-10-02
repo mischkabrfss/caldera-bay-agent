@@ -21,7 +21,7 @@
   <div class="quiz-stage"></div>
 </div>
 <div id="site">
-<script>/* Client déjà abonné : pas de quiz, on montre directement le site. */try{if(localStorage.getItem('sl_member')){document.getElementById('quiz').classList.remove('open');document.documentElement.classList.add('is-paid')}}catch(e){}</script>
+<script>/* Quiz déjà fait, fermé il y a moins de 7 jours ou client abonné : le site s'affiche directement (sans flash). */try{var q=JSON.parse(localStorage.getItem('sl_quiz')||'null'),m=localStorage.getItem('sl_member');if(location.hash!=='#quiz'&&(m||(q&&(q.state==='done'||Date.now()-q.at<6048e5)))){document.getElementById('quiz').classList.remove('open')}if(m)document.documentElement.classList.add('is-paid')}catch(e){}</script>
 <div class="progress" id="progress"></div>
 <div class="bg-fx" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><canvas id="coins"></canvas></div>
 

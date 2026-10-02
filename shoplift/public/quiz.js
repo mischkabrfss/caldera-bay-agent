@@ -1,24 +1,31 @@
-// Quiz d'arrivée : combien ta boutique pourrait gagner. Estimation indicative, calculée dans le navigateur.
+// Quiz d'arrivée : combien ta boutique laisse sur la table. Estimation indicative, calculée dans le navigateur.
+// Affiché une seule fois : fait → plus jamais (résultat gardé dans un bandeau), fermé → pas avant 7 jours.
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
-  const fmt = (n) => Math.round(n).toLocaleString('fr-FR').replace(/\u202f/g, '\u00a0'); // espace insécable normale : reste visible en gros caractères
+  const fmt = (n) => Math.round(n).toLocaleString('fr-FR').replace(/ /g, ' '); // espace insécable visible en gros caractères
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const PLANS = { basic: ['Basique', 19], pro: ['Pro', 49], scale: ['Scale', 99] };
-  const BENCH = 2.5; // taux de conversion e-commerce de référence (%)
+  const KEY = 'sl_quiz';
+  const WEEK = 7 * 86_400_000;
+  const store = {
+    get() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch { return null; } },
+    set(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch { /* stockage indisponible */ } },
+  };
 
   const STEPS = [
-    { id: 'stage', q: 'Où en est ta boutique ?', type: 'choice', options: [
+    { id: 'stage', q: 'Où en est <mark>ta boutique</mark> ?', type: 'choice', options: [
       ['launch', 'sprout', 'Pas encore lancée'], ['small', 'rocket', 'Moins de 1 000 €/mois'], ['mid', 'trend', '1 000 à 10 000 €/mois'], ['big', 'award', 'Plus de 10 000 €/mois']] },
-    { id: 'visitors', q: 'Combien de visiteurs par mois ?', hint: 'Une estimation suffit.', type: 'range', min: 100, max: 200000, unit: 'visiteurs' },
-    { id: 'cr', q: 'Ton taux de conversion ?', hint: 'Sur 100 visiteurs, combien achètent ?', type: 'choice', options: [
-      ['1.2', 'help', 'Je ne sais pas'], ['0.3', 'gauge', 'Moins de 0,5 %'], ['0.75', 'gauge', '0,5 à 1 %'], ['1.5', 'gauge', '1 à 2 %'], ['2.5', 'gauge', '2 à 3 %'], ['3.5', 'gauge', 'Plus de 3 %']] },
-    { id: 'aov', q: 'Ton panier moyen ?', hint: 'Le montant moyen d’une commande.', type: 'range', min: 10, max: 300, unit: '€' },
-    { id: 'goal', q: 'Ton objectif ?', type: 'choice', options: [
+    { id: 'visitors', q: 'Combien de <mark>visiteurs</mark> par mois ?', hint: 'Une estimation suffit.', type: 'range', min: 100, max: 200000, unit: 'visiteurs', presets: [500, 2000, 10000, 50000] },
+    { id: 'cr', q: 'Sur 100 visiteurs, combien <mark>achètent</mark> ?', hint: 'Ton taux de conversion.', type: 'choice', options: [
+      ['1.2', 'help', 'Je ne sais pas'], ['0.3', 'gauge', 'Moins de 0,5'], ['0.75', 'gauge', '0,5 à 1'], ['1.5', 'gauge', '1 à 2'], ['2.5', 'gauge', '2 à 3'], ['3.5', 'gauge', 'Plus de 3']] },
+    { id: 'aov', q: 'Ton <mark>panier moyen</mark> ?', hint: 'Le montant moyen d’une commande.', type: 'range', min: 10, max: 300, unit: '€', presets: [20, 40, 70, 120] },
+    { id: 'goal', q: 'Ton <mark>objectif</mark> ?', type: 'choice', options: [
       ['first', 'target', 'Ma première vente'], ['1k', 'euro', '1 000 €/mois'], ['10k', 'coins', '10 000 €/mois'], ['100k', 'award', '100 000 €/mois']] },
-    { id: 'blocker', q: 'Ton plus gros blocage ?', type: 'choice', options: [
+    { id: 'blocker', q: 'Qu’est-ce qui te <mark>bloque</mark> le plus ?', type: 'choice', options: [
       ['traffic', 'eyeoff', 'Pas assez de visiteurs'], ['conversion', 'cart', 'Les visiteurs n’achètent pas'], ['aov', 'coins', 'Panier trop petit'], ['product', 'search', 'Je ne sais pas quoi vendre']] },
   ];
   const DEFAULT_VISITORS = { launch: 1000, small: 3000, mid: 15000, big: 60000 };
+  const BLOCKER = { traffic: 'Pas assez de visiteurs', conversion: 'Tes visiteurs n’achètent pas', aov: 'Ton panier est trop petit', product: 'Tu ne sais pas quoi vendre' };
   const ACTIONS = {
     traffic: ['Publie 1 vidéo courte par jour sur TikTok/Reels autour de ton produit phare', 'Optimise titres et méta-descriptions pour ressortir sur Google', 'Espionne les best-sellers de 3 concurrents pour copier leurs angles'],
     conversion: ['Ajoute des avis clients visibles sur chaque fiche produit', 'Passe à 5 photos minimum par produit, dont une en situation', 'Affiche paiement sécurisé + retours 30 jours sous le bouton d’achat'],
@@ -30,40 +37,80 @@
   const toVal = (s, pos) => (s.id === 'visitors' ? Math.round(10 ** (Math.log10(s.min) + (pos / 1000) * (Math.log10(s.max) - Math.log10(s.min))) / 50) * 50 || s.min : Math.round(s.min + (pos / 1000) * (s.max - s.min)));
   const toPos = (s, v) => (s.id === 'visitors' ? ((Math.log10(v) - Math.log10(s.min)) / (Math.log10(s.max) - Math.log10(s.min))) * 1000 : ((v - s.min) / (s.max - s.min)) * 1000);
 
-  const answers = { visitors: 3000, aov: 40 };
+  let answers = { visitors: 3000, aov: 40 };
+  let touched = {}; // curseurs déjà réglés à la main : on ne les écrase plus
   let step = 0;
+  let busy = false; // anti double-clic : une seule avancée par question
   let root;
 
+  function compute(a = answers) {
+    const V = a.visitors;
+    const cr = a.stage === 'launch' && a.cr === '1.2' ? 0 : Number(a.cr || 1.2);
+    const aov = a.aov;
+    const current = (V * cr * aov) / 100;
+    const boost = a.blocker === 'conversion' ? 1.2 : cr >= 3 ? 0.4 : 0.8;
+    const newCr = Math.min(Math.max(cr, 0.5) + boost, 4.5);
+    const newAov = aov * (a.blocker === 'aov' ? 1.3 : 1.15);
+    const newV = V * (a.blocker === 'traffic' ? 1.3 : 1);
+    const potential = (newV * newCr * newAov) / 100;
+    const gain = Math.max(0, potential - current);
+    const plan = a.blocker === 'product' ? 'pro' : a.stage === 'big' || a.goal === '100k' ? 'scale' : a.stage === 'mid' ? 'pro' : 'basic';
+    const days = gain > 0 ? Math.max(1, Math.ceil(PLANS[plan][1] / (gain / 30))) : null;
+    return { V, cr, aov, current, potential, gain, newCr, plan, days };
+  }
+
   function build() {
-    root = document.getElementById('quiz'); // coque déjà présente dans la page (affichée dès la 1re image)
+    root = document.getElementById('quiz');
     if (!root) {
       root = document.createElement('div');
       root.id = 'quiz';
       root.className = 'quiz';
       root.setAttribute('role', 'dialog');
       root.setAttribute('aria-modal', 'true');
-      root.innerHTML = `<div class="quiz-bg"><i></i><i></i><i></i></div><canvas class="quiz-confetti"></canvas>
-        <div class="quiz-top"><span class="logo"><span class="logo-mark"></span><span>Shop<b>lift</b></span></span><button class="quiz-x" type="button" aria-label="Fermer le quiz">${window.icon('x')}</button></div>
-        <div class="quiz-bar"><i></i></div><div class="quiz-stage"></div>`;
-      document.body.append(root);
+      document.body.prepend(root);
     }
-    root.querySelector('.quiz-x').onclick = close;
-    addEventListener('keydown', (e) => e.key === 'Escape' && root.classList.contains('open') && close());
+    root.innerHTML = `<div class="quiz-bg"><i></i><i></i></div>
+      <div class="quiz-top"><span class="logo"><span class="logo-mark"></span><span>Shop<b>lift</b></span></span>
+        <div class="quiz-tease" aria-hidden="true"><small>Ton potentiel</small><b>+<span>••••</span> €</b></div>
+        <button class="quiz-x" type="button" aria-label="Fermer le quiz">${window.icon('x')}</button></div>
+      <div class="quiz-steps">${STEPS.map(() => '<i></i>').join('')}</div>
+      <div class="quiz-stage"></div>`;
+    root.querySelector('.quiz-x').onclick = skip;
   }
 
   function open() {
-    if (!root) build();
-    step = 0;
-    root.classList.remove('bam');
+    build();
+    answers = { visitors: 3000, aov: 40 }; touched = {}; step = 0; busy = false;
+    root.classList.remove('done', 'bam');
     root.classList.add('open');
+    document.documentElement.classList.add('quiz-on');
     scrollTo(0, 0);
     question();
   }
-
   function close() {
     root.classList.remove('open');
+    document.documentElement.classList.remove('quiz-on');
     scrollTo(0, 0);
   }
+  function skip() {
+    const prev = store.get();
+    if (prev?.state !== 'done') store.set({ state: 'skipped', at: Date.now() });
+    close();
+    if (prev?.state === 'done') banner(prev.answers);
+  }
+
+  addEventListener('keydown', (e) => {
+    if (!root?.classList.contains('open')) return;
+    if (e.key === 'Escape') return skip();
+    if (e.target.closest?.('input[type=text], input[type=url], input:not([type])')) return;
+    const s = STEPS[step];
+    if (!s || root.classList.contains('done')) return;
+    if (s.type === 'choice') {
+      const i = 'abcdef'.indexOf(e.key.toLowerCase()) >= 0 ? 'abcdef'.indexOf(e.key.toLowerCase()) : '123456'.indexOf(e.key);
+      const btn = root.querySelectorAll('.quiz-choice')[i];
+      if (i >= 0 && btn) { e.preventDefault(); btn.click(); }
+    } else if (e.key === 'Enter') { e.preventDefault(); next(); }
+  });
 
   function swap(html) {
     const stage = root.querySelector('.quiz-stage');
@@ -74,157 +121,144 @@
     return stage;
   }
 
+  function progress() {
+    root.querySelectorAll('.quiz-steps i').forEach((b, i) => { b.className = i < step ? 'on' : i === step ? 'now' : ''; });
+    // Teaser : un montant flou qui bouge à chaque réponse, dévoilé seulement à la fin.
+    const tease = root.querySelector('.quiz-tease');
+    tease.classList.toggle('show', step >= 1);
+    tease.querySelector('span').textContent = step >= 1 ? fmt(compute({ ...answers, blocker: answers.blocker || 'conversion', cr: answers.cr || '1.2' }).gain) : '••••';
+  }
+
   function question() {
+    busy = false;
     const s = STEPS[step];
-    root.querySelector('.quiz-bar i').style.width = `${(step / STEPS.length) * 100}%`;
-    if (s.id === 'visitors' && answers.stage) answers.visitors = DEFAULT_VISITORS[answers.stage];
-    const head = `<span class="quiz-count">${step + 1} / ${STEPS.length}</span><h2>${s.q}</h2>${s.hint ? `<p class="muted">${s.hint}</p>` : ''}`;
+    if (s.id === 'visitors' && answers.stage && !touched.visitors) answers.visitors = DEFAULT_VISITORS[answers.stage];
+    progress();
+    const left = STEPS.length - step;
+    const head = `<p class="quiz-kicker"><b>${step + 1}/${STEPS.length}</b>${step === 0 ? 'Ton chiffre en 30 secondes' : left === 1 ? 'Dernière question' : `Plus que ${left} questions`}</p><h2>${s.q}</h2>${s.hint ? `<p class="quiz-hint">${s.hint}</p>` : ''}`;
     if (s.type === 'choice') {
-      const stage = swap(`${head}<div class="quiz-choices">${s.options.map(([v, e, l], i) => `<button type="button" class="quiz-choice${answers[s.id] === v ? ' on' : ''}" data-v="${v}" style="--d:${i * 0.06}s"><span>${window.icon(e)}</span>${l}</button>`).join('')}</div>${nav(false)}`);
+      const stage = swap(`${head}<div class="quiz-choices${s.options.length > 4 ? ' six' : ''}">${s.options.map(([v, ic, l], i) => `<button type="button" class="quiz-choice${answers[s.id] === v ? ' on' : ''}" data-v="${v}" style="--d:${i * 0.05}s"><kbd>${'ABCDEF'[i]}</kbd><span class="qi">${window.icon(ic)}</span><span class="ql">${l}</span><span class="qc">${window.icon('check')}</span></button>`).join('')}</div>${nav(false)}`);
       stage.querySelectorAll('.quiz-choice').forEach((b) => (b.onclick = () => {
+        if (busy) return;
+        busy = true;
         answers[s.id] = b.dataset.v;
         stage.querySelectorAll('.quiz-choice').forEach((x) => x.classList.toggle('on', x === b));
-        setTimeout(next, 260);
+        progress();
+        setTimeout(next, reduced ? 80 : 300);
       }));
       bindNav(stage);
     } else {
       const v = answers[s.id];
-      const stage = swap(`${head}<div class="quiz-range"><output><b>${fmt(v)}</b> ${s.unit}</output>
-        <input type="range" min="0" max="1000" value="${toPos(s, v)}" aria-label="${s.q}"></div>${nav(true)}`);
+      const stage = swap(`${head}<div class="quiz-range"><output><b>${fmt(v)}</b><span>${s.unit}</span></output>
+        <input type="range" min="0" max="1000" value="${toPos(s, v)}" aria-label="${s.q.replace(/<[^>]+>/g, '')}">
+        <div class="quiz-presets">${s.presets.map((p) => `<button type="button" data-p="${p}">${fmt(p)}${s.unit === '€' ? ' €' : ''}</button>`).join('')}</div></div>${nav(true)}`);
       const input = stage.querySelector('input');
-      input.oninput = () => {
-        answers[s.id] = toVal(s, Number(input.value));
-        stage.querySelector('output b').textContent = fmt(answers[s.id]);
+      const setVal = (val) => {
+        answers[s.id] = val; touched[s.id] = true;
+        stage.querySelector('output b').textContent = fmt(val);
+        stage.querySelectorAll('[data-p]').forEach((b) => b.classList.toggle('on', Number(b.dataset.p) === val));
+        progress();
       };
+      input.oninput = () => setVal(toVal(s, Number(input.value)));
+      stage.querySelectorAll('[data-p]').forEach((b) => (b.onclick = () => { input.value = toPos(s, Number(b.dataset.p)); setVal(Number(b.dataset.p)); }));
       bindNav(stage);
     }
   }
 
-  const nav = (withNext) => `<div class="quiz-nav">${step ? '<button type="button" class="quiz-back">← Retour</button>' : '<button type="button" class="quiz-back quiz-pass">Passer</button>'}${withNext ? '<button type="button" class="btn btn-main quiz-next">Suivant <span class="arrow">→</span></button>' : ''}</div>`;
+  const nav = (withNext) => `<div class="quiz-nav">${step ? '<button type="button" class="quiz-back">← Retour</button>' : '<button type="button" class="quiz-back quiz-pass">Passer le quiz</button>'}${withNext ? '<button type="button" class="btn btn-main quiz-next">Valider <span class="arrow">→</span></button>' : '<span class="quiz-keys">Touche A, B, C…</span>'}</div>`;
   function bindNav(stage) {
-    stage.querySelector('.quiz-pass')?.addEventListener('click', close);
-    stage.querySelector('.quiz-back:not(.quiz-pass)')?.addEventListener('click', () => { step--; question(); });
+    stage.querySelector('.quiz-pass')?.addEventListener('click', skip);
+    stage.querySelector('.quiz-back:not(.quiz-pass)')?.addEventListener('click', () => { if (step > 0) { step--; question(); } });
     stage.querySelector('.quiz-next')?.addEventListener('click', next);
   }
   function next() {
+    if (step >= STEPS.length) return;
     step++;
     if (step < STEPS.length) question(); else analyzing();
   }
 
-  function compute() {
-    const V = answers.visitors;
-    const cr = answers.stage === 'launch' && answers.cr === '1.2' ? 0 : Number(answers.cr || 1.2);
-    const aov = answers.aov;
-    const current = (V * cr * aov) / 100;
-    const boost = answers.blocker === 'conversion' ? 1.2 : cr >= 3 ? 0.4 : 0.8;
-    const newCr = Math.min(Math.max(cr, 0.5) + boost, 4.5);
-    const newAov = aov * (answers.blocker === 'aov' ? 1.3 : 1.15);
-    const newV = V * (answers.blocker === 'traffic' ? 1.3 : 1);
-    const potential = (newV * newCr * newAov) / 100;
-    const gain = Math.max(0, potential - current);
-    const plan = answers.blocker === 'product' ? 'pro' : answers.stage === 'big' || answers.goal === '100k' ? 'scale' : answers.stage === 'mid' ? 'pro' : 'basic';
-    const days = gain > 0 ? Math.max(1, Math.ceil(PLANS[plan][1] / (gain / 30))) : null;
-    return { V, cr, aov, current, potential, gain, newCr, plan, days };
-  }
-
   function analyzing() {
-    root.querySelector('.quiz-bar i').style.width = '100%';
-    const lines = ['Calcul de ton chiffre d’affaires actuel', 'Comparaison avec les boutiques qui convertissent', 'Estimation de ton potentiel', 'Préparation de ton plan d’action'];
-    const stage = swap(`<div class="quiz-analyzing"><div class="radar"><i style="top:24%;left:62%"></i><i style="top:60%;left:30%;animation-delay:.7s"></i></div>
-      <div class="loader-lines">${lines.map((l) => `<p>${l}</p>`).join('')}</div></div>`);
-    const ps = stage.querySelectorAll('.loader-lines p');
-    ps.forEach((p, i) => setTimeout(() => p.classList.add('on'), 450 * i));
-    setTimeout(bam, reduced ? 300 : 2000);
-  }
-
-  // Fin du quiz : flash « bam », le quiz s'efface et la page s'ouvre avec le résultat en haut.
-  function bam() {
-    const r = compute();
-    const reveal = () => {
-      close();
-      recap(r);
-      document.body.classList.add('bam-in');
-      setTimeout(() => document.body.classList.remove('bam-in'), 1000);
-    };
-    if (reduced) return reveal();
-    root.classList.add('bam');
-    const flash = document.createElement('div');
-    flash.className = 'bam-flash';
-    document.body.append(flash);
-    setTimeout(reveal, 380);
-    setTimeout(() => flash.remove(), 900);
-  }
-
-  function recap(r) {
-    const [planName, planPrice] = PLANS[r.plan];
-    document.querySelector('.quiz-recap')?.remove();
-    const col = document.querySelector('.hero-grid > div');
-    if (!col) return;
-    col.insertAdjacentHTML('afterbegin', `<div class="card quiz-recap">
-      <div class="boom"><span></span><span></span><span></span></div>
-      <span class="eyebrow">Ton potentiel estimé</span>
-      <div class="quiz-big">+<b data-to="${Math.round(r.gain)}">0</b> €<small>/mois</small></div>
-      <p class="quiz-year">soit <b>+${fmt(r.gain * 12)} €</b> par an · de ${fmt(r.current)} € à ${fmt(r.potential)} € par mois</p>
-      <ol class="recap-actions">${ACTIONS[answers.blocker || 'conversion'].map((a) => `<li>${a}</li>`).join('')}</ol>
-      <div class="recap-cta"><button class="btn btn-ghost recap-plan" type="button">Offre conseillée : ${planName} · ${planPrice}\u00a0€/mois</button><button class="quiz-skip recap-redo" type="button">${window.icon('refresh')} Refaire le quiz</button></div>
-      <p class="quiz-legal">Estimation indicative basée sur des moyennes e-commerce${r.days ? ` · rentabilisé en ${r.days} jour${r.days > 1 ? 's' : ''} si tu atteins ce potentiel` : ''}. Analyse ta boutique ci-dessous pour ton vrai plan d’action.</p>
-    </div>`);
-    const card = col.querySelector('.quiz-recap');
-    const big = card.querySelector('[data-to]');
-    const target = Number(big.dataset.to);
-    const start = performance.now();
+    progress();
+    root.querySelector('.quiz-tease').classList.remove('show');
+    const lines = ['Ton chiffre d’affaires actuel', 'Comparaison avec les boutiques qui convertissent', 'Ton potentiel caché', 'Ton plan d’action'];
+    const stage = swap(`<div class="quiz-analyzing"><div class="qa-num"><b>0</b>%</div><div class="qa-bar"><i></i></div>
+      <ul>${lines.map((l) => `<li>${window.icon('check')}${l}</li>`).join('')}</ul></div>`);
+    const total = reduced ? 300 : 2200; const t0 = performance.now();
     const tick = (t) => {
-      const p = reduced ? 1 : Math.min(1, (t - start) / 1800);
-      big.textContent = fmt(target * (1 - Math.pow(1 - p, 4)));
+      const p = Math.min(1, (t - t0) / total);
+      stage.querySelector('.qa-num b').textContent = Math.round(p * 100);
+      stage.querySelector('.qa-bar i').style.width = `${p * 100}%`;
+      stage.querySelectorAll('li').forEach((li, i) => li.classList.toggle('on', p > (i + 0.7) / lines.length));
+      if (p < 1) requestAnimationFrame(tick); else result();
+    };
+    requestAnimationFrame(tick);
+  }
+
+  // Écran de résultat plein écran : le chiffre, la comparaison, les priorités et l'essai gratuit sur SA boutique.
+  function result() {
+    const r = compute();
+    store.set({ state: 'done', at: Date.now(), answers });
+    root.classList.add('done');
+    const [planName, planPrice] = PLANS[r.plan];
+    const launch = r.current < 1;
+    const stage = swap(`<div class="qr">
+      <p class="quiz-kicker"><b>Résultat</b>Estimation sur tes réponses</p>
+      <h2 class="qr-title">${launch ? 'Ta boutique peut viser' : 'Tu laisses environ'}</h2>
+      <div class="qr-big">+<b>0</b> €<small>/mois</small></div>
+      <p class="qr-sub">${launch ? 'dès les premiers mois avec les bons réglages' : 'sur la table chaque mois'}, soit <b>+${fmt(r.gain * 12)} € par an</b>.</p>
+      <div class="qr-bars">
+        <div><span>Aujourd’hui</span><i style="--w:${Math.max(3, (r.current / r.potential) * 100)}%"></i><b>${fmt(r.current)} €</b></div>
+        <div class="pot"><span>Ton potentiel</span><i style="--w:100%"></i><b>${fmt(r.potential)} €</b></div>
+      </div>
+      <div class="qr-try">
+        <span class="qr-stamp">Gratuit</span>
+        <h3>Vérifie sur <mark>ta</mark> boutique.</h3>
+        <p>On analyse ta vraie boutique Shopify et on te montre exactement quoi corriger pour aller chercher ces euros.</p>
+        <form class="qr-form" data-store-form><input name="store" placeholder="maboutique.com" autocomplete="url" inputmode="url" aria-label="Adresse de ta boutique Shopify" required><button class="btn btn-main" type="submit">Analyser gratuitement <span class="arrow">→</span></button></form>
+        <small>1 analyse offerte · sans carte bancaire · résultat en 30 secondes</small>
+      </div>
+      <div class="qr-plan">
+        <div class="qr-prio"><p class="quiz-kicker"><b>Priorité</b>${BLOCKER[answers.blocker] || BLOCKER.conversion}</p>
+          <ol>${ACTIONS[answers.blocker || 'conversion'].map((a) => `<li>${a}</li>`).join('')}</ol></div>
+        <div class="qr-offer"><span>Offre conseillée</span><b>${planName} · ${planPrice} €/mois</b>${r.days ? `<small>Rentabilisée en ${r.days} jour${r.days > 1 ? 's' : ''} au potentiel estimé</small>` : ''}<button type="button" class="btn btn-ghost qr-see">Voir l’offre</button></div>
+      </div>
+      <div class="qr-links"><button type="button" class="qr-site">Découvrir Shoplift ↓</button><button type="button" class="qr-redo">${window.icon('refresh')} Refaire le quiz</button></div>
+      <p class="quiz-legal">Estimation indicative basée sur des moyennes e-commerce, pas une promesse de résultat.</p></div>`);
+    const big = stage.querySelector('.qr-big b');
+    // Le montant final doit tenir dans la colonne (gros gains à 6 chiffres) : taille réduite si besoin.
+    const line = stage.querySelector('.qr-big');
+    big.textContent = fmt(r.gain);
+    for (let size = parseFloat(getComputedStyle(line).fontSize); line.scrollWidth > line.clientWidth + 1 && size > 30; size -= 4) line.style.fontSize = `${size}px`;
+    big.textContent = '0';
+    const t0 = performance.now();
+    const tick = (t) => {
+      const p = reduced ? 1 : Math.min(1, (t - t0) / 1600);
+      big.textContent = fmt(r.gain * (1 - Math.pow(1 - p, 4)));
       if (p < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
     confetti();
-    card.querySelector('.recap-redo').onclick = () => open();
-    card.querySelector('.recap-plan').onclick = () => {
-      document.querySelector('#tarifs')?.scrollIntoView({ behavior: 'smooth' });
+    stage.querySelector('.qr-redo').onclick = open;
+    stage.querySelector('.qr-site').onclick = () => { close(); banner(answers); };
+    stage.querySelector('.qr-see').onclick = () => {
+      close(); banner(answers);
       const plan = document.querySelector(`[data-plan="${r.plan}"]`)?.closest('.plan');
+      document.querySelector('#tarifs')?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
       plan?.classList.add('spot-plan');
       setTimeout(() => plan?.classList.remove('spot-plan'), 4000);
     };
-    document.querySelector('[data-store-form]')?.classList.add('spot-form');
-    trial(r, planName, planPrice);
   }
 
-  // Bloc « essai gratuit » juste après le résultat : ce qui est offert maintenant + ce que l'offre débloque.
-  const PERKS = {
-    basic: ['Audits illimités et toutes les corrections', 'Espion de concurrents', '1 agent de sourcing avec son WhatsApp'],
-    pro: ['Radar des produits gagnants mis à jour toutes les 6\u00a0h', 'Espion complet + suivi de 5 concurrents', '3 agents de sourcing avec leurs coordonnées'],
-    scale: ['Les 10 agents de sourcing', 'Suivi de 20 concurrents + comparateur', 'Rapports PDF et Excel prêts à envoyer'],
-  };
-  function trial(r, planName, planPrice) {
-    document.querySelector('.trial-zone')?.remove();
-    const hero = document.querySelector('#analyser');
-    if (!hero) return;
-    hero.insertAdjacentHTML('afterend', `<section class="trial-zone" id="essai"><div class="wrap"><div class="trial-card">
-      <div class="trial-ticket">
-        <span class="trial-stamp">Offert</span>
-        <span class="eyebrow">Ton essai gratuit est prêt</span>
-        <h2>Vérifie ces <span class="grad-text">+${fmt(r.gain)} €</span> sur ta vraie boutique.</h2>
-        <ul class="trial-list">
-          <li><b>1</b> analyse complète de ta boutique</li>
-          <li><b>3</b> corrections expliquées pas à pas</li>
-          <li><b>3</b> produits gagnants du radar</li>
-        </ul>
-        <form class="store-form" data-store-form>
-          <label class="store-input"><input name="store" placeholder="maboutique.com" autocomplete="url" inputmode="url" aria-label="Adresse de ta boutique Shopify" required></label>
-          <button class="btn btn-main" type="submit">Lancer mon essai gratuit <span class="arrow">→</span></button>
-        </form>
-        <p class="trial-micro">Sans carte bancaire · sans inscription · résultat en 30 secondes</p>
-      </div>
-      <div class="trial-buy">
-        <span class="eyebrow">Ou débloque tout de suite</span>
-        <div class="trial-price"><b>${planPrice} €</b><span>/mois · offre ${planName}</span></div>
-        <ul class="trial-perks">${PERKS[r.plan].map((p) => `<li>${p}</li>`).join('')}</ul>
-        <button class="btn btn-main trial-go" data-plan="${r.plan}" type="button">Débloquer ${planName} <span class="arrow">→</span></button>
-        <p class="trial-micro">Sans engagement · résiliable en 1 clic · paiement sécurisé par Stripe${r.days ? ` · rentabilisé en ${r.days} jour${r.days > 1 ? "s" : ""} au potentiel estimé` : ''}</p>
-      </div>
-    </div></div></section>`);
+  // Bandeau discret en haut du site, gardé d'une visite à l'autre une fois le quiz fait.
+  function banner(a) {
+    document.querySelector('.quiz-banner')?.remove();
+    if (!a) return;
+    const r = compute(a);
+    const site = document.getElementById('site');
+    if (!site || !r.gain) return;
+    site.insertAdjacentHTML('afterbegin', `<div class="quiz-banner"><div class="wrap"><span>${window.icon('trend')}<b>Ton potentiel : +${fmt(r.gain)} €/mois</b></span><a href="#analyser" class="qb-go">Vérifier sur ma boutique →</a><button type="button" class="qb-redo" aria-label="Refaire le quiz">${window.icon('refresh')}</button></div></div>`);
+    site.querySelector('.qb-redo').onclick = open;
+    site.querySelector('.qb-go').onclick = (e) => { e.preventDefault(); const f = document.querySelector('#analyser [data-store-form]'); f?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' }); setTimeout(() => f?.querySelector('input')?.focus({ preventScroll: true }), 500); };
   }
 
   function confetti() {
@@ -234,19 +268,27 @@
     document.body.append(c);
     const ctx = c.getContext('2d');
     c.width = innerWidth; c.height = innerHeight;
-    const colors = ['#ffd23f', '#ffb020', '#3fae82', '#ff7a59', '#ffe68a'];
-    const parts = Array.from({ length: 180 }, () => ({ x: innerWidth / 2, y: innerHeight * 0.3, vx: (Math.random() - 0.5) * 18, vy: Math.random() * -16 - 4, s: 4 + Math.random() * 7, c: colors[Math.floor(Math.random() * 5)], r: Math.random() * 6, vr: (Math.random() - 0.5) * 0.3 }));
+    const colors = ['#ffd23f', '#ffb020', '#f4f1ea', '#ffe68a'];
+    const parts = Array.from({ length: 140 }, () => ({ x: innerWidth / 2, y: innerHeight * 0.3, vx: (Math.random() - 0.5) * 18, vy: Math.random() * -16 - 4, s: 4 + Math.random() * 7, c: colors[Math.floor(Math.random() * colors.length)], r: Math.random() * 6, vr: (Math.random() - 0.5) * 0.3 }));
     let f = 0;
     (function draw() {
       ctx.clearRect(0, 0, c.width, c.height);
       for (const p of parts) { p.vy += 0.35; p.x += p.vx; p.y += p.vy; p.vx *= 0.99; p.r += p.vr; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); ctx.restore(); }
-      if (f++ < 200) requestAnimationFrame(draw); else c.remove();
+      if (f++ < 180) requestAnimationFrame(draw); else c.remove();
     })();
   }
 
   document.addEventListener('click', (e) => { if (e.target.closest('[data-quiz]')) { e.preventDefault(); open(); } });
   let paid = false;
   try { paid = !!localStorage.getItem('sl_member'); } catch { /* stockage indisponible */ }
-  if (paid) build(); else open(); // abonné : pas de quiz ; sinon la 1re question s'affiche tout de suite
+  const saved = store.get();
+  const recentlySkipped = saved?.state === 'skipped' && Date.now() - saved.at < WEEK;
+  if (location.hash === '#quiz') open(); // lien direct (pub, e-mail) : le quiz s'ouvre toujours
+  else if (paid || saved?.state === 'done' || recentlySkipped) {
+    build();
+    close();
+    if (saved?.state === 'done') banner(saved.answers);
+  } else open();
+  addEventListener('hashchange', () => { if (location.hash === '#quiz') open(); });
   window.shopliftQuiz = { open, compute: () => compute() };
 })();
