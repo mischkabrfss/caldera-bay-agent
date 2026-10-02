@@ -58,6 +58,7 @@ npx wrangler secret put STRIPE_SECRET_KEY   # colle ta clé Stripe
 Conçu pour tenir dans les limites gratuites de Cloudflare : 10 ms de calcul par requête, 100 000 appels d'API par jour, 50 sous-requêtes.
 
 - Pages, images et scripts : servis par le CDN de Cloudflare, gratuits et illimités (ne comptent pas dans les 100 000).
+- Seule exception : la page d'accueil passe par le Worker (quelques microsecondes) pour donner aux réseaux sociaux l'adresse complète de l'image d'aperçu. `robots.txt` et `sitemap.xml` sont générés avec la vraie adresse du site.
 - Une seule requête au démarrage de l'appli (`/api/me` renvoie aussi la configuration).
 - Audit : 150 fiches analysées en détail (les plus récentes), le vrai nombre de produits affiché. Environ 4 à 11 ms de calcul la première fois, environ 1 ms ensuite (résultat en cache 30 min).
 - Espion et comparateur : 100 fiches par boutique, environ 3 à 9 ms, puis cache 6 h servi tout de suite pendant le rafraîchissement.

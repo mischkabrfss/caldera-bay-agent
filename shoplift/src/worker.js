@@ -369,6 +369,20 @@ export default {
     const url = new URL(request.url);
     // Coordonnées des agents : jamais servies en fichier brut, seulement via /api/agents (filtré selon l'offre).
     if (url.pathname === '/agents.js') return new Response('Not found', { status: 404 });
+    if (url.pathname === '/robots.txt') return new Response(`User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /app\nSitemap: ${url.origin}/sitemap.xml\n`, { headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=86400' } });
+    if (url.pathname === '/sitemap.xml') {
+      const pages = ['/', '/mentions-legales', '/cgv', '/confidentialite'];
+      return new Response(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map((p) => `<url><loc>${url.origin}${p}</loc></url>`).join('')}</urlset>`, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=86400' } });
+    }
+    // Page d'accueil : adresses absolues pour l'aperçu de partage (Facebook, WhatsApp, LinkedIn les exigent).
+    if ((url.pathname === '/' || url.pathname === '/index.html') && typeof HTMLRewriter !== 'undefined') {
+      const abs = (v) => (v && v.startsWith('/') ? url.origin + v : v);
+      const fix = (attr) => ({ element: (el) => el.setAttribute(attr, abs(el.getAttribute(attr))) });
+      return new HTMLRewriter()
+        .on('meta[property="og:image"], meta[name="twitter:image"], meta[property="og:url"]', fix('content'))
+        .on('link[rel="canonical"]', fix('href'))
+        .transform(await env.ASSETS.fetch(request));
+    }
     if (!url.pathname.startsWith('/api/')) return env.ASSETS.fetch(request);
     globalThis.SHOPIFY_MOCK = env.SHOPIFY_MOCK || '';
     await loadSecret(env);
