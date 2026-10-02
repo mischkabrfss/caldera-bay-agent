@@ -243,12 +243,23 @@ test('Shopify : 2e tentative automatique si la boutique renvoie une erreur', asy
   assert.equal(calls, 2);
 });
 
-test('Radar : tâche planifiée (une niche par heure) sans erreur', async () => {
+test('Radar : tâche planifiée (une boutique / 7 min dans KV), lecture KV puis repli sur le relevé figé', async () => {
   installFetch();
+  const kv = new Map();
+  const DATA = { get: async (k, type) => (kv.has(k) ? (type === 'json' ? JSON.parse(kv.get(k)) : kv.get(k)) : null), put: async (k, v) => { kv.set(k, v); } };
+  // Sans KV rempli : vrais produits du dernier relevé figé
+  const before = await (await call('/api/radar?niche=mode', { e: env({ DATA, APP_SECRET: 'test-secret' }) })).json();
+  assert.ok(before.items.length > 0 && before.updatedAt.startsWith('2026-'));
+  // Une boutique de la niche déjà relue, la boutique du tour est injoignable : la niche est quand même recomposée
+  const titles = ['Legging sculptant', 'Robe midi satin', 'Sweat oversize', 'Jean droit', 'Brassière sport', 'Jupe plissée'];
+  kv.set('store:edikted.com', JSON.stringify({ host: 'edikted.com', meta: { name: 'Edikted', currency: 'USD' }, bestsellers: [], products: products.slice(0, 6).map((p, i) => ({ ...p, title: titles[i], handle: `h${i}` })) }));
   const jobs = [];
-  await worker.scheduled({ scheduledTime: Date.UTC(2026, 8, 30, 5) }, env(), { waitUntil: (p) => jobs.push(p) });
-  const results = await Promise.all(jobs);
-  assert.ok(results.length === 1 && Array.isArray(results[0].items) && 'at' in results[0]);
+  await worker.scheduled({ scheduledTime: 0 }, env({ DATA, APP_SECRET: 'test-secret' }), { waitUntil: (p) => jobs.push(p) });
+  await Promise.all(jobs);
+  const stored = JSON.parse(kv.get('radar:mode'));
+  assert.ok(stored.items.length > 0 && stored.items.every((x) => x.host === 'edikted.com'));
+  const res = await (await call('/api/radar?niche=mode', { e: env({ DATA, APP_SECRET: 'test-secret' }) })).json();
+  assert.equal(res.updatedAt, stored.at);
 });
 
 test('Connexion Shopify : réponse Admin GraphQL → audit réel sans page d’accueil', async () => {
@@ -340,7 +351,7 @@ test('connexion : mot de passe stocké haché chez Stripe, login sur un autre ap
   assert.equal(res.status, 400);
   res = await call('/api/password', { method: 'POST', body: { password: 'MonMotDePasse!2026' }, cookie: `pr_session=${token}`, e });
   assert.equal(res.status, 200);
-  assert.ok(saved.startsWith('v1$100000$') && !saved.includes('MonMotDePasse'));
+  assert.ok(saved.startsWith('v2$10000$') && !saved.includes('MonMotDePasse'));
   // 2) autre appareil : connexion
   res = await call('/api/login', { method: 'POST', body: { email: 'ana@shop.fr', password: 'mauvais-mot' }, e });
   assert.equal(res.status, 401);
@@ -377,10 +388,32 @@ test('charge : 300 analyses simultanées de la même boutique → un seul charge
   const real = globalThis.fetch; let shop = 0;
   globalThis.fetch = async (input, init) => { if (String(input instanceof Request ? input.url : input).includes('demo.myshopify.com')) shop++; await new Promise((r) => setTimeout(r, 20)); return real(input, init); };
   const one = (i) => worker.fetch(new Request('https://app.test/api/audit', { method: 'POST', headers: { 'Content-Type': 'application/json', 'CF-Connecting-IP': `10.0.${i >> 8}.${i & 255}` }, body: JSON.stringify({ store: 'demo.myshopify.com' }) }), env());
-  const first = await one(9999); assert.equal(first.status, 200);
-  const single = shop; shop = 0; store.clear();
+  const { fetchStoreFull } = await import('../src/shopify.js');
+  await fetchStoreFull('demo.myshopify.com'); // nombre d'appels d'un chargement unique
+  const single = shop; shop = 0;
   const codes = (await Promise.all([...Array(300)].map((_, i) => one(i)))).map((r) => r.status);
   delete globalThis.caches;
   assert.ok(codes.every((c) => c === 200), JSON.stringify(codes.filter((c) => c !== 200)));
   assert.equal(shop, single);
+});
+
+test('mot de passe : ancien format v1 toujours accepté, v2 lié au secret du serveur', async () => {
+  const { checkPassword, hashPassword } = await import('../src/stripe.js');
+  const te = new TextEncoder(); const salt = new Uint8Array(16);
+  const key = await crypto.subtle.importKey('raw', te.encode('Ancien2024!'), 'PBKDF2', false, ['deriveBits']);
+  const bits = new Uint8Array(await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt, iterations: 100000 }, key, 256));
+  const v1 = `v1$100000$${btoa(String.fromCharCode(...salt))}$${btoa(String.fromCharCode(...bits))}`;
+  assert.equal(await checkPassword('Ancien2024!', v1, 's'), true);
+  assert.equal(await checkPassword('autre', v1, 's'), false);
+  const v2 = await hashPassword('Nouveau2026!', 'secret-a');
+  assert.equal(await checkPassword('Nouveau2026!', v2, 'secret-a'), true);
+  assert.equal(await checkPassword('Nouveau2026!', v2, 'secret-b'), false);
+});
+
+test('secret du serveur : généré une fois et gardé dans KV si APP_SECRET est absent', async () => {
+  const { loadSecret, secretOf } = await import('../src/auth.js');
+  const kv = new Map(); const DATA = { get: async (k) => kv.get(k) ?? null, put: async (k, v) => { kv.set(k, v); } };
+  assert.equal(secretOf({ APP_SECRET: 'fixe', DATA }), 'fixe');
+  await loadSecret({ DATA });
+  assert.ok(kv.get('app-secret')?.length >= 40 && secretOf({ STRIPE_SECRET_KEY: 'sk' }) === kv.get('app-secret'));
 });

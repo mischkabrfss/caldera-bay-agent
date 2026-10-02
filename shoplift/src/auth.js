@@ -3,8 +3,21 @@ const enc = new TextEncoder();
 const b64 = (bytes) => btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const unb64 = (text) => Uint8Array.from(atob(text.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0));
 
+// Secret du serveur (signature des sessions, poivre des mots de passe) :
+// APP_SECRET s'il est défini, sinon un secret aléatoire généré une fois et gardé dans KV (aucune étape à faire).
+let generated = null;
 export function secretOf(env) {
-  return env.APP_SECRET || env.STRIPE_SECRET_KEY || 'shoplift-dev-only-secret';
+  return env.APP_SECRET || generated || env.STRIPE_SECRET_KEY || 'shoplift-dev-only-secret';
+}
+export async function loadSecret(env) {
+  if (env.APP_SECRET || generated || !env.DATA) return;
+  let s = await env.DATA.get('app-secret');
+  if (!s) {
+    s = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))));
+    await env.DATA.put('app-secret', s);
+    s = (await env.DATA.get('app-secret')) || s; // deux instances au tout premier démarrage : on garde celui qui est enregistré
+  }
+  generated = s;
 }
 
 async function key(secret) {

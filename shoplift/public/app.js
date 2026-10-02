@@ -313,7 +313,8 @@ function renderProducts() {
   if (!a) { out.innerHTML = '<div class="card empty"><b>' + icon('box') + '</b>Lance d’abord un audit de ta boutique dans l’onglet Audit.<br><br><a class="btn btn-main" href="#audit">Lancer un audit</a></div>'; return; }
   const list = [...a.products].sort((x, y) => (state.sort === 'asc' ? x.score - y.score : y.score - x.score));
   const hidden = a.products.filter((p) => p.locked).length;
-  out.innerHTML = `${exportButton('products')}<div class="list">${list.slice(0, 120).map((p, i) => productCard(p, i, a.currency)).join('')}</div>${hidden ? `<div class="card unlock-banner"><h3>${icon('unlock')} ${hidden} fiches à débloquer</h3><p>Vois pour chaque produit ce qui cloche, pourquoi, et comment le corriger.</p><button class="btn btn-main" data-open-upgrade>Débloquer toutes les fiches</button></div>` : ''}`;
+  const sample = a.stats?.analyzed && a.stats.analyzed < a.stats.products ? `<p class="muted" style="margin:0 0 12px">Les ${a.stats.analyzed} fiches les plus récentes sont notées en détail, sur ${a.stats.products} produits en ligne.</p>` : '';
+  out.innerHTML = `${exportButton('products')}${sample}<div class="list">${list.slice(0, 120).map((p, i) => productCard(p, i, a.currency)).join('')}</div>${hidden ? `<div class="card unlock-banner"><h3>${icon('unlock')} ${hidden} fiches à débloquer</h3><p>Vois pour chaque produit ce qui cloche, pourquoi, et comment le corriger.</p><button class="btn btn-main" data-open-upgrade>Débloquer toutes les fiches</button></div>` : ''}`;
   bindExport('products', 'products', () => ({ audit: a }));
 }
 $$('[data-sort]').forEach((b) => b.addEventListener('click', () => {
@@ -716,7 +717,8 @@ function confetti() {
 
 // ---------- Démarrage ----------
 async function loadMe() {
-  const r = await api('/api/me');
+  const r = firstMe || await api('/api/me');
+  firstMe = null;
   if (r.ok) state.me = r.data;
   // Client abonné : pas de quiz sur l'accueil. L'aperçu (offres simulées) ne compte pas : le quiz y reste toujours visible.
   try { if (state.me.plan && state.me.plan !== 'test' && !state.me.demo) localStorage.setItem('sl_member', state.me.plan); else localStorage.removeItem('sl_member'); } catch { /* stockage indisponible */ }
@@ -724,9 +726,11 @@ async function loadMe() {
   if (state.me.expired) toast('Ton abonnement a pris fin : retour à l’offre Test.', 'err');
 }
 
+// Un seul appel au démarrage : /api/me renvoie aussi la configuration (économise le quota gratuit de Cloudflare).
+let firstMe = null;
 async function detectBackend() {
-  const r = await api('/api/config');
-  if (r.ok && r.data.plans) return r;
+  const r = await api('/api/me');
+  if (r.ok && r.data.config) { firstMe = r; return { ok: true, data: r.data.config }; }
   ({ demoApi } = await import('./demo.js'));
   document.body.classList.add('is-demo');
   $('.app-top').insertAdjacentHTML('afterend', '<div class="demo-bar">Aperçu du site</div>');

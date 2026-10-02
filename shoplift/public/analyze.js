@@ -11,8 +11,31 @@ export const CATEGORIES = {
   tech: { label: 'Performance', weight: 10 },
 };
 
-const stripHtml = (html) => String(html || '').replace(/<style[\s\S]*?<\/style>|<script[\s\S]*?<\/script>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&[a-z#0-9]+;/gi, ' ').replace(/\s+/g, ' ').trim();
-const words = (text) => (text ? text.split(' ').filter(Boolean).length : 0);
+// Nombre de mots d'une description HTML, en une seule passe (sans copie ni regex) : balises, <style>/<script> et entités = séparateurs.
+const wordCache = new WeakMap();
+function countWords(product) {
+  if (wordCache.has(product)) return wordCache.get(product);
+  const s = String(product.body || ''); const L = s.length; let n = 0, inWord = false;
+  for (let i = 0; i < L;) {
+    const c = s.charCodeAt(i);
+    if (c === 60) { // <
+      const low = s.slice(i + 1, i + 7).toLowerCase();
+      const block = low.startsWith('style') ? '</style' : low.startsWith('script') ? '</script' : '';
+      let j = block ? s.toLowerCase().indexOf(block, i) : i;
+      j = j < 0 ? -1 : s.indexOf('>', j);
+      i = j < 0 ? L : j + 1; inWord = false; continue;
+    }
+    if (c === 38) { // &entité;
+      const j = s.indexOf(';', i);
+      if (j > i && j - i <= 10 && /^&[a-z#0-9]+$/i.test(s.slice(i, j))) { i = j + 1; inWord = false; continue; }
+    }
+    if (c === 32 || (c >= 9 && c <= 13) || c === 160 || c === 0x1680 || (c >= 0x2000 && c <= 0x200a) || c === 0x2028 || c === 0x2029 || c === 0x202f || c === 0x205f || c === 0x3000 || c === 0xfeff) inWord = false; // mêmes espaces que \s
+    else if (!inWord) { inWord = true; n++; }
+    i++;
+  }
+  wordCache.set(product, n);
+  return n;
+}
 const avg = (list) => (list.length ? list.reduce((a, b) => a + b, 0) / list.length : 0);
 const pct = (part, total) => (total ? Math.round((part / total) * 100) : 0);
 const clamp = (value, min = 0, max = 100) => Math.max(min, Math.min(max, Math.round(value)));
@@ -44,8 +67,7 @@ export function analyzeProduct(product, { now = Date.now(), rank = null } = {}) 
   const cons = [];
   let score = 50;
   const title = product.title.trim();
-  const text = stripHtml(product.body);
-  const wordCount = words(text);
+  const wordCount = countWords(product);
   const images = product.images.length;
   const altMissing = product.images.filter((i) => !i.alt.trim()).length;
   const price = priceOf(product);
@@ -101,26 +123,33 @@ export function analyzeProduct(product, { now = Date.now(), rank = null } = {}) 
 }
 
 // ---------- Audit boutique ----------
+// Une seule passe sur le HTML (souvent 1 Mo) : regex unique construite depuis la table, ~5× plus rapide que 70 recherches.
+const DETECT = {
+  // apiClientId = app Shopify officielle installée en « Web Pixel » (Facebook & Instagram, TikTok, Google & YouTube).
+  metaPixel: ['fbevents.js', 'facebook-pixel', 'fbq(', 'facebook_pixel', '"apiclientid":2329312', '"facebookcapienabled":true', '"facebookcapienabled":"true"'],
+  tiktokPixel: ['analytics.tiktok.com', 'ttq.load', '"apiclientid":4383523'],
+  google: ['googletagmanager.com', 'gtag(', 'google-analytics.com', '"apiclientid":1780363'],
+  pinterest: ['pintrk', 's.pinimg.com/ct'],
+  snapchat: ['sc-static.net/scevent'],
+  klaviyo: ['klaviyo'],
+  newsletter: ['contact[email]', 'newsletter', 'form_type" value="customer'],
+  reviews: ['judge.me', 'judgeme', 'loox', 'yotpo', 'stamped.io', 'okendo', 'reviews.io', 'productreviews', 'ali-reviews', 'trustpilot', 'rivyo', 'kudobuzz'],
+  trustText: ['paiement sécurisé', 'secure payment', 'secure checkout', 'satisfait ou remboursé', 'money back', 'garantie', 'guarantee'],
+  freeShipping: ['livraison gratuite', 'livraison offerte', 'free shipping', 'frais de port offerts'],
+  upsell: ['reconvert', 'zipify', 'frequently bought', 'fréquemment achetés', 'bold-upsell', 'selleasy', 'upsell'],
+  chat: ['tidio', 'gorgias', 'intercom', 'crisp.chat', 'zendesk', 'shopify-chat', 'inbox'],
+  social: ['instagram.com/', 'tiktok.com/@', 'facebook.com/', 'youtube.com/'],
+  currencyConverter: ['currency-converter', 'currency_converter'],
+};
+const NEEDLE_FLAG = new Map(Object.entries(DETECT).flatMap(([flag, list]) => list.map((n) => [n, flag])));
+// Les Web Pixels Shopify sont en JSON échappé : \" accepté partout où la table a un ".
+const DETECT_RE = new RegExp([...NEEDLE_FLAG.keys()].sort((a, b) => b.length - a.length).map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/"/g, '\\\\?"')).join('|'), 'gi');
 export function detect(html) {
-  const h = html.toLowerCase().replace(/\\/g, ''); // les Web Pixels Shopify sont en JSON échappé
-  const has = (...needles) => needles.some((n) => h.includes(n));
-  return {
-    // apiClientId = app Shopify officielle installée en « Web Pixel » (Facebook & Instagram, TikTok, Google & YouTube).
-    metaPixel: has('fbevents.js', 'facebook-pixel', 'fbq(', 'facebook_pixel', '"apiclientid":2329312', '"facebookcapienabled":true', '"facebookcapienabled":"true"'),
-    tiktokPixel: has('analytics.tiktok.com', 'ttq.load', '"apiclientid":4383523'),
-    google: has('googletagmanager.com', 'gtag(', 'google-analytics.com', '"apiclientid":1780363'),
-    pinterest: has('pintrk', 's.pinimg.com/ct'),
-    snapchat: has('sc-static.net/scevent'),
-    klaviyo: has('klaviyo'),
-    newsletter: has('contact[email]', 'newsletter', 'form_type" value="customer'),
-    reviews: has('judge.me', 'judgeme', 'loox', 'yotpo', 'stamped.io', 'okendo', 'reviews.io', 'productreviews', 'ali-reviews', 'trustpilot', 'rivyo', 'kudobuzz'),
-    trustText: has('paiement sécurisé', 'secure payment', 'secure checkout', 'satisfait ou remboursé', 'money back', 'garantie', 'guarantee'),
-    freeShipping: has('livraison gratuite', 'livraison offerte', 'free shipping', 'frais de port offerts'),
-    upsell: has('reconvert', 'zipify', 'frequently bought', 'fréquemment achetés', 'bold-upsell', 'selleasy', 'upsell'),
-    chat: has('tidio', 'gorgias', 'intercom', 'crisp.chat', 'zendesk', 'shopify-chat', 'inbox'),
-    social: has('instagram.com/', 'tiktok.com/@', 'facebook.com/', 'youtube.com/'),
-    currencyConverter: has('currency-converter', 'currency_converter'),
-  };
+  const found = Object.fromEntries(Object.keys(DETECT).map((k) => [k, false]));
+  let h = String(html || '');
+  if (h.length > 400_000) h = h.slice(0, 280_000) + h.slice(-120_000); // pixels dans l'en-tête, réseaux sociaux en pied de page
+  for (const [m] of h.matchAll(DETECT_RE)) found[NEEDLE_FLAG.get(m.toLowerCase().replace(/\\/g, ''))] = true;
+  return found;
 }
 
 function themeName(html) {
@@ -131,6 +160,8 @@ export function auditStore(store, { now = Date.now() } = {}) {
   const html = store.html || '';
   const products = store.products || [];
   const rankOf = new Map((store.bestsellers || []).map((h, i) => [h, i]));
+  // Gros catalogue : 150 fiches analysées en détail (les plus récentes), mais le vrai total affiché.
+  const total = Math.max(products.length, Number(store.meta?.published_products_count) || 0);
   const analyzed = products.map((p) => ({ ...analyzeProduct(p, { now, rank: rankOf.has(p.handle) ? rankOf.get(p.handle) : null }), url: p.url !== undefined ? p.url : `https://${store.host}/products/${p.handle}` }));
   const d = detect(html);
   const checks = [];
@@ -173,10 +204,10 @@ export function auditStore(store, { now = Date.now() } = {}) {
   // Fiches produit
   const n = analyzed.length || 1;
   const avgImages = avg(products.map((p) => p.images.length));
-  const avgWords = avg(products.map((p) => words(stripHtml(p.body))));
+  const avgWords = avg(products.map(countWords));
   const soldOut = analyzed.filter((p) => !p.available).length;
   const weak = analyzed.filter((p) => p.verdict === 'Faible').length;
-  add('catalog', products.length >= 5, 'moyen', 'Taille du catalogue', `${products.length} produit(s) en ligne.`, products.length < 5 ? 'Ajoute des produits complémentaires pour augmenter le panier moyen (3 à 15 produits suffisent pour une boutique de niche).' : 'Bon volume.');
+  add('catalog', total >= 5, 'moyen', 'Taille du catalogue', `${total} produit(s) en ligne.`, total < 5 ? 'Ajoute des produits complémentaires pour augmenter le panier moyen (3 à 15 produits suffisent pour une boutique de niche).' : 'Bon volume.');
   add('catalog', avgImages >= 4, 'élevé', 'Photos par produit', `Moyenne : ${avgImages.toFixed(1)} photo(s) par produit.`, 'Vise 5 à 8 visuels : lifestyle, détail, échelle, bénéfice, vidéo.');
   add('catalog', avgWords >= 120, 'élevé', 'Descriptions produit', `Moyenne : ${Math.round(avgWords)} mots par fiche.`, 'Écris au moins 150 mots : bénéfices, puces, caractéristiques, FAQ.');
   add('catalog', pct(soldOut, n) <= 15, 'élevé', 'Produits en rupture', `${soldOut} produit(s) épuisé(s) (${pct(soldOut, n)}%).`, 'Masque ou réapprovisionne les ruptures : elles gaspillent ton trafic.');
@@ -233,7 +264,7 @@ export function auditStore(store, { now = Date.now() } = {}) {
     strengths,
     stack: Object.entries(d).filter(([, v]) => v).map(([k]) => k),
     stats: {
-      products: products.length, collections: (store.collections || []).length, avgPrice: round2(avgPrice),
+      products: total, analyzed: products.length, collections: (store.collections || []).length, avgPrice: round2(avgPrice),
       soldOut, discounted, avgImages: round2(avgImages), avgWords: Math.round(avgWords),
     },
     products: analyzed.sort((a, b) => a.score - b.score),
@@ -255,7 +286,7 @@ export function spyStore(store, { now = Date.now() } = {}) {
   const currency = store.meta?.currency || 'EUR';
   const discounted = analyzed.filter((p) => p.discount >= 10);
   const stats = {
-    products: analyzed.length,
+    products: Math.max(analyzed.length, Number(store.meta?.published_products_count) || 0),
     minPrice: prices.length ? Math.min(...prices) : 0,
     maxPrice: prices.length ? Math.max(...prices) : 0,
     avgPrice: round2(avg(prices)),

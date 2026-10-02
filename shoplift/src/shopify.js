@@ -101,16 +101,16 @@ function slimProduct(product) {
   };
 }
 
-export async function fetchProducts(host, maxPages = 4) {
+export async function fetchProducts(host, maxPages = 4, limit = 250) {
   const products = [];
   for (let page = 1; page <= maxPages; page++) {
-    const data = await getJson(`https://${host}/products.json?limit=250&page=${page}`);
+    const data = await getJson(`https://${host}/products.json?limit=${limit}&page=${page}`);
     if (!data || !Array.isArray(data.products)) {
       if (page === 1) return null;
       break;
     }
     products.push(...data.products.map(slimProduct));
-    if (data.products.length < 250) break;
+    if (data.products.length < limit) break;
   }
   return products;
 }
@@ -128,7 +128,8 @@ export function bestsellerHandles(html) {
 // withHome : lit aussi la page d'accueil (outils marketing détectés par l'espion).
 async function fetchLite(host, { withHome = false } = {}) {
   const [products, meta, best, home] = await Promise.all([
-    fetchProducts(host, 2),
+    // 100 fiches les plus récentes : assez pour l'espion et le radar, et la lecture tient dans les 10 ms de calcul gratuites.
+    fetchProducts(host, 1, 100),
     getJson(`https://${host}/meta.json`),
     getText(`https://${host}/collections/all?sort_by=best-selling`),
     withHome ? getText(`https://${host}/`) : null,
@@ -149,7 +150,7 @@ async function fetchLite(host, { withHome = false } = {}) {
         if (featured.length >= 4) { bestsellers = featured; bestSource = 'home'; }
       }
     }
-    // Gros catalogues : les produits classés absents des 500 premiers sont lus un par un (12 maximum).
+    // Gros catalogues : les produits classés absents des 100 premiers sont lus un par un (12 maximum).
     const missing = bestsellers.filter((h) => !known.has(h)).slice(0, 12);
     for (const r of await Promise.all(missing.map((h) => getJson(`https://${host}/products/${h}.json`)))) {
       if (r?.product && !known.has(r.product.handle)) { products.push(slimProduct(r.product)); known.add(r.product.handle); }
@@ -161,7 +162,7 @@ async function fetchLite(host, { withHome = false } = {}) {
 // Lecture complète pour l'audit.
 async function fetchFull(host) {
   const [products, meta, collections, home, best, refund, privacy, terms, shipping, contact, sitemap] = await Promise.all([
-    fetchProducts(host, 4),
+    fetchProducts(host, 1, 150), // 150 fiches analysées en détail ; le vrai total vient de meta.json
     getJson(`https://${host}/meta.json`),
     getJson(`https://${host}/collections.json?limit=250`),
     getText(`https://${host}/`),

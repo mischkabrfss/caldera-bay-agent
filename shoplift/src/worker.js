@@ -1,8 +1,9 @@
 import { auditStore, compareStores, radarFrom, spyStore } from '../public/analyze.js';
-import { cookie, readCookie, secretOf, sign, verify } from './auth.js';
+import { cookie, loadSecret, readCookie, secretOf, sign, verify } from './auth.js';
 import { can, lockAudit, lockItems, lockSpy, PLANS, TEST_LIMITS } from '../public/plans.js';
 import { kindOf, NICHES, SPY_EXAMPLES } from '../public/seeds.js';
 import { agentsFor, AGENTS_CHECKED } from '../public/agents.js';
+import { SNAPSHOT, SNAPSHOT_DATE } from '../public/radar-snapshot.js';
 import { fetchStoreFull, fetchStoreLite, normalizeStore, StoreError } from './shopify.js';
 import { accessFromCheckout, accessFromEmail, accessFromLogin, changePlan, createCheckout, portalUrl, refreshAccess, setPassword } from './stripe.js';
 
@@ -29,6 +30,13 @@ class HttpError extends Error {
 // - au plus 4 catalogues chargés en même temps par instance (128 Mo de mémoire) : les autres patientent.
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let running = 0;
+// Mémoire locale de l'instance (50 résultats) : le cache Cloudflare n'agit pas sur les adresses *.workers.dev gratuites,
+// cette mémoire garde donc les résultats récents même sans nom de domaine. Valeurs simples, jamais de promesse partagée.
+const memo = new Map();
+function remember(key, entry, life) {
+  memo.delete(key); memo.set(key, { ...entry, exp: Date.now() + life * 1000 });
+  if (memo.size > 50) memo.delete(memo.keys().next().value);
+}
 const computing = new Set(); // clés en cours de calcul dans cette instance (simple texte, pas de promesse partagée)
 async function heavy(fn) {
   for (let i = 0; running >= 4; i++) {
@@ -43,7 +51,15 @@ async function cached(key, ttl, load, { overwrite = false, stale = 0, wait = nul
   if (!cache) return load();
   const request = new Request(`https://cache.shoplift.internal/v3/${key}`);
   const lock = new Request(`https://cache.shoplift.internal/v3-lock/${key}`);
-  const read = async () => { const hit = await cache.match(request); return hit ? hit.json() : null; };
+  const read = async () => {
+    const m = memo.get(key);
+    if (m && m.exp > Date.now()) return m;
+    const hit = await cache.match(request);
+    if (!hit) return null;
+    const entry = await hit.json();
+    remember(key, entry, entry.e ? 120 : ttl + stale - (Date.now() - entry.at) / 1000);
+    return entry;
+  };
   // save() suppose la clé déjà réservée dans `computing` (réservation synchrone : aucune requête ne peut s'intercaler).
   const save = async () => {
     try {
@@ -53,10 +69,12 @@ async function cached(key, ttl, load, { overwrite = false, stale = 0, wait = nul
         value = await load();
       } catch (error) {
         // Boutique introuvable ou bloquée : réponse gardée 2 min pour ne pas relancer l'analyse à chaque requête.
+        if (error instanceof StoreError) remember(key, { at: Date.now(), e: { message: error.message, code: error.code } }, 120);
         if (error instanceof StoreError) await cache.put(request, new Response(JSON.stringify({ at: Date.now(), e: { message: error.message, code: error.code } }), { headers: { 'Cache-Control': 'max-age=120' } }));
         throw error;
       }
       const empty = (Array.isArray(value) && !value.length) || (Array.isArray(value?.items) && !value.items.length);
+      if (!empty) remember(key, { at: Date.now(), v: value }, ttl + stale);
       if (!empty) await cache.put(request, new Response(JSON.stringify({ at: Date.now(), v: value }), { headers: { 'Cache-Control': `max-age=${ttl + stale}` } }));
       return value;
     } finally {
@@ -142,21 +160,32 @@ async function consumeTrial(request, ctx) {
   return TEST_LIMITS.audits - next.n;
 }
 
-// Radar : résultat frais 6 h (relevé automatique 4 fois par jour) + dernier résultat valide gardé 30 jours.
-async function scanNiche(niche) {
-  const results = await Promise.allSettled(NICHES[niche].stores.map((host) => heavy(() => fetchStoreLite(host))));
-  const items = radarFrom(results.filter((r) => r.status === 'fulfilled').map((r) => r.value), { kind: (p) => kindOf(niche, p) });
-  const scan = { at: new Date().toISOString(), items };
-  if (items.length) await cached(`radar-backup/${niche}`, 2_592_000, async () => scan, { overwrite: true });
-  return scan;
+// Radar, conçu pour l'offre gratuite de Cloudflare (10 ms de calcul par requête) :
+// la tâche planifiée relit UNE boutique toutes les 7 minutes (46 boutiques → chacune toutes les ~5 h 20),
+// garde sa version allégée dans KV (DATA), puis recompose la niche. Les visiteurs ne font qu'une lecture.
+// Tant que KV est vide (juste après la mise en ligne), on sert les vrais produits figés du dernier relevé.
+const RADAR_STORES = Object.entries(NICHES).flatMap(([niche, n]) => n.stores.map((host) => ({ niche, host })));
+const TICK = 7 * 60_000;
+const slimForRadar = (store, niche) => ({
+  host: store.host, meta: { name: store.meta?.name, currency: store.meta?.currency }, bestsellers: (store.bestsellers || []).slice(0, 40),
+  products: store.products.filter((p) => kindOf(niche, p)).slice(0, 60).map((p) => ({ title: p.title, type: p.type, handle: p.handle,
+    images: p.images.slice(0, 6).map((i, k) => ({ src: k < 2 ? i.src : '' })), variants: p.variants.map((v) => ({ price: v.price, compareAt: v.compareAt, available: v.available })) })),
+});
+async function radarTick(env, when) {
+  if (!env.DATA) return;
+  const { niche, host } = RADAR_STORES[Math.floor(when / TICK) % RADAR_STORES.length];
+  try {
+    await env.DATA.put(`store:${host}`, JSON.stringify(slimForRadar(await fetchStoreLite(host), niche)));
+  } catch (error) {
+    console.error('radar', host, error?.message); // boutique momentanément injoignable : on garde sa dernière lecture
+  }
+  const stores = (await Promise.all(NICHES[niche].stores.map((h) => env.DATA.get(`store:${h}`, 'json')))).filter(Boolean);
+  const items = radarFrom(stores, { kind: (p) => kindOf(niche, p) });
+  if (items.length) await env.DATA.put(`radar:${niche}`, JSON.stringify({ at: new Date(when).toISOString(), items }));
 }
-
-// Clés versionnées : un ancien cache (autre format, produits non filtrés) n'est jamais relu.
-const scanOf = (v) => (Array.isArray(v) ? { at: null, items: v } : v && Array.isArray(v.items) ? v : { at: null, items: [] });
-async function radar(niche, { fresh = false, wait = null } = {}) {
-  const scan = scanOf(fresh ? await cached(`radar/${niche}`, 21600, () => scanNiche(niche), { overwrite: true }) : await cached(`radar/${niche}`, 21600, () => scanNiche(niche), { stale: 2_592_000, wait }));
-  return scan.items.length ? scan : scanOf(await cached(`radar-backup/${niche}`, 2_592_000, async () => ({ at: null, items: [] })));
-}
+const snapshotRadar = (niche) => ({ at: `${SNAPSHOT_DATE}T00:00:00.000Z`, items: SNAPSHOT[niche] || [] });
+// Lecture KV mise en cache 10 min par centre de données (les lectures KV gratuites sont limitées à 100 000/jour).
+const radar = (niche, env) => cached(`radar/${niche}`, 600, async () => (env.DATA && (await env.DATA.get(`radar:${niche}`, 'json'))) || snapshotRadar(niche));
 
 // mode : 'full' (audit), 'spy' (catalogue + page d'accueil), 'lite' (catalogue seul)
 async function loadStore(input, mode, wait) {
@@ -182,14 +211,13 @@ async function route(request, env, ctx) {
   const method = request.method;
   const origin = env.PUBLIC_URL || url.origin;
 
-  if (pathname === '/api/config') {
-    return json({ stripe: !!env.STRIPE_SECRET_KEY, plans: PLANS, niches: Object.fromEntries(Object.entries(NICHES).map(([k, v]) => [k, { label: v.label }])), spyExamples: SPY_EXAMPLES });
-  }
+  const config = () => ({ stripe: !!env.STRIPE_SECRET_KEY, plans: PLANS, niches: Object.fromEntries(Object.entries(NICHES).map(([k, v]) => [k, { label: v.label }])), spyExamples: SPY_EXAMPLES });
+  if (pathname === '/api/config') return json(config());
 
   if (pathname === '/api/me') {
     const access = await getAccess(request, env, ctx);
     const trial = (await verify(readCookie(request, TRIAL), ctx.secret)) || { n: 0 };
-    return json({ plan: access.plan, email: access.email || '', expired: !!access.expired, trialLeft: Math.max(0, TEST_LIMITS.audits - trial.n), portal: !!access.cus, pw: !!access.pw, canSetPw: !!(access.cus || access.cid), portalLogin: access.restored ? env.PORTAL_LOGIN_URL || '' : '' });
+    return json({ plan: access.plan, email: access.email || '', expired: !!access.expired, trialLeft: Math.max(0, TEST_LIMITS.audits - trial.n), portal: !!access.cus, pw: !!access.pw, canSetPw: !!(access.cus || access.cid), portalLogin: access.restored ? env.PORTAL_LOGIN_URL || '' : '', config: config() });
   }
 
   if (pathname === '/api/audit' && method === 'POST') {
@@ -219,7 +247,7 @@ async function route(request, env, ctx) {
   if (pathname === '/api/radar') {
     const niche = NICHES[url.searchParams.get('niche')] ? url.searchParams.get('niche') : 'mode';
     const access = await getAccess(request, env, ctx);
-    const { at, items } = await radar(niche, { wait: ctx.wait });
+    const { at, items } = await radar(niche, env);
     const allowed = can(access.plan, 'radar');
     return json({ plan: access.plan, niche, updatedAt: at, locked: !allowed, items: allowed ? items : lockItems(items.slice(0, 12), TEST_LIMITS.radar) });
   }
@@ -268,6 +296,8 @@ async function route(request, env, ctx) {
     if (!env.STRIPE_SECRET_KEY) throw new HttpError(503, 'Paiement non configuré.');
     if (typeof email !== 'string' || !email.includes('@') || !/^\d{4}$/.test(String(last4))) throw new HttpError(400, 'Entre ton e-mail et les 4 derniers chiffres de ta carte.');
     const mail = email.trim();
+    await limitIp(request, env, 'restore', 20);
+    if (env.AUTH_LIMITER && !(await env.AUTH_LIMITER.limit({ key: `restore:${mail.toLowerCase()}` })).success) throw new HttpError(429, 'Trop de tentatives. Réessaie dans une minute.');
     if (!(await allowAttempt(`restore/${encodeURIComponent(mail.toLowerCase())}`, 5))) throw new HttpError(429, 'Trop de tentatives. Réessaie dans une heure.');
     const access = await accessFromEmail(env, mail, String(last4));
     if (!access) throw new HttpError(404, 'Aucun abonnement actif ne correspond à ces informations.');
@@ -283,6 +313,7 @@ async function route(request, env, ctx) {
     if (typeof email !== 'string' || !email.includes('@') || typeof password !== 'string' || !password) throw new HttpError(400, 'Entre ton e-mail et ton mot de passe.');
     const mail = email.trim();
     await limitIp(request, env, 'login', 30);
+    if (env.AUTH_LIMITER && !(await env.AUTH_LIMITER.limit({ key: `login:${mail.toLowerCase()}` })).success) throw new HttpError(429, 'Trop de tentatives. Réessaie dans une minute ou utilise « Mot de passe oublié ».');
     if (!(await allowAttempt(`login/${encodeURIComponent(mail.toLowerCase())}`, 8))) throw new HttpError(429, 'Trop de tentatives. Réessaie dans une heure ou utilise « Mot de passe oublié ».');
     const access = await accessFromLogin(env, mail, password);
     if (!access) throw new HttpError(401, 'E-mail ou mot de passe incorrect.');
@@ -326,12 +357,9 @@ async function route(request, env, ctx) {
 }
 
 export default {
-  // Tâche planifiée gratuite, chaque heure : une niche à la fois (limite de 50 requêtes par exécution
-  // sur l'offre gratuite Cloudflare). 6 niches → chacune est rafraîchie toutes les 6 h.
+  // Tâche planifiée gratuite toutes les 7 minutes : une boutique du radar relue à chaque fois (voir radarTick).
   async scheduled(event, env, ctx) {
-    const niches = Object.keys(NICHES);
-    const niche = niches[new Date(event.scheduledTime || Date.now()).getUTCHours() % niches.length];
-    ctx.waitUntil(radar(niche, { fresh: true }));
+    ctx.waitUntil(radarTick(env, event.scheduledTime ?? Date.now()));
   },
 
   async fetch(request, env, exec) {
@@ -340,6 +368,7 @@ export default {
     if (url.pathname === '/agents.js') return new Response('Not found', { status: 404 });
     if (!url.pathname.startsWith('/api/')) return env.ASSETS.fetch(request);
     globalThis.SHOPIFY_MOCK = env.SHOPIFY_MOCK || '';
+    await loadSecret(env);
     const ctx = { cookies: [], secret: secretOf(env), wait: (p) => exec?.waitUntil ? exec.waitUntil(p) : p };
     let response;
     try {

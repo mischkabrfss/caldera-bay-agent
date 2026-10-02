@@ -1,3 +1,4 @@
+import { secretOf } from './auth.js';
 // Client Stripe minimal (API REST, aucune dépendance).
 import { PLANS } from '../public/plans.js';
 
@@ -83,26 +84,34 @@ export async function accessFromCheckout(env, sessionId) {
 const te = new TextEncoder();
 const b64 = (u8) => btoa(String.fromCharCode(...u8));
 const unb64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
-const ITERATIONS = 100000; // maximum accepté par Cloudflare Workers
-async function derive(password, salt, iterations = ITERATIONS) {
-  const key = await crypto.subtle.importKey('raw', te.encode(password), 'PBKDF2', false, ['deriveBits']);
+// v2 : mot de passe d'abord mêlé au secret du serveur (HMAC, « poivre »), puis PBKDF2 10 000 tours.
+// Sans le secret, une empreinte volée est inutilisable ; ~2 ms de calcul, compatible avec l'offre gratuite de Cloudflare.
+// v1 (100 000 tours, sans poivre) reste reconnu pour les mots de passe déjà créés.
+const ITERATIONS = 10000;
+async function derive(material, salt, iterations) {
+  const key = await crypto.subtle.importKey('raw', material, 'PBKDF2', false, ['deriveBits']);
   return new Uint8Array(await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt, iterations }, key, 256));
 }
-export async function hashPassword(password) {
-  const salt = crypto.getRandomValues(new Uint8Array(16));
-  return `v1$${ITERATIONS}$${b64(salt)}$${b64(await derive(password, salt))}`;
+async function pepper(password, secret) {
+  const key = await crypto.subtle.importKey('raw', te.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  return new Uint8Array(await crypto.subtle.sign('HMAC', key, te.encode(password)));
 }
-export async function checkPassword(password, stored) {
+export async function hashPassword(password, secret) {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  return `v2$${ITERATIONS}$${b64(salt)}$${b64(await derive(await pepper(password, secret), salt, ITERATIONS))}`;
+}
+export async function checkPassword(password, stored, secret) {
   const [v, it, salt, hash] = String(stored || '').split('$');
-  if (v !== 'v1' || !salt || !hash) return false;
-  const got = await derive(password, unb64(salt), Number(it));
+  if (!['v1', 'v2'].includes(v) || !salt || !hash || !(Number(it) > 0 && Number(it) <= 100000)) return false;
+  const material = v === 'v2' ? await pepper(password, secret) : te.encode(password);
+  const got = await derive(material, unb64(salt), Number(it));
   const want = unb64(hash);
   if (got.length !== want.length) return false;
   let diff = 0; for (let i = 0; i < got.length; i++) diff |= got[i] ^ want[i]; // comparaison à temps constant
   return diff === 0;
 }
 export async function setPassword(env, customer, password) {
-  await stripe(env, 'POST', `customers/${encodeURIComponent(customer)}`, { metadata: { sl_pw: await hashPassword(password) } });
+  await stripe(env, 'POST', `customers/${encodeURIComponent(customer)}`, { metadata: { sl_pw: await hashPassword(password, secretOf(env)) } });
 }
 // Connexion : client trouvé par e-mail, mot de passe vérifié, abonnement actif.
 export async function accessFromLogin(env, email, password) {
@@ -110,7 +119,7 @@ export async function accessFromLogin(env, email, password) {
   const found = [];
   for (const variant of variants) found.push(...((await stripe(env, 'GET', 'customers', { email: variant, limit: 5 })).data || []));
   for (const customer of found) {
-    if (!(await checkPassword(password, customer.metadata?.sl_pw))) continue;
+    if (!(await checkPassword(password, customer.metadata?.sl_pw, secretOf(env)))) continue;
     const subs = await stripe(env, 'GET', 'subscriptions', { customer: customer.id, status: 'all', limit: 10 });
     for (const sub of subs.data || []) {
       const access = subscriptionToAccess(sub, customer.email || email);
