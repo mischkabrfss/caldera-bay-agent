@@ -392,9 +392,8 @@ footer a:hover { color: var(--text); }
   .card, .chip, .toast { backdrop-filter: none; -webkit-backdrop-filter: none; }
   .nav { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(10,10,10,.92); } /* flou recalculé à chaque image au-dessus des pièces : très lourd sur iPhone */
   .quiz-bg::after { display: none; }
-  .bg-fx { transform: translateZ(0); }
   .bg-fx::after { animation: none; mix-blend-mode: normal; opacity: .04; }
-  .blob, .quiz-bg i { animation: none; filter: blur(70px); }
+  .blob { animation: none; }
   .reveal { transform: translateY(24px); }
   .feature:hover, .feature.tilt:hover { transform: none; z-index: auto; }
   .feature:hover::before { transform: none; }
@@ -567,3 +566,16 @@ footer a:hover { color: var(--text); }
 @media (hover: none), (max-width: 720px) { .quiz-bg::after { display: none; } }
 /* Hors écran : animations en pause (voir landing.js) */
 .anim-off, .anim-off *, .anim-off *::before, .anim-off *::after, .anim-off::before, .anim-off::after { animation-play-state: paused !important; }
+@keyframes qrSlamM { from { transform: scale(1.8); opacity: 0; } }
+@keyframes stepOutM { to { opacity: 0; transform: translateX(-26px); } }
+
+/* Téléphones (en fin de fichier pour passer après les règles du quiz) */
+@media (hover: none), (max-width: 720px) {
+  /* Safari iPhone : un flou géant (filter: blur) sur des calques plein écran sature la mémoire graphique
+     → écran figé ou vide après le quiz. Même halo doux, obtenu par un dégradé (quasi gratuit). */
+  .blob, .quiz-bg i { animation: none; filter: none; -webkit-mask-image: radial-gradient(closest-side, #000, transparent); mask-image: radial-gradient(closest-side, #000, transparent); }
+  .qr-big { text-shadow: 0 0 30px rgba(255,210,63,.3); animation-name: qrSlamM; }
+  .quiz-stage.out > * { animation-name: stepOutM !important; }
+  html.quiz-on .bg-fx { display: none; } /* le quiz couvre tout l'écran : inutile de dessiner le fond derrière */
+  .bg-fx::after { display: none; } /* grain : texture plein écran ×4 inutile sur petit écran */
+}

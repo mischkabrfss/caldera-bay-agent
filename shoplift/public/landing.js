@@ -19,6 +19,8 @@ let raf = 0;
 const sweep = () => { raf = 0; pending = pending.filter((el) => { if (el.classList.contains('in')) return false; if (el.getBoundingClientRect().top < innerHeight) { reveal(el); return false; } return true; }); };
 addEventListener('scroll', () => { if (!raf && pending.length) raf = requestAnimationFrame(sweep); }, { passive: true });
 addEventListener('resize', sweep);
+// Fermeture du quiz : le site réapparaît, on révèle tout de suite ce qui est à l'écran (filet de sécurité Safari).
+addEventListener('quiz:closed', () => requestAnimationFrame(sweep));
 
 function countUp(el) {
   if (el.dataset.done) return;

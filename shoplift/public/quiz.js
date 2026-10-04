@@ -103,6 +103,7 @@
     top0();
     const site = document.getElementById('site');
     if (site && !reduced) { site.classList.remove('site-in'); void site.offsetWidth; site.classList.add('site-in'); }
+    dispatchEvent(new Event('quiz:closed'));
   }
   function skip() {
     const prev = store.get();
@@ -329,7 +330,7 @@
     const ctx = c.getContext('2d');
     c.width = innerWidth; c.height = innerHeight;
     const colors = ['#ffd23f', '#ffb020', '#f4f1ea', '#ffe68a'];
-    const parts = Array.from({ length: 140 }, () => ({ x: innerWidth / 2, y: innerHeight * 0.3, vx: (Math.random() - 0.5) * 18, vy: Math.random() * -16 - 4, s: 4 + Math.random() * 7, c: colors[Math.floor(Math.random() * colors.length)], r: Math.random() * 6, vr: (Math.random() - 0.5) * 0.3 }));
+    const parts = Array.from({ length: innerWidth < 700 ? 70 : 140 }, () => ({ x: innerWidth / 2, y: innerHeight * 0.3, vx: (Math.random() - 0.5) * 18, vy: Math.random() * -16 - 4, s: 4 + Math.random() * 7, c: colors[Math.floor(Math.random() * colors.length)], r: Math.random() * 6, vr: (Math.random() - 0.5) * 0.3 }));
     let f = 0;
     (function draw() {
       ctx.clearRect(0, 0, c.width, c.height);
