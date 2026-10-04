@@ -212,6 +212,10 @@ img.noimg { visibility: hidden; }
 .tabbar a span .ic { width: 22px; height: 22px; }
 .tabbar a.on span .ic { color: var(--green); }
 .empty b .ic { width: 40px; height: 40px; color: var(--green); stroke-width: 1.5; }
+.pw-help p { margin: 0 auto 14px; max-width: 460px; color: var(--text); font-weight: 600; }
+.pw-help ol { margin: 0 auto 14px; max-width: 400px; padding-left: 22px; text-align: left; line-height: 1.7; }
+.pw-help ol b { display: inline; font-size: inherit; margin: 0; color: var(--text); }
+.pw-help small { display: block; margin-bottom: 14px; }
 .store-input > .ic { opacity: .7; }
 .h3 .ic, .unlock-banner h3 .ic { color: var(--green); }
 .lock-over .ic { width: 22px; height: 22px; }

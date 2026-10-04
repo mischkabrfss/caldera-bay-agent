@@ -69,8 +69,10 @@ async function cached(key, ttl, load, { overwrite = false, stale = 0, wait = nul
         value = await load();
       } catch (error) {
         // Boutique introuvable ou bloquée : réponse gardée 2 min pour ne pas relancer l'analyse à chaque requête.
-        if (error instanceof StoreError) remember(key, { at: Date.now(), e: { message: error.message, code: error.code } }, 120);
-        if (error instanceof StoreError) await cache.put(request, new Response(JSON.stringify({ at: Date.now(), e: { message: error.message, code: error.code } }), { headers: { 'Cache-Control': 'max-age=120' } }));
+        // Sauf le mot de passe : le marchand le retire puis clique « Réessayer » aussitôt.
+        const keep = error instanceof StoreError && error.code !== 'password';
+        if (keep) remember(key, { at: Date.now(), e: { message: error.message, code: error.code } }, 120);
+        if (keep) await cache.put(request, new Response(JSON.stringify({ at: Date.now(), e: { message: error.message, code: error.code } }), { headers: { 'Cache-Control': 'max-age=120' } }));
         throw error;
       }
       const empty = (Array.isArray(value) && !value.length) || (Array.isArray(value?.items) && !value.items.length);

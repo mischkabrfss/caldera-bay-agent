@@ -162,12 +162,22 @@ function loader(target, steps = STEPS) {
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// Boutique protégée par un mot de passe : la marche à suivre + « Réessayer » (aucune analyse gratuite décomptée).
+function passwordHelp(out, message, retry, own) {
+  out.innerHTML = `<div class="card empty pw-help"><b>${icon('lock')}</b><p>${esc(message)}</p>
+    ${own ? `<ol><li>Dans Shopify : <b>Boutique en ligne → Préférences</b></li><li>Décoche <b>Protection par mot de passe</b>, puis <b>Enregistrer</b></li><li>Clique sur <b>Réessayer</b> (tu pourras le remettre juste après)</li></ol>
+    ${state.me?.plan === 'test' ? '<small>Ton analyse gratuite n’a pas été utilisée.</small>' : ''}` : '<small>Cette boutique n’est pas encore ouverte au public : réessaie quand elle le sera.</small>'}
+    <button class="btn btn-main" type="button" data-retry>Réessayer</button></div>`;
+  out.querySelector('[data-retry]').onclick = retry;
+}
+
 async function runAudit(input, connected = null) {
   const out = $('#auditOut');
   const done = loader(out);
   const [r] = await Promise.all([api('/api/audit', { store: input, connected }), wait(2600)]);
   done();
   if (!r.ok) {
+    if (r.data.code === 'password') return passwordHelp(out, r.data.error, () => runAudit(input, connected), true);
     if (r.status === 402) { out.innerHTML = ''; openUpgrade(r.data.error); } else out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error || 'Analyse impossible.')}${r.data.examples ? `<div class="chips" style="justify-content:center;margin-top:12px">${r.data.examples.map((h) => `<button class="chip-btn" type="button" data-try="${esc(h)}">${esc(h)}</button>`).join('')}</div>` : ''}</div>`;
     out.querySelectorAll('[data-try]').forEach((b) => { b.onclick = () => { const i = $('#auditForm input[name=store]'); if (i) i.value = b.dataset.try; runAudit(b.dataset.try); }; });
     return;
@@ -452,6 +462,7 @@ async function runSpy(storeInput, connected = null) {
   const done = loader(out, ['Connexion à la boutique', 'Lecture du catalogue et des best-sellers', 'Détection des nouveautés et des outils', 'Analyse de sa stratégie']);
   const [r] = await Promise.all([api('/api/spy', { store: storeInput, connected }), wait(1800)]);
   done();
+  if (!r.ok && r.data.code === 'password') return passwordHelp(out, r.data.error, () => runSpy(storeInput, connected), false);
   if (!r.ok) { out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error)}</div>`; return; }
   const s = r.data.report;
   state.spy = s;

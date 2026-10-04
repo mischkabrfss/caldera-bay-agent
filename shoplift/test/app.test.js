@@ -421,3 +421,17 @@ test('secret du serveur : généré une fois et gardé dans KV si APP_SECRET est
   await loadSecret({ DATA });
   assert.ok(kv.get('app-secret')?.length >= 40 && secretOf({ STRIPE_SECRET_KEY: 'sk' }) === kv.get('app-secret'));
 });
+
+test('API : boutique protégée par mot de passe → message clair, essai non décompté, réessai immédiat', async () => {
+  globalThis.STORE_LOCKED = true;
+  const res = await call('/api/audit', { method: 'POST', body: { store: 'locked.myshopify.com' } });
+  assert.equal(res.status, 422);
+  assert.equal((await res.json()).code, 'password');
+  assert.equal(res.headers.getSetCookie().length, 0); // aucune analyse gratuite consommée
+  const spy = await call('/api/spy', { method: 'POST', body: { store: 'locked.myshopify.com' } });
+  assert.equal((await spy.json()).code, 'password');
+  globalThis.STORE_LOCKED = false; // le marchand retire son mot de passe puis clique « Réessayer »
+  const retry = await call('/api/audit', { method: 'POST', body: { store: 'locked.myshopify.com' } });
+  assert.equal(retry.status, 200);
+  assert.equal((await retry.json()).trialLeft, 0);
+});

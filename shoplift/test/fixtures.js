@@ -56,7 +56,14 @@ export function installFetch({ stripe = {} } = {}) {
       const [status, data] = handler[1](url, init);
       return new Response(JSON.stringify(data), { status });
     }
-    if (url.hostname === 'demo.myshopify.com') {
+    // Boutique protégée par mot de passe tant que globalThis.STORE_LOCKED est vrai.
+    if (url.hostname === 'locked.myshopify.com' && globalThis.STORE_LOCKED) {
+      if (url.pathname.endsWith('.json')) return new Response('', { status: 401 });
+      const res = new Response('<form action="/password"></form>', { status: 200, headers: { 'content-type': 'text/html' } });
+      Object.defineProperty(res, 'url', { value: 'https://locked.myshopify.com/password' });
+      return res;
+    }
+    if (url.hostname === 'demo.myshopify.com' || url.hostname === 'locked.myshopify.com') {
       if (url.pathname === '/products.json') return ok({ products: url.searchParams.get('page') === '1' ? rawProducts : [] });
       if (url.pathname === '/meta.json') return ok({ name: 'Demo Shop', currency: 'EUR' });
       if (url.pathname === '/collections.json') return ok({ collections: [{ title: 'Lampes', handle: 'lampes' }] });

@@ -17,6 +17,10 @@ function notFound(host, status) {
     : new StoreError('not_shopify', `« ${host} » existe mais ce n’est pas une boutique Shopify ouverte (autre plateforme, boutique fermée ou protégée par mot de passe).`);
 }
 
+// Boutique en préparation : Shopify redirige vers /password et cache le catalogue (products.json → 401).
+const isLocked = (page) => !!page?.finalUrl && new URL(page.finalUrl).pathname.startsWith('/password');
+const passwordError = (host) => new StoreError('password', `« ${host} » est protégée par un mot de passe : Shopify cache tous ses produits tant qu’il est actif.`);
+
 export function normalizeStore(input) {
   let value = String(input || '').trim().toLowerCase();
   if (!value) throw new StoreError('invalid', 'Entre l’adresse de ta boutique.');
@@ -37,7 +41,9 @@ async function get(url, { json = false, timeout = 9000 } = {}) {
     headers: { 'User-Agent': UA, Accept: json ? 'application/json' : 'text/html,*/*' },
     redirect: 'follow',
     signal: AbortSignal.timeout(timeout),
-    cf: { cacheTtl: 900, cacheEverything: true },
+    // Seules les vraies pages sont gardées 15 min : une redirection vers /password ou une erreur n'est jamais mise en cache
+    // (sinon une boutique dont on vient de retirer le mot de passe resterait « verrouillée » un quart d'heure).
+    cf: { cacheEverything: true, cacheTtlByStatus: { '200-299': 900, '300-599': 0 } },
   });
   // Une 2e tentative si Shopify limite (429), plante (5xx) ou si le réseau coupe.
   try {
@@ -134,7 +140,7 @@ async function fetchLite(host, { withHome = false } = {}) {
     getText(`https://${host}/collections/all?sort_by=best-selling`),
     withHome ? getText(`https://${host}/`) : null,
   ]);
-  if (!products) throw notFound(host, best.status);
+  if (!products) throw isLocked(best) || isLocked(home) ? passwordError(host) : notFound(host, best.status);
   const known = new Set(products.map((p) => p.handle));
   let bestsellers = bestsellerHandles(best.text);
   let bestSource = 'sales';
@@ -174,9 +180,7 @@ async function fetchFull(host) {
     exists(`https://${host}/pages/contact`),
     exists(`https://${host}/sitemap.xml`),
   ]);
-  if (home.finalUrl && new URL(home.finalUrl).pathname.startsWith('/password')) {
-    throw new StoreError('password', 'Ta boutique est protégée par un mot de passe. Retire-le (Boutique en ligne → Préférences) le temps de l’analyse.');
-  }
+  if (isLocked(home)) throw passwordError(host);
   if (!products) throw notFound(host, home.status);
   return {
     host,
