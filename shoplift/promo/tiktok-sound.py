@@ -11,7 +11,7 @@ N = int(SR * DUR)
 rng = np.random.default_rng(7)
 
 # ---------- voix : placement de chaque phrase ----------
-START = [0.15, 1.70, 2.62, 3.45, 6.00, 8.90, 10.80, 12.80, 14.85, 16.85]  # début du 1er mot de chaque phrase (s)
+START = [0.10, 0.85, 2.45, 4.45, 5.30, 7.15, 9.75, 11.45, 13.20, 15.05, 16.80]  # début du 1er mot de chaque phrase (s)
 DELAY = 0.065  # décalage du décodeur MP3 : le 1er mot s'entend ~65 ms après l'instant annoncé par edge-tts
 data = json.load(open(f'{HERE}/voice/words.json'))
 
@@ -30,20 +30,22 @@ for i, (line, s) in enumerate(zip(data['lines'], START)):
     w0 = line['words'][0]['t']
     at = s - (w0 + DELAY)
     env = np.convolve(np.abs(x), np.ones(240) / 240, 'same'); on = np.where(env > .006)[0]
-    a = int(round(at * SR)); n = min(len(x), N - a)
+    a = int(round(at * SR))
+    if a < 0: x, a = x[-a:], 0  # silence de tête plus long que l'avance : on le rogne
+    n = min(len(x), N - a)
     voice[a:a + n] += x[:n]
     lines.append({'text': line['text'], 'start': s, 'end': round(at + on[-1] / SR, 3),
                   'words': [{'w': w['w'], 't': round(s + w['t'] - w0, 3)} for w in line['words']]})
 
 def W(li, wi): return lines[li]['words'][wi]['t']
 cues = {
-    'hook1': W(0, 0), 'hook2': W(0, 2), 'hook3': W(0, 3), 'hookQ': W(0, 5), 'look': W(1, 0),
-    's2': 2.55, 'type0': 2.70, 'type1': 3.12, 'click': 3.30, 'gauge0': W(3, 0), 'chip30': W(3, 2), 'score': W(3, 8),
-    's3': 5.95, 'card1': W(4, 0), 'card2': W(4, 1), 'card3': W(4, 4), 'card4': W(4, 6), 'expand': W(4, 7), 'fixed': W(4, 7) + .38,
-    's4': 8.85, 'hot': W(5, 3),
-    's5': 10.75, 'best': W(6, 1), 'rivals': W(6, 4),
-    's6': 12.75, 'ten': W(7, 1), 'msg1': W(7, 2) + .05, 'msg2': W(7, 4) - .05, 'checked': W(7, 5),
-    's7': 14.80, 'logo': W(8, 0), 'free': W(8, 4), 'button': W(8, 4) + .55, 'bio0': W(9, 0), 'bio': W(9, 2), 'tap': 18.15,
+    'stop': W(0, 0), 'hook1': W(1, 0), 'hook2': W(1, 2), 'hook3': W(1, 3), 'hookQ': W(1, 5), 'why': W(2, 0), 'thirty': W(2, 5),
+    's2': 4.30, 'type0': 4.45, 'type1': 4.85, 'click': 5.05, 'boom': W(4, 1), 'score': W(4, 5),
+    's3': 7.05, 'card1': W(5, 0), 'card2': W(5, 1), 'card3': W(5, 4), 'card4': W(5, 6), 'expand': W(5, 7), 'fixed': W(5, 7) + .36,
+    's4': 9.65, 'hot': W(6, 3),
+    's5': 11.35, 'best': W(7, 1), 'rivals': W(7, 4),
+    's6': 13.10, 'ten': W(8, 1), 'msg1': W(8, 2) + .05, 'msg2': W(8, 4) - .02, 'checked': W(8, 5),
+    's7': 14.95, 'logo': W(9, 0), 'free': W(9, 4), 'button': W(9, 4) + .4, 'bio0': W(10, 0), 'bio': W(10, 2), 'go': W(10, 3), 'tap': 18.75,
     'end': DUR,
 }
 cues = {k: round(v, 3) for k, v in cues.items()}
@@ -168,24 +170,28 @@ def crackle(t0, d=.7, g=.08):
 A1, F1, C2, G1 = 55.0, 43.65, 65.41, 49.0
 CH = {'Am': (A1, (220, 261.63, 329.63)), 'F': (F1, (174.61, 220, 261.63)), 'C': (C2, (261.63, 329.63, 392)), 'G': (G1, (196, 246.94, 293.66))}
 
-# ---------- accroche (0 – 2,55 s) : silence + impacts, pas de beat ----------
-glitch(0.0, .18, .3); impact(0.0, .55, 1.0)
-pad(0.0, (110, 130.81, 164.81), 2.4, .03)
-whoosh(C['hook1'], .14, .12); impact(C['hook1'], .6, 1.1); thump(C['hook1'], .35)
+# ---------- accroche (0 – 4,3 s) : STOP, mots qui claquent, tic-tac des 30 s, montée ----------
+glitch(0.0, .16, .3); impact(0.0, 1.0, 1.6); thump(0.0, .5)
+t = tt(.5); put('sfx', 0.02, np.sin(2 * np.pi * np.cumsum(900 + 500 * np.sin(2 * np.pi * 6 * t)) / SR) * np.exp(-t * 4) * .5, .18, verb=.3)  # sirène courte
+whoosh(C['hook1'], .14, .12); impact(C['hook1'], .55, 1.0); thump(C['hook1'], .35)
 whoosh(C['hook2'], .14, .12); impact(C['hook2'], .7, 1.1); thump(C['hook2'], .4)
 impact(C['hook3'], 1.0, 1.8); buzzer(C['hook3'] + .02, .22); glitch(C['hook3'], .14, .2)
 pop(C['hookQ'], .16, 900)
-whoosh(C['look'], .25, .16, up=False)
-riser(C['look'] + .1, C['s2'] - C['look'] - .18, .45)
-tr = C['look'] + .3
+pad(C['hook1'], (110, 130.81, 164.81), C['s2'] - C['hook1'], .03)
+whoosh(C['why'], .25, .14, up=False)
+for k in range(int((C['s2'] - C['why']) / .25)):  # tic-tac d'horloge
+    tk = C['why'] + .1 + k * .25; click(tk, .2 if k % 2 == 0 else .14, 1800 if k % 2 == 0 else 1400, (-.3, .3)[k % 2])
+pop(C['thirty'], .16, 1200); ping(C['thirty'] + .02, .1, 0, 1568)
+riser(C['thirty'] + .1, C['s2'] - C['thirty'] - .18, .45)
+tr = C['thirty'] + .2
 while tr < C['s2'] - .1:
-    step = .12 if tr < C['s2'] - .45 else .06 if tr < C['s2'] - .22 else .03
-    snare(tr, .05 + .18 * (tr - C['look']) / (C['s2'] - C['look'])); tr += step
+    step = .1 if tr < C['s2'] - .35 else .05 if tr < C['s2'] - .18 else .025
+    snare(tr, .05 + .18 * (tr - C['thirty']) / (C['s2'] - C['thirty'])); tr += step
 whoosh(C['s2'], .3, .22)
 
 # ---------- beat 128 BPM (2,55 – 19,43 s) ----------
-BEAT = 60 / 128; T0 = C['s2']; NB = 36  # 9 mesures
-prog = ['Am', 'F', 'C', 'G', 'Am', 'F', 'C', 'G', 'Am']
+BEAT = 60 / 128; T0 = C['s2']; NB = 32  # 8 mesures
+prog = ['Am', 'F', 'C', 'G', 'Am', 'F', 'C', 'G']
 for b in range(NB):
     t0 = T0 + b * BEAT
     kick(t0, .55)
@@ -210,10 +216,9 @@ impact(C['s2'], .75)
 for k in range(14): click(C['type0'] + k * (C['type1'] - C['type0']) / 14, .08 + .05 * rng.random(), 2800 + 900 * rng.random(), .1)
 whoosh(C['click'] - .02, .3, .06, (.5,))
 click(C['click'], .32, 2200); pop(C['click'] + .02, .12, 500)
-whoosh(C['gauge0'] + .15, .25, .12)
-pop(C['chip30'], .12, 1100, -.3)
+impact(C['boom'], .9, 1.4); glitch(C['boom'], .1, .18); whoosh(C['boom'], .2, .12)
 last = -1
-g0, g1 = C['gauge0'] + .12, C['score']
+g0, g1 = C['boom'], C['score']
 for i in range(0, int((g1 - g0) * SR), int(.004 * SR)):
     x = i / SR / (g1 - g0); v = int(64 * (1 - (1 - x) ** 3))
     if v > last: last = v; click(g0 + i / SR, .04, 3600 + 25 * v, .1)
@@ -222,18 +227,19 @@ ping(C['score'], .16, 0, 1568); impact(C['score'], .55); shimmer(C['score'] + .0
 whoosh(C['s3'], .3, .2); impact(C['s3'], .35, .8)
 for k, key in enumerate(('card1', 'card2', 'card3', 'card4')):
     thump(C[key], .4); blip(C[key] + .03, 520, 300, .12, .1, (-.4, .4)[k % 2], wave_='sq')
+whoosh(C['card2'] + .25, .3, .08, (.6,))  # cercle rouge
 whoosh(C['expand'], .25, .14); shimmer(C['expand'], .5, .06)
 success(C['fixed'], .15)
 
 whoosh(C['s4'], .32, .22); impact(C['s4'], .5)
 ping(C['s4'] + .1, .09, -.2, 880)
 for k in range(6): whoosh(C['s4'] + .16 + k * .07, .12, .05, ((-.6, .6)[k % 2],))
-impact(C['hot'], .45, 1.0); ping(C['hot'] + .02, .12, .2, 1760)
+impact(C['hot'], .45, 1.0); ping(C['hot'] + .02, .12, .2, 1760); pop(C['hot'] + .05, .14, 800)
 
 whoosh(C['s5'], .32, .22); impact(C['s5'], .4)
 scan(C['s5'] + .15, .75, .1)
 for k, dt in enumerate((.2, .32, .45, .58, .7)): pop(C['s5'] + .15 + dt, .11, 600 + 120 * k, (-.5, .5)[k % 2])
-impact(C['best'], .4, .9); impact(C['rivals'], .35, .8)
+impact(C['best'], .4, .9); impact(C['rivals'], .35, .8); pop(C['rivals'] + .05, .14, 900)
 
 whoosh(C['s6'], .32, .22)
 impact(C['ten'], .8, 1.4); thump(C['ten'], .4)
@@ -245,6 +251,7 @@ whoosh(C['logo'] + .1, .2, .1, up=False)
 kaching(C['free'], .42); impact(C['free'], .7, 1.4); crackle(C['free'] + .05, .8, .07)
 pop(C['button'], .13, 650)
 whoosh(C['bio0'], .2, .12); boing(C['bio'], .16)
+impact(C['go'], .6, 1.0); whoosh(C['go'] + .2, .4, .2)
 click(C['tap'], .3, 2300); pop(C['tap'] + .02, .12, 520)
 
 # ---------- voix : traitement (passe-haut, compresseur doux, présence) ----------

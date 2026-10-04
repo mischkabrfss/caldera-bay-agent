@@ -9,18 +9,22 @@ if os.environ.get('SSL_CERT_FILE'):
     edge_tts.communicate._SSL_CTX = ssl.create_default_context(cafile=os.environ['SSL_CERT_FILE'])
 
 VOICE = os.environ.get('VOICE', 'fr-FR-RemyMultilingualNeural')
-RATE = os.environ.get('RATE', '+8%')
+RATE = os.environ.get('RATE', '+10%')
+# Texte envoyé à la voix. Mots anglais écrits « à l'oreille » (vérifié par reconnaissance vocale anglaise) :
+# Shopify → « Shopifaille » (prononciation française courante, sans le « fi » final), sourcing → « sôr-ssinng ».
+# Les sous-titres affichent la vraie orthographe (tiktok.html).
 LINES = [
-    'Ta boutique Shopify ne vend pas ?',
-    'Regarde ça.',
+    'Stop !',
+    'Ta boutique Shopifaille ne vend pas ?',
+    'Je te montre pourquoi en trente secondes.',
     'Tu colles ton lien…',
-    'et en trente secondes, t’as ton score sur cent.',
+    'et boum : ton score sur cent.',
     'Chaque erreur qui te coûte des ventes : expliquée.',
     'Les produits qui cartonnent en ce moment.',
     'Les best-sellers de tes concurrents.',
-    'Et dix agents de sourcing vérifiés.',
-    'Ta première analyse est offerte.',
-    'Lien en bio.',
+    'Et dix agents de sôr-ssinng vérifiés.',
+    'Ta première analyse est gratuite.',
+    'Lien en bio. Fonce !',
 ]
 DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'voice')
 

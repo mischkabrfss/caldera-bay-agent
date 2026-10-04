@@ -81,6 +81,8 @@ body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
 .free{position:absolute;left:50%;padding:.02em .22em .08em;background:var(--y);color:var(--k);font:800 196px/1 M;letter-spacing:-.055em;border-radius:26px;white-space:nowrap;box-shadow:0 40px 120px -20px rgba(255,210,63,.55)}
 .cta{position:absolute;left:150px;width:780px;height:140px;border-radius:70px;background:var(--y);color:var(--k);display:flex;align-items:center;justify-content:center;gap:22px;font:800 52px M;letter-spacing:-.03em;overflow:hidden;box-shadow:0 30px 80px -20px rgba(255,210,63,.5)}
 .bio{position:absolute;left:0;width:1080px;text-align:center;font:800 104px/1 M;letter-spacing:-.04em;color:var(--y);white-space:nowrap}
+.emo{position:absolute;font-family:'Noto Color Emoji',sans-serif;line-height:1;white-space:nowrap}
+.sticker{position:absolute;padding:.04em .3em .08em;border-radius:22px;font:800 92px/1 M;letter-spacing:-.04em;white-space:nowrap;box-shadow:0 26px 60px -16px rgba(0,0,0,.7)}
 /* sous-titres TikTok */
 #caps{position:absolute;left:100px;top:1250px;width:860px;transform-origin:430px 80px}
 .page{position:absolute;left:0;top:0;width:860px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 22px;visibility:hidden}
@@ -97,11 +99,24 @@ body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
 <div id="cam">
  <div id="bg"><div class="glow" id="gl1"></div><div class="glow" id="gl2"></div><div id="grid"></div></div>
 
+ <!-- 0 · STOP -->
+ <div class="sc" id="s0">
+  <div class="a" style="inset:-160px;background:radial-gradient(circle at 50% 45%,#ff4a3d,#d91a1a 70%)"></div>
+  <div class="emo" id="hand" style="left:0;width:1080px;text-align:center;top:360px;font-size:300px">✋</div>
+  <div class="hk" id="stop" style="top:740px;font-size:340px;color:#fff;text-shadow:0 20px 60px rgba(0,0,0,.35)">STOP</div>
+  <div class="mono a" id="stopl" style="left:0;width:1080px;text-align:center;top:1130px;font-size:42px;color:#fff">Si t’as une boutique Shopify</div>
+ </div>
+
  <!-- 1 · accroche -->
  <div class="sc" id="s1">
   <div class="hk" id="h1" style="top:420px;font-size:150px">TA BOUTIQUE</div>
   <div class="hk" id="h2" style="top:590px;font-size:186px;color:var(--y)">SHOPIFY</div>
   <div class="stamp" id="h3" style="top:820px"><span>NE VEND PAS</span><span id="hq">?</span></div>
+  <div class="emo" id="scream" style="left:850px;top:700px;font-size:170px">😱</div>
+  <div class="a" id="watch" style="left:0;width:1080px;top:1000px;display:flex;justify-content:center;align-items:center;gap:26px">
+   <div class="emo" style="position:relative;font-size:150px">⏱️</div>
+   <div style="font:800 190px/1 M;letter-spacing:-.06em;color:var(--y)"><span id="wv">30</span><span style="font-size:90px"> s</span></div>
+  </div>
   <div class="sales" id="sales" style="top:1130px">
    <div class="mono">Commandes aujourd’hui</div><b>0</b>
    <svg width="700" height="90" viewBox="0 0 700 90" style="display:block;margin-top:10px"><path id="flat" d="M0 70 H700" stroke="#ff4d4d" stroke-width="7" fill="none" stroke-linecap="round" stroke-dasharray="700" stroke-dashoffset="700"/><circle id="fdot" cx="700" cy="70" r="11" fill="#ff4d4d"/></svg>
@@ -133,6 +148,7 @@ body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
     <div class="cat" style="left:448px;top:770px"><span>Marketing <b>49</b></span><i><u style="background:#ff4d4d"></u></i></div>
    </div>
   </div>
+  <div class="emo" id="boom" style="left:680px;top:330px;font-size:210px">💥</div>
   <div class="chip" id="chip30" style="left:560px;top:300px;border-color:rgba(255,210,63,.5);color:var(--y)"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffd23f" stroke-width="2.4"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>Résultat &lt; 30 s</div>
  </div>
 
@@ -143,6 +159,12 @@ body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
    <div class="more" id="i1m"><div class="mono" style="color:var(--mu)">Pourquoi</div><p>La preuve sociale est le levier n°1 de conversion.</p><div class="mono" style="color:var(--g)">Corrige ça</div><p>Installe Judge.me (gratuit) et affiche les étoiles sur tes fiches.</p></div></div>
   <div class="issue" id="i2"><div class="top"><div class="ic"></div><div><div class="tt">Pixel Meta (Facebook/Instagram)</div><div style="margin-top:12px"><span class="pill hi">IMPACT ÉLEVÉ</span></div></div></div></div>
   <div class="issue" id="i3"><div class="top"><div class="ic"></div><div><div class="tt">Photos par produit</div><div style="margin-top:12px"><span class="pill hi">IMPACT ÉLEVÉ</span></div></div></div></div>
+  <svg id="circ" class="a" style="left:0;top:0" width="1080" height="1300" viewBox="0 0 1080 1300" fill="none" stroke="#ff2d2d" stroke-linecap="round">
+   <path id="c1" d="M540 300 C 940 296 1010 340 1000 420 C 990 500 830 528 540 530 C 250 532 70 500 74 420 C 78 340 180 304 560 296" stroke-width="12" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+   <path id="ar" d="M900 860 C 960 740 950 640 905 560" stroke-width="14" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+   <path id="ah" d="M870 600 L905 548 L948 594" stroke-width="14" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+  </svg>
+  <div class="emo" id="money" style="left:820px;top:860px;font-size:150px">💸</div>
   <div class="issue" id="i4"><div class="top"><div class="ic"></div><div><div class="tt">Livraison offerte mise en avant</div><div style="margin-top:12px"><span class="pill md">IMPACT MOYEN</span></div></div></div></div>
  </div>
 
@@ -154,6 +176,7 @@ body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
   </div>
   <div class="lbl mono" style="top:262px"><i style="width:14px;height:14px;border-radius:50%;background:var(--g);box-shadow:0 0 16px var(--g)" id="live"></i>Produits gagnants · màj toutes les 6 h</div>
   <div id="cards"></div>
+  <div class="emo" id="fire" style="left:590px;top:250px;font-size:130px;z-index:11">🔥</div>
   <div class="top1" id="top1">TOP 1 · DEMANDE 99/100</div>
  </div>
 
@@ -165,6 +188,7 @@ body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
    <div id="tiles" class="a" style="left:0;top:96px;width:860px;height:754px"></div>
    <div id="beam" class="a" style="left:0;width:860px;height:6px;background:var(--y);box-shadow:0 0 30px 10px rgba(255,210,63,.55)"></div>
   </div>
+  <div class="emo" id="eyes" style="left:790px;top:180px;font-size:170px">👀</div>
   <div class="chip" id="spychip" style="left:110px;top:1200px;width:860px;justify-content:center;color:var(--y);border-color:rgba(255,210,63,.45)">12 best-sellers + 12 nouveautés par concurrent</div>
  </div>
 
@@ -190,14 +214,16 @@ body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
   </div>
   <div class="ln" style="top:500px"><span id="w1">TA</span> <span id="w2">PREMIÈRE</span></div>
   <div class="ln" style="top:630px"><span id="w3">ANALYSE</span> <span id="w4">EST</span></div>
-  <div class="free" id="free" style="top:770px">OFFERTE</div>
+  <div class="free" id="free" style="top:770px">GRATUITE</div>
+  <div class="emo" id="gift" style="left:905px;top:720px;font-size:140px">🎁</div>
   <div class="a" id="chips" style="left:0;width:1080px;top:1040px;display:flex;justify-content:center;gap:18px">
    <div class="chip" style="position:relative;font-size:28px"><span style="color:var(--g)">✓</span> Sans carte bancaire</div>
    <div class="chip" style="position:relative;font-size:28px">Puis dès 19 €/mois</div>
   </div>
   <div class="cta" id="cta" style="top:1160px">Analyser ma boutique <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg><i class="ripple" id="rip2"></i></div>
+  <div class="sticker" id="fonce" style="left:600px;top:1500px;background:#ff2d2d;color:#fff">FONCE <span style="font-family:'Noto Color Emoji'">🚀</span></div>
   <div class="bio" id="bio" style="top:1360px"><span id="b_l">LIEN</span> <span id="b_e">EN</span> <span id="b_b" style="background:var(--y);color:var(--k);padding:0 .14em;border-radius:.14em">BIO</span></div>
-  <svg id="arrow" class="a" style="left:470px;top:1490px" width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="#ffd23f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v17M5 13l7 7 7-7"/></svg>
+  <svg id="arrow" class="a" style="left:330px;top:1490px" width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="#ffd23f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v17M5 13l7 7 7-7"/></svg>
  </div>
 </div>
 
@@ -244,13 +270,13 @@ function popIn(el, dt, { from = .5, y = 40, pre = '' } = {}) {
 
 // ---------- sous-titres (phrases 1 à 7 ; l'accroche et la fin ont leur propre texte) ----------
 const CAPS = {
-  1: [[['Regarde', 0], ['ça', 1, 1]]],
-  2: [[['Tu', 0], ['colles', 1], ['ton', 2], ['lien…', 3, 1]]],
-  3: [[['et', 0], ['en', 1], ['30', 2, 1], ['secondes,', 3, 1]], [['t’as', 4], ['ton', 5], ['score', 6, 1], ['sur', 7], ['100.', 8, 1]]],
-  4: [[['Chaque', 0], ['erreur', 1, 1]], [['qui', 2], ['te', 3], ['coûte', 4], ['des', 5], ['ventes', 6, 1]], [['expliquée.', 7, 1]]],
-  5: [[['Les', 0], ['produits', 1], ['qui', 2], ['cartonnent', 3, 1]], [['en', 4], ['ce', 5], ['moment.', 6]]],
-  6: [[['Les', 0], ['best-sellers', 1, 1]], [['de', 2], ['tes', 3], ['concurrents.', 4, 1]]],
-  7: [[['Et', 0], ['10', 1, 1], ['agents', 2, 1]], [['de', 3], ['sourcing', 4], ['vérifiés.', 5, 1]]],
+  2: [[['Je', 0], ['te', 1], ['montre', 2], ['pourquoi', 3, 1]], [['en', 4], ['30', 5, 1], ['secondes.', 6, 1]]],
+  3: [[['Tu', 0], ['colles', 1], ['ton', 2], ['lien…', 3, 1]]],
+  4: [[['et', 0], ['boum :', 1, 1]], [['ton', 2], ['score', 3, 1], ['sur', 4], ['100.', 5, 1]]],
+  5: [[['Chaque', 0], ['erreur', 1, 1]], [['qui', 2], ['te', 3], ['coûte', 4], ['des', 5], ['ventes', 6, 1]], [['expliquée.', 7, 1]]],
+  6: [[['Les', 0], ['produits', 1], ['qui', 2], ['cartonnent', 3, 1]], [['en', 4], ['ce', 5], ['moment.', 6]]],
+  7: [[['Les', 0], ['best-sellers', 1, 1]], [['de', 2], ['tes', 3], ['concurrents.', 4, 1]]],
+  8: [[['Et', 0], ['10', 1, 1], ['agents', 2, 1]], [['de', 3], ['sourcing', 4], ['vérifiés.', 5, 1]]],
 };
 const pages = [];
 function buildCaps() {
@@ -267,7 +293,7 @@ function buildCaps() {
   pages.forEach((p, i) => {
     const n = pages[i + 1];
     p.b = !p.last && n ? n.a : Math.min(p.lineEnd + .35, p.nextStart - .06);
-    if (p.li === 1) p.b = Math.min(p.b, C.s2 - .3);
+    if (p.li === 2) p.b = Math.min(p.b, C.s2 - .3);
     p.toks.forEach((k, j) => { k.end = j < p.toks.length - 1 ? p.toks[j + 1].t : Math.min(p.b, k.t + .45); });
   });
 }
@@ -342,9 +368,9 @@ function sceneState(t, a, b, first) {
 
 function setup() {
   C = TL.cues; DUR = TL.dur;
-  PUNCH = [[C.hook1, .05], [C.hook2, .06], [C.hook3, .1], [C.look, .04], [C.s2, .05], [C.click, .03], [C.chip30, .025], [C.score, .09], [C.card1, .025], [C.card2, .025], [C.card3, .025], [C.card4, .025], [C.expand, .05], [C.fixed, .03], [C.s4, .04], [C.hot, .07], [C.s5, .04], [C.best, .05], [C.rivals, .03], [C.s6, .04], [C.ten, .1], [C.checked, .05], [C.s7, .06], [C.logo, .03], [C.free, .13], [C.button, .03], [C.bio, .07], [C.tap, .03]];
-  SHAKE = [[0, 10], [C.hook1, 12], [C.hook2, 14], [C.hook3, 30], [C.s2, 10], [C.score, 16], [C.ten, 22], [C.s7, 14], [C.free, 24]];
-  SCENES = [['s1', 0, C.s2], ['s2', C.s2, C.s3], ['s3', C.s3, C.s4], ['s4', C.s4, C.s5], ['s5', C.s5, C.s6], ['s6', C.s6, C.s7], ['s7', C.s7, DUR + 1]];
+  PUNCH = [[C.stop, .08], [C.hook1, .05], [C.hook2, .06], [C.hook3, .1], [C.why, .04], [C.thirty, .06], [C.s2, .05], [C.click, .03], [C.boom, .12], [C.score, .09], [C.card1, .025], [C.card2, .04], [C.card3, .025], [C.card4, .04], [C.expand, .05], [C.fixed, .03], [C.s4, .04], [C.hot, .08], [C.s5, .04], [C.best, .05], [C.rivals, .05], [C.s6, .04], [C.ten, .1], [C.checked, .05], [C.s7, .06], [C.logo, .03], [C.free, .13], [C.button, .03], [C.bio, .07], [C.go, .1], [C.tap, .03]];
+  SHAKE = [[0, 30], [C.stop, 22], [C.hook1, 12], [C.hook2, 14], [C.hook3, 30], [C.s2, 10], [C.boom, 26], [C.score, 14], [C.ten, 22], [C.s7, 14], [C.free, 24], [C.go, 18]];
+  SCENES = [['s0', 0, C.hook1 - .14], ['s1', C.hook1 - .14, C.s2], ['s2', C.s2, C.s3], ['s3', C.s3, C.s4], ['s4', C.s4, C.s5], ['s5', C.s5, C.s6], ['s6', C.s6, C.s7], ['s7', C.s7, DUR + 1]];
   // jauge : graduations
   const ticks = $('#ticks'); let h = '';
   for (let i = 0; i < 60; i++) { const a = i / 60 * Math.PI * 2 - Math.PI / 2; h += `<line data-i="${i}" x1="${430 + Math.cos(a) * 275}" y1="${300 + Math.sin(a) * 275}" x2="${430 + Math.cos(a) * (i % 5 ? 288 : 296)}" y2="${300 + Math.sin(a) * (i % 5 ? 288 : 296)}" stroke="rgba(255,255,255,.18)" stroke-width="${i % 5 ? 3 : 5}" stroke-linecap="round"/>`; }
@@ -358,6 +384,7 @@ function setup() {
       .map(([txt, i, bg, fg], k) => `<div class="tag" id="tg${k}" style="left:${30 + (i % 3) * 278 + 12}px;top:${34 + Math.floor(i / 3) * 352 + 12}px;background:${bg};color:${fg}">${txt}</div>`).join('');
   buildCaps();
   // confettis et étincelles
+  burst(C.boom, 540, 960, 60, { kind: 'spark', speed: 1600, grav: 300, colors: ['#ffd23f', '#ff7a1a', '#fff'], size: [30, 70], life: .8 });
   burst(C.score, 540, 960, 70, { kind: 'spark', speed: 1300, grav: 300, colors: ['#ffd23f', '#ffe68a', '#fff'], size: [26, 60], life: .9 });
   burst(C.hot, 255, 560, 40, { kind: 'spark', speed: 900, grav: 300, colors: ['#ffd23f', '#ffb020', '#fff'], size: [20, 44], life: .7 });
   burst(C.ten, 540, 500, 50, { kind: 'spark', speed: 1200, grav: 300, colors: ['#ffd23f', '#fff'], size: [24, 56], life: .8 });
@@ -374,13 +401,13 @@ function render(t) {
   $('#progi').style.transform = `scaleX(${t / DUR})`;
 
   // fond : halos qui dérivent ; rouge pendant « ne vend pas », jaune à la fin
-  const red = P(t, C.hook3 - .02, C.hook3 + .1) * (1 - P(t, C.look + .3, C.s2)), end = P(t, C.s7, C.s7 + .3);
+  const red = P(t, C.hook3 - .02, C.hook3 + .1) * (1 - P(t, C.why + .3, C.s2)), end = P(t, C.s7, C.s7 + .3);
   css($('#gl1'), { left: `${120 + Math.sin(t * .7) * 120}px`, top: `${300 + Math.cos(t * .5) * 140}px`, width: '900px', height: '900px', background: `rgba(${lerp(255, 255, red)},${lerp(210, 70, red)},${lerp(63, 70, red)},${.10 + .12 * red + .1 * end})` });
   css($('#gl2'), { left: `${500 + Math.cos(t * .6) * 140}px`, top: `${1200 + Math.sin(t * .8) * 120}px`, width: '800px', height: '800px', background: `rgba(255,176,32,${.07 + .08 * end})` });
   $('#grid').style.transform = `translateY(${(t * 40) % 54}px)`;
 
   for (const [id, a, b] of SCENES) {
-    const el = $('#' + id), st = sceneState(t, a, b, id === 's1');
+    const el = $('#' + id), st = sceneState(t, a, b, id === 's0');
     show(el, !!st);
     if (!st) continue;
     el.style.opacity = st.op; el.style.transform = `scale(${st.s})`; el.style.filter = st.blur > .2 ? `blur(${st.blur}px)` : 'none';
@@ -398,17 +425,35 @@ function render(t) {
 
   // flashs : début, coupes de scène, temps forts
   let fl = 0, fc = '255,255,255';
-  const flashes = [[0, .9, '255,210,63'], [C.hook3, .35, '255,77,77'], [C.s3, .45], [C.s4, .45], [C.s5, .45], [C.s6, .45], [C.s7, .85, '255,210,63'], [C.score, .25, '255,210,63'], [C.free, .4, '255,255,255']];
+  const flashes = [[C.hook1 - .14, .8], [C.boom, .35, '255,210,63'], [C.hook3, .35, '255,77,77'], [C.s3, .45], [C.s4, .45], [C.s5, .45], [C.s6, .45], [C.s7, .85, '255,210,63'], [C.score, .25, '255,210,63'], [C.free, .4, '255,255,255']];
   for (const [t0, a, c] of flashes) { const dt = t - t0; if (dt >= -.02 && dt < .2) { const v = a * (dt < 0 ? 1 + dt / .02 : Math.exp(-dt * 22)); if (v > fl) { fl = v; fc = c || '255,255,255'; } } }
   $('#flash').style.background = fl > .005 ? `rgba(${fc},${fl})` : 'none';
 
   gctx.putImageData(grains[Math.floor(t * 60) % 8], 0, 0);
 }
 
+function emo(el, dt, wob = 1) {
+  if (dt < 0) { el.style.opacity = 0; return; }
+  const s = spr(dt, 2.2, 8);
+  el.style.opacity = cl(dt / .05);
+  el.style.transform = `scale(${.2 + .8 * s}) rotate(${wob * (14 * Math.sin(dt * 9) * Math.exp(-dt * 1.5) + 4 * Math.sin(dt * 3))}deg) translateY(${-8 * Math.sin(dt * 5)}px)`;
+}
 const SC = {
+  s0(t) {
+    const st = $('#stop'), d = t + .06;
+    slam(st, Math.max(d, .001), { from: 1.35, base: fit(st, 980), split: 24, blur: 10 });
+    emo($('#hand'), t + .15);
+    $('#stopl').style.opacity = cl((t - .25) / .1);
+    $('#s0').style.filter = `brightness(${1 + .25 * Math.sin(t * 30) * Math.exp(-t * 4)})`;
+  },
   s1(t) {
+    emo($('#scream'), t - C.hookQ, -1);
+    const wt = t - C.thirty, w = $('#watch');
+    w.style.opacity = cl(wt / .06); w.style.transform = wt < 0 ? 'scale(.3)' : `scale(${.3 + .7 * spr(wt, 2, 9)})`;
+    $('#wv').textContent = wt < 0 ? 30 : Math.max(0, 30 - Math.floor(wt * 12));
+    $('#scream').style.opacity = (t > C.hookQ ? 1 : 0) * (1 - P(t, C.why, C.why + .2));
     const h1 = $('#h1'), h2 = $('#h2'), h3 = $('#h3');
-    const look = P(t, C.look, C.look + .35), lift = o5(look);
+    const look = P(t, C.why, C.why + .35), lift = o5(look);
     h1.dataset.pre = `translateY(${-50 * lift}px)`; h2.dataset.pre = `translateY(${-50 * lift}px)`;
     slam(h1, t - C.hook1, { from: 2.6, base: fit(h1, 900) * (1 - .1 * lift) });
     slam(h2, t - C.hook2, { from: 2.8, base: fit(h2, 900) * (1 - .1 * lift), rot: -1.5 });
@@ -420,7 +465,7 @@ const SC = {
     // carte « 0 commande » : arrive avec le tampon, repart sur « regarde ça »
     const sa = $('#sales'), ds = t - C.hook3 - .08;
     const sIn = ds < 0 ? 0 : spr(ds, 1.8, 9);
-    sa.style.opacity = cl(ds / .1) * (1 - P(t, C.look, C.look + .25));
+    sa.style.opacity = cl(ds / .1) * (1 - P(t, C.why, C.why + .25));
     sa.style.transform = `translateY(${(1 - sIn) * 260 + o3(look) * 200}px) rotate(${(1 - sIn) * 6}deg)`;
     $('#flat').setAttribute('stroke-dashoffset', 700 * (1 - o3(P(t, C.hook3 + .1, C.hook3 + .5))));
     $('#fdot').setAttribute('r', 11 + 4 * Math.sin(t * 14));
@@ -448,7 +493,8 @@ const SC = {
     const g = $('#gauge'), dg = t - (C.click + .18);
     g.style.opacity = cl(dg / .12);
     g.style.transform = `scale(${dg < 0 ? .5 : .5 + .5 * spr(dg, 1.8, 9)})`; g.style.transformOrigin = '430px 300px';
-    const gx = cl((t - (C.gauge0 + .12)) / (C.score - C.gauge0 - .12)), v = Math.round(64 * o3(gx));
+    const gx = cl((t - C.boom) / (C.score - C.boom)), v = Math.round(64 * o3(gx));
+    emo($('#boom'), t - C.boom); $('#boom').style.opacity = (t > C.boom ? 1 : 0) * (1 - P(t, C.boom + .7, C.boom + .9));
     $('#gv').textContent = v;
     const len = 1457.7; $('#arc').setAttribute('stroke-dashoffset', len * (1 - v / 100));
     $('#arc').style.filter = t > C.score ? `drop-shadow(0 0 ${30 * Math.exp(-(t - C.score) * 3) + 8}px rgba(255,210,63,.8))` : 'drop-shadow(0 0 8px rgba(255,210,63,.4))';
@@ -459,16 +505,20 @@ const SC = {
     const gr = $('#grade'); gr.style.opacity = cl(ds / .1); gr.style.transform = `scale(${ds < 0 ? .3 : .3 + .7 * spr(ds)})`; gr.style.display = 'inline-block';
     // catégories
     $$('#cats .cat').forEach((c, i) => {
-      const dc2 = t - (C.gauge0 + .55 + i * .16);
+      const dc2 = t - (C.boom + .25 + i * .16);
       c.style.opacity = cl(dc2 / .12); c.style.transform = `translateY(${30 * (1 - o3(cl(dc2 / .3)))}px)`;
       const val = [72, 58, 61, 49][i]; c.querySelector('u').style.transform = `scaleX(${val / 100 * o3(cl((dc2 - .1) / .6))})`;
     });
-    const chip = $('#chip30'); popIn(chip, t - C.chip30, { from: .3, y: 20, pre: `rotate(4deg)` });
+    const chip = $('#chip30'); popIn(chip, t - C.click - .35, { from: .3, y: 20, pre: `rotate(4deg)` });
     $('#s2l').style.opacity = cl(dIn / .2);
   },
   s3(t) {
     const exp = o3(P(t, C.expand, C.expand + .35)), fixed = P(t, C.fixed, C.fixed + .15);
     const keys = ['card1', 'card2', 'card3', 'card4'];
+    const cg = 1 - P(t, C.expand, C.expand + .2);
+    $('#c1').setAttribute('stroke-dashoffset', 1 - o3(P(t, C.card2 + .05, C.card2 + .4))); $('#circ').style.opacity = cg;
+    $('#ar').setAttribute('stroke-dashoffset', 1 - o3(P(t, C.card2 + .3, C.card2 + .5))); $('#ah').setAttribute('stroke-dashoffset', 1 - o3(P(t, C.card2 + .48, C.card2 + .58)));
+    emo($('#money'), t - C.card4); $('#money').style.opacity = (t > C.card4 ? 1 : 0) * cg;
     ['#i1', '#i2', '#i3', '#i4'].forEach((id, i) => {
       const el = $(id), d = t - C[keys[i]], side = i % 2 ? 1 : -1;
       const s = d < 0 ? 0 : spr(d, 2, 10);
@@ -492,6 +542,7 @@ const SC = {
     });
   },
   s4(t, lt) {
+    emo($('#fire'), t - C.hot);
     $('#sweep').style.transform = `rotate(${t * 220}deg)`;
     $('#radar').style.opacity = .9; $('#radar').style.transform = `scale(${.9 + .1 * o3(cl(lt / .4))})`;
     $('#live').style.opacity = .5 + .5 * Math.abs(Math.sin(t * 5));
@@ -522,6 +573,7 @@ const SC = {
     for (let k = 0; k < 5; k++) popIn($('#tg' + k), t - at[k], { from: .2, y: 20, pre: `rotate(${k % 2 ? 4 : -4}deg) scale(${k === 0 ? 1.15 : 1})` });
     $('#win').style.transform = `translateY(${60 * (1 - o3(cl(lt / .35)))}px)`;
     popIn($('#spychip'), t - C.rivals, { from: .4, y: 30 });
+    emo($('#eyes'), t - C.rivals);
   },
   s6(t) {
     const ten = $('#ten'); slam(ten, t - C.ten, { from: 3, base: 1, rot: -3, split: 26, blur: 20 });
@@ -536,10 +588,10 @@ const SC = {
   s7(t, lt) {
     $('#rays').style.transform = `rotate(${t * 14}deg)`; $('#rays').style.opacity = .4 + .6 * P(t, C.free, C.free + .3);
     const logo = $('#logo'), dl = t - C.logo; logo.style.opacity = cl(dl / .08); logo.style.transform = `scale(${dl < 0 ? .4 : .4 + .6 * spr(dl, 1.8, 9)})`;
-    const L = TL.lines[8].words;
+    const L = TL.lines[9].words;
     [['#w1', 0], ['#w2', 1], ['#w3', 2], ['#w4', 3]].forEach(([id, wi]) => slam($(id), t - L[wi].t + .02, { from: 2.2, base: 1, blur: 10, split: 10 }));
     const fr = $('#free'); fr.dataset.pre = 'translateX(-50%)';
-    slam(fr, t - C.free, { from: 3.4, base: 1 + .03 * Math.sin(Math.max(0, t - C.free) * 7), rot: -3, split: 0, blur: 22 });
+    slam(fr, t - C.free, { from: 3.4, base: fit(fr, 940) *(1 + .03 * Math.sin(Math.max(0, t - C.free) * 7)), rot: -3, split: 0, blur: 22 });
     $('#chips').style.opacity = cl((t - C.free - .35) / .2); $('#chips').style.transform = `translateY(${30 * (1 - o3(cl((t - C.free - .35) / .35)))}px)`;
     const cta = $('#cta'), db = t - C.button, dtp = t - C.tap;
     popIn(cta, db, { from: .4, y: 50, pre: `scale(${dtp >= 0 && dtp < .1 ? .94 : 1 + .025 * Math.sin(t * 6) * (db > .5 ? 1 : 0)})` });
@@ -549,8 +601,10 @@ const SC = {
     const cur = $('#cursor'), cm = P(t, C.tap - .45, C.tap - .05), cu = P(t, C.tap + .12, C.tap + .45);
     show(cur, t > C.tap - .5 && t < C.tap + .5);
     if (t > C.tap - .5) { cur.style.transform = `translate(${lerp(980, 700, io(cm)) + 120 * i3(cu)}px,${lerp(1500, 1235, io(cm)) + 200 * i3(cu)}px) scale(${dtp >= 0 && dtp < .12 ? .85 : 1})`; cur.style.opacity = 1 - cu; }
-    const B = TL.lines[9].words;
+    const B = TL.lines[10].words;
     [['#b_l', 0], ['#b_e', 1], ['#b_b', 2]].forEach(([id, wi]) => { const el = $(id); el.style.display = 'inline-block'; slam(el, t - B[wi].t + .02, { from: 2, base: 1, blur: 8, split: 12 }); });
+    emo($('#gift'), t - C.free - .12);
+    const fo = $('#fonce'); slam(fo, t - C.go, { from: 2.4, base: 1 + .04 * Math.sin(Math.max(0, t - C.go) * 8), rot: -7, split: 0, blur: 10 }); fo.style.textShadow = 'none';
     const ar = $('#arrow'), da = t - C.bio;
     ar.style.opacity = cl(da / .1); ar.style.transform = `translateY(${da < 0 ? -40 : 34 * Math.abs(Math.sin(da * 7))}px) scale(${da < 0 ? .5 : .5 + .5 * spr(da)})`;
   },
