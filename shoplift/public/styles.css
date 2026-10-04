@@ -415,6 +415,8 @@ footer a:hover { color: var(--text); }
 .quiz { position: relative; z-index: 200; display: none; flex-direction: column; min-height: 100vh; min-height: 100dvh; background: #060606; overflow: hidden; overflow: clip; } /* clip : jamais de défilement latéral caché */
 .quiz.open { display: flex; animation: quizIn .45s cubic-bezier(.2,.9,.2,1); }
 .quiz.open ~ #site { display: none; }
+#site.site-in { animation: siteIn .4s cubic-bezier(.2,.9,.2,1); }
+@keyframes siteIn { from { opacity: 0; } } /* opacité seule : un transform casserait les éléments fixes (barre du bas) */
 @keyframes quizIn { from { opacity: 0; transform: scale(1.03); } }
 .quiz-bg { position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(rgba(255,255,255,.13) 1px, transparent 1.4px); background-size: 26px 26px; -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 10%, transparent 75%); mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 10%, transparent 75%); }
 .quiz-bg i { position: absolute; border-radius: 50%; filter: blur(110px); }

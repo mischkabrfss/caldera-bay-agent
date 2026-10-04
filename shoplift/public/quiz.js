@@ -82,19 +82,27 @@
     root.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse') { root.style.setProperty('--px', `${e.clientX}px`); root.style.setProperty('--py', `${e.clientY}px`); } });
   }
 
+  // Retour en haut instantané : le défilement fluide du site (scroll-behavior) faisait glisser toute la page sur mobile.
+  function top0() {
+    const h = document.documentElement, prev = h.style.scrollBehavior;
+    h.style.scrollBehavior = 'auto'; scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    requestAnimationFrame(() => requestAnimationFrame(() => { h.style.scrollBehavior = prev; }));
+  }
   function open() {
     build();
     answers = { visitors: 3000, aov: 40 }; touched = {}; step = 0; busy = false; moving = false; lastTease = null;
     root.classList.remove('done', 'bam');
     root.classList.add('open');
     document.documentElement.classList.add('quiz-on');
-    scrollTo(0, 0);
+    top0();
     question();
   }
   function close() {
     root.classList.remove('open');
     document.documentElement.classList.remove('quiz-on');
-    scrollTo(0, 0);
+    top0();
+    const site = document.getElementById('site');
+    if (site && !reduced) { site.classList.remove('site-in'); void site.offsetWidth; site.classList.add('site-in'); }
   }
   function skip() {
     const prev = store.get();
