@@ -87,34 +87,51 @@ if (!reduced && matchMedia('(pointer: fine)').matches) {
 }
 
 // Pluie de pièces et de billets (canvas léger)
+// Mobile : symboles pré-dessinés (pas de rendu de texte à chaque image), 30 i/s, pause quand le quiz couvre
+// la page ou que l'onglet est caché, et pas de recalcul quand la barre d'adresse apparaît/disparaît au défilement.
 const canvas = $('#coins');
 if (canvas && !reduced) {
   const ctx = canvas.getContext('2d');
   const glyphs = ['€', '€', '$', '€', '%', '€'];
-  let w, h, items;
-  const reset = () => {
-    const dpr = Math.min(devicePixelRatio || 1, 2);
-    w = canvas.width = innerWidth * dpr;
-    h = canvas.height = innerHeight * dpr;
-    const count = innerWidth < 700 ? 14 : 26;
-    items = Array.from({ length: count }, () => spawn(true, dpr));
-  };
-  const spawn = (anywhere, dpr = Math.min(devicePixelRatio || 1, 2)) => ({
+  const mobile = innerWidth < 700 || matchMedia('(hover: none)').matches;
+  const sprites = {};
+  for (const g of new Set(glyphs)) {
+    const c = document.createElement('canvas'); c.width = c.height = 64;
+    const x = c.getContext('2d'); x.font = '800 52px Manrope, sans-serif'; x.fillStyle = '#ffd23f'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(g, 32, 34);
+    sprites[g] = c;
+  }
+  let w, h, items, lastW = 0, frame = 0;
+  const dprOf = () => Math.min(devicePixelRatio || 1, mobile ? 1.5 : 2);
+  const spawn = (anywhere, dpr = dprOf()) => ({
     x: Math.random() * w, y: anywhere ? Math.random() * h : -40, s: (10 + Math.random() * 16) * dpr,
     v: (0.25 + Math.random() * 0.7) * dpr, r: Math.random() * 6, vr: (Math.random() - 0.5) * 0.02,
     g: glyphs[Math.floor(Math.random() * glyphs.length)], a: 0.12 + Math.random() * 0.3,
   });
+  const reset = () => {
+    if (innerWidth === lastW && items) return; // seule la hauteur a bougé (barre d'adresse mobile) : on garde tout
+    lastW = innerWidth;
+    const dpr = dprOf();
+    w = canvas.width = innerWidth * dpr;
+    h = canvas.height = Math.max(innerHeight, screen.height || 0) * dpr;
+    items = Array.from({ length: innerWidth < 700 ? 14 : 26 }, () => spawn(true, dpr));
+  };
   const draw = () => {
+    requestAnimationFrame(draw);
+    if (document.hidden || document.documentElement.classList.contains('quiz-on')) return;
+    if (mobile && frame++ % 2) return;
+    const step = mobile ? 2 : 1;
     ctx.clearRect(0, 0, w, h);
     for (const c of items) {
-      c.y += c.v; c.r += c.vr;
+      c.y += c.v * step; c.r += c.vr * step;
       if (c.y > h + 40) Object.assign(c, spawn(false));
-      ctx.save(); ctx.globalAlpha = c.a; ctx.translate(c.x, c.y); ctx.rotate(c.r);
-      ctx.font = `800 ${c.s}px Manrope, sans-serif`; ctx.fillStyle = '#ffd23f'; ctx.fillText(c.g, 0, 0); ctx.restore();
+      ctx.setTransform(Math.cos(c.r), Math.sin(c.r), -Math.sin(c.r), Math.cos(c.r), c.x, c.y);
+      ctx.globalAlpha = c.a; ctx.drawImage(sprites[c.g], -c.s * .62, -c.s * .62, c.s * 1.24, c.s * 1.24);
     }
-    requestAnimationFrame(draw);
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1;
   };
-  reset(); addEventListener('resize', reset); draw();
+  reset(); addEventListener('resize', reset);
+  document.fonts?.ready.then(() => { for (const g in sprites) { const x = sprites[g].getContext('2d'); x.clearRect(0, 0, 64, 64); x.fillText(g, 32, 34); } });
+  requestAnimationFrame(draw);
 }
 
 // Formulaire boutique → app (délégué : le bloc d'essai ajouté après le quiz en profite aussi)
@@ -227,4 +244,10 @@ if (document.documentElement.classList.contains('is-paid')) {
     b.href = 'app.html';
     b.innerHTML = 'Mon espace <span class="arrow">→</span>';
   });
+}
+
+// Animations en boucle mises en pause hors de l'écran (rien ne change à l'œil, gros gain sur téléphone).
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver((list) => list.forEach((e) => e.target.classList.toggle('anim-off', !e.isIntersecting)), { rootMargin: '150px 0px' });
+  document.querySelectorAll('main > section, .ticker, footer').forEach((el) => io.observe(el));
 }

@@ -390,6 +390,9 @@ footer a:hover { color: var(--text); }
 /* ---------- Téléphones : effets allégés pour un défilement net (pas de cartes qui clignotent ou se découpent) ---------- */
 @media (hover: none), (max-width: 720px) {
   .card, .chip, .toast { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .nav { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(10,10,10,.92); } /* flou recalculé à chaque image au-dessus des pièces : très lourd sur iPhone */
+  .quiz-bg::after { display: none; }
+  .bg-fx { transform: translateZ(0); }
   .bg-fx::after { animation: none; mix-blend-mode: normal; opacity: .04; }
   .blob, .quiz-bg i { animation: none; filter: blur(70px); }
   .reveal { transform: translateY(24px); }
@@ -562,3 +565,5 @@ footer a:hover { color: var(--text); }
 .qa-ring { position: absolute; left: 50%; top: 50%; width: 1.5em; height: 1.5em; margin: -.75em 0 0 -.75em; border-radius: 50%; background: conic-gradient(from 0deg, transparent, rgba(255,210,63,.45) 30%, transparent 32%); -webkit-mask: radial-gradient(circle, transparent 62%, #000 63%); mask: radial-gradient(circle, transparent 62%, #000 63%); animation: spin 1s linear infinite; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .quiz-bg em, .quiz-bg::after, .qa-ring { display: none; } .quiz-stage h2 mark { animation: none; background-size: 100% 100%; color: #0a0a0a; } }
 @media (hover: none), (max-width: 720px) { .quiz-bg::after { display: none; } }
+/* Hors écran : animations en pause (voir landing.js) */
+.anim-off, .anim-off *, .anim-off *::before, .anim-off *::after, .anim-off::before, .anim-off::after { animation-play-state: paused !important; }
