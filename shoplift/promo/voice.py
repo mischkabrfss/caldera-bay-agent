@@ -24,7 +24,7 @@ LINES = [
     'Les best-sellers de tes concurrents.',
     'Et dix agents de sôr-ssinng vérifiés.',
     'Ta première analyse est gratuite.',
-    'Lien en bio. Fonce !',
+    'Lien en bio. Allez, fonce !',  # « Fonce ! » seul était mal prononcé
 ]
 DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'voice')
 

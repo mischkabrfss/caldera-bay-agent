@@ -328,7 +328,7 @@
    ]
   },
   {
-   "text": "Lien en bio. Fonce !",
+   "text": "Lien en bio. Allez, fonce !",
    "words": [
     {
      "w": "Lien",
@@ -346,9 +346,14 @@
      "d": 0.397708
     },
     {
-     "w": "Fonce",
+     "w": "Allez",
      "t": 1.209083,
-     "d": 0.715916
+     "d": 0.443166
+    },
+    {
+     "w": "fonce",
+     "t": 1.890916,
+     "d": 0.579541
     }
    ]
   }

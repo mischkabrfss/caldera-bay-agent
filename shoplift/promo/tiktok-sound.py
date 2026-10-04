@@ -45,7 +45,7 @@ cues = {
     's4': 9.65, 'hot': W(6, 3),
     's5': 11.35, 'best': W(7, 1), 'rivals': W(7, 4),
     's6': 13.10, 'ten': W(8, 1), 'msg1': W(8, 2) + .05, 'msg2': W(8, 4) - .02, 'checked': W(8, 5),
-    's7': 14.95, 'logo': W(9, 0), 'free': W(9, 4), 'button': W(9, 4) + .4, 'bio0': W(10, 0), 'bio': W(10, 2), 'go': W(10, 3), 'tap': 18.75,
+    's7': 14.95, 'logo': W(9, 0), 'free': W(9, 4), 'button': W(9, 4) + .4, 'bio0': W(10, 0), 'bio': W(10, 2), 'go': W(10, 4), 'tap': 19.15,
     'end': DUR,
 }
 cues = {k: round(v, 3) for k, v in cues.items()}
@@ -267,7 +267,7 @@ v /= np.abs(v).max() + 1e-9
 
 # ---------- mixage : la musique s'efface sous la voix (ducking) ----------
 venv = np.convolve(np.abs(v), np.ones(1200) / 1200, 'same'); venv /= venv.max()
-duck = 1 - .62 * np.clip(venv / .12, 0, 1)
+duck = 1 - .72 * np.clip(venv / .1, 0, 1)
 dz = np.empty_like(duck); z = 1.0; a_att, a_rel = 1 - np.exp(-1 / (.02 * SR)), 1 - np.exp(-1 / (.25 * SR))
 for i in range(N):
     z += (a_att if duck[i] < z else a_rel) * (duck[i] - z); dz[i] = z
@@ -280,7 +280,7 @@ verb = np.stack([filt(verb[0], lo=300, hi=6000), filt(verb[1], lo=300, hi=6000)]
 
 music = (bus['drums'] * .9 + bus['music'] + verb * .35) * dz
 sfx = bus['sfx'] * (1 - .25 * (1 - dz))
-mix = music * .55 + sfx * .8 + np.stack([v, v]) * .9
+mix = music * .38 + sfx * .6 + np.stack([v, v]) * 1.0  # voix bien devant
 mix = np.tanh(mix * 1.1) / 1.1
 mix *= np.minimum(1, (DUR - np.arange(N) / SR) / .25)  # fin propre (pas de clic)
 raw = f'{HERE}/voice/mix-raw.wav'
