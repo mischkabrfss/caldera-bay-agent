@@ -1,0 +1,335 @@
+{
+ "dur": 20.0,
+ "voice": "fr-FR-RemyMultilingualNeural",
+ "lines": [
+  {
+   "text": "Ta boutique Shopify ne vend pas ?",
+   "start": 0.15,
+   "end": 1.512,
+   "words": [
+    {
+     "w": "Ta",
+     "t": 0.15
+    },
+    {
+     "w": "boutique",
+     "t": 0.243
+    },
+    {
+     "w": "Shopify",
+     "t": 0.613
+    },
+    {
+     "w": "ne",
+     "t": 1.087
+    },
+    {
+     "w": "vend",
+     "t": 1.192
+    },
+    {
+     "w": "pas",
+     "t": 1.331
+    }
+   ]
+  },
+  {
+   "text": "Regarde ça.",
+   "start": 1.7,
+   "end": 2.346,
+   "words": [
+    {
+     "w": "Regarde",
+     "t": 1.7
+    },
+    {
+     "w": "ça",
+     "t": 2.128
+    }
+   ]
+  },
+  {
+   "text": "Tu colles ton lien…",
+   "start": 2.62,
+   "end": 3.327,
+   "words": [
+    {
+     "w": "Tu",
+     "t": 2.62
+    },
+    {
+     "w": "colles",
+     "t": 2.724
+    },
+    {
+     "w": "ton",
+     "t": 2.933
+    },
+    {
+     "w": "lien",
+     "t": 3.071
+    }
+   ]
+  },
+  {
+   "text": "et en trente secondes, t’as ton score sur cent.",
+   "start": 3.45,
+   "end": 5.587,
+   "words": [
+    {
+     "w": "et",
+     "t": 3.45
+    },
+    {
+     "w": "en",
+     "t": 3.554
+    },
+    {
+     "w": "trente",
+     "t": 3.635
+    },
+    {
+     "w": "secondes",
+     "t": 3.878
+    },
+    {
+     "w": "t’as",
+     "t": 4.712
+    },
+    {
+     "w": "ton",
+     "t": 4.804
+    },
+    {
+     "w": "score",
+     "t": 4.943
+    },
+    {
+     "w": "sur",
+     "t": 5.209
+    },
+    {
+     "w": "cent",
+     "t": 5.394
+    }
+   ]
+  },
+  {
+   "text": "Chaque erreur qui te coûte des ventes : expliquée.",
+   "start": 6.0,
+   "end": 8.428,
+   "words": [
+    {
+     "w": "Chaque",
+     "t": 6.0
+    },
+    {
+     "w": "erreur",
+     "t": 6.266
+    },
+    {
+     "w": "qui",
+     "t": 6.66
+    },
+    {
+     "w": "te",
+     "t": 6.787
+    },
+    {
+     "w": "coûte",
+     "t": 6.891
+    },
+    {
+     "w": "des",
+     "t": 7.088
+    },
+    {
+     "w": "ventes",
+     "t": 7.192
+    },
+    {
+     "w": "expliquée",
+     "t": 7.991
+    }
+   ]
+  },
+  {
+   "text": "Les produits qui cartonnent en ce moment.",
+   "start": 8.9,
+   "end": 10.397,
+   "words": [
+    {
+     "w": "Les",
+     "t": 8.9
+    },
+    {
+     "w": "produits",
+     "t": 9.039
+    },
+    {
+     "w": "qui",
+     "t": 9.432
+    },
+    {
+     "w": "cartonnent",
+     "t": 9.56
+    },
+    {
+     "w": "en",
+     "t": 9.942
+    },
+    {
+     "w": "ce",
+     "t": 10.0
+    },
+    {
+     "w": "moment",
+     "t": 10.138
+    }
+   ]
+  },
+  {
+   "text": "Les best-sellers de tes concurrents.",
+   "start": 10.8,
+   "end": 12.361,
+   "words": [
+    {
+     "w": "Les",
+     "t": 10.8
+    },
+    {
+     "w": "best-sellers",
+     "t": 10.962
+    },
+    {
+     "w": "de",
+     "t": 11.691
+    },
+    {
+     "w": "tes",
+     "t": 11.795
+    },
+    {
+     "w": "concurrents",
+     "t": 11.9
+    }
+   ]
+  },
+  {
+   "text": "Et dix agents de sourcing vérifiés.",
+   "start": 12.8,
+   "end": 14.394,
+   "words": [
+    {
+     "w": "Et",
+     "t": 12.8
+    },
+    {
+     "w": "dix",
+     "t": 12.927
+    },
+    {
+     "w": "agents",
+     "t": 13.078
+    },
+    {
+     "w": "de",
+     "t": 13.437
+    },
+    {
+     "w": "sourcing",
+     "t": 13.552
+    },
+    {
+     "w": "vérifiés",
+     "t": 13.911
+    }
+   ]
+  },
+  {
+   "text": "Ta première analyse est offerte.",
+   "start": 14.85,
+   "end": 16.358,
+   "words": [
+    {
+     "w": "Ta",
+     "t": 14.85
+    },
+    {
+     "w": "première",
+     "t": 14.943
+    },
+    {
+     "w": "analyse",
+     "t": 15.301
+    },
+    {
+     "w": "est",
+     "t": 15.892
+    },
+    {
+     "w": "offerte",
+     "t": 15.938
+    }
+   ]
+  },
+  {
+   "text": "Lien en bio.",
+   "start": 16.85,
+   "end": 17.563,
+   "words": [
+    {
+     "w": "Lien",
+     "t": 16.85
+    },
+    {
+     "w": "en",
+     "t": 17.22
+    },
+    {
+     "w": "bio",
+     "t": 17.313
+    }
+   ]
+  }
+ ],
+ "cues": {
+  "hook1": 0.15,
+  "hook2": 0.613,
+  "hook3": 1.087,
+  "hookQ": 1.331,
+  "look": 1.7,
+  "s2": 2.55,
+  "type0": 2.7,
+  "type1": 3.12,
+  "click": 3.3,
+  "gauge0": 3.45,
+  "chip30": 3.635,
+  "score": 5.394,
+  "s3": 5.95,
+  "card1": 6.0,
+  "card2": 6.266,
+  "card3": 6.891,
+  "card4": 7.192,
+  "expand": 7.991,
+  "fixed": 8.371,
+  "s4": 8.85,
+  "hot": 9.56,
+  "s5": 10.75,
+  "best": 10.962,
+  "rivals": 11.9,
+  "s6": 12.75,
+  "ten": 12.927,
+  "msg1": 13.128,
+  "msg2": 13.502,
+  "checked": 13.911,
+  "s7": 14.8,
+  "logo": 14.85,
+  "free": 15.938,
+  "button": 16.488,
+  "bio0": 16.85,
+  "bio": 17.313,
+  "tap": 18.15,
+  "end": 20.0
+ }
+}

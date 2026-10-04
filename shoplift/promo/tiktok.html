@@ -1,0 +1,572 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Shoplift — TikTok 9:16</title>
+<!-- Vidéo TikTok 1080×1920 pilotée par render(t) (aucune animation CSS : chaque image est calculée, rendu image par image par render.mjs).
+     Minutage : voice/timeline.json (écrit par tiktok-sound.py) → sous-titres et temps forts calés au mot près sur la voix. -->
+<style>
+@font-face{font-family:M;font-weight:200 800;src:url(../public/fonts/manrope-latin.woff2) format('woff2')}
+@font-face{font-family:J;font-weight:100 800;src:url(fonts/jetbrains-mono.woff2) format('woff2')}
+:root{--y:#ffd23f;--o:#ffb020;--k:#0a0a0a;--w:#f6f3ec;--mu:#9a958b;--g:#3ddc84;--r:#ff4d4d;--line:rgba(255,255,255,.11)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#090909}
+body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
+.a{position:absolute}.full{position:absolute;inset:0}
+.sc{position:absolute;inset:0;visibility:hidden}
+.mono{font-family:J,monospace;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.h{font-weight:800;letter-spacing:-.045em;line-height:.95}
+#cam{position:absolute;inset:0;transform-origin:540px 860px}
+#bg{position:absolute;inset:-200px;background:#090909}
+.glow{position:absolute;border-radius:50%;filter:blur(90px)}
+#grid{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.075) 2px,transparent 2.5px);background-size:54px 54px}
+/* accroche */
+.hk{position:absolute;left:0;width:1080px;text-align:center;white-space:nowrap;font-weight:800;letter-spacing:-.05em;line-height:1}
+.stamp{position:absolute;left:50%;display:flex;align-items:center;gap:.12em;padding:.06em .28em .1em;background:var(--r);color:#fff;font:800 150px M;letter-spacing:-.05em;white-space:nowrap;border-radius:22px;box-shadow:0 30px 80px -20px rgba(255,60,60,.6)}
+.sales{position:absolute;left:150px;width:780px;padding:34px 40px;border-radius:36px;background:#141414;border:2px solid rgba(255,77,77,.35);box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.sales .mono{font-size:24px;color:var(--mu)}
+.sales b{display:block;font:800 150px/1 M;color:var(--r);letter-spacing:-.05em;margin-top:6px}
+/* app d'audit */
+.lbl{position:absolute;left:110px;width:860px;display:flex;align-items:center;justify-content:center;gap:14px;font-size:24px;color:var(--y)}
+.app{position:absolute;left:110px;top:330px;width:860px;height:880px;border-radius:48px;background:linear-gradient(180deg,#171717,#101010);border:2px solid var(--line);box-shadow:0 60px 120px -40px rgba(0,0,0,1),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden}
+.app h2{position:absolute;left:56px;top:70px;font:800 74px/1 M;letter-spacing:-.045em}
+.inp{position:absolute;left:56px;right:56px;height:140px;border-radius:30px;background:#0a0a0a;border:2px solid rgba(255,210,63,.55);display:flex;align-items:center;gap:22px;padding:0 34px;font:700 52px M;letter-spacing:-.02em}
+.inp svg{flex:none}
+.caret{display:inline-block;width:5px;height:58px;background:var(--y);margin-left:4px;vertical-align:middle}
+.btn{position:absolute;display:flex;align-items:center;justify-content:center;gap:20px;border-radius:30px;background:var(--y);color:var(--k);font:800 56px M;letter-spacing:-.03em;overflow:hidden}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.55)}
+.gnum{position:absolute;left:0;width:860px;text-align:center;font:800 210px/1 M;letter-spacing:-.06em;font-variant-numeric:tabular-nums}
+.gnum small{font-size:64px;color:var(--mu);letter-spacing:-.03em}
+.cat{position:absolute;width:356px}
+.cat span{display:flex;justify-content:space-between;font:700 28px M;color:#d9d4ca;margin-bottom:12px}
+.cat span b{color:var(--w)}
+.cat i{display:block;height:16px;border-radius:8px;background:rgba(255,255,255,.09);overflow:hidden}
+.cat i u{display:block;height:100%;border-radius:8px;transform-origin:left}
+.chip{position:absolute;display:inline-flex;align-items:center;gap:12px;padding:16px 26px;border-radius:99px;background:#121212;border:2px solid var(--line);font:700 30px M;white-space:nowrap;box-shadow:0 20px 50px -18px rgba(0,0,0,.9)}
+.pill{display:inline-block;font:700 22px J;letter-spacing:.12em;padding:7px 14px;border-radius:10px;white-space:nowrap}
+.hi{background:rgba(255,77,77,.16);color:var(--r)}.md{background:rgba(255,176,32,.16);color:var(--o)}.ok{background:rgba(61,220,132,.16);color:var(--g)}
+/* plan d'action */
+.issue{position:absolute;left:110px;width:860px;border-radius:34px;background:#141414;border:2px solid var(--line);box-shadow:0 40px 80px -30px rgba(0,0,0,.95);overflow:hidden}
+.issue .top{display:flex;align-items:center;gap:28px;height:150px;padding:0 30px}
+.issue .ic{flex:none;width:96px;height:96px;border-radius:26px;display:grid;place-items:center}
+.issue .tt{font:800 44px/1.05 M;letter-spacing:-.03em}
+.issue .more{padding:0 36px 34px 154px}
+.issue .more p{font:600 31px/1.35 M;color:#dcd7cd;margin-top:10px}
+.issue .more .mono{font-size:21px;margin-top:22px}
+/* radar */
+.pc{position:absolute;width:270px;border-radius:28px;background:#151515;border:2px solid var(--line);overflow:hidden;box-shadow:0 40px 70px -24px rgba(0,0,0,.95)}
+.pc img{display:block;width:270px;height:270px;object-fit:cover}
+.pc .sb{position:absolute;top:14px;left:14px;background:rgba(10,10,10,.88);color:var(--y);font:800 34px M;padding:4px 14px;border-radius:14px;font-variant-numeric:tabular-nums}
+.pc .kd{display:block;padding:14px 18px 0;font:800 27px M;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .sl{display:block;padding:4px 18px 18px;font:700 20px M;color:var(--g);white-space:nowrap}
+.top1{position:absolute;z-index:10;padding:12px 22px;border-radius:16px;background:var(--y);color:var(--k);font:800 30px J;letter-spacing:.06em;white-space:nowrap;box-shadow:0 20px 50px -10px rgba(255,210,63,.6)}
+.ring{position:absolute;border-radius:50%;border:2px solid rgba(255,255,255,.08)}
+/* espion */
+.win{position:absolute;left:110px;top:330px;width:860px;height:850px;border-radius:44px;background:#121212;border:2px solid var(--line);overflow:hidden;box-shadow:0 60px 120px -40px rgba(0,0,0,1)}
+.bar{height:96px;display:flex;align-items:center;gap:14px;padding:0 30px;border-bottom:2px solid var(--line);background:#161616}
+.bar i{width:20px;height:20px;border-radius:50%}
+.url{flex:1;margin-left:14px;height:56px;border-radius:28px;background:#0c0c0c;display:flex;align-items:center;padding:0 24px;font:600 27px M;color:#cfcac0}
+.tl{position:absolute;width:248px}
+.tl img{display:block;width:248px;height:248px;object-fit:cover;border-radius:22px}
+.tl i{display:block;height:13px;border-radius:7px;background:rgba(255,255,255,.12);margin-top:16px;width:180px}
+.tl b{display:block;height:13px;border-radius:7px;background:rgba(255,210,63,.5);margin-top:10px;width:84px}
+.tag{position:absolute;padding:10px 16px;border-radius:12px;font:800 25px J;letter-spacing:.04em;white-space:nowrap;box-shadow:0 14px 34px -10px rgba(0,0,0,.85)}
+/* agents */
+.ten{position:absolute;left:0;width:1080px;text-align:center;font:800 400px/1 M;letter-spacing:-.07em;background:linear-gradient(180deg,#ffe68a,#ffd23f 45%,#ffb020);-webkit-background-clip:background;-webkit-background-clip:text;color:transparent}
+.chat{position:absolute;left:150px;width:780px;border-radius:40px;background:#111;border:2px solid var(--line);overflow:hidden;box-shadow:0 60px 120px -40px rgba(0,0,0,1)}
+.chat .hd{display:flex;align-items:center;gap:20px;padding:26px 30px;background:#1a1a1a;border-bottom:2px solid var(--line)}
+.av{width:78px;height:78px;border-radius:50%;background:linear-gradient(135deg,#ffd23f,#ffb020);display:grid;place-items:center;color:var(--k);font:800 34px M}
+.bub{position:absolute;max-width:560px;padding:22px 28px;border-radius:30px;font:600 32px/1.3 M}
+.vstamp{position:absolute;padding:14px 26px;border-radius:18px;border:5px solid var(--g);color:var(--g);font:800 46px M;letter-spacing:-.01em;background:rgba(10,30,18,.85);white-space:nowrap}
+/* fin */
+.rays{position:absolute;left:-460px;top:-60px;width:2000px;height:2000px;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(255,210,63,.13) 0deg 7deg,transparent 7deg 20deg);-webkit-mask:radial-gradient(circle,#000 0,#000 18%,transparent 62%)}
+.ln{position:absolute;left:0;width:1080px;text-align:center;font:800 118px/1 M;letter-spacing:-.05em;white-space:nowrap}
+.ln span{display:inline-block}
+.free{position:absolute;left:50%;padding:.02em .22em .08em;background:var(--y);color:var(--k);font:800 196px/1 M;letter-spacing:-.055em;border-radius:26px;white-space:nowrap;box-shadow:0 40px 120px -20px rgba(255,210,63,.55)}
+.cta{position:absolute;left:150px;width:780px;height:140px;border-radius:70px;background:var(--y);color:var(--k);display:flex;align-items:center;justify-content:center;gap:22px;font:800 52px M;letter-spacing:-.03em;overflow:hidden;box-shadow:0 30px 80px -20px rgba(255,210,63,.5)}
+.bio{position:absolute;left:0;width:1080px;text-align:center;font:800 104px/1 M;letter-spacing:-.04em;color:var(--y);white-space:nowrap}
+/* sous-titres TikTok */
+#caps{position:absolute;left:100px;top:1250px;width:860px;transform-origin:430px 80px}
+.page{position:absolute;left:0;top:0;width:860px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 22px;visibility:hidden}
+.tok{display:inline-block;font:800 96px/1.14 M;letter-spacing:-.025em;text-transform:uppercase;white-space:nowrap;padding:0 .12em;border-radius:.16em;
+  text-shadow:0 5px 0 #000,0 -3px 0 #000,4px 0 0 #000,-4px 0 0 #000,3px 3px 0 #000,-3px 3px 0 #000,0 14px 30px rgba(0,0,0,.75)}
+#fx,#grain{position:absolute;left:0;top:0;width:1080px;height:1920px;pointer-events:none}
+#grain{opacity:.07;mix-blend-mode:overlay;image-rendering:pixelated}
+#iris,#flash{position:absolute;inset:0;pointer-events:none}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 50% 45%,transparent 55%,rgba(0,0,0,.6) 100%);pointer-events:none}
+#prog{position:absolute;left:0;top:0;width:1080px;height:10px;background:rgba(255,255,255,.12)}
+#prog i{display:block;height:100%;background:var(--y);transform-origin:left;box-shadow:0 0 18px rgba(255,210,63,.8)}
+#cursor{position:absolute;left:0;top:0;width:86px;height:86px;filter:drop-shadow(0 10px 18px rgba(0,0,0,.6))}
+</style></head><body>
+<div id="cam">
+ <div id="bg"><div class="glow" id="gl1"></div><div class="glow" id="gl2"></div><div id="grid"></div></div>
+
+ <!-- 1 · accroche -->
+ <div class="sc" id="s1">
+  <div class="hk" id="h1" style="top:420px;font-size:150px">TA BOUTIQUE</div>
+  <div class="hk" id="h2" style="top:590px;font-size:186px;color:var(--y)">SHOPIFY</div>
+  <div class="stamp" id="h3" style="top:820px"><span>NE VEND PAS</span><span id="hq">?</span></div>
+  <div class="sales" id="sales" style="top:1130px">
+   <div class="mono">Commandes aujourd’hui</div><b>0</b>
+   <svg width="700" height="90" viewBox="0 0 700 90" style="display:block;margin-top:10px"><path id="flat" d="M0 70 H700" stroke="#ff4d4d" stroke-width="7" fill="none" stroke-linecap="round" stroke-dasharray="700" stroke-dashoffset="700"/><circle id="fdot" cx="700" cy="70" r="11" fill="#ff4d4d"/></svg>
+  </div>
+ </div>
+
+ <!-- 2 · audit -->
+ <div class="sc" id="s2">
+  <div class="lbl mono" id="s2l" style="top:262px"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffd23f" stroke-width="2.6"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Audit de ta boutique</div>
+  <div class="app" id="app">
+   <h2 id="ah">Scanne ta <span style="color:var(--y)">boutique</span></h2>
+   <div class="inp" id="inp" style="top:200px"><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#9a958b" stroke-width="2"><path d="M3 9l1.5-5h15L21 9M3 9v11h18V9M3 9h18M9 20v-6h6v6"/></svg><span id="typed"></span><i class="caret" id="caret"></i></div>
+   <div class="btn" id="go" style="left:56px;right:56px;top:370px;height:140px">Analyser <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg><i class="ripple" id="rip"></i></div>
+   <div id="gauge" class="a" style="left:0;top:40px;width:860px;height:600px">
+    <svg width="860" height="600" viewBox="0 0 860 600" class="a" style="left:0;top:0">
+     <defs><linearGradient id="gg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ffe68a"/><stop offset=".55" stop-color="#ffd23f"/><stop offset="1" stop-color="#ffb020"/></linearGradient></defs>
+     <g id="ticks"></g>
+     <circle cx="430" cy="300" r="232" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="38"/>
+     <circle id="arc" cx="430" cy="300" r="232" fill="none" stroke="url(#gg)" stroke-width="38" stroke-linecap="round" transform="rotate(-90 430 300)" stroke-dasharray="1457.7" stroke-dashoffset="1457.7"/>
+    </svg>
+    <div class="mono a" style="left:0;width:860px;text-align:center;top:168px;font-size:22px;color:var(--mu)">Score Shoplift</div>
+    <div class="gnum" id="gnum" style="top:205px"><span id="gv">0</span><small>/100</small></div>
+    <div class="a" style="left:0;width:860px;text-align:center;top:438px"><span class="pill md" id="grade" style="font-size:24px">À BOOSTER</span></div>
+   </div>
+   <div id="cats">
+    <div class="cat" style="left:56px;top:670px"><span>SEO <b>72</b></span><i><u style="background:#ffd23f"></u></i></div>
+    <div class="cat" style="left:448px;top:670px"><span>Confiance <b>58</b></span><i><u style="background:#ffb020"></u></i></div>
+    <div class="cat" style="left:56px;top:770px"><span>Fiches produit <b>61</b></span><i><u style="background:#ffd23f"></u></i></div>
+    <div class="cat" style="left:448px;top:770px"><span>Marketing <b>49</b></span><i><u style="background:#ff4d4d"></u></i></div>
+   </div>
+  </div>
+  <div class="chip" id="chip30" style="left:560px;top:300px;border-color:rgba(255,210,63,.5);color:var(--y)"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffd23f" stroke-width="2.4"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>Résultat &lt; 30 s</div>
+ </div>
+
+ <!-- 3 · plan d'action -->
+ <div class="sc" id="s3">
+  <div class="lbl mono" style="top:262px"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffd23f" stroke-width="2.6"><path d="M4 6h16M4 12h10M4 18h6"/></svg>Ton plan d’action · trié par impact</div>
+  <div class="issue" id="i1"><div class="top"><div class="ic" id="i1ic"></div><div><div class="tt">Avis clients visibles</div><div style="margin-top:12px"><span class="pill hi" id="i1p">IMPACT ÉLEVÉ</span></div></div></div>
+   <div class="more" id="i1m"><div class="mono" style="color:var(--mu)">Pourquoi</div><p>La preuve sociale est le levier n°1 de conversion.</p><div class="mono" style="color:var(--g)">Corrige ça</div><p>Installe Judge.me (gratuit) et affiche les étoiles sur tes fiches.</p></div></div>
+  <div class="issue" id="i2"><div class="top"><div class="ic"></div><div><div class="tt">Pixel Meta (Facebook/Instagram)</div><div style="margin-top:12px"><span class="pill hi">IMPACT ÉLEVÉ</span></div></div></div></div>
+  <div class="issue" id="i3"><div class="top"><div class="ic"></div><div><div class="tt">Photos par produit</div><div style="margin-top:12px"><span class="pill hi">IMPACT ÉLEVÉ</span></div></div></div></div>
+  <div class="issue" id="i4"><div class="top"><div class="ic"></div><div><div class="tt">Livraison offerte mise en avant</div><div style="margin-top:12px"><span class="pill md">IMPACT MOYEN</span></div></div></div></div>
+ </div>
+
+ <!-- 4 · radar -->
+ <div class="sc" id="s4">
+  <div id="radar" class="a" style="left:70px;top:290px;width:940px;height:940px">
+   <div class="ring" style="inset:0"></div><div class="ring" style="inset:150px"></div><div class="ring" style="inset:300px"></div>
+   <div id="sweep" class="a" style="inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(61,220,132,0) 0deg,rgba(61,220,132,0) 300deg,rgba(61,220,132,.28) 360deg)"></div>
+  </div>
+  <div class="lbl mono" style="top:262px"><i style="width:14px;height:14px;border-radius:50%;background:var(--g);box-shadow:0 0 16px var(--g)" id="live"></i>Produits gagnants · màj toutes les 6 h</div>
+  <div id="cards"></div>
+  <div class="top1" id="top1">TOP 1 · DEMANDE 99/100</div>
+ </div>
+
+ <!-- 5 · espion -->
+ <div class="sc" id="s5">
+  <div class="lbl mono" id="s5l" style="top:262px"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffd23f" stroke-width="2.4"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Espion concurrents</div>
+  <div class="win" id="win">
+   <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><div class="url">boutique-concurrente.com</div></div>
+   <div id="tiles" class="a" style="left:0;top:96px;width:860px;height:754px"></div>
+   <div id="beam" class="a" style="left:0;width:860px;height:6px;background:var(--y);box-shadow:0 0 30px 10px rgba(255,210,63,.55)"></div>
+  </div>
+  <div class="chip" id="spychip" style="left:110px;top:1200px;width:860px;justify-content:center;color:var(--y);border-color:rgba(255,210,63,.45)">12 best-sellers + 12 nouveautés par concurrent</div>
+ </div>
+
+ <!-- 6 · agents -->
+ <div class="sc" id="s6">
+  <div class="lbl mono" style="top:262px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffd23f" stroke-width="2.4"><path d="M3 7h13v10H3zM16 10h3l2 3v4h-5M7 20a2 2 0 100-4 2 2 0 000 4zm11 0a2 2 0 100-4 2 2 0 000 4z"/></svg>Sourcing</div>
+  <div class="ten" id="ten" style="top:300px">10</div>
+  <div class="mono a" id="tenl" style="left:0;width:1080px;text-align:center;top:700px;font-size:36px;color:var(--w)">agents de sourcing</div>
+  <div class="chat" id="chat" style="top:790px;height:400px">
+   <div class="hd"><div class="av">A</div><div><div style="font:800 34px M;display:flex;align-items:center;gap:10px">Agent de sourcing <svg width="34" height="34" viewBox="0 0 24 24"><path d="M12 2l2.4 2.2 3.2-.4.9 3.1 2.8 1.6-1.2 3 1.2 3-2.8 1.6-.9 3.1-3.2-.4L12 22l-2.4-2.2-3.2.4-.9-3.1-2.8-1.6 1.2-3-1.2-3 2.8-1.6.9-3.1 3.2.4z" fill="#3ddc84"/><path d="M8 12.2l2.7 2.6L16.2 9" stroke="#0a0a0a" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div style="font:600 24px M;color:var(--g);margin-top:4px">WhatsApp direct · e-mail</div></div></div>
+   <div class="bub" id="b1" style="right:30px;top:150px;background:var(--y);color:var(--k);border-bottom-right-radius:8px">Tu peux me trouver ce produit ?</div>
+   <div class="bub" id="b2" style="left:30px;top:262px;background:#222;border-bottom-left-radius:8px">Oui ! Envoie le lien, je te fais un devis.</div>
+  </div>
+  <div class="vstamp" id="vst" style="left:560px;top:745px">✓ VÉRIFIÉS</div>
+ </div>
+
+ <!-- 7 · fin -->
+ <div class="sc" id="s7">
+  <div class="rays" id="rays"></div>
+  <div class="a" id="logo" style="left:0;width:1080px;top:270px;display:flex;justify-content:center;align-items:center;gap:26px">
+   <svg width="120" height="120" viewBox="0 0 32 32"><path d="M3.5 16 11 6.5h16a2.5 2.5 0 0 1 2.5 2.5v14a2.5 2.5 0 0 1-2.5 2.5H11z" fill="#ffd23f"/><circle cx="10.5" cy="16" r="2" fill="#0a2419"/><path d="M15.5 21 22 12.5m-5 0h5v5" fill="none" stroke="#0a2419" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+   <span style="font:800 124px/1 M;letter-spacing:-.05em">Shoplift</span>
+  </div>
+  <div class="ln" style="top:500px"><span id="w1">TA</span> <span id="w2">PREMIÈRE</span></div>
+  <div class="ln" style="top:630px"><span id="w3">ANALYSE</span> <span id="w4">EST</span></div>
+  <div class="free" id="free" style="top:770px">OFFERTE</div>
+  <div class="a" id="chips" style="left:0;width:1080px;top:1040px;display:flex;justify-content:center;gap:18px">
+   <div class="chip" style="position:relative;font-size:28px"><span style="color:var(--g)">✓</span> Sans carte bancaire</div>
+   <div class="chip" style="position:relative;font-size:28px">Puis dès 19 €/mois</div>
+  </div>
+  <div class="cta" id="cta" style="top:1160px">Analyser ma boutique <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg><i class="ripple" id="rip2"></i></div>
+  <div class="bio" id="bio" style="top:1360px"><span id="b_l">LIEN</span> <span id="b_e">EN</span> <span id="b_b" style="background:var(--y);color:var(--k);padding:0 .14em;border-radius:.14em">BIO</span></div>
+  <svg id="arrow" class="a" style="left:470px;top:1490px" width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="#ffd23f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v17M5 13l7 7 7-7"/></svg>
+ </div>
+</div>
+
+<div id="caps"></div>
+<canvas id="fx" width="1080" height="1920"></canvas>
+<svg id="cursor" viewBox="0 0 24 24"><path d="M5 2.5v17.2l4.6-4.3 3.1 6.6 3-1.4-3.1-6.5 6.3-.3z" fill="#fff" stroke="#0a0a0a" stroke-width="1.4" stroke-linejoin="round"/></svg>
+<div id="iris"></div>
+<div id="flash"></div>
+<div id="vig"></div>
+<canvas id="grain" width="360" height="640"></canvas>
+<div id="prog"><i id="progi"></i></div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const cl = (x, a = 0, b = 1) => x < a ? a : x > b ? b : x;
+const P = (t, a, b) => cl((t - a) / (b - a));
+const lerp = (a, b, x) => a + (b - a) * x;
+const o3 = (x) => 1 - (1 - x) ** 3, o5 = (x) => 1 - (1 - x) ** 5, i3 = (x) => x * x * x, io = (x) => x < .5 ? 4 * x * x * x : 1 - (-2 * x + 2) ** 3 / 2;
+const back = (x, s = 2) => 1 + (s + 1) * (x - 1) ** 3 + s * (x - 1) ** 2;
+const spr = (dt, f = 2.2, z = 11) => dt <= 0 ? 0 : 1 - Math.exp(-z * dt) * Math.cos(2 * Math.PI * f * dt); // ressort : 0 → 1 avec rebond
+const css = (el, o) => { for (const k in o) el.style[k] = o[k]; };
+const show = (el, on) => { el.style.visibility = on ? 'visible' : 'hidden'; };
+// graine fixe : la même image à chaque rendu
+let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+
+let TL, C, DUR = 20;
+// slam : arrive de très grand, s'écrase et se pose (+ flou et aberration chromatique)
+function slam(el, dt, { from = 2.4, base = 1, rot = 0, blur = 14, split = 16 } = {}) {
+  if (dt < 0) { el.style.opacity = 0; return; }
+  const s = spr(dt, 2.0, 10);
+  el.style.opacity = cl(dt / .05);
+  el.style.transform = `${el.dataset.pre || ''} scale(${base * (1 + (from - 1) * (1 - s))}) rotate(${rot}deg)`;
+  el.style.filter = dt < .1 ? `blur(${blur * (1 - dt / .1)}px)` : 'none';
+  const dx = split * Math.exp(-dt * 13);
+  el.style.textShadow = dx > .3 ? `${dx}px 0 rgba(255,40,80,.85),${-dx}px 0 rgba(30,220,255,.85)` : 'none';
+}
+function popIn(el, dt, { from = .5, y = 40, pre = '' } = {}) {
+  if (dt < 0) { el.style.opacity = 0; el.style.transform = `${pre} scale(${from})`; return 0; }
+  const s = spr(dt);
+  el.style.opacity = cl(dt / .08);
+  el.style.transform = `${pre} translateY(${y * (1 - s)}px) scale(${from + (1 - from) * s})`;
+  return s;
+}
+
+// ---------- sous-titres (phrases 1 à 7 ; l'accroche et la fin ont leur propre texte) ----------
+const CAPS = {
+  1: [[['Regarde', 0], ['ça', 1, 1]]],
+  2: [[['Tu', 0], ['colles', 1], ['ton', 2], ['lien…', 3, 1]]],
+  3: [[['et', 0], ['en', 1], ['30', 2, 1], ['secondes,', 3, 1]], [['t’as', 4], ['ton', 5], ['score', 6, 1], ['sur', 7], ['100.', 8, 1]]],
+  4: [[['Chaque', 0], ['erreur', 1, 1]], [['qui', 2], ['te', 3], ['coûte', 4], ['des', 5], ['ventes', 6, 1]], [['expliquée.', 7, 1]]],
+  5: [[['Les', 0], ['produits', 1], ['qui', 2], ['cartonnent', 3, 1]], [['en', 4], ['ce', 5], ['moment.', 6]]],
+  6: [[['Les', 0], ['best-sellers', 1, 1]], [['de', 2], ['tes', 3], ['concurrents.', 4, 1]]],
+  7: [[['Et', 0], ['10', 1, 1], ['agents', 2, 1]], [['de', 3], ['sourcing', 4], ['vérifiés.', 5, 1]]],
+};
+const pages = [];
+function buildCaps() {
+  const box = $('#caps');
+  for (const li in CAPS) {
+    const line = TL.lines[li], next = TL.lines[+li + 1];
+    CAPS[li].forEach((pg, pi) => {
+      const el = document.createElement('div'); el.className = 'page';
+      const toks = pg.map(([txt, wi, em]) => { const s = document.createElement('span'); s.className = 'tok'; s.textContent = txt; el.appendChild(s); return { el: s, t: line.words[wi].t, em: !!em }; });
+      box.appendChild(el);
+      pages.push({ el, toks, a: toks[0].t - .05, li: +li, pi, last: pi === CAPS[li].length - 1, lineEnd: line.end, nextStart: next ? next.start : DUR });
+    });
+  }
+  pages.forEach((p, i) => {
+    const n = pages[i + 1];
+    p.b = !p.last && n ? n.a : Math.min(p.lineEnd + .35, p.nextStart - .06);
+    if (p.li === 1) p.b = Math.min(p.b, C.s2 - .3);
+    p.toks.forEach((k, j) => { k.end = j < p.toks.length - 1 ? p.toks[j + 1].t : Math.min(p.b, k.t + .45); });
+  });
+}
+function renderCaps(t) {
+  for (const p of pages) {
+    const on = t >= p.a && t < p.b; show(p.el, on);
+    if (!on) continue;
+    for (const k of p.toks) {
+      const dt = t - k.t + .03;
+      if (dt < 0) { k.el.style.opacity = 0; continue; }
+      const s = spr(dt, 2.4, 12), act = t >= k.t - .03 && t < k.end;
+      k.el.style.opacity = cl(dt / .05);
+      k.el.style.transform = `translateY(${22 * (1 - s)}px) scale(${(.6 + .4 * s) * (act ? 1.07 : 1)}) rotate(${act ? -2.5 : 0}deg)`;
+      k.el.style.background = act ? '#ffd23f' : 'transparent';
+      k.el.style.color = act ? '#0a0a0a' : k.em ? '#ffd23f' : '#fff';
+      k.el.style.textShadow = act ? '0 10px 30px rgba(0,0,0,.45)' : '';
+    }
+  }
+}
+
+// ---------- confettis et étincelles (déterministes) ----------
+const fx = $('#fx').getContext('2d');
+const bursts = [];
+function burst(t0, x, y, n, { speed = 1500, grav = 2600, colors = ['#ffd23f', '#fff', '#ffb020', '#3ddc84'], size = [14, 30], life = 1.6, spread = Math.PI * 2, dir = -Math.PI / 2, kind = 'conf' } = {}) {
+  const ps = [];
+  for (let i = 0; i < n; i++) {
+    const a = dir + (rnd() - .5) * spread, v = speed * (.35 + .65 * rnd());
+    ps.push({ vx: Math.cos(a) * v, vy: Math.sin(a) * v, r: rnd() * 6.28, vr: (rnd() - .5) * 18, w: size[0] + rnd() * (size[1] - size[0]), h: (size[0] + rnd() * (size[1] - size[0])) * (kind === 'conf' ? .45 : 1), c: colors[Math.floor(rnd() * colors.length)], drag: .6 + rnd() * .8 });
+  }
+  bursts.push({ t0, x, y, ps, grav, life, kind });
+}
+function renderFx(t) {
+  fx.clearRect(0, 0, 1080, 1920);
+  for (const b of bursts) {
+    const dt = t - b.t0; if (dt < 0 || dt > b.life) continue;
+    const fade = 1 - P(dt, b.life * .6, b.life);
+    for (const p of b.ps) {
+      const k = (1 - Math.exp(-p.drag * dt * 3)) / (p.drag * 3); // freinage de l'air
+      const x = b.x + p.vx * k, y = b.y + p.vy * k + .5 * b.grav * dt * dt * (b.kind === 'conf' ? .35 : .6);
+      fx.save(); fx.globalAlpha = fade; fx.translate(x, y); fx.rotate(p.r + p.vr * dt); fx.fillStyle = p.c;
+      if (b.kind === 'spark') { fx.globalCompositeOperation = 'lighter'; fx.fillRect(-p.w / 2, -2.5, p.w * (1.4 - dt), 5); }
+      else fx.fillRect(-p.w / 2, -p.h / 2 * Math.abs(Math.cos(p.r * 3 + dt * 9)), p.w, p.h * Math.abs(Math.cos(p.r * 3 + dt * 9)) + 1);
+      fx.restore();
+    }
+  }
+}
+
+// ---------- grain (8 trames pré-calculées) ----------
+const gctx = $('#grain').getContext('2d'); const grains = [];
+for (let f = 0; f < 8; f++) { const im = gctx.createImageData(360, 640); for (let i = 0; i < im.data.length; i += 4) { const v = rnd() * 255; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; } grains.push(im); }
+
+// ---------- caméra : coups de zoom et secousses ----------
+let PUNCH, SHAKE;
+function camera(t) {
+  let s = 1, x = 0, y = 0, r = 0;
+  for (const [t0, a] of PUNCH) { const dt = t - t0; if (dt < 0 || dt > 1) continue; s += a * (dt < .05 ? dt / .05 : Math.exp(-(dt - .05) * 7)); }
+  for (const [t0, a] of SHAKE) { const dt = t - t0; if (dt < 0 || dt > .6) continue; const e = a * Math.exp(-dt * 9); x += e * Math.sin(dt * 97); y += e * Math.cos(dt * 83); r += e * .03 * Math.sin(dt * 61); }
+  // léger mouvement continu (caméra « à la main »)
+  x += Math.sin(t * 1.3) * 3; y += Math.cos(t * 1.1) * 3;
+  return { s, x, y, r };
+}
+
+// ---------- scènes : entrée en zoom + flou, sortie en zoom traversant ----------
+let SCENES;
+function sceneState(t, a, b, first) {
+  if (t < a - .06 || t > b + .14) return null;
+  let s = 1, blur = 0, op = 1;
+  if (!first && t < a + .26) { const x = P(t, a - .04, a + .26); s *= lerp(.82, 1, back(o3(x), 1.4)); blur += 16 * (1 - o3(x)); op = cl(x * 4); }
+  if (t > b - .1) { const x = P(t, b - .1, b + .12); s *= 1 + .7 * i3(x); blur += 26 * x; op *= 1 - x; }
+  return { s, blur, op };
+}
+
+function setup() {
+  C = TL.cues; DUR = TL.dur;
+  PUNCH = [[C.hook1, .05], [C.hook2, .06], [C.hook3, .1], [C.look, .04], [C.s2, .05], [C.click, .03], [C.chip30, .025], [C.score, .09], [C.card1, .025], [C.card2, .025], [C.card3, .025], [C.card4, .025], [C.expand, .05], [C.fixed, .03], [C.s4, .04], [C.hot, .07], [C.s5, .04], [C.best, .05], [C.rivals, .03], [C.s6, .04], [C.ten, .1], [C.checked, .05], [C.s7, .06], [C.logo, .03], [C.free, .13], [C.button, .03], [C.bio, .07], [C.tap, .03]];
+  SHAKE = [[0, 10], [C.hook1, 12], [C.hook2, 14], [C.hook3, 30], [C.s2, 10], [C.score, 16], [C.ten, 22], [C.s7, 14], [C.free, 24]];
+  SCENES = [['s1', 0, C.s2], ['s2', C.s2, C.s3], ['s3', C.s3, C.s4], ['s4', C.s4, C.s5], ['s5', C.s5, C.s6], ['s6', C.s6, C.s7], ['s7', C.s7, DUR + 1]];
+  // jauge : graduations
+  const ticks = $('#ticks'); let h = '';
+  for (let i = 0; i < 60; i++) { const a = i / 60 * Math.PI * 2 - Math.PI / 2; h += `<line data-i="${i}" x1="${430 + Math.cos(a) * 275}" y1="${300 + Math.sin(a) * 275}" x2="${430 + Math.cos(a) * (i % 5 ? 288 : 296)}" y2="${300 + Math.sin(a) * (i % 5 ? 288 : 296)}" stroke="rgba(255,255,255,.18)" stroke-width="${i % 5 ? 3 : 5}" stroke-linecap="round"/>`; }
+  ticks.innerHTML = h;
+  // radar : 6 vrais produits du relevé (score de demande, nombre de boutiques)
+  const R = [['beaute-0.webp', 99, 'Lèvres', 6], ['sport-0.webp', 92, 'Legging', 5], ['animaux-0.webp', 92, 'Lit pour animal', 4], ['bijoux-0.webp', 88, 'Lunettes de soleil', 4], ['maison-0.webp', 85, 'Bougie', 4], ['mode-0.webp', 78, 'Haut', 8]];
+  $('#cards').innerHTML = R.map(([img, sc, kd, n], i) => `<div class="pc" id="pc${i}" style="left:${110 + (i % 3) * 295}px;top:${370 + Math.floor(i / 3) * 400}px"><img src="../public/radar-img/${img}"><span class="sb" data-s="${sc}">0</span><span class="kd">${kd}</span><span class="sl">Vendu par ${n} boutiques</span></div>`).join('');
+  const T = ['mode-1.webp', 'mode-2.jpg', 'sport-3.webp', 'beaute-1.webp', 'maison-2.webp', 'animaux-2.webp'];
+  $('#tiles').innerHTML = T.map((img, i) => `<div class="tl" id="tl${i}" style="left:${30 + (i % 3) * 278}px;top:${34 + Math.floor(i / 3) * 352}px"><img src="../public/radar-img/${img}"><i></i><b></b></div>`).join('')
+    + [['#1 BEST-SELLER', 1, '#ffd23f', '#0a0a0a'], ['#2', 3, '#ffd23f', '#0a0a0a'], ['#3', 0, '#ffd23f', '#0a0a0a'], ['PROMO', 2, '#ff4d4d', '#fff'], ['NOUVEAU', 5, '#3ddc84', '#0a0a0a']]
+      .map(([txt, i, bg, fg], k) => `<div class="tag" id="tg${k}" style="left:${30 + (i % 3) * 278 + 12}px;top:${34 + Math.floor(i / 3) * 352 + 12}px;background:${bg};color:${fg}">${txt}</div>`).join('');
+  buildCaps();
+  // confettis et étincelles
+  burst(C.score, 540, 960, 70, { kind: 'spark', speed: 1300, grav: 300, colors: ['#ffd23f', '#ffe68a', '#fff'], size: [26, 60], life: .9 });
+  burst(C.hot, 255, 560, 40, { kind: 'spark', speed: 900, grav: 300, colors: ['#ffd23f', '#ffb020', '#fff'], size: [20, 44], life: .7 });
+  burst(C.ten, 540, 500, 50, { kind: 'spark', speed: 1200, grav: 300, colors: ['#ffd23f', '#fff'], size: [24, 56], life: .8 });
+  burst(C.free, 540, 870, 180, { speed: 2300, spread: Math.PI * 1.15, life: 2.6 });
+  burst(C.free + .08, 200, 1000, 60, { speed: 1800, dir: -Math.PI / 2.6, spread: .9, life: 2.4 });
+  burst(C.free + .08, 880, 1000, 60, { speed: 1800, dir: -Math.PI + Math.PI / 2.6, spread: .9, life: 2.4 });
+}
+
+function render(t) {
+  show($('#cursor'), false);
+  const cam = camera(t);
+  $('#cam').style.transform = `translate(${cam.x}px,${cam.y}px) scale(${cam.s}) rotate(${cam.r}deg)`;
+  $('#caps').style.transform = `translate(${cam.x * .35}px,${cam.y * .35}px) scale(${1 + (cam.s - 1) * .5})`;
+  $('#progi').style.transform = `scaleX(${t / DUR})`;
+
+  // fond : halos qui dérivent ; rouge pendant « ne vend pas », jaune à la fin
+  const red = P(t, C.hook3 - .02, C.hook3 + .1) * (1 - P(t, C.look + .3, C.s2)), end = P(t, C.s7, C.s7 + .3);
+  css($('#gl1'), { left: `${120 + Math.sin(t * .7) * 120}px`, top: `${300 + Math.cos(t * .5) * 140}px`, width: '900px', height: '900px', background: `rgba(${lerp(255, 255, red)},${lerp(210, 70, red)},${lerp(63, 70, red)},${.10 + .12 * red + .1 * end})` });
+  css($('#gl2'), { left: `${500 + Math.cos(t * .6) * 140}px`, top: `${1200 + Math.sin(t * .8) * 120}px`, width: '800px', height: '800px', background: `rgba(255,176,32,${.07 + .08 * end})` });
+  $('#grid').style.transform = `translateY(${(t * 40) % 54}px)`;
+
+  for (const [id, a, b] of SCENES) {
+    const el = $('#' + id), st = sceneState(t, a, b, id === 's1');
+    show(el, !!st);
+    if (!st) continue;
+    el.style.opacity = st.op; el.style.transform = `scale(${st.s})`; el.style.filter = st.blur > .2 ? `blur(${st.blur}px)` : 'none';
+    el.style.transformOrigin = '540px 820px';
+    SC[id](t, t - a);
+  }
+  renderCaps(t);
+  renderFx(t);
+
+  // iris jaune : accroche → audit
+  const ia = P(t, C.s2 - .3, C.s2), ib = P(t, C.s2, C.s2 + .24);
+  if (t > C.s2 - .3 && t < C.s2) $('#iris').style.background = `radial-gradient(circle at 540px 900px,#ffd23f ${i3(ia) * 1500}px,transparent ${i3(ia) * 1500 + 2}px)`;
+  else if (t >= C.s2 && t < C.s2 + .24) $('#iris').style.background = `radial-gradient(circle at 540px 900px,transparent ${o3(ib) * 1500}px,#ffd23f ${o3(ib) * 1500 + 2}px)`;
+  else $('#iris').style.background = 'none';
+
+  // flashs : début, coupes de scène, temps forts
+  let fl = 0, fc = '255,255,255';
+  const flashes = [[0, .9, '255,210,63'], [C.hook3, .35, '255,77,77'], [C.s3, .45], [C.s4, .45], [C.s5, .45], [C.s6, .45], [C.s7, .85, '255,210,63'], [C.score, .25, '255,210,63'], [C.free, .4, '255,255,255']];
+  for (const [t0, a, c] of flashes) { const dt = t - t0; if (dt >= -.02 && dt < .2) { const v = a * (dt < 0 ? 1 + dt / .02 : Math.exp(-dt * 22)); if (v > fl) { fl = v; fc = c || '255,255,255'; } } }
+  $('#flash').style.background = fl > .005 ? `rgba(${fc},${fl})` : 'none';
+
+  gctx.putImageData(grains[Math.floor(t * 60) % 8], 0, 0);
+}
+
+const SC = {
+  s1(t) {
+    const h1 = $('#h1'), h2 = $('#h2'), h3 = $('#h3');
+    const look = P(t, C.look, C.look + .35), lift = o5(look);
+    h1.dataset.pre = `translateY(${-50 * lift}px)`; h2.dataset.pre = `translateY(${-50 * lift}px)`;
+    slam(h1, t - C.hook1, { from: 2.6, base: fit(h1, 900) * (1 - .1 * lift) });
+    slam(h2, t - C.hook2, { from: 2.8, base: fit(h2, 900) * (1 - .1 * lift), rot: -1.5 });
+    h3.dataset.pre = `translateX(-50%) translateY(${-50 * lift}px)`;
+    slam(h3, t - C.hook3, { from: 3.2, base: fit(h3, 920) * (1 - .06 * lift), rot: -4, split: 22 });
+    h3.style.textShadow = 'none';
+    const q = $('#hq'), dq = t - C.hookQ; q.style.display = 'inline-block';
+    q.style.transform = dq < 0 ? 'scale(0)' : `scale(${spr(dq, 2.4, 9) * (1 + .1 * Math.sin(t * 18) * Math.exp(-dq * 2))}) rotate(${12 * Math.sin(dq * 20) * Math.exp(-dq * 6)}deg)`;
+    // carte « 0 commande » : arrive avec le tampon, repart sur « regarde ça »
+    const sa = $('#sales'), ds = t - C.hook3 - .08;
+    const sIn = ds < 0 ? 0 : spr(ds, 1.8, 9);
+    sa.style.opacity = cl(ds / .1) * (1 - P(t, C.look, C.look + .25));
+    sa.style.transform = `translateY(${(1 - sIn) * 260 + o3(look) * 200}px) rotate(${(1 - sIn) * 6}deg)`;
+    $('#flat').setAttribute('stroke-dashoffset', 700 * (1 - o3(P(t, C.hook3 + .1, C.hook3 + .5))));
+    $('#fdot').setAttribute('r', 11 + 4 * Math.sin(t * 14));
+  },
+  s2(t) {
+    const app = $('#app'), dIn = t - C.s2;
+    // saisie de l'adresse
+    const url = 'maboutique.com', n = Math.round(url.length * P(t, C.type0, C.type1));
+    $('#typed').textContent = url.slice(0, n);
+    $('#caret').style.opacity = t < C.click ? (Math.floor(t * 3.4) % 2 ? .2 : 1) : 0;
+    // curseur qui vient cliquer sur « Analyser »
+    const cur = $('#cursor'), cm = P(t, C.click - .38, C.click - .04), up = P(t, C.click + .12, C.click + .4);
+    const press = t >= C.click && t < C.click + .12;
+    show(cur, t > C.click - .4 && t < C.click + .45);
+    if (t < C.s3) { cur.style.transform = `translate(${lerp(900, 640, io(cm)) + 80 * i3(up)}px,${lerp(1250, 790, io(cm)) + 160 * i3(up)}px) scale(${press ? .85 : 1})`; cur.style.opacity = 1 - up; }
+    const go = $('#go'), dc = t - C.click;
+    go.style.transform = `scale(${dc >= 0 && dc < .1 ? .94 : 1 - .06 * Math.exp(-Math.max(0, dc - .1) * 12) * (dc > 0 ? 1 : 0)})`;
+    const rip = $('#rip'), rr = P(t, C.click, C.click + .45);
+    css(rip, { left: `${374 - rr * 420}px`, top: `${70 - rr * 420}px`, width: `${rr * 840}px`, height: `${rr * 840}px`, opacity: rr > 0 && rr < 1 ? .6 * (1 - rr) : 0 });
+    // l'écran de saisie s'efface, la jauge apparaît
+    const sw = o3(P(t, C.click + .08, C.click + .3));
+    for (const el of [$('#ah'), $('#inp'), go]) { el.style.opacity = 1 - sw; }
+    $('#ah').style.transform = `translateY(${-60 * sw}px)`; $('#inp').style.transform = `translateY(${-60 * sw}px)`;
+    go.style.marginTop = `${-60 * sw}px`;
+    const g = $('#gauge'), dg = t - (C.click + .18);
+    g.style.opacity = cl(dg / .12);
+    g.style.transform = `scale(${dg < 0 ? .5 : .5 + .5 * spr(dg, 1.8, 9)})`; g.style.transformOrigin = '430px 300px';
+    const gx = cl((t - (C.gauge0 + .12)) / (C.score - C.gauge0 - .12)), v = Math.round(64 * o3(gx));
+    $('#gv').textContent = v;
+    const len = 1457.7; $('#arc').setAttribute('stroke-dashoffset', len * (1 - v / 100));
+    $('#arc').style.filter = t > C.score ? `drop-shadow(0 0 ${30 * Math.exp(-(t - C.score) * 3) + 8}px rgba(255,210,63,.8))` : 'drop-shadow(0 0 8px rgba(255,210,63,.4))';
+    $('#ticks').querySelectorAll('line').forEach((l) => l.setAttribute('stroke', +l.dataset.i < v * .6 ? '#ffd23f' : 'rgba(255,255,255,.16)'));
+    const ds = t - C.score;
+    $('#gnum').style.transform = ds < 0 ? 'none' : `scale(${1 + .28 * Math.exp(-ds * 8) * Math.cos(ds * 30)})`;
+    $('#gnum').style.color = ds > 0 ? '#ffd23f' : '#f6f3ec';
+    const gr = $('#grade'); gr.style.opacity = cl(ds / .1); gr.style.transform = `scale(${ds < 0 ? .3 : .3 + .7 * spr(ds)})`; gr.style.display = 'inline-block';
+    // catégories
+    $$('#cats .cat').forEach((c, i) => {
+      const dc2 = t - (C.gauge0 + .55 + i * .16);
+      c.style.opacity = cl(dc2 / .12); c.style.transform = `translateY(${30 * (1 - o3(cl(dc2 / .3)))}px)`;
+      const val = [72, 58, 61, 49][i]; c.querySelector('u').style.transform = `scaleX(${val / 100 * o3(cl((dc2 - .1) / .6))})`;
+    });
+    const chip = $('#chip30'); popIn(chip, t - C.chip30, { from: .3, y: 20, pre: `rotate(4deg)` });
+    $('#s2l').style.opacity = cl(dIn / .2);
+  },
+  s3(t) {
+    const exp = o3(P(t, C.expand, C.expand + .35)), fixed = P(t, C.fixed, C.fixed + .15);
+    const keys = ['card1', 'card2', 'card3', 'card4'];
+    ['#i1', '#i2', '#i3', '#i4'].forEach((id, i) => {
+      const el = $(id), d = t - C[keys[i]], side = i % 2 ? 1 : -1;
+      const s = d < 0 ? 0 : spr(d, 2, 10);
+      const top = 340 + i * 172 + (i > 0 ? 320 * exp : 0);
+      el.style.top = `${top}px`;
+      el.style.opacity = cl(d / .06) * (i > 0 ? 1 - .55 * exp : 1) * (i === 3 ? 1 - exp : 1);
+      el.style.transform = `translateX(${side * 900 * (1 - s)}px) rotate(${side * 8 * (1 - s)}deg) scale(${i === 0 ? 1 + .03 * exp : 1 - .04 * exp})`;
+      el.style.filter = i > 0 && exp > 0 ? `blur(${3 * exp}px)` : 'none';
+      el.style.height = `${i === 0 ? 150 + 340 * exp : 150}px`;
+      const ic = el.querySelector('.ic');
+      const ok = i === 0 && fixed > 0;
+      ic.style.background = ok ? 'rgba(61,220,132,.18)' : 'rgba(255,77,77,.15)';
+      ic.innerHTML = ok ? '<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#3ddc84" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>' : '<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#ff4d4d" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+      ic.style.transform = ok ? `scale(${1 + .35 * Math.exp(-(t - C.fixed) * 9) * Math.cos((t - C.fixed) * 25)})` : `scale(${d > 0 ? 1 + .3 * Math.exp(-d * 10) : 1})`;
+      if (i === 0) {
+        el.style.borderColor = ok ? 'rgba(61,220,132,.6)' : exp > 0 ? 'rgba(255,210,63,.5)' : 'rgba(255,255,255,.11)';
+        el.style.boxShadow = ok ? `0 0 ${60 * Math.exp(-(t - C.fixed) * 3) + 20}px rgba(61,220,132,.35),0 40px 80px -30px rgba(0,0,0,.95)` : '';
+        const p = $('#i1p'); p.textContent = ok ? 'CORRIGÉ ✓' : 'IMPACT ÉLEVÉ'; p.className = 'pill ' + (ok ? 'ok' : 'hi');
+        $('#i1m').style.opacity = P(t, C.expand + .1, C.expand + .35);
+      }
+    });
+  },
+  s4(t, lt) {
+    $('#sweep').style.transform = `rotate(${t * 220}deg)`;
+    $('#radar').style.opacity = .9; $('#radar').style.transform = `scale(${.9 + .1 * o3(cl(lt / .4))})`;
+    $('#live').style.opacity = .5 + .5 * Math.abs(Math.sin(t * 5));
+    const hot = t - C.hot;
+    for (let i = 0; i < 6; i++) {
+      const el = $('#pc' + i), d = t - (C.s4 + .1 + i * .07);
+      const x = cl(d / .5), s = d < 0 ? 0 : spr(d, 1.6, 8);
+      const left = 110 + (i % 3) * 295, top = 370 + Math.floor(i / 3) * 400;
+      const fx0 = 540 - 135 - left, fy0 = 760 - 180 - top;
+      el.style.opacity = cl(d / .08) * (hot > 0 && i ? 1 - .45 * cl(hot / .2) : 1);
+      el.style.transform = `translate(${fx0 * (1 - s)}px,${fy0 * (1 - s)}px) scale(${(.15 + .85 * s) * (i === 0 && hot > 0 ? 1 + .1 * spr(hot, 1.6, 7) : 1)}) rotate(${(1 - s) * (i % 2 ? 25 : -25)}deg)`;
+      el.style.zIndex = i === 0 ? 5 : 1;
+      if (i === 0) { el.style.borderColor = hot > 0 ? '#ffd23f' : 'rgba(255,255,255,.11)'; el.style.boxShadow = hot > 0 ? `0 0 ${50 + 20 * Math.sin(t * 9)}px rgba(255,210,63,.55),0 40px 70px -24px rgba(0,0,0,.95)` : ''; }
+      const sb = el.querySelector('.sb'); sb.textContent = Math.round(+sb.dataset.s * o3(x));
+    }
+    const tp = $('#top1'); css(tp, { left: '140px', top: '300px' }); popIn(tp, hot, { from: .2, y: 30, pre: 'rotate(-4deg)' });
+  },
+  s5(t, lt) {
+    const by = P(t, C.s5 + .15, C.s5 + .9);
+    $('#beam').style.top = `${96 + io(by) * 740}px`; $('#beam').style.opacity = by > 0 && by < 1 ? 1 : 0;
+    for (let i = 0; i < 6; i++) {
+      const el = $('#tl' + i), d = t - (C.s5 + .05 + i * .04);
+      el.style.opacity = cl(d / .1); el.style.transform = `translateY(${40 * (1 - o3(cl(d / .3)))}px)`;
+      const row = Math.floor(i / 3), lit = io(by) * 740 > 34 + row * 352 + 120;
+      el.querySelector('img').style.filter = lit ? 'none' : 'grayscale(.7) brightness(.6)';
+    }
+    const at = [C.best, C.s5 + .62, C.s5 + .5, C.s5 + .76, C.s5 + .88];
+    for (let k = 0; k < 5; k++) popIn($('#tg' + k), t - at[k], { from: .2, y: 20, pre: `rotate(${k % 2 ? 4 : -4}deg) scale(${k === 0 ? 1.15 : 1})` });
+    $('#win').style.transform = `translateY(${60 * (1 - o3(cl(lt / .35)))}px)`;
+    popIn($('#spychip'), t - C.rivals, { from: .4, y: 30 });
+  },
+  s6(t) {
+    const ten = $('#ten'); slam(ten, t - C.ten, { from: 3, base: 1, rot: -3, split: 26, blur: 20 });
+    ten.style.textShadow = 'none';
+    const tl = $('#tenl'); popIn(tl, t - C.ten - .12, { from: .6, y: 20 });
+    const chat = $('#chat'), dc = t - C.s6 - .05; chat.style.opacity = cl(dc / .15); chat.style.transform = `translateY(${120 * (1 - o3(cl(dc / .4)))}px)`;
+    popIn($('#b1'), t - C.msg1, { from: .3, y: 30 }); $('#b1').style.transformOrigin = 'right bottom';
+    popIn($('#b2'), t - C.msg2, { from: .3, y: 30 }); $('#b2').style.transformOrigin = 'left bottom';
+    const vs = $('#vst'), dv = t - C.checked;
+    vs.style.opacity = cl(dv / .04); vs.style.transform = dv < 0 ? 'scale(3)' : `scale(${1 + 2 * (1 - spr(dv, 2.2, 11))}) rotate(8deg)`;
+  },
+  s7(t, lt) {
+    $('#rays').style.transform = `rotate(${t * 14}deg)`; $('#rays').style.opacity = .4 + .6 * P(t, C.free, C.free + .3);
+    const logo = $('#logo'), dl = t - C.logo; logo.style.opacity = cl(dl / .08); logo.style.transform = `scale(${dl < 0 ? .4 : .4 + .6 * spr(dl, 1.8, 9)})`;
+    const L = TL.lines[8].words;
+    [['#w1', 0], ['#w2', 1], ['#w3', 2], ['#w4', 3]].forEach(([id, wi]) => slam($(id), t - L[wi].t + .02, { from: 2.2, base: 1, blur: 10, split: 10 }));
+    const fr = $('#free'); fr.dataset.pre = 'translateX(-50%)';
+    slam(fr, t - C.free, { from: 3.4, base: 1 + .03 * Math.sin(Math.max(0, t - C.free) * 7), rot: -3, split: 0, blur: 22 });
+    $('#chips').style.opacity = cl((t - C.free - .35) / .2); $('#chips').style.transform = `translateY(${30 * (1 - o3(cl((t - C.free - .35) / .35)))}px)`;
+    const cta = $('#cta'), db = t - C.button, dtp = t - C.tap;
+    popIn(cta, db, { from: .4, y: 50, pre: `scale(${dtp >= 0 && dtp < .1 ? .94 : 1 + .025 * Math.sin(t * 6) * (db > .5 ? 1 : 0)})` });
+    const rr = P(t, C.tap, C.tap + .5), rip = $('#rip2');
+    css(rip, { left: `${600 - rr * 500}px`, top: `${70 - rr * 500}px`, width: `${rr * 1000}px`, height: `${rr * 1000}px`, opacity: rr > 0 && rr < 1 ? .55 * (1 - rr) : 0 });
+    // curseur qui appuie sur le bouton
+    const cur = $('#cursor'), cm = P(t, C.tap - .45, C.tap - .05), cu = P(t, C.tap + .12, C.tap + .45);
+    show(cur, t > C.tap - .5 && t < C.tap + .5);
+    if (t > C.tap - .5) { cur.style.transform = `translate(${lerp(980, 700, io(cm)) + 120 * i3(cu)}px,${lerp(1500, 1235, io(cm)) + 200 * i3(cu)}px) scale(${dtp >= 0 && dtp < .12 ? .85 : 1})`; cur.style.opacity = 1 - cu; }
+    const B = TL.lines[9].words;
+    [['#b_l', 0], ['#b_e', 1], ['#b_b', 2]].forEach(([id, wi]) => { const el = $(id); el.style.display = 'inline-block'; slam(el, t - B[wi].t + .02, { from: 2, base: 1, blur: 8, split: 12 }); });
+    const ar = $('#arrow'), da = t - C.bio;
+    ar.style.opacity = cl(da / .1); ar.style.transform = `translateY(${da < 0 ? -40 : 34 * Math.abs(Math.sin(da * 7))}px) scale(${da < 0 ? .5 : .5 + .5 * spr(da)})`;
+  },
+};
+const $$ = (s) => document.querySelectorAll(s);
+const fits = new Map();
+function fit(el, max) { if (!fits.has(el)) { const w = el.scrollWidth; fits.set(el, Math.min(1, max / w)); } return fits.get(el); }
+
+(async () => {
+  TL = await (await fetch('voice/timeline.json')).json();
+  await document.fonts.ready;
+  setup();
+  await Promise.all([...document.images].map((im) => im.decode().catch(() => {})));
+  // mesure des largeurs avant toute transformation
+  for (const el of [$('#h1'), $('#h2'), $('#h3')]) fit(el, 920);
+  render(0); window.__ready = true;
+})();
+</script>
+</body></html>

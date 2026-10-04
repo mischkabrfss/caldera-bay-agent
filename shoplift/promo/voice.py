@@ -1,0 +1,41 @@
+# Voix off de tiktok.html : voix neuronale Microsoft (edge-tts) + minutage de chaque mot (sous-titres synchronisés).
+# Usage : SSL_CERT_FILE=… python3 voice.py  →  voice/NN.mp3 + voice/words.json
+import asyncio, json, os, ssl
+import edge_tts
+import edge_tts.communicate
+
+# Derrière un proxy HTTPS d'entreprise : faire confiance à son certificat (SSL_CERT_FILE) en plus de ceux de certifi.
+if os.environ.get('SSL_CERT_FILE'):
+    edge_tts.communicate._SSL_CTX = ssl.create_default_context(cafile=os.environ['SSL_CERT_FILE'])
+
+VOICE = os.environ.get('VOICE', 'fr-FR-RemyMultilingualNeural')
+RATE = os.environ.get('RATE', '+8%')
+LINES = [
+    'Ta boutique Shopify ne vend pas ?',
+    'Regarde ça.',
+    'Tu colles ton lien…',
+    'et en trente secondes, t’as ton score sur cent.',
+    'Chaque erreur qui te coûte des ventes : expliquée.',
+    'Les produits qui cartonnent en ce moment.',
+    'Les best-sellers de tes concurrents.',
+    'Et dix agents de sourcing vérifiés.',
+    'Ta première analyse est offerte.',
+    'Lien en bio.',
+]
+DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'voice')
+
+async def say(i, text):
+    audio, words = b'', []
+    async for c in edge_tts.Communicate(text, VOICE, rate=RATE, boundary='WordBoundary').stream():
+        if c['type'] == 'audio': audio += c['data']
+        elif c['type'] == 'WordBoundary': words.append({'w': c['text'], 't': c['offset'] / 1e7, 'd': c['duration'] / 1e7})
+    with open(os.path.join(DIR, f'{i:02d}.mp3'), 'wb') as f: f.write(audio)
+    return {'text': text, 'words': words}
+
+async def main():
+    os.makedirs(DIR, exist_ok=True)
+    out = [await say(i, t) for i, t in enumerate(LINES)]
+    json.dump({'voice': VOICE, 'rate': RATE, 'lines': out}, open(os.path.join(DIR, 'words.json'), 'w'), ensure_ascii=False, indent=1)
+    for i, l in enumerate(out): print(i, ' '.join(f"{w['w']}@{w['t']:.2f}" for w in l['words']))
+
+asyncio.run(main())
