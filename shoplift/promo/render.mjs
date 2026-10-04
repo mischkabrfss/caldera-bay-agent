@@ -3,7 +3,7 @@
 import { chromium } from '/opt/node22/lib/node_modules/playwright/index.mjs';
 import { spawn } from 'node:child_process';
 const TT = !!process.env.TT, V = TT || !!process.env.V, RATE = 120, DUR = +(process.env.DUR || 20), dir = new URL('.', import.meta.url).pathname, out = process.env.OUT || `${dir}shoplift-${V ? 'tiktok' : 'youtube'}-20s.mp4`;
-const ff = spawn(process.env.FFMPEG || 'ffmpeg', ['-loglevel', 'error', '-y', '-f', 'image2pipe', '-framerate', String(RATE), '-c:v', 'mjpeg', '-i', '-', '-i', `${dir}${TT ? 'tiktok-sound' : 'sound-20s'}.wav`,
+const ff = spawn(process.env.FFMPEG || 'ffmpeg', ['-loglevel', 'error', '-y', '-f', 'image2pipe', '-framerate', String(RATE), '-c:v', TT ? 'png' : 'mjpeg', '-i', '-', '-i', `${dir}${TT ? 'tiktok-sound' : 'sound-20s'}.wav`,
   '-vf', 'tmix=frames=2,fps=60', '-c:v', 'libx264', '-preset', 'slow', '-crf', '16', '-profile:v', 'high', '-pix_fmt', 'yuv420p', '-r', '60',
   '-c:a', 'aac', '-b:a', '256k', '-ar', '48000', '-shortest', '-movflags', '+faststart', out], { stdio: ['pipe', 'inherit', 'inherit'] });
 const b = await chromium.launch(); const p = await b.newPage({ viewport: V ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 } });
@@ -11,7 +11,7 @@ await p.goto('http://localhost:8812/promo/' + (TT ? 'tiktok.html' : 'youtube.htm
 const t0 = Date.now();
 for (let f = 0; f < RATE * DUR; f++) {
   await p.evaluate((t) => render(t), f / RATE);
-  const img = await p.screenshot({ type: 'jpeg', quality: 93 });
+  const img = await p.screenshot(TT ? { type: 'png' } : { type: 'jpeg', quality: 93 }); // PNG : texte net, sans artefacts
   if (!ff.stdin.write(img)) await new Promise((r) => ff.stdin.once('drain', r));
   if (f % 240 === 0) console.log(`image ${f}/${RATE * DUR} · ${((Date.now() - t0) / 1000).toFixed(0)} s`);
 }

@@ -45,7 +45,7 @@ cues = {
     's4': 9.65, 'hot': W(6, 3),
     's5': 11.35, 'best': W(7, 1), 'rivals': W(7, 4),
     's6': 13.10, 'ten': W(8, 1), 'msg1': W(8, 2) + .05, 'msg2': W(8, 4) - .02, 'checked': W(8, 5),
-    's7': 14.95, 'logo': W(9, 0), 'free': W(9, 4), 'button': W(9, 4) + .4, 'bio0': W(10, 0), 'bio': W(10, 2), 'go': W(10, 4), 'tap': 19.15,
+    's7': 14.95, 'logo': W(9, 0), 'free': W(9, 4), 'button': W(9, 4) + .4, 'bio0': W(10, 0), 'bio': W(10, 2), 'go': W(10, 4), 'tap': 19.35,
     'end': DUR,
 }
 cues = {k: round(v, 3) for k, v in cues.items()}

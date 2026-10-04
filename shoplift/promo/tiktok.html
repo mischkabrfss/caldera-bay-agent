@@ -221,9 +221,11 @@ body{font-family:M,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
    <div class="chip" style="position:relative;font-size:28px">Puis dès 19 €/mois</div>
   </div>
   <div class="cta" id="cta" style="top:1160px">Analyser ma boutique <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg><i class="ripple" id="rip2"></i></div>
-  <div class="sticker" id="fonce" style="left:600px;top:1500px;background:#ff2d2d;color:#fff">FONCE <span style="font-family:'Noto Color Emoji'">🚀</span></div>
-  <div class="bio" id="bio" style="top:1360px"><span id="b_l">LIEN</span> <span id="b_e">EN</span> <span id="b_b" style="background:var(--y);color:var(--k);padding:0 .14em;border-radius:.14em">BIO</span></div>
-  <svg id="arrow" class="a" style="left:330px;top:1490px" width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="#ffd23f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v17M5 13l7 7 7-7"/></svg>
+  <div class="sticker" id="fonce" style="left:330px;top:1590px;background:#ff2d2d;color:#fff">FONCE <span style="font-family:'Noto Color Emoji'">🚀</span></div>
+  <div class="bio" id="bio" style="top:1310px"><span id="b_l">LIEN</span> <span id="b_e">EN</span></div>
+  <div class="bio" style="top:1425px"><span id="b_b" style="background:var(--y);color:var(--k);padding:0 .14em;border-radius:.14em">COMMENTAIRE</span></div>
+  <div class="emo" id="bubble" style="left:40px;top:1300px;font-size:130px">💬</div>
+  <svg id="arrow" class="a" style="left:880px;top:1265px" width="150" height="150" viewBox="0 0 24 24" fill="none" stroke="#ffd23f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h17M13 5l7 7-7 7"/></svg>
  </div>
 </div>
 
@@ -603,10 +605,10 @@ const SC = {
     if (t > C.tap - .5) { cur.style.transform = `translate(${lerp(980, 700, io(cm)) + 120 * i3(cu)}px,${lerp(1500, 1235, io(cm)) + 200 * i3(cu)}px) scale(${dtp >= 0 && dtp < .12 ? .85 : 1})`; cur.style.opacity = 1 - cu; }
     const B = TL.lines[10].words;
     [['#b_l', 0], ['#b_e', 1], ['#b_b', 2]].forEach(([id, wi]) => { const el = $(id); el.style.display = 'inline-block'; slam(el, t - B[wi].t + .02, { from: 2, base: 1, blur: 8, split: 12 }); });
-    emo($('#gift'), t - C.free - .12);
+    emo($('#gift'), t - C.free - .12); emo($('#bubble'), t - C.bio - .05);
     const fo = $('#fonce'); slam(fo, t - C.go, { from: 2.4, base: 1 + .04 * Math.sin(Math.max(0, t - C.go) * 8), rot: -7, split: 0, blur: 10 }); fo.style.textShadow = 'none';
     const ar = $('#arrow'), da = t - C.bio;
-    ar.style.opacity = cl(da / .1); ar.style.transform = `translateY(${da < 0 ? -40 : 34 * Math.abs(Math.sin(da * 7))}px) scale(${da < 0 ? .5 : .5 + .5 * spr(da)})`;
+    ar.style.opacity = cl(da / .1); ar.style.transform = `translateX(${da < 0 ? -40 : 30 * Math.abs(Math.sin(da * 7))}px) scale(${da < 0 ? .5 : .5 + .5 * spr(da)})`;
   },
 };
 const $$ = (s) => document.querySelectorAll(s);
