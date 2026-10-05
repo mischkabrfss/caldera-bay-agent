@@ -21,7 +21,7 @@ RATE = os.environ.get('RATE', '+10%')
 # Shopify → « Shopifaille » (prononciation française courante, sans le « fi » final), sourcing → « sôr-ssinng ».
 # Les sous-titres affichent la vraie orthographe (tiktok.html).
 LINES = [
-    'Stop !',
+    'Hé, stop !',  # « Stop ! » seul sonnait bizarre
     'Ta boutique Shopifaille ne vend pas ?',
     'Je te montre pourquoi en trente secondes.',
     'Tu colles ton lien…',
@@ -31,7 +31,7 @@ LINES = [
     'Les best-sellers de tes concurrents.',
     'Et dix agents de sôr-ssinng vérifiés.',
     'Ta première analyse est gratuite.',
-    'Lien en commentaire. Allez, fonce !',  # « Fonce ! » seul était mal prononcé
+    'Lien en commentaire, teste-le !',  # « Allez, fonce ! » sonnait bizarre
 ]
 DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'voice')
 

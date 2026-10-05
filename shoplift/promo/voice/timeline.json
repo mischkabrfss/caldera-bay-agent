@@ -3,13 +3,17 @@
  "voice": "fr-FR-RemyMultilingualNeural",
  "lines": [
   {
-   "text": "Stop !",
-   "start": 0.1,
-   "end": 0.647,
+   "text": "Hé, stop !",
+   "start": 0.05,
+   "end": 0.786,
    "words": [
     {
-     "w": "Stop",
-     "t": 0.1
+     "w": "Hé",
+     "t": 0.05
+    },
+    {
+     "w": "stop",
+     "t": 0.323
     }
    ]
   },
@@ -293,9 +297,9 @@
    ]
   },
   {
-   "text": "Lien en commentaire. Allez, fonce !",
+   "text": "Lien en commentaire, teste-le !",
    "start": 16.8,
-   "end": 19.408,
+   "end": 18.518,
    "words": [
     {
      "w": "Lien",
@@ -303,25 +307,21 @@
     },
     {
      "w": "en",
-     "t": 17.118
+     "t": 17.05
     },
     {
      "w": "commentaire",
-     "t": 17.198
+     "t": 17.118
     },
     {
-     "w": "Allez",
-     "t": 18.282
-    },
-    {
-     "w": "fonce",
-     "t": 18.964
+     "w": "teste-le",
+     "t": 18.084
     }
    ]
   }
  ],
  "cues": {
-  "stop": 0.1,
+  "stop": 0.323,
   "hook1": 0.85,
   "hook2": 1.27,
   "hook3": 1.873,
@@ -356,8 +356,8 @@
   "free": 16.175,
   "button": 16.575,
   "bio0": 16.8,
-  "bio": 17.198,
-  "go": 18.964,
+  "bio": 17.118,
+  "go": 18.084,
   "tap": 19.35,
   "end": 20.0
  }

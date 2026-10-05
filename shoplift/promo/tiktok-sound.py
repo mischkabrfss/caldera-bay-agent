@@ -11,7 +11,7 @@ N = int(SR * DUR)
 rng = np.random.default_rng(7)
 
 # ---------- voix : placement de chaque phrase ----------
-START = [0.10, 0.85, 2.45, 4.45, 5.30, 7.15, 9.75, 11.45, 13.20, 15.05, 16.80]  # début du 1er mot de chaque phrase (s)
+START = [0.05, 0.85, 2.45, 4.45, 5.30, 7.15, 9.75, 11.45, 13.20, 15.05, 16.80]  # début du 1er mot de chaque phrase (s)
 DELAY = 0.065  # décalage du décodeur MP3 : le 1er mot s'entend ~65 ms après l'instant annoncé par edge-tts
 data = json.load(open(f'{HERE}/voice/words.json'))
 
@@ -39,13 +39,13 @@ for i, (line, s) in enumerate(zip(data['lines'], START)):
 
 def W(li, wi): return lines[li]['words'][wi]['t']
 cues = {
-    'stop': W(0, 0), 'hook1': W(1, 0), 'hook2': W(1, 2), 'hook3': W(1, 3), 'hookQ': W(1, 5), 'why': W(2, 0), 'thirty': W(2, 5),
+    'stop': W(0, 1), 'hook1': W(1, 0), 'hook2': W(1, 2), 'hook3': W(1, 3), 'hookQ': W(1, 5), 'why': W(2, 0), 'thirty': W(2, 5),
     's2': 4.30, 'type0': 4.45, 'type1': 4.85, 'click': 5.05, 'boom': W(4, 1), 'score': W(4, 5),
     's3': 7.05, 'card1': W(5, 0), 'card2': W(5, 1), 'card3': W(5, 4), 'card4': W(5, 6), 'expand': W(5, 7), 'fixed': W(5, 7) + .36,
     's4': 9.65, 'hot': W(6, 3),
     's5': 11.35, 'best': W(7, 1), 'rivals': W(7, 4),
     's6': 13.10, 'ten': W(8, 1), 'msg1': W(8, 2) + .05, 'msg2': W(8, 4) - .02, 'checked': W(8, 5),
-    's7': 14.95, 'logo': W(9, 0), 'free': W(9, 4), 'button': W(9, 4) + .4, 'bio0': W(10, 0), 'bio': W(10, 2), 'go': W(10, 4), 'tap': 19.35,
+    's7': 14.95, 'logo': W(9, 0), 'free': W(9, 4), 'button': W(9, 4) + .4, 'bio0': W(10, 0), 'bio': W(10, 2), 'go': W(10, 3), 'tap': 19.35,
     'end': DUR,
 }
 cues = {k: round(v, 3) for k, v in cues.items()}
@@ -189,17 +189,19 @@ while tr < C['s2'] - .1:
     snare(tr, .05 + .18 * (tr - C['thirty']) / (C['s2'] - C['thirty'])); tr += step
 whoosh(C['s2'], .3, .22)
 
-# ---------- beat 128 BPM (2,55 – 19,43 s) ----------
-BEAT = 60 / 128; T0 = C['s2']; NB = 32  # 8 mesures
+# ---------- beat 128 BPM dès la 1re seconde (calé pour que la mesure tombe pile sur l'audit, à 4,3 s) ----------
+BEAT = 60 / 128; T0 = C['s2']; NB = 32  # 8 mesures après l'audit
+INTRO = 12  # 3 mesures avant l'audit : la musique démarre dès 0 s (plus légère pendant l'accroche)
 prog = ['Am', 'F', 'C', 'G', 'Am', 'F', 'C', 'G']
-for b in range(NB):
-    t0 = T0 + b * BEAT
-    kick(t0, .55)
-    if b % 2 == 1: clap(t0, .28)
-    put('drums', t0 + BEAT / 2, OHAT, .09, .25)
+for b in range(-INTRO, NB):
+    t0 = T0 + b * BEAT; intro = b < 0
+    kick(t0, .45 if intro else .55)
+    if b % 2 == 1: clap(t0, .2 if intro else .28)
+    put('drums', t0 + BEAT / 2, OHAT, .07 if intro else .09, .25)
     for s16 in range(4):
         put('drums', t0 + s16 * BEAT / 4, HAT, (.07 if s16 % 2 else .04), -.3 + .2 * s16)
-for bar, name in enumerate(prog):
+for bar in range(-INTRO // 4, 8):
+    name = prog[bar % 8]; intro = bar < 0
     t0 = T0 + bar * 4 * BEAT; root, tri = CH[name]
     pad(t0, tri, 4 * BEAT, .04)
     for e in range(16):
@@ -207,7 +209,7 @@ for bar, name in enumerate(prog):
         if e % 4 == 2: bass(tb, root * 2, .19, .2)
         if e % 4 == 3: bass(tb, root * 2, .1, .12)
         notes = [tri[0] * 2, tri[1] * 2, tri[2] * 2, tri[0] * 4, tri[2] * 2, tri[1] * 2, tri[0] * 4, tri[1] * 4]
-        pluck(tb, notes[e % 8], .075 + (.02 if bar >= 3 else 0), (-.5, .5)[e % 2], 1.2 if bar < 3 else 1.6)
+        pluck(tb, notes[e % 8], .05 if intro else .075 + (.02 if bar >= 3 else 0), (-.5, .5)[e % 2], 1.0 if intro else 1.2 if bar < 3 else 1.6)
 end_hit = T0 + NB * BEAT
 impact(end_hit, .55, 1.2); pad(end_hit, (220, 261.63, 329.63, 440), 1.0, .05)
 
