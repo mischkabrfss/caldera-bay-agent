@@ -1,5 +1,5 @@
 // Tableau de bord Shoplift.
-import { START, starterHtml } from './starter.js';
+import { bindStarter, START, starterHtml } from './starter.js';
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -426,14 +426,15 @@ async function loadStarter() {
   const [r] = await Promise.all([api('/api/starter', { answers: a }), wait(900)]);
   done();
   if (!r.ok) { out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error || 'Plan indisponible pour le moment. Réessaie dans une minute.')}</div>`; return; }
-  out.innerHTML = starterHtml(r.data.starter, { icon, done: store.get('sl_check') || {}, unlock: 'Débloquer avec l’offre Basique' });
+  out.innerHTML = starterHtml(r.data.starter, { icon, done: store.get('sl_check') || {}, days: store.get('sl_days') || {}, unlock: 'Débloquer avec l’offre Basique' });
 }
+bindStarter($('#startOut'), (d, on) => { const s = store.get('sl_days') || {}; s[d] = on; store.set('sl_days', s); });
 $('#startForm').addEventListener('submit', (e) => {
   e.preventDefault();
   store.set('sl_start', Object.fromEntries(new FormData(e.target)));
   loadStarter();
 });
-document.addEventListener('click', (e) => { if (e.target.closest('[data-start-unlock]')) openUpgrade('Le plan de lancement complet est inclus dès l’offre Basique : les 4 semaines détaillées, tous les produits, les contenus prêts à copier et la checklist entière.'); });
+document.addEventListener('click', (e) => { if (e.target.closest('[data-start-unlock]')) openUpgrade('Le plan de lancement complet est inclus dès l’offre Basique : les 30 missions détaillées, tous les produits, tous les contenus prêts à copier et la checklist entière.'); });
 document.addEventListener('change', (e) => {
   const c = e.target.closest('[data-check]');
   if (c) { const d = store.get('sl_check') || {}; d[c.dataset.check] = c.checked; store.set('sl_check', d); }

@@ -438,21 +438,24 @@ test('API : boutique protégée par mot de passe → message clair, essai non d�
 });
 
 test('débutants : plan de lancement selon les réponses, aperçu verrouillé en Test, complet dès Basique', async () => {
-  const items = [{ title: 'A', price: 30, resale: { low: 26, high: 35 }, score: 90, kind: 'Haut' }, { title: 'B', price: 20, resale: { low: 17, high: 23 }, score: 80 }, { title: 'C', price: 40, resale: { low: 34, high: 46 }, score: 70 }, { title: 'D', price: 200, score: 99 }];
+  const items = [{ title: 'A', price: 30, resale: { low: 26, high: 35 }, score: 90, kind: 'Haut', currency: 'EUR' }, { title: 'B', price: 20, resale: { low: 17, high: 23 }, score: 80 }, { title: 'C', price: 40, resale: { low: 34, high: 46 }, score: 70 }, { title: 'D', price: 200, score: 99 }];
   const plan = buildStarter({ budget: 'xs', time: 'low', niche: 'mode', channel: 'organic', evil: '<x>' }, items);
   assert.deepEqual(plan.answers, { budget: 'xs', time: 'low', niche: 'mode', channel: 'organic' });
-  assert.equal(plan.weeks.length, 4);
-  assert.ok(plan.weeks.every((w) => w.tasks.length === 3));
+  assert.equal(plan.days.length, 30);
+  assert.ok(plan.days.every((d) => d.steps.length >= 3 && d.min > 0 && d.week >= 1 && d.week <= 4));
   assert.ok(!plan.products.some((p) => p.title === 'D'), 'produit hors budget écarté');
-  assert.equal(buildStarter({ budget: 'l', time: 'high', channel: 'ads' }, items).weeks[0].tasks.length, 5);
+  assert.equal(plan.calc.price, 31);
+  assert.equal(plan.budget.split.reduce((s, x) => s + x.pct, 0), 100);
+  assert.match(buildStarter({ budget: 'l', channel: 'ads' }, items).days[17].title, /pub/);
   assert.equal(buildStarter({ budget: 'hack' }).answers.budget, 's');
   const locked = lockStarter(plan);
-  assert.ok(locked.weeks[1].locked && !locked.weeks[1].tasks && locked.weeks[0].tasks);
-  assert.ok(locked.content.locked && !locked.content.scripts && locked.products[1].locked && !locked.products[1].title);
+  assert.ok(locked.days[7].locked && !locked.days[7].steps && locked.days[6].steps);
+  assert.ok(locked.content.locked && !locked.content.agent && !locked.content.faq && locked.content.scripts.length === 1);
+  assert.ok(locked.products[1].locked && !locked.products[1].title && locked.budget && locked.kpis);
   assert.ok(!can('test', 'starter') && can('basic', 'starter'));
   const res = await call('/api/starter', { method: 'POST', body: { answers: { budget: 's', time: 'mid', niche: 'animaux', channel: 'organic' } } });
   assert.equal(res.status, 200);
   const data = await res.json();
   assert.equal(data.plan, 'test');
-  assert.ok(data.starter.locked && data.starter.products.length > 0 && data.starter.products[0].title);
+  assert.ok(data.starter.locked && data.starter.products.length > 0 && data.starter.products[0].title && !data.starter.days[20].steps);
 });

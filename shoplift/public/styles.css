@@ -619,7 +619,7 @@ footer a:hover { color: var(--text); }
 .sp-names { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
 .sp-names span { padding: 6px 12px; border-radius: 10px; background: #1b1b1b; color: var(--text); font-weight: 800; }
 .sp-card small { color: var(--muted); font-size: 12.5px; }
-.sp-card pre { white-space: pre-wrap; font: 500 14px/1.5 var(--font); color: var(--muted); }
+.sp-card pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 500 14px/1.5 var(--font); color: var(--muted); }
 .sp-copy { display: inline-flex; align-items: center; gap: 6px; flex: none; padding: 6px 10px; border-radius: 10px; border: 1px solid var(--line); font: 700 12.5px var(--font); color: var(--text); }
 .sp-copy .ic { width: 14px; height: 14px; }
 .sp-check { list-style: none; display: grid; gap: 8px; }
@@ -630,3 +630,40 @@ footer a:hover { color: var(--text); }
 .sp-unlock { justify-content: center; margin-top: 12px; }
 .sp-cta { display: grid; gap: 4px; padding: 20px; border-radius: 20px; border: 1px solid rgba(255,210,63,.45); background: #111; }
 .sp-cta p { color: var(--muted); }
+.sp-wk { display: grid; gap: 8px; align-content: start; }
+.sp-wk h4 { font: 800 19px/1.2 var(--display); letter-spacing: -.02em; margin-bottom: 2px; }
+.sp-day { border-radius: 16px; background: #111; border: 1px solid var(--line); min-width: 0; }
+.sp-day summary, div.sp-day { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer; list-style: none; }
+.sp-day summary::-webkit-details-marker { display: none; }
+.sp-day b { font-size: 15px; line-height: 1.3; }
+.sp-day small { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+.sp-dn { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 10px; background: #1b1b1b; font: 800 13px var(--display); color: var(--green); }
+.sp-dn .ic { width: 16px; height: 16px; }
+.sp-day.is-done .sp-dn { background: var(--green); color: #0a0a0a; }
+.sp-day.is-done b { color: var(--muted); }
+.sp-day[open] { border-color: rgba(255,210,63,.4); }
+.sp-dbody { padding: 0 14px 14px 54px; display: grid; gap: 10px; }
+.sp-dbody ol { padding-left: 18px; display: grid; gap: 8px; color: var(--muted); font-size: 15px; line-height: 1.45; }
+.sp-dbody li::marker { color: var(--green); font-weight: 800; }
+.sp-tip { display: flex; gap: 8px; padding: 10px 12px; border-radius: 12px; background: rgba(255,210,63,.08); color: var(--text); font-size: 14px; line-height: 1.4; }
+.sp-tip .ic { flex: none; color: var(--green); margin-top: 2px; }
+.sp-done { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; cursor: pointer; }
+.sp-done input { width: 18px; height: 18px; accent-color: var(--green); }
+@media (max-width: 520px) { .sp-dbody { padding-left: 14px; } }
+.sp-tab { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 14px; }
+.sp-tab td { padding: 8px 0; border-top: 1px solid var(--line); color: var(--muted); vertical-align: top; }
+.sp-tab td:first-child { color: var(--text); font-weight: 700; padding-right: 12px; }
+.sp-tab b { color: var(--green); }
+.sp-calc { display: grid; gap: 14px; }
+.sp-in { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.sp-in label { display: grid; gap: 6px; font-size: 12.5px; font-weight: 700; color: var(--muted); }
+.sp-in input { height: 46px; padding: 0 12px; border-radius: 12px; background: #0a0a0a; border: 1px solid var(--line); color: var(--text); font: 700 16px var(--font); min-width: 0; }
+.sp-out { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.sp-out div { padding: 12px; border-radius: 14px; background: #0a0a0a; border: 1px solid var(--line); display: grid; gap: 4px; }
+.sp-out b { font: 800 22px var(--display); color: var(--green); }
+.sp-hint { color: var(--text) !important; font-size: 14px !important; }
+.sp-list { padding-left: 20px; display: grid; gap: 6px; color: var(--muted); font-size: 14.5px; }
+.sp-f { font: 700 13px var(--font); color: var(--green) !important; }
+.sp-card p, .sp-list li { overflow-wrap: anywhere; }
+.sp-tab { table-layout: fixed; } .sp-tab td { white-space: normal; overflow-wrap: anywhere; } .sp-tab td:first-child { width: 45%; }
+.sp .sp-tab { min-width: 0; } .sp .sp-tab td { padding: 8px 0; border-bottom: 0; }

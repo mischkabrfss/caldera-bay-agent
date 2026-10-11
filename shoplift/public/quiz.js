@@ -357,6 +357,7 @@
     const out = stage.querySelector('.qs-out');
     if (!st || !mod) { out.innerHTML = '<a class="btn btn-main" href="app.html#lancement">Voir mon plan <span class="arrow">→</span></a>'; return; }
     out.innerHTML = mod.starterHtml(st, { icon: window.icon, unlock: 'Débloquer mon plan complet' });
+    mod.bindStarter(out);
     out.addEventListener('click', (e) => { if (e.target.closest('[data-start-unlock]')) location.href = 'app.html#lancement'; });
   }
 
