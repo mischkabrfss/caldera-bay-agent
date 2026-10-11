@@ -131,6 +131,13 @@ export function demoApi(path, body = {}) {
       const items = (SNAPSHOT[niche] || []).map((i) => ({ ...i, snapshot: SNAPSHOT_DATE }));
       return ok({ plan, niche, locked: !can(plan, 'radar'), items: can(plan, 'radar') ? items : lockItems(items.slice(0, 12), TEST_LIMITS.radar) });
     }
+    case '/api/starter':
+      return import('./starter.js').then(({ buildStarter, cleanAnswers, lockStarter }) => {
+        const a = cleanAnswers(body.answers);
+        const items = (a.niche === 'any' ? Object.keys(NICHES) : [a.niche]).flatMap((n) => (SNAPSHOT[n] || []).map((i) => ({ ...i, niche: n })));
+        const starter = buildStarter(a, items);
+        return ok({ plan, starter: can(plan, 'starter') ? starter : lockStarter(starter) });
+      });
     case '/api/compare':
       if (!can(plan, 'compare')) return fail(403, 'Le comparateur multi-boutiques est inclus dans l’offre Scale.');
       {

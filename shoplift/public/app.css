@@ -388,3 +388,7 @@ img.noimg { visibility: hidden; }
 .quote-box[open] { gap: 10px; }
 .quote-box:not([open]) { gap: 0; }
 .sup-agent { white-space: normal; text-align: center; line-height: 1.25; padding: 10px 14px; }
+.start-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; padding: 16px; margin-bottom: 16px; }
+.start-form label { display: grid; gap: 6px; font-size: 13px; font-weight: 700; color: var(--muted); }
+.start-form select { height: 46px; padding: 0 12px; border-radius: 12px; background: #111; border: 1px solid var(--line); color: var(--text); font: 600 15px var(--font); }
+.start-form .btn { align-self: end; justify-content: center; min-height: 46px; }

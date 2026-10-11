@@ -9,6 +9,7 @@ export const PLANS = {
 // Fonctionnalité → offre minimale.
 export const FEATURES = {
   fullAudit: 'basic',
+  starter: 'basic',     // plan de lancement complet pour les débutants
   allProducts: 'basic',
   spyInsights: 'basic', // conseils + graphiques de l'espion
   spy: 'pro',           // espion complet (12 best-sellers, 12 nouveautés, fournisseurs)

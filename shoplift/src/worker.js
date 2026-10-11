@@ -4,6 +4,7 @@ import { can, lockAudit, lockItems, lockSpy, PLANS, TEST_LIMITS } from '../publi
 import { kindOf, NICHES, SPY_EXAMPLES } from '../public/seeds.js';
 import { agentsFor, AGENTS_CHECKED } from '../public/agents.js';
 import { SNAPSHOT, SNAPSHOT_DATE } from '../public/radar-snapshot.js';
+import { buildStarter, cleanAnswers, lockStarter } from '../public/starter.js';
 import { fetchStoreFull, fetchStoreLite, normalizeStore, StoreError } from './shopify.js';
 import { accessFromCheckout, accessFromEmail, accessFromLogin, changePlan, createCheckout, portalUrl, refreshAccess, setPassword } from './stripe.js';
 
@@ -255,6 +256,16 @@ async function route(request, env, ctx) {
     const { at, items } = await radar(niche, env);
     const allowed = can(access.plan, 'radar');
     return json({ plan: access.plan, niche, updatedAt: at, locked: !allowed, items: allowed ? items : lockItems(items.slice(0, 12), TEST_LIMITS.radar) });
+  }
+
+  // Débutants (pas encore de boutique) : plan de lancement + vrais produits du radar. Aperçu en Test, complet dès Basique.
+  if (pathname === '/api/starter' && method === 'POST') {
+    const a = cleanAnswers((await body(request)).answers);
+    const access = await getAccess(request, env, ctx);
+    const niches = a.niche === 'any' ? Object.keys(NICHES) : [a.niche];
+    const items = (await Promise.all(niches.map(async (n) => (await radar(n, env)).items.map((i) => ({ ...i, niche: n }))))).flat();
+    const plan = buildStarter(a, items);
+    return json({ plan: access.plan, starter: can(access.plan, 'starter') ? plan : lockStarter(plan) });
   }
 
   if (pathname === '/api/compare' && method === 'POST') {

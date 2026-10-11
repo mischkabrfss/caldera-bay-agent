@@ -1,4 +1,5 @@
 // Tableau de bord Shoplift.
+import { START, starterHtml } from './starter.js';
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -96,6 +97,7 @@ function show(tab) {
   if (tab === 'produits') renderProducts();
   if (tab === 'compte') renderAccount();
   if (tab === 'agents') loadAgents();
+  if (tab === 'lancement') loadStarter();
 }
 addEventListener('hashchange', () => show(location.hash.slice(1)));
 
@@ -408,6 +410,34 @@ async function loadRadar(niche) {
   out.innerHTML = `${note}${exportButton('radar')}<div class="pgrid">${r.data.items.map((p, i) => pCard(p, i)).join('')}</div>${r.data.locked ? '<div class="card unlock-banner"><h3>' + icon('radar') + ' Débloque le radar complet</h3><p>24 produits gagnants par niche, avec leurs raisons et le lien direct.</p><button class="btn btn-main" data-open-upgrade>Passer Pro</button></div>' : ''}`;
   bindExport('radar', 'radar', () => ({ items: r.data.items.filter((p) => !p.locked), niche: state.config?.niches?.[niche]?.label || niche, date: r.data.updatedAt || r.data.items[0]?.snapshot ? new Date(r.data.updatedAt || r.data.items[0].snapshot).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : undefined }));
 }
+
+// ---------- Lancement (débutants) : réponses du quiz gardées sur cet appareil ----------
+const START_Q = { budget: 'Budget de départ', time: 'Temps par semaine', niche: 'Univers', channel: 'Façon de vendre' };
+function startForm(a) {
+  $('#startForm').innerHTML = `${Object.entries(START_Q).map(([k, l]) => `<label>${l}<select name="${k}">${Object.entries(START[k]).map(([v, t]) => `<option value="${v}"${a?.[k] === v ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select></label>`).join('')}
+    <button class="btn btn-main" type="submit">${a ? 'Mettre à jour mon plan' : 'Créer mon plan'} <span class="arrow">→</span></button>`;
+}
+async function loadStarter() {
+  const a = store.get('sl_start');
+  const out = $('#startOut');
+  startForm(a);
+  if (!a) { out.innerHTML = `<div class="card empty"><b>${icon('sprout')}</b>Choisis tes réponses ci-dessus : ton plan se crée en quelques secondes.</div>`; return; }
+  const done = loader(out, ['Lecture de ton profil', 'Produits qui se vendent dans ta niche', 'Ton plan sur 4 semaines', 'Tes contenus prêts à copier']);
+  const [r] = await Promise.all([api('/api/starter', { answers: a }), wait(900)]);
+  done();
+  if (!r.ok) { out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error || 'Plan indisponible pour le moment. Réessaie dans une minute.')}</div>`; return; }
+  out.innerHTML = starterHtml(r.data.starter, { icon, done: store.get('sl_check') || {}, unlock: 'Débloquer avec l’offre Basique' });
+}
+$('#startForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  store.set('sl_start', Object.fromEntries(new FormData(e.target)));
+  loadStarter();
+});
+document.addEventListener('click', (e) => { if (e.target.closest('[data-start-unlock]')) openUpgrade('Le plan de lancement complet est inclus dès l’offre Basique : les 4 semaines détaillées, tous les produits, les contenus prêts à copier et la checklist entière.'); });
+document.addEventListener('change', (e) => {
+  const c = e.target.closest('[data-check]');
+  if (c) { const d = store.get('sl_check') || {}; d[c.dataset.check] = c.checked; store.set('sl_check', d); }
+});
 
 // ---------- Espion & comparateur ----------
 $$('[data-spy-tab]').forEach((b) => b.addEventListener('click', () => {
@@ -757,6 +787,7 @@ async function detectBackend() {
   renderWatch();
   $('#niches').innerHTML = Object.entries(cfg.data?.niches || {}).map(([id, n]) => `<button class="seg ${id === state.niche ? 'on' : ''}" data-niche="${id}">${esc(n.label)}</button>`).join('');
   $$('#niches .seg').forEach((b) => b.addEventListener('click', () => loadRadar(b.dataset.niche)));
+  if (store.get('sl_start') || location.hash === '#lancement') $('[data-tab="lancement"]').classList.remove('hidden');
   show(location.hash.slice(1) || 'audit');
   await offerConnect();
   renderAudit();
