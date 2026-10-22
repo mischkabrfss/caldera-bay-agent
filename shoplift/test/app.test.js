@@ -440,7 +440,11 @@ test('API : boutique protégée par mot de passe → message clair, essai non d�
 test('débutants : plan de lancement selon les réponses, aperçu verrouillé en Test, complet dès Basique', async () => {
   const items = [{ title: 'A', price: 30, resale: { low: 26, high: 35 }, score: 90, kind: 'Haut', currency: 'EUR' }, { title: 'B', price: 20, resale: { low: 17, high: 23 }, score: 80 }, { title: 'C', price: 40, resale: { low: 34, high: 46 }, score: 70 }, { title: 'D', price: 200, score: 99 }];
   const plan = buildStarter({ budget: 'xs', time: 'low', niche: 'mode', channel: 'organic', evil: '<x>' }, items);
-  assert.deepEqual(plan.answers, { budget: 'xs', time: 'low', niche: 'mode', channel: 'organic' });
+  assert.deepEqual(plan.answers, { budget: 'xs', time: 'low', niche: 'mode', channel: 'organic', goal: 'side', name: '' });
+  const named = buildStarter({ niche: 'animaux', goal: 'salary', name: 'léa<script>' }, items);
+  assert.equal(named.answers.name, 'Léascript');
+  assert.ok(named.why.startsWith('Léascript, tu') && named.goal.target === 1500 && named.goal.sales > 0);
+  assert.ok(named.days.some((d) => d.steps.some((s) => s.includes('Animaux'))) && named.days.every((d) => d.out));
   assert.equal(plan.days.length, 30);
   assert.ok(plan.days.every((d) => d.steps.length >= 3 && d.min > 0 && d.week >= 1 && d.week <= 4));
   assert.ok(!plan.products.some((p) => p.title === 'D'), 'produit hors budget écarté');

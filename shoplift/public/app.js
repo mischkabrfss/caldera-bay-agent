@@ -412,9 +412,10 @@ async function loadRadar(niche) {
 }
 
 // ---------- Lancement (débutants) : réponses du quiz gardées sur cet appareil ----------
-const START_Q = { budget: 'Budget de départ', time: 'Temps par semaine', niche: 'Univers', channel: 'Façon de vendre' };
+const START_Q = { budget: 'Budget de départ', time: 'Temps par semaine', niche: 'Univers', channel: 'Façon de vendre', goal: 'Objectif dans 3 mois' };
 function startForm(a) {
-  $('#startForm').innerHTML = `${Object.entries(START_Q).map(([k, l]) => `<label>${l}<select name="${k}">${Object.entries(START[k]).map(([v, t]) => `<option value="${v}"${a?.[k] === v ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select></label>`).join('')}
+  $('#startForm').innerHTML = `${Object.entries(START_Q).map(([k, l]) => `<label>${l}<select name="${k}">${Object.entries(START[k]).map(([v, t]) => `<option value="${v}"${(a?.[k] || (k === 'goal' ? 'side' : '')) === v ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select></label>`).join('')}
+    <label>Prénom (facultatif)<input name="name" maxlength="20" autocomplete="given-name" value="${esc(a?.name || '')}"></label>
     <button class="btn btn-main" type="submit">${a ? 'Mettre à jour mon plan' : 'Créer mon plan'} <span class="arrow">→</span></button>`;
 }
 async function loadStarter() {
@@ -426,12 +427,13 @@ async function loadStarter() {
   const [r] = await Promise.all([api('/api/starter', { answers: a }), wait(900)]);
   done();
   if (!r.ok) { out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error || 'Plan indisponible pour le moment. Réessaie dans une minute.')}</div>`; return; }
-  out.innerHTML = starterHtml(r.data.starter, { icon, done: store.get('sl_check') || {}, days: store.get('sl_days') || {}, unlock: 'Débloquer avec l’offre Basique' });
+  if (!a.at) { a.at = Date.now(); store.set('sl_start', a); }
+  out.innerHTML = starterHtml(r.data.starter, { icon, done: store.get('sl_check') || {}, days: store.get('sl_days') || {}, start: a.at, unlock: 'Débloquer avec l’offre Basique' });
 }
 bindStarter($('#startOut'), (d, on) => { const s = store.get('sl_days') || {}; s[d] = on; store.set('sl_days', s); });
 $('#startForm').addEventListener('submit', (e) => {
   e.preventDefault();
-  store.set('sl_start', Object.fromEntries(new FormData(e.target)));
+  store.set('sl_start', { ...Object.fromEntries(new FormData(e.target)), at: store.get('sl_start')?.at || Date.now() });
   loadStarter();
 });
 document.addEventListener('click', (e) => { if (e.target.closest('[data-start-unlock]')) openUpgrade('Le plan de lancement complet est inclus dès l’offre Basique : les 30 missions détaillées, tous les produits, tous les contenus prêts à copier et la checklist entière.'); });
@@ -744,9 +746,11 @@ $('#restoreForm').addEventListener('submit', async (e) => {
 
 // ---------- Confettis ----------
 function confetti() {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // Pas sur téléphone : sur iPhone, quand Safari sature, l'animation se fige en un amas jaune au centre.
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches || !matchMedia('(hover: hover) and (min-width: 721px)').matches) return;
   const c = $('#confetti');
   const ctx = c.getContext('2d');
+  setTimeout(() => ctx.clearRect(0, 0, c.width, c.height), 3500); // jamais de confettis figés
   c.width = innerWidth; c.height = innerHeight;
   const colors = ['#ffd23f', '#ffb020', '#3fae82', '#ff7a59', '#ffe68a'];
   const parts = Array.from({ length: 160 }, () => ({ x: innerWidth / 2, y: innerHeight / 3, vx: (Math.random() - 0.5) * 16, vy: Math.random() * -14 - 4, s: 4 + Math.random() * 6, c: colors[Math.floor(Math.random() * 5)], r: Math.random() * 6, vr: (Math.random() - 0.5) * 0.3 }));

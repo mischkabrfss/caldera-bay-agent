@@ -34,6 +34,9 @@
       ['mode', 'tag', 'Mode'], ['beaute', 'star', 'Beauté'], ['maison', 'store', 'Maison'], ['bijoux', 'award', 'Bijoux & accessoires'], ['sport', 'activity', 'Sport & bien-être'], ['animaux', 'sprout', 'Animaux'], ['any', 'help', 'Je ne sais pas encore']] },
     { id: 'channel', q: 'Tu veux vendre <mark>comment</mark> ?', type: 'choice', options: [
       ['organic', 'phone', 'Vidéos gratuites (TikTok, Reels)'], ['ads', 'target', 'Publicité payante'], ['unsure', 'help', 'Je ne sais pas']] },
+    { id: 'goal', q: 'Ton <mark>objectif</mark> dans 3 mois ?', type: 'choice', options: [
+      ['first', 'target', 'Ma première vente'], ['side', 'coins', 'Un complément de revenu'], ['salary', 'euro', 'Un vrai salaire'], ['brand', 'award', 'Créer une vraie marque']] },
+    { id: 'name', q: 'Et ton <mark>prénom</mark> ?', hint: 'Pour écrire ton plan à ton nom. Facultatif.', type: 'text', ph: 'Ton prénom' },
   ];
   let flow = STEPS;
   const DEFAULT_VISITORS = { launch: 1000, small: 3000, mid: 15000, big: 60000 };
@@ -217,6 +220,13 @@
         setTimeout(next, reduced ? 80 : 380);
       }));
       bindNav(stage);
+    } else if (s.type === 'text') {
+      const val = String(answers[s.id] || '').replace(/["<>&]/g, '');
+      const stage = swap(`${head}<div class="quiz-text"><input type="text" maxlength="20" autocomplete="given-name" autocapitalize="words" enterkeyhint="done" placeholder="${s.ph}" value="${val}" aria-label="${s.ph}"></div>${nav(true)}`);
+      const input = stage.querySelector('input');
+      input.oninput = () => { answers[s.id] = input.value; };
+      input.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); input.blur(); next(); } };
+      bindNav(stage);
     } else {
       const v = answers[s.id];
       const stage = swap(`${head}<div class="quiz-range"><output><b>${fmt(v)}</b><span>${s.unit}</span></output>
@@ -339,13 +349,13 @@
     try { const { demoApi } = await import('./demo.js'); return (await demoApi('/api/starter', { answers: a })).data.starter; } catch { return null; }
   }
   async function startResult() {
-    const a = { budget: answers.budget, time: answers.time, niche: answers.niche, channel: answers.channel };
+    const a = { budget: answers.budget, time: answers.time, niche: answers.niche, channel: answers.channel, goal: answers.goal, name: answers.name || '', at: Date.now() };
     store.set({ state: 'done', at: Date.now(), answers });
     try { localStorage.setItem('sl_start', JSON.stringify(a)); } catch { /* stockage indisponible */ }
     root.classList.add('done');
     const stage = swap(`<div class="qr">
       <p class="quiz-kicker"><b>Résultat</b>Ton plan pour te lancer</p>
-      <h2 class="qr-title">Ton plan de lancement est prêt</h2>
+      <h2 class="qr-title">${answers.name ? `${String(answers.name).replace(/[^\p{L}\p{M}' -]/gu, '').slice(0, 20)}, ton plan est prêt` : 'Ton plan de lancement est prêt'}</h2>
       <p class="qr-sub">Construit sur tes réponses, avec de vrais produits qui se vendent en ce moment.</p>
       <div class="qs-out"><p class="sp-note">Préparation de ton plan…</p></div>
       <div class="qr-links"><button type="button" class="qr-site">Découvrir Shoplift ↓</button><button type="button" class="qr-redo">${window.icon('refresh')} Refaire le quiz</button></div>
@@ -356,7 +366,7 @@
     const [st, mod] = await Promise.all([getStarter(a), import('./starter.js').catch(() => null)]);
     const out = stage.querySelector('.qs-out');
     if (!st || !mod) { out.innerHTML = '<a class="btn btn-main" href="app.html#lancement">Voir mon plan <span class="arrow">→</span></a>'; return; }
-    out.innerHTML = mod.starterHtml(st, { icon: window.icon, unlock: 'Débloquer mon plan complet' });
+    out.innerHTML = mod.starterHtml(st, { icon: window.icon, start: a.at, unlock: 'Débloquer mon plan complet' });
     mod.bindStarter(out);
     out.addEventListener('click', (e) => { if (e.target.closest('[data-start-unlock]')) location.href = 'app.html#lancement'; });
   }
@@ -378,11 +388,14 @@
     site.querySelector('.qb-go').onclick = (e) => { e.preventDefault(); const f = document.querySelector('#analyser [data-store-form]'); f?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' }); setTimeout(() => f?.querySelector('input')?.focus({ preventScroll: true }), 500); };
   }
 
+  // Confettis seulement sur ordinateur : sur iPhone, quand Safari sature, l'animation se fige en un amas jaune au centre.
+  const bigScreen = matchMedia('(hover: hover) and (min-width: 721px)');
   function confetti() {
-    if (reduced) return;
+    if (reduced || !bigScreen.matches) return;
     const c = document.createElement('canvas');
     c.className = 'quiz-confetti';
     document.body.append(c);
+    setTimeout(() => c.remove(), 3500); // filet de sécurité : jamais de confettis figés à l'écran
     const ctx = c.getContext('2d');
     c.width = innerWidth; c.height = innerHeight;
     const colors = ['#ffd23f', '#ffb020', '#f4f1ea', '#ffe68a'];

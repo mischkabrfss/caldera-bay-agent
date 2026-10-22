@@ -1,3 +1,67 @@
+// Conseils propres à chaque niche (public, angles, idées de vidéos, photos, points de vigilance, accroches).
+export const NICHE_INFO = {
+  mode: { audience: 'Surtout des 18-35 ans qui achètent sur un coup de cœur vu en vidéo, souvent le soir et le week-end.',
+    angles: ['La pièce qui fait tout un look à elle seule', 'Avant/après : tenue basique puis avec le produit', 'Le confort sans sacrifier le style'],
+    ideas: ['« 3 façons de le porter »', 'Prépare-toi avec moi en le portant', 'Réaction d’une amie qui découvre la tenue', 'Gros plan sur la matière et les finitions', 'Le même vêtement sur 2 morphologies'],
+    photo: 'Porté, en lumière naturelle, plus un gros plan sur la matière. Ajoute un guide des tailles en centimètres.',
+    watch: 'Les tailles sont la 1re cause de retours en mode : demande le guide des tailles exact à ton agent et affiche-le sur ta page.',
+    hooks: ['« La pièce que tout le monde me demande en ce moment »', '« 3 façons de porter le même haut »', '« Ce look complet à moins de [prix] € »'] },
+  beaute: { audience: 'Surtout des 18-40 ans qui veulent voir le résultat avant d’acheter et lisent beaucoup les avis.',
+    angles: ['Le résultat visible en quelques secondes', 'La routine simple qui remplace 3 produits', 'L’avis honnête après une semaine'],
+    ideas: ['Avant/après sans filtre, même lumière', 'Routine du matin en 30 secondes', 'La texture en très gros plan', 'Réponse à « ça marche vraiment ? »', 'Jour 1 contre jour 7'],
+    photo: 'Texture en gros plan, produit en main, résultat sans filtre : les filtres cassent la confiance.',
+    watch: 'Les cosmétiques sont très encadrés en Europe : vends uniquement des produits avec un étiquetage conforme (ingrédients, responsable dans l’UE) et ne promets jamais d’effet médical.',
+    hooks: ['« Sans filtre : voilà le vrai résultat »', '« La routine qui remplace 3 produits »', '« J’ai testé 7 jours, je te dis tout »'] },
+  maison: { audience: 'Des 25-45 ans qui aménagent leur logement et achètent ce qui rend le quotidien plus simple ou plus beau.',
+    angles: ['Le petit objet qui change une pièce', 'L’astuce qui fait gagner du temps', 'L’ambiance avant/après'],
+    ideas: ['Avant/après d’une pièce ou d’un tiroir', 'Rangement ou nettoyage « satisfaisant »', 'Ambiance du soir avec le produit', 'Installation en 20 secondes', 'Le produit dans un vrai appartement'],
+    photo: 'En situation dans une vraie pièce, plus une photo qui montre la taille réelle (dimensions en cm sur la page).',
+    watch: 'Objets fragiles ou lourds : vérifie l’emballage avec ton agent, la casse et le port mangent vite la marge. Un produit électrique doit porter le marquage CE.',
+    hooks: ['« L’objet qui a changé mon salon »', '« Avant / après en 20 secondes »', '« L’astuce rangement que personne ne connaît »'] },
+  bijoux: { audience: 'Des 18-40 ans qui achètent pour elles ou pour offrir, très sensibles aux photos et à l’emballage.',
+    angles: ['Le cadeau qui fait effet', 'Le bijou qui va avec tout', 'Le détail qui fait « cher » sans l’être'],
+    ideas: ['Déballage avec un joli écrin', 'Porté en gros plan, au soleil', 'Idée cadeau pour une date (fête des mères, Noël…)', 'Le bijou sur 3 tenues différentes', '« On me demande toujours où je l’ai eu »'],
+    photo: 'Porté sur la peau, en lumière naturelle, plus un fond neutre. L’écrin compte : montre-le.',
+    watch: 'Demande à ton agent la matière exacte (acier inoxydable, plaqué or…) et s’il est sans nickel : les allergies causent beaucoup de retours. N’écris « or » que si c’est vrai.',
+    hooks: ['« Le cadeau qui fait toujours effet »', '« Il va avec absolument tout »', '« On me demande toujours où je l’ai eu »'] },
+  sport: { audience: 'Des 18-45 ans motivés par un objectif (forme, performance, bien-être) qui veulent voir le produit en action.',
+    angles: ['La sensation pendant l’effort', 'L’accessoire qui remplace la salle', 'Le confort pendant une vraie séance'],
+    ideas: ['Une vraie séance filmée avec le produit', 'Routine de 5 minutes à la maison', 'Test de solidité', 'L’erreur fréquente et comment l’éviter', 'Avant/après de posture ou de confort'],
+    photo: 'En action, pendant une vraie séance, plus des photos de détails (matière, tailles).',
+    watch: 'Aucune allégation santé : n’écris jamais qu’un produit fait maigrir ou soigne. Parle de confort, de motivation et d’usage.',
+    hooks: ['« Ma séance de 5 minutes, sans salle »', '« L’accessoire qui a changé mes entraînements »', '« L’erreur que tout le monde fait (et comment l’éviter) »'] },
+  animaux: { audience: 'Des propriétaires de chiens et de chats qui achètent par amour pour leur animal et adorent les vidéos où il réagit.',
+    angles: ['La réaction de l’animal', 'Le problème réglé (poils, stress, balade)', 'Le confort et la sécurité de l’animal'],
+    ideas: ['Première réaction de l’animal avec le produit', 'Avant/après (poils, désordre, tirage en laisse)', 'Une journée avec mon chien', 'Test de solidité face aux dents', 'Le produit sur un petit et un grand chien'],
+    photo: 'L’animal qui utilise le produit, plus une photo avec les tailles (petit, moyen, grand).',
+    watch: 'Tailles et sécurité d’abord : un harnais ou un jouet mal dimensionné revient en retour. Ne promets aucun effet vétérinaire.',
+    hooks: ['« Sa réaction quand il l’a vu… »', '« Fini les poils sur le canapé »', '« Mon chien tirait en laisse, jusqu’à ça »'] },
+  any: { audience: 'Tu choisiras ta niche au jour 2 : prends un univers que tu comprends, c’est plus facile de parler à tes clients.',
+    angles: ['Le problème réglé', 'L’effet « waouh » visible en vidéo', 'L’idée cadeau'],
+    ideas: ['Avant/après', 'Déballage', 'Réaction d’un proche', 'Le produit compris en 3 secondes', 'Réponse à une question en commentaire'],
+    photo: 'En situation, plus un gros plan et une photo qui montre la taille.',
+    watch: 'Évite au début les produits fragiles, électriques, cosmétiques ou de marque : plus de règles et plus de retours.',
+    hooks: ['« Le truc que tout le monde me demande »', '« Je ne m’attendais pas à ça pour ce prix »', '« Avant / après : regarde »'] },
+};
+
+// Liens des outils cités dans les missions (pages officielles ou onglets Shoplift).
+export const TOOLS = {
+  radar: ['Radar Shoplift', 'app.html#radar'], espion: ['Espion Shoplift', 'app.html#espion'], agents: ['Agents Shoplift', 'app.html#agents'], audit: ['Audit Shoplift', 'app.html#audit'],
+  shopify: ['Shopify', 'https://www.shopify.com/fr'], canva: ['Canva', 'https://www.canva.com'], capcut: ['CapCut', 'https://www.capcut.com'], tiktok: ['TikTok', 'https://www.tiktok.com'],
+  instagram: ['Instagram', 'https://www.instagram.com'], tiktokads: ['TikTok Ads', 'https://ads.tiktok.com'], urssaf: ['URSSAF', 'https://autoentrepreneur.urssaf.fr'],
+};
+// Résultat attendu et outils de chaque mission (même ordre que les 30 jours).
+const EXTRA = [
+  ['Tu sais exactement comment tu vas gagner de l’argent', []], ['10 produits candidats avec leur prix', ['radar']], ['Tes 5 produits qui ont une vraie demande', ['tiktok']],
+  ['Tes concurrents analysés et ton avantage', ['espion']], ['Ton prix de vente minimum', []], ['Ton produit n°1 et 2 produits de secours', []], ['Ton nom, ton logo, tes 2 couleurs', ['canva']],
+  ['Les tarifs de 2 agents côte à côte', ['agents']], ['Ton échantillon commandé', []], ['Ta boutique créée et reliée à ton nom de domaine', ['shopify']], ['Ta page produit en ligne (encore privée)', ['shopify']],
+  ['Tes pages légales complètes', ['shopify', 'urssaf']], ['Paiements et livraison prêts', ['shopify']], ['Une boutique testée de bout en bout', ['audit']], ['10 plans vidéo et 5 vraies photos', []],
+  ['Tes comptes TikTok et Instagram prêts', ['tiktok', 'instagram']], ['Ta première vidéo montée', ['capcut']], ['@ADS', []], ['La meilleure de tes 3 accroches', ['tiktok']],
+  ['Ta boutique ouverte à tous', ['shopify']], ['Ton tableau de suivi', []], ['Le point qui bloque tes ventes', ['shopify']], ['Une page produit plus convaincante', ['audit']],
+  ['Un pack et un seuil de livraison offerte', ['shopify']], ['5 nouvelles variantes de tes meilleures vidéos', ['capcut']], ['Des clients contents (et du contenu gratuit)', []], ['@ADS2', []],
+  ['Ta décision : garder ou changer de produit', []], ['Tes comptes à jour', ['urssaf']], ['Ton objectif du mois 2', []],
+];
+
 // Plan de lancement jour par jour (30 missions), adapté aux réponses du débutant. Textes fixes : rien à maintenir.
 // c = { ads, small, nicheTxt, lo, hi, product }
 export function planDays(c) {
@@ -197,7 +261,25 @@ export function planDays(c) {
       'Garde ce qui marche, coupe le reste, et refais le cycle : contenu, page, chiffres.',
     ], tip: 'Tu as maintenant une vraie méthode. Le mois 2 sert à faire la même chose, en mieux et plus souvent.' },
   ];
-  return D.map((d, i) => { const w = Math.min(3, Math.floor(i / 7)); return { d: i + 1, week: w + 1, weekTitle: W[w], ...d }; });
+  // Personnalisation : niche, produit, budget et objectif injectés dans les missions.
+  const N = NICHE_INFO[c.niche] || NICHE_INFO.any, add = (i, line) => D[i].steps.push(line);
+  if (c.niche !== 'any') add(2, `Angles qui marchent en ${c.nicheLabel} : ${N.angles.join(' · ')}.`);
+  if (c.product) D[5].steps.splice(1, 0, `Point de départ conseillé : « ${c.product} », vendu en ce moment par d’autres boutiques (voir tes produits plus bas).`);
+  D[5].tip = N.watch;
+  add(10, `Photos pour ta niche : ${N.photo}`);
+  add(14, `Idées de plans pour ta niche : ${N.ideas.slice(0, 3).join(', ')}.`);
+  add(16, `Accroche conseillée pour ta niche : ${N.hooks[0]}`);
+  add(24, `Nouvelles idées à tester : ${N.ideas.slice(3).join(', ')}.`);
+  D[0].steps.splice(2, 0, `Ton budget de départ (${c.budgetLabel}) et ton temps (${c.timeLabel}) sont pris en compte dans tout le plan : rythme, modèle et façon de vendre.`);
+  if (c.ads && c.daily) D[17].steps.splice(2, 1, `Avec ton budget, commence vers ${c.daily} € par jour pour toute la campagne : l’objectif est d’apprendre quelle vidéo fait cliquer.`);
+  if (c.goalLine) { add(20, c.goalLine); add(29, `Rappel de ton objectif : ${c.goalLine}`); }
+  return D.map((d, i) => {
+    const w = Math.min(3, Math.floor(i / 7));
+    const [out, tools] = EXTRA[i];
+    const res = out === '@ADS' ? (c.ads ? 'Ta première campagne en ligne' : 'Ta routine de publication lancée') : out === '@ADS2' ? (c.ads ? 'Des pubs triées : tu gardes celles qui vendent' : '5 créateurs contactés') : out;
+    const tl = out === '@ADS' ? (c.ads ? ['tiktokads'] : ['tiktok']) : out === '@ADS2' ? (c.ads ? ['tiktokads'] : ['tiktok', 'instagram']) : tools;
+    return { d: i + 1, week: w + 1, weekTitle: W[w], out: res, tools: tl, ...d };
+  });
 }
 
 // Modèles prêts à copier : textes de pages, accroches, scripts, message pour l'agent.
@@ -205,6 +287,7 @@ export function readyContent(c) {
   const P = c.product || 'Nom du produit';
   return {
     hooks: [
+      ...(NICHE_INFO[c.niche] || NICHE_INFO.any).hooks,
       '« Je ne m’attendais pas à ça pour ce prix… »',
       '« Arrête de scroller si tu as ce problème »',
       '« Le truc que tout le monde me demande depuis une semaine »',

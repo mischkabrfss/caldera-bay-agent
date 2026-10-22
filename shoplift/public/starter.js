@@ -1,18 +1,21 @@
 // Parcours « je pars de zéro » : plan de lancement assemblé à partir des réponses du quiz (règles fixes : aucun coût
 // par client, rien à maintenir) et de vrais produits relevés par le radar. Utilisé par le serveur, l'aperçu et l'affichage.
-import { planDays, readyContent } from './starter-days.js';
+import { NICHE_INFO, planDays, readyContent, TOOLS } from './starter-days.js';
 export const START = {
   budget: { xs: 'Moins de 100 €', s: '100 à 500 €', m: '500 à 2 000 €', l: 'Plus de 2 000 €' },
   time: { low: 'Moins de 5 h/semaine', mid: '5 à 15 h/semaine', high: 'Plus de 15 h/semaine' },
   niche: { mode: 'Mode', beaute: 'Beauté', maison: 'Maison', bijoux: 'Bijoux & accessoires', sport: 'Sport & bien-être', animaux: 'Animaux', any: 'Je ne sais pas encore' },
   channel: { organic: 'Vidéos gratuites (TikTok, Reels)', ads: 'Publicité payante', unsure: 'Je ne sais pas' },
+  goal: { first: 'Ma première vente', side: 'Un complément de revenu', salary: 'Un vrai salaire', brand: 'Créer une vraie marque' },
 };
+const GOALS = { first: 0, side: 400, salary: 1500, brand: 3000 }; // bénéfice mensuel visé, en euros
 export const START_LIMITS = { days: 7, products: 1, checklist: 5, hooks: 3, scripts: 1 };
 
 // Réponses inconnues → valeur par défaut (le serveur ne fait confiance à rien de ce qui arrive du navigateur).
 export function cleanAnswers(a = {}) {
   const pick = (k, d) => (Object.hasOwn(START[k], a[k]) ? a[k] : d);
-  return { budget: pick('budget', 's'), time: pick('time', 'mid'), niche: pick('niche', 'any'), channel: pick('channel', 'unsure') };
+  const name = String(a.name || '').normalize('NFC').replace(/[^\p{L}\p{M}' -]/gu, '').trim().slice(0, 20);
+  return { budget: pick('budget', 's'), time: pick('time', 'mid'), niche: pick('niche', 'any'), channel: pick('channel', 'unsure'), goal: pick('goal', 'side'), name: name && name[0].toUpperCase() + name.slice(1) };
 }
 
 const NAMES = {
@@ -56,6 +59,23 @@ export function buildStarter(answers, items = []) {
   const nicheTxt = a.niche === 'any' ? 'toutes les niches' : `la niche ${START.niche[a.niche]}`;
   const [lo, hi] = range(a, ads);
   const p0 = products[0];
+  const N = NICHE_INFO[a.niche];
+  // Objectif en chiffres : marge estimée à 35 % du prix de revente du produit n°1 (à affiner avec le calculateur).
+  const price = p0?.resale ? Math.round((p0.resale.low + p0.resale.high) / 2) : 30;
+  const margin = Math.max(3, Math.round(price * 0.35));
+  const target = GOALS[a.goal];
+  const sales = target ? Math.ceil(target / margin) : 1;
+  const goal = { label: START.goal[a.goal], target, price, margin, sales, perDay: Math.round((sales / 30) * 10) / 10, visits: Math.ceil(sales / 0.02) };
+  const goalLine = target ? `environ ${target.toLocaleString('fr-FR')} € de bénéfice par mois, soit à peu près ${sales} ventes (${goal.perDay < 1 ? 'moins d’une' : `environ ${String(goal.perDay).replace('.', ',')}`} par jour).` : 'ta première vente : vise environ 50 à 100 visites sur ta page produit pour l’obtenir.';
+  const L = START.niche[a.niche];
+  const why = [
+    `${a.name ? `${a.name}, tu` : 'Tu'} pars de zéro avec ${START.budget[a.budget].toLowerCase()} et ${START.time[a.time].toLowerCase()}.`,
+    small ? 'Le plus sûr pour toi : démarrer sans stock, avec un agent qui expédie à ta place. Tu ne risques que le prix d’un échantillon.' : 'Ton budget te permet de tester plusieurs produits sans stock, puis de prendre un petit stock du produit gagnant.',
+    ads ? 'Tu vendras avec de la publicité : le plan t’apprend à tester petit et à couper vite ce qui ne vend pas.' : 'Tu vendras avec des vidéos gratuites : le plan te dit quoi filmer et quand publier.',
+    a.niche === 'any' ? 'Tu n’as pas encore de niche : le plan t’aide à la choisir dès le jour 2.' : `En ${L} : ${N.audience.charAt(0).toLowerCase()}${N.audience.slice(1)}`,
+    `Ton objectif : ${goalLine}`,
+  ].join(' ');
+  const id = `SL-${String([...JSON.stringify(a)].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) % 9000, 7) + 1000)}`;
 
   const model = small
     ? { title: 'Dropshipping avec un agent de sourcing', text: 'Zéro stock : tu paies le produit seulement quand un client commande. Ton budget sert à la boutique, au nom de domaine et à un échantillon pour filmer.' }
@@ -88,7 +108,8 @@ export function buildStarter(answers, items = []) {
     ['Coût par achat maximum', 'ta marge par vente', 'Si une vente te coûte plus que ta marge en pub, tu perds de l’argent : le calculateur te donne ton seuil.'],
   ];
 
-  const ctx = { ads, small, nicheTxt, lo, hi, product: p0?.title, url: p0?.url };
+  const ctx = { ads, small, nicheTxt, lo, hi, product: p0?.title, url: p0?.url, niche: a.niche, nicheLabel: L, budgetLabel: START.budget[a.budget], timeLabel: START.time[a.time].toLowerCase(),
+    daily: ads ? Math.min(50, Math.max(5, Math.round((REF[a.budget] * 0.6) / 14 / 5) * 5)) : 0, goalLine: goalLine.charAt(0).toUpperCase() + goalLine.slice(1) };
   const [w1, w2] = NAMES[a.niche];
   const content = {
     names: w1.flatMap((x, i) => [`${x} ${w2[i]}`, `${x} ${w2[i + 1]}`]).slice(0, 5),
@@ -113,7 +134,7 @@ export function buildStarter(answers, items = []) {
     'Publie ta première vidéo',
   ];
 
-  return { answers: a, profile: Object.fromEntries(Object.entries(a).map(([k, v]) => [k, START[k][v]])), model, channel, pace: PACE[a.time],
+  return { answers: a, id, why, goal, niche: { label: a.niche === 'any' ? 'Ta future niche' : L, ...N }, profile: Object.fromEntries(Object.entries(a).filter(([k]) => START[k]).map(([k, v]) => [k, START[k][v]])), model, channel, pace: PACE[a.time],
     budget, calc: { price: p0?.resale && p0.currency === 'EUR' ? Math.round((p0.resale.low + p0.resale.high) / 2) : '' }, kpis, days: planDays(ctx), products, content, checklist };
 }
 
@@ -134,23 +155,34 @@ export function lockStarter(plan) {
 
 // Affichage commun (quiz de l'accueil et onglet « Plan » du tableau de bord).
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-const img = (src) => (/^radar-img\/[\w.-]+$/.test(src || '') || /^https:\/\//.test(src || '') ? esc(src) : '');
+// Photos des boutiques : version 400 px (les originaux Shopify font souvent 2 000 px et plus, très lourds sur téléphone).
+const img = (src) => {
+  if (/^radar-img\/[\w.-]+$/.test(src || '')) return esc(src);
+  try { const u = new URL(src); if (u.protocol !== 'https:') return ''; if (u.hostname === 'cdn.shopify.com') u.searchParams.set('width', '400'); return esc(u.href); } catch { return ''; }
+};
 const eur = (n, c) => { try { return Number(n).toLocaleString('fr-FR', { style: 'currency', currency: c || 'EUR', maximumFractionDigits: 0 }); } catch { return `${Math.round(n)} €`; } };
 const dur = (m) => (m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? ` ${m % 60}` : ''}` : `${m} min`);
 
-export function starterHtml(p, { icon = () => '', done = {}, days = {}, unlock = 'Débloquer mon plan complet' } = {}) {
+// Date de chaque mission selon le rythme choisi (moins de 5 h : 1 jour sur 2 ; plus de 15 h : 2 missions par jour les 2 premières semaines).
+const when = (start, d, time) => {
+  const k = time === 'low' ? (d - 1) * 2 : time === 'high' ? (d <= 14 ? Math.floor((d - 1) / 2) : d - 8) : d - 1;
+  return new Date(start + k * 86_400_000).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' });
+};
+
+export function starterHtml(p, { icon = () => '', done = {}, days = {}, start = Date.now(), unlock = 'Débloquer mon plan complet' } = {}) {
   const lockBtn = (txt) => `<button type="button" class="btn btn-main sp-unlock" data-start-unlock>${icon('unlock')} ${txt}</button>`;
   const copyBtn = (text, label) => `<button type="button" class="sp-copy" data-copy="${esc(text)}" data-copy-label="${esc(label)}">${icon('copy')} Copier</button>`;
   const card = (title, body, copy) => `<div class="sp-card"><h4>${title}${copy || ''}</h4>${body}</div>`;
   const prod = (x) => (x.locked
-    ? `<div class="sp-prod is-locked"><span class="sp-img">${img(x.image) ? `<img src="${img(x.image)}" alt="" loading="lazy">` : ''}</span><b>${icon('lock')} ${esc(x.kind || 'Produit')}</b><small>Score ${x.score}/100</small></div>`
-    : `<div class="sp-prod"><span class="sp-img">${img(x.image) ? `<img src="${img(x.image)}" alt="" loading="lazy">` : ''}<em>${x.score}/100</em></span><b>${esc(x.title)}</b>
+    ? `<div class="sp-prod is-locked"><span class="sp-img">${img(x.image) ? `<img src="${img(x.image)}" alt="" loading="lazy" decoding="async">` : ''}</span><b>${icon('lock')} ${esc(x.kind || 'Produit')}</b><small>Score ${x.score}/100</small></div>`
+    : `<div class="sp-prod"><span class="sp-img">${img(x.image) ? `<img src="${img(x.image)}" alt="" loading="lazy" decoding="async">` : ''}<em>${x.score}/100</em></span><b>${esc(x.title)}</b>
       ${x.resale ? `<small>Revente conseillée : ${eur(x.resale.low, x.currency)} à ${eur(x.resale.high, x.currency)}</small>` : ''}<ul>${x.reasons.map((r) => `<li>${esc(r)}</li>`).join('')}</ul>
       ${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener nofollow">Voir chez le vendeur →</a>` : ''}</div>`);
   const day = (d) => (d.locked
-    ? `<div class="sp-day is-locked"><span class="sp-dn">${d.d}</span><b>${esc(d.title)}</b><small>${icon('lock')} ${dur(d.min)}</small></div>`
-    : `<details class="sp-day${days[d.d] ? ' is-done' : ''}"${d.d === 1 && !days[1] ? ' open' : ''}><summary><span class="sp-dn">${days[d.d] ? icon('check') : d.d}</span><b>${esc(d.title)}</b><small>${dur(d.min)}</small></summary>
-      <div class="sp-dbody"><ol>${d.steps.map((s) => `<li>${esc(s)}</li>`).join('')}</ol>${d.tip ? `<p class="sp-tip">${icon('zap')} ${esc(d.tip)}</p>` : ''}
+    ? `<div class="sp-day is-locked"><span class="sp-dn">${d.d}</span><b>${esc(d.title)}<i>${when(start, d.d, p.answers.time)}</i></b><small>${icon('lock')} ${dur(d.min)}</small></div>`
+    : `<details class="sp-day${days[d.d] ? ' is-done' : ''}"${d.d === 1 && !days[1] ? ' open' : ''}><summary><span class="sp-dn">${days[d.d] ? icon('check') : d.d}</span><b>${esc(d.title)}<i>${when(start, d.d, p.answers.time)}</i></b><small>${dur(d.min)}</small></summary>
+      <div class="sp-dbody"><p class="sp-res">${icon('target')} <span><b>À la fin :</b> ${esc(d.out)}</span></p><ol>${d.steps.map((s) => `<li>${esc(s)}</li>`).join('')}</ol>${d.tip ? `<p class="sp-tip">${icon('zap')} ${esc(d.tip)}</p>` : ''}
+      ${d.tools?.length ? `<p class="sp-tools">${d.tools.map((t) => TOOLS[t] ? `<a href="${esc(TOOLS[t][1])}"${TOOLS[t][1].startsWith('http') ? ' target="_blank" rel="noopener"' : ''}>${icon('link')} ${esc(TOOLS[t][0])}</a>` : '').join('')}</p>` : ''}
       <label class="sp-done"><input type="checkbox" data-day="${d.d}"${days[d.d] ? ' checked' : ''}> Mission terminée</label></div></details>`);
   const weeks = [1, 2, 3, 4].map((w) => {
     const list = p.days.filter((d) => d.week === w);
@@ -172,8 +204,19 @@ export function starterHtml(p, { icon = () => '', done = {}, days = {}, unlock =
   ].join('');
   const b = p.budget;
   const left = p.checklist.filter((t) => t === null).length;
+  const doneN = Object.values(days).filter(Boolean).length, g = p.goal, N = p.niche;
   return `<div class="sp">
+    <div class="sp-hero"><p class="sp-k">Plan ${esc(p.id)} · créé le ${new Date(start).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}</p>
+      <h3>${p.answers.name ? `Le plan de ${esc(p.answers.name)}` : 'Ton plan de lancement personnalisé'}</h3><p>${esc(p.why)}</p>
+      <div class="sp-prog" aria-label="Progression"><i style="width:${Math.round((doneN / 30) * 100)}%"></i></div><small data-prog>${doneN}/30 missions terminées</small></div>
     <div class="sp-profile">${Object.values(p.profile).map((v) => `<span>${esc(v)}</span>`).join('')}</div>
+    <h3 class="sp-h">${icon('award')} Ton objectif en chiffres</h3>
+    <div class="sp-out4">${g.target ? `<div><small>Bénéfice visé</small><b>${eur(g.target)}/mois</b></div><div><small>Ventes nécessaires</small><b>≈ ${g.sales}/mois</b></div><div><small>Soit par jour</small><b>≈ ${String(g.perDay).replace('.', ',')}</b></div><div><small>Visites à prévoir</small><b>≈ ${g.visits}/mois</b></div>`
+      : `<div><small>Objectif</small><b>1re vente</b></div><div><small>Visites à prévoir</small><b>50 à 100</b></div><div><small>Prix conseillé</small><b>≈ ${eur(g.price)}</b></div><div><small>Marge estimée</small><b>≈ ${eur(g.margin)}</b></div>`}</div>
+    <p class="sp-note">Estimation sur un prix de vente d’environ ${eur(g.price)} et une marge d’environ ${eur(g.margin)} par vente (35 %), avec 2 visiteurs sur 100 qui achètent. Affine avec le calculateur plus bas.</p>
+    <h3 class="sp-h">${icon('sprout')} ${esc(N.label)} : ce qu’il faut savoir</h3>
+    <div class="sp-duo"><div class="sp-card"><p class="sp-k">Tes clients</p><p>${esc(N.audience)}</p><p class="sp-k" style="margin-top:12px">Angles qui marchent</p><ul class="sp-list">${N.angles.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>
+      <div class="sp-card"><p class="sp-k">Idées de vidéos</p><ul class="sp-list">${N.ideas.map((x) => `<li>${esc(x)}</li>`).join('')}</ul><p class="sp-tip">${icon('alert')} ${esc(N.watch)}</p></div></div>
     <div class="sp-duo"><div class="sp-card"><p class="sp-k">Ton modèle</p><h4>${esc(p.model.title)}</h4><p>${esc(p.model.text)}</p></div>
       <div class="sp-card"><p class="sp-k">Tes ventes viendront de</p><h4>${esc(p.channel.title)}</h4><p>${esc(p.channel.text)}</p></div></div>
 
@@ -236,6 +279,9 @@ export function bindStarter(root, onDay) {
     d.classList.toggle('is-done', box.checked);
     d.querySelector('.sp-dn').innerHTML = box.checked ? (globalThis.icon ? globalThis.icon('check') : '✓') : box.dataset.day;
     onDay?.(box.dataset.day, box.checked);
+    const n = root.querySelectorAll('[data-day]:checked').length + root.querySelectorAll('.sp-day.is-done:not(details)').length;
+    const prog = root.querySelector('[data-prog]');
+    if (prog) { prog.textContent = `${n}/30 missions terminées`; root.querySelector('.sp-prog i').style.width = `${Math.round((n / 30) * 100)}%`; }
   });
   calc();
 }

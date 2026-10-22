@@ -667,3 +667,26 @@ footer a:hover { color: var(--text); }
 .sp-card p, .sp-list li { overflow-wrap: anywhere; }
 .sp-tab { table-layout: fixed; } .sp-tab td { white-space: normal; overflow-wrap: anywhere; } .sp-tab td:first-child { width: 45%; }
 .sp .sp-tab { min-width: 0; } .sp .sp-tab td { padding: 8px 0; border-bottom: 0; }
+@media (hover: none), (max-width: 720px) {
+  .quiz.done .quiz-bg em { display: none; } /* résultat : les symboles qui flottent s'arrêtent (moins de travail pour le téléphone) */
+  .sp-wk, .sp-contents, .sp-prods, .sp-check { content-visibility: auto; contain-intrinsic-size: auto 600px; } /* dessiné seulement à l'approche */
+}
+.quiz-text input { width: 100%; height: 64px; padding: 0 20px; border-radius: 18px; border: 1.5px solid rgba(255,210,63,.45); background: #0f0f0f; color: var(--text); font: 700 20px var(--font); margin-top: 18px; }
+.quiz-text input:focus { outline: none; border-color: var(--green); }
+.sp-hero { position: relative; overflow: hidden; display: grid; gap: 10px; padding: 22px 20px; border-radius: 22px; background: linear-gradient(160deg, rgba(255,210,63,.14), rgba(255,210,63,.02) 60%), #111; border: 1px solid rgba(255,210,63,.35); }
+.sp-hero h3 { font: 800 clamp(24px, 6vw, 34px)/1.08 var(--display); letter-spacing: -.035em; }
+.sp-hero > p:not(.sp-k) { color: var(--muted); font-size: 15.5px; line-height: 1.5; }
+.sp-hero small { color: var(--muted); font-size: 13px; font-weight: 700; }
+.sp-prog { height: 8px; border-radius: 4px; background: rgba(255,255,255,.08); overflow: hidden; }
+.sp-prog i { display: block; height: 100%; min-width: 4px; border-radius: 4px; background: var(--green); transition: width .4s; }
+.sp-out4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.sp-out4 div { padding: 14px; border-radius: 16px; background: #111; border: 1px solid var(--line); display: grid; gap: 4px; }
+.sp-out4 small { color: var(--muted); font-size: 12.5px; font-weight: 700; }
+.sp-out4 b { font: 800 22px var(--display); color: var(--green); letter-spacing: -.02em; }
+.sp-day b i { display: block; font: 600 12px var(--font); font-style: normal; color: var(--muted); margin-top: 2px; }
+.sp-res { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; color: var(--muted); }
+.sp-res b { color: var(--text); }
+.sp-res .ic { flex: none; color: var(--green); margin-top: 3px; }
+.sp-tools { display: flex; flex-wrap: wrap; gap: 6px; }
+.sp-tools a { display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 10px; background: #1b1b1b; border: 1px solid var(--line); font-size: 12.5px; font-weight: 700; color: var(--text); }
+.sp-tools .ic { width: 13px; height: 13px; color: var(--green); }
