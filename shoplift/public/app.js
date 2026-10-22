@@ -428,19 +428,16 @@ async function loadStarter() {
   done();
   if (!r.ok) { out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error || 'Plan indisponible pour le moment. Réessaie dans une minute.')}</div>`; return; }
   if (!a.at) { a.at = Date.now(); store.set('sl_start', a); }
-  out.innerHTML = starterHtml(r.data.starter, { icon, done: store.get('sl_check') || {}, days: store.get('sl_days') || {}, start: a.at, unlock: 'Débloquer avec l’offre Basique' });
+  const opts = { icon, start: a.at, unlock: 'Débloquer avec l’offre Basique' };
+  out.innerHTML = starterHtml(r.data.starter, opts);
+  bindStarter(out, r.data.starter, opts);
 }
-bindStarter($('#startOut'), (d, on) => { const s = store.get('sl_days') || {}; s[d] = on; store.set('sl_days', s); });
 $('#startForm').addEventListener('submit', (e) => {
   e.preventDefault();
   store.set('sl_start', { ...Object.fromEntries(new FormData(e.target)), at: store.get('sl_start')?.at || Date.now() });
   loadStarter();
 });
 document.addEventListener('click', (e) => { if (e.target.closest('[data-start-unlock]')) openUpgrade('Le plan de lancement complet est inclus dès l’offre Basique : les 30 missions détaillées, tous les produits, tous les contenus prêts à copier et la checklist entière.'); });
-document.addEventListener('change', (e) => {
-  const c = e.target.closest('[data-check]');
-  if (c) { const d = store.get('sl_check') || {}; d[c.dataset.check] = c.checked; store.set('sl_check', d); }
-});
 
 // ---------- Espion & comparateur ----------
 $$('[data-spy-tab]').forEach((b) => b.addEventListener('click', () => {

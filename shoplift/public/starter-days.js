@@ -62,6 +62,81 @@ const EXTRA = [
   ['Ta décision : garder ou changer de produit', []], ['Tes comptes à jour', ['urssaf']], ['Ton objectif du mois 2', []],
 ];
 
+// Pourquoi chaque mission compte (même ordre que les 30 jours).
+const WHY = [
+  'Savoir où va chaque euro et chaque heure t’évite les 2 erreurs qui font abandonner : dépenser trop vite et s’éparpiller.',
+  'Plus ta liste de départ est large, plus tu as de chances d’y trouver le produit qui vendra vraiment.',
+  'Un produit sans demande ne se vendra pas, même avec une belle boutique : on vérifie avant d’investir.',
+  'Tes concurrents ont déjà fait les tests pour toi : leurs prix et leurs erreurs te montrent la voie.',
+  'Sans marge, chaque vente te coûte de l’argent. Ce calcul te protège dès le premier jour.',
+  'Un seul produit fort, c’est un message clair, des vidéos ciblées et une page qui convertit.',
+  'Un nom et une image soignés inspirent confiance : on achète plus facilement à une « vraie » marque.',
+  'Comparer 2 agents, c’est souvent quelques euros gagnés par vente et une livraison plus fiable.',
+  'Tenir le produit en main te permet de vérifier la qualité et de filmer de vraies vidéos.',
+  'Ta boutique est ton magasin : une base propre et rapide fait déjà la moitié du travail.',
+  'C’est la page où l’achat se décide : chaque détail ici se transforme en ventes.',
+  'Les pages légales rassurent les clients et te protègent. Elles sont obligatoires en France.',
+  'Un client qui hésite sur la livraison ou le paiement abandonne son panier : on lève tous les doutes.',
+  'Mieux vaut trouver les problèmes toi-même que les faire découvrir à tes premiers clients.',
+  'Tes propres vidéos et photos valent bien plus que celles du fournisseur, que tout le monde utilise.',
+  'Des comptes pro te donnent les statistiques et relient tes vidéos à tes ventes.',
+  'Ta première vidéo t’apprend plus que 10 heures de théorie : on se lance.',
+  'La régularité est ce qui fait décoller un compte ou une campagne : c’est le moment de s’y tenir.',
+  'Les 2 premières secondes décident de tout : une meilleure accroche peut multiplier tes vues.',
+  'Tant que le mot de passe est là, personne ne peut acheter : c’est l’ouverture officielle.',
+  'Ce que tu mesures, tu peux l’améliorer. 2 minutes par jour suffisent.',
+  'Savoir exactement où les visiteurs décrochent te dit quoi corriger en premier.',
+  'Quelques détails de confiance (avis, garanties, vraies photos) peuvent doubler tes ventes.',
+  'Vendre un peu plus à chaque client est souvent plus simple que trouver de nouveaux clients.',
+  'Une idée qui a marché une fois a de bonnes chances de remarcher : on la décline.',
+  'Un client content revient, laisse un avis et te donne du contenu gratuit.',
+  '',
+  'Garder un produit qui ne vend pas, c’est perdre du temps. Changer trop vite aussi : on décide avec des règles.',
+  'Des comptes à jour t’évitent les mauvaises surprises et te montrent ton vrai bénéfice.',
+  'Un objectif clair pour le mois suivant transforme ton test en vraie activité.',
+];
+const WHY27 = { ads: 'Couper ce qui ne marche pas et renforcer ce qui marche : c’est tout l’art de la pub rentable.', organic: 'Des créateurs et tes clients parlent mieux de ton produit que toi : c’est de la visibilité gratuite.' };
+
+// Mots du e-commerce expliqués simplement.
+export const GLOSSARY = [
+  ['Dropshipping', 'Tu vends un produit que tu n’as pas en stock : ton fournisseur l’expédie directement à ton client.'],
+  ['Agent de sourcing', 'Un intermédiaire (souvent en Chine) qui achète tes produits à l’usine, vérifie la qualité et expédie tes commandes.'],
+  ['Niche', 'L’univers dans lequel tu vends (mode, maison, animaux…) et les clients qui vont avec.'],
+  ['Marge', 'Ce qu’il te reste sur une vente après avoir payé le produit, la livraison et les frais de paiement.'],
+  ['Panier moyen', 'Le montant moyen d’une commande. Plus il est haut, plus chaque client te rapporte.'],
+  ['Taux de conversion', 'Sur 100 visiteurs, combien achètent. Le repère courant en e-commerce est de 1 à 3.'],
+  ['Accroche', 'Les 2 premières secondes d’une vidéo, celles qui donnent envie de rester ou de passer.'],
+  ['Organique', 'Les vues que tu obtiens gratuitement, sans payer de publicité.'],
+  ['ROAS', 'Ce que rapporte 1 € de publicité. Un ROAS de 2 veut dire 2 € de ventes pour 1 € dépensé.'],
+  ['Pixel / suivi des ventes', 'Un petit code qui relie tes pubs et vidéos à tes ventes, pour savoir ce qui marche.'],
+  ['Prix barré', 'L’ancien prix affiché à côté du nouveau. En France, il doit correspondre à un vrai prix pratiqué avant.'],
+  ['Micro-entreprise', 'Le statut le plus simple pour démarrer en France : tu déclares ton chiffre d’affaires et tu paies des cotisations dessus.'],
+];
+
+// Erreurs de débutant à éviter.
+export const MISTAKES = [
+  ['Changer de produit tous les 3 jours', 'Teste au moins plusieurs angles de vidéo avant de juger un produit.'],
+  ['Copier les photos du fournisseur', 'Tout le monde les utilise : tes vraies photos font la différence.'],
+  ['Annoncer une livraison trop rapide', 'Un délai honnête évite les clients fâchés et les remboursements.'],
+  ['Tout miser sur la pub dès le début', 'Teste petit, garde une réserve, coupe vite ce qui ne vend pas.'],
+  ['Vendre sans marge', 'Si tu vends moins de 2,5 fois ton coût, la pub et les retours mangent tout.'],
+  ['Oublier le mot de passe de la boutique', 'Tant qu’il est actif, personne ne peut acheter.'],
+  ['Négliger les pages légales', 'Elles sont obligatoires et rassurent les clients.'],
+  ['Arrêter de publier au bout d’une semaine', 'Beaucoup de comptes décollent après des dizaines de vidéos, pas après 5.'],
+];
+
+// La suite après les 30 jours (mois 2 et 3).
+export function roadmap(c) {
+  return [
+    ['Semaine 5', 'Doubler ce qui marche', 'Refais tes vidéos gagnantes chaque semaine et améliore ta page avec les retours clients.'],
+    ['Semaine 6', 'Un 2e produit complémentaire', 'Ajoute un produit qui va avec le premier (accessoire, recharge, version premium) pour augmenter ton panier.'],
+    ['Semaine 7', c.ads ? 'Monter le budget pub prudemment' : 'Tester la pub sur ta meilleure vidéo', c.ads ? 'Augmente par petites étapes sur les pubs rentables et teste 3 nouvelles vidéos par semaine.' : 'Booste ta meilleure vidéo organique avec un petit budget et regarde si les ventes suivent.'],
+    ['Semaine 8', 'Relancer tes clients', 'Collecte les e-mails (code promo contre inscription) et envoie une offre à tes anciens clients.'],
+    ['Mois 3', 'Petit stock et emballage', 'Si un produit vend chaque jour, commande un petit stock à ton agent pour livrer plus vite, avec ton logo sur l’emballage.'],
+    ['Mois 3', 'Devenir une marque', 'Des avis, du contenu clients, une identité forte : c’est ce qui te protège des copieurs.'],
+  ];
+}
+
 // Plan de lancement jour par jour (30 missions), adapté aux réponses du débutant. Textes fixes : rien à maintenir.
 // c = { ads, small, nicheTxt, lo, hi, product }
 export function planDays(c) {
@@ -278,7 +353,7 @@ export function planDays(c) {
     const [out, tools] = EXTRA[i];
     const res = out === '@ADS' ? (c.ads ? 'Ta première campagne en ligne' : 'Ta routine de publication lancée') : out === '@ADS2' ? (c.ads ? 'Des pubs triées : tu gardes celles qui vendent' : '5 créateurs contactés') : out;
     const tl = out === '@ADS' ? (c.ads ? ['tiktokads'] : ['tiktok']) : out === '@ADS2' ? (c.ads ? ['tiktokads'] : ['tiktok', 'instagram']) : tools;
-    return { d: i + 1, week: w + 1, weekTitle: W[w], out: res, tools: tl, ...d };
+    return { d: i + 1, week: w + 1, weekTitle: W[w], out: res, tools: tl, why: i === 26 ? WHY27[c.ads ? 'ads' : 'organic'] : WHY[i], ...d };
   });
 }
 

@@ -366,8 +366,9 @@
     const [st, mod] = await Promise.all([getStarter(a), import('./starter.js').catch(() => null)]);
     const out = stage.querySelector('.qs-out');
     if (!st || !mod) { out.innerHTML = '<a class="btn btn-main" href="app.html#lancement">Voir mon plan <span class="arrow">→</span></a>'; return; }
-    out.innerHTML = mod.starterHtml(st, { icon: window.icon, start: a.at, unlock: 'Débloquer mon plan complet' });
-    mod.bindStarter(out);
+    const opts = { icon: window.icon, start: a.at, unlock: 'Débloquer mon plan complet' };
+    out.innerHTML = mod.starterHtml(st, opts);
+    mod.bindStarter(out, st, opts);
     out.addEventListener('click', (e) => { if (e.target.closest('[data-start-unlock]')) location.href = 'app.html#lancement'; });
   }
 
@@ -391,7 +392,8 @@
   // Confettis seulement sur ordinateur : sur iPhone, quand Safari sature, l'animation se fige en un amas jaune au centre.
   const bigScreen = matchMedia('(hover: hover) and (min-width: 721px)');
   function confetti() {
-    if (reduced || !bigScreen.matches) return;
+    if (reduced) return;
+    if (!bigScreen.matches) { import('./starter.js').then((m) => m.burst(root.querySelector('.qr-title') || root)).catch(() => {}); return; } // téléphone : petite fête en CSS, sans canvas
     const c = document.createElement('canvas');
     c.className = 'quiz-confetti';
     document.body.append(c);
