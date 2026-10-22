@@ -271,7 +271,8 @@ export function burst(el) {
   const r = el.getBoundingClientRect(), box = document.createElement('div');
   box.className = 'sp-burst';
   box.style.cssText = `left:${r.left + r.width / 2}px;top:${r.top + r.height / 2}px`;
-  const colors = ['#ffd23f', '#ffb020', '#f4f1ea', '#ffe68a'];
+  const v = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const colors = [v('--green'), v('--green2'), '#f4f1ea', v('--gold')];
   box.innerHTML = Array.from({ length: 18 }, (_, i) => { const a = (i / 18) * Math.PI * 2, d = 60 + (i % 3) * 30; return `<i style="--x:${Math.round(Math.cos(a) * d)}px;--y:${Math.round(Math.sin(a) * d - 30)}px;--r:${i * 47}deg;background:${colors[i % 4]}"></i>`; }).join('');
   document.body.append(box);
   setTimeout(() => box.remove(), 1100);

@@ -99,7 +99,7 @@ if (canvas && !reduced) {
   const sprites = {};
   for (const g of new Set(glyphs)) {
     const c = document.createElement('canvas'); c.width = c.height = 64;
-    const x = c.getContext('2d'); x.font = '800 52px Manrope, sans-serif'; x.fillStyle = '#ffd23f'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(g, 32, 34);
+    const x = c.getContext('2d'); x.font = '800 52px Manrope, sans-serif'; x.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--green').trim() || '#ffd23f'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(g, 32, 34);
     sprites[g] = c;
   }
   let w, h, items, lastW = 0, frame = 0;

@@ -752,7 +752,8 @@ function confetti() {
   const ctx = c.getContext('2d');
   setTimeout(() => ctx.clearRect(0, 0, c.width, c.height), 3500); // jamais de confettis figés
   c.width = innerWidth; c.height = innerHeight;
-  const colors = ['#ffd23f', '#ffb020', '#3fae82', '#ff7a59', '#ffe68a'];
+  const v = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const colors = [v('--green'), v('--green2'), '#3fae82', '#ff7a59', v('--gold')];
   const parts = Array.from({ length: 160 }, () => ({ x: innerWidth / 2, y: innerHeight / 3, vx: (Math.random() - 0.5) * 16, vy: Math.random() * -14 - 4, s: 4 + Math.random() * 6, c: colors[Math.floor(Math.random() * 5)], r: Math.random() * 6, vr: (Math.random() - 0.5) * 0.3 }));
   let frames = 0;
   (function draw() {

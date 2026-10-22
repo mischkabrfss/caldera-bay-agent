@@ -400,7 +400,8 @@
     setTimeout(() => c.remove(), 3500); // filet de sécurité : jamais de confettis figés à l'écran
     const ctx = c.getContext('2d');
     c.width = innerWidth; c.height = innerHeight;
-    const colors = ['#ffd23f', '#ffb020', '#f4f1ea', '#ffe68a'];
+    const v = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const colors = [v('--green'), v('--green2'), '#f4f1ea', v('--gold')];
     const parts = Array.from({ length: innerWidth < 700 ? 70 : 140 }, () => ({ x: innerWidth / 2, y: innerHeight * 0.3, vx: (Math.random() - 0.5) * 18, vy: Math.random() * -16 - 4, s: 4 + Math.random() * 7, c: colors[Math.floor(Math.random() * colors.length)], r: Math.random() * 6, vr: (Math.random() - 0.5) * 0.3 }));
     let f = 0;
     (function draw() {
