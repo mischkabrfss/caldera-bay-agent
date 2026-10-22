@@ -489,3 +489,16 @@ test('offre Lancement (annuelle = Pro) et prix fidélité', async () => {
   assert.equal(body.get('line_items[0][price_data][recurring][interval]'), 'year');
   assert.equal(body.get('line_items[0][price_data][unit_amount]'), '9900');
 });
+
+test('CSS : chaque variable utilisée est définie et aucune ne se référence elle-même', async () => {
+  const { readFileSync } = await import('node:fs');
+  for (const f of ['public/styles.css', 'public/app.css']) {
+    const css = readFileSync(new URL(`../${f}`, import.meta.url), 'utf8');
+    assert.ok(!/--([\w-]+):\s*var\(--\1\)/.test(css), `${f} : variable qui se référence elle-même`);
+    const defined = new Set([...readFileSync(new URL('../public/styles.css', import.meta.url), 'utf8').matchAll(/(--[\w-]+)\s*:/g), ...css.matchAll(/(--[\w-]+)\s*:/g)].map((m) => m[1]));
+    const used = [...css.matchAll(/var\((--[\w-]+)\s*[,)]/g)].map((m) => m[1]);
+    const local = new Set(['--d', '--i', '--n', '--w', '--h', '--x', '--y', '--s', '--t', '--r', '--p', '--glow', '--px', '--py', '--sp-top', '--c']);
+    const missing = [...new Set(used.filter((v) => !defined.has(v) && !local.has(v)))];
+    assert.deepEqual(missing, [], `${f} : variables non définies ${missing.join(', ')}`);
+  }
+});

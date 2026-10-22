@@ -13,7 +13,7 @@ export const START_LIMITS = { days: 7, products: 1, checklist: 5, hooks: 3, scri
 
 // Réponses inconnues → valeur par défaut (le serveur ne fait confiance à rien de ce qui arrive du navigateur).
 export function cleanAnswers(a = {}) {
-  const pick = (k, d) => (Object.hasOwn(START[k], a[k]) ? a[k] : d);
+  const pick = (k, d) => (Object.prototype.hasOwnProperty.call(START[k], a[k]) ? a[k] : d);
   const name = String(a.name || '').normalize('NFC').replace(/[^\p{L}\p{M}' -]/gu, '').trim().slice(0, 20);
   return { budget: pick('budget', 's'), time: pick('time', 'mid'), niche: pick('niche', 'any'), channel: pick('channel', 'unsure'), goal: pick('goal', 'side'), name: name && name[0].toUpperCase() + name.slice(1) };
 }
@@ -108,11 +108,12 @@ export function buildStarter(answers, items = []) {
     ['Coût par achat maximum', 'ta marge par vente', 'Si une vente te coûte plus que ta marge en pub, tu perds de l’argent : le calculateur te donne ton seuil.'],
   ];
 
-  const ctx = { ads, small, nicheTxt, lo, hi, product: p0?.title, url: p0?.url, niche: a.niche, nicheLabel: L, budgetLabel: START.budget[a.budget], timeLabel: START.time[a.time].toLowerCase(),
-    daily: ads ? Math.min(50, Math.max(5, Math.round((REF[a.budget] * 0.6) / 14 / 5) * 5)) : 0, goalLine: goalLine.charAt(0).toUpperCase() + goalLine.slice(1) };
   const [w1, w2] = NAMES[a.niche];
+  const names = w1.flatMap((x, i) => [`${x} ${w2[i]}`, `${x} ${w2[i + 1]}`]).slice(0, 5);
+  const ctx = { shopName: names[0], kind: p0?.kind, ads, small, nicheTxt, lo, hi, product: p0?.title, url: p0?.url, niche: a.niche, nicheLabel: L, budgetLabel: START.budget[a.budget], timeLabel: START.time[a.time].toLowerCase(),
+    daily: ads ? Math.min(50, Math.max(5, Math.round((REF[a.budget] * 0.6) / 14 / 5) * 5)) : 0, goalLine: goalLine.charAt(0).toUpperCase() + goalLine.slice(1) };
   const content = {
-    names: w1.flatMap((x, i) => [`${x} ${w2[i]}`, `${x} ${w2[i + 1]}`]).slice(0, 5),
+    names,
     namesNote: 'Vérifie que le nom est libre sur Instagram, TikTok et en .fr / .com avant de le prendre.',
     ...readyContent(ctx),
   };
@@ -253,7 +254,7 @@ export function starterHtml(p, { icon = () => '', start = Date.now(), unlock = '
       <h3 class="sp-h">${icon('file')} Les mots du e-commerce</h3>
       <div class="sp-gloss">${p.glossary.map(([t, x]) => `<details><summary>${esc(t)}</summary><p>${esc(x)}</p></details>`).join('')}</div>`,
   };
-  const why = p.why.split(/(?<=\.)\s+/);
+  const why = p.why.replace(/\.\s+/g, '.\n').split('\n'); // (pas de « lookbehind » : non compris par Safari avant la version 16.4)
   return `<div class="sp" data-sp>
     <div class="sp-hero"><div class="sp-ring" data-ring><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="27"/><circle cx="32" cy="32" r="27" data-arc/></svg><b data-pct>0 %</b></div>
       <div class="sp-ht"><p class="sp-k">Plan ${esc(p.id)} · créé le ${new Date(start).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}</p>
@@ -296,7 +297,7 @@ export function bindStarter(root, p, { icon = () => '', start = Date.now(), unlo
   const top = () => {
     const nav = sp.querySelector('.sp-tabs'), stick = parseFloat(getComputedStyle(nav).top) || 0;
     const y = sp.querySelector('.sp-hero').getBoundingClientRect().bottom + scrollY - stick;
-    if (scrollY > y) scrollTo({ top: y, behavior: 'instant' });
+    if (scrollY > y) scrollTo(0, y);
   };
   const progress = () => {
     const n = p.days.filter((d) => days[d.d]).length, pct = Math.round((n / 30) * 100);
@@ -320,6 +321,7 @@ export function bindStarter(root, p, { icon = () => '', start = Date.now(), unlo
       <p class="sp-res">${icon('target')} <span><b>À la fin :</b> ${esc(d.out)}</span></p>
       <div class="sp-sbar"><i style="width:${Math.round((n / d.steps.length) * 100)}%"></i></div><small class="sp-scount">${n}/${d.steps.length} étapes</small>
       <ol class="sp-steps">${d.steps.map((s, i) => `<li><button type="button" data-step="${d.d}-${i}" aria-pressed="${!!steps[`${d.d}-${i}`]}"><span class="sp-cb">${icon('check')}</span><span>${esc(s)}</span></button></li>`).join('')}</ol>
+      ${d.ex ? `<div class="sp-ex"><p class="sp-k">${icon('file')} Exemple concret</p><p>${esc(d.ex.replace(/^Exemple[^:]*:\s*/, ''))}</p></div>` : ''}
       ${d.tip ? `<p class="sp-tip">${icon('zap')} ${esc(d.tip)}</p>` : ''}
       ${d.tools?.length ? `<p class="sp-tools">${d.tools.map((t) => (TOOLS[t] ? `<a href="${esc(TOOLS[t][1])}"${TOOLS[t][1].startsWith('http') ? ' target="_blank" rel="noopener"' : ''}>${icon('link')} ${esc(TOOLS[t][0])}</a>` : '')).join('')}</p>` : ''}
       <div class="sp-tnav"><button type="button" class="btn btn-ghost" data-day-move="-1"${d.d === 1 ? ' disabled' : ''}>←</button>

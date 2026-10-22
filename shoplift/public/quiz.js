@@ -41,11 +41,20 @@
   let flow = STEPS;
   const DEFAULT_VISITORS = { launch: 1000, small: 3000, mid: 15000, big: 60000 };
   const BLOCKER = { traffic: 'Pas assez de visiteurs', conversion: 'Tes visiteurs n’achètent pas', aov: 'Ton panier est trop petit', product: 'Tu ne sais pas quoi vendre' };
+  // Chaque priorité : l'action + comment la faire concrètement.
   const ACTIONS = {
-    traffic: ['Publie 1 vidéo courte par jour sur TikTok/Reels autour de ton produit phare', 'Optimise titres et méta-descriptions pour ressortir sur Google', 'Espionne les best-sellers de 3 concurrents pour copier leurs angles'],
-    conversion: ['Ajoute des avis clients visibles sur chaque fiche produit', 'Passe à 5 photos minimum par produit, dont une en situation', 'Affiche paiement sécurisé + retours 30 jours sous le bouton d’achat'],
-    aov: ['Crée un « Pack x2 -15 % » sur tes 3 best-sellers', 'Ajoute un seuil de livraison offerte à +20 % de ton panier moyen', 'Active les recommandations « souvent achetés ensemble »'],
-    product: ['Lance le radar sur ta niche pour repérer les produits qui explosent', 'Choisis un produit entre 15 et 90 € avec un bénéfice visible en vidéo', 'Teste 3 produits en parallèle avant d’investir en pub'],
+    traffic: [['Publie 1 vidéo courte par jour sur TikTok et Reels autour de ton produit phare', 'Montre le produit en action dans les 2 premières secondes, sous-titres activés, « lien en bio » à la fin. La régularité compte plus que la perfection.'],
+      ['Optimise tes titres et descriptions pour Google', 'Dans Shopify, ouvre chaque produit puis « Référencement » : utilise les mots que tes clients tapent (ex. « harnais chien anti-traction »).'],
+      ['Espionne les best-sellers de 3 concurrents', 'Onglet Espion de Shoplift : repère leurs produits les plus vendus et leurs promesses, puis fais mieux (photos, avis, livraison).']],
+    conversion: [['Ajoute des avis clients visibles sur chaque fiche produit', 'Installe une application d’avis (Judge.me a une version gratuite) et demande un avis par e-mail après chaque livraison.'],
+      ['Passe à 5 photos minimum par produit, dont une en situation', 'Produit seul, utilisé ou porté, gros plan sur la matière, taille réelle, emballage. Ajoute une courte vidéo si tu peux.'],
+      ['Rassure juste sous le bouton d’achat', 'Une ligne simple : paiement sécurisé · livraison suivie · retours sous 14 ou 30 jours (seulement ce que tu offres vraiment).']],
+    aov: [['Crée un « Pack x2 » à prix réduit sur tes 3 best-sellers', 'Une variante « Lot de 2 » ou une application de lots : beaucoup de clients choisissent l’offre la plus avantageuse.'],
+      ['Mets la livraison offerte un peu au-dessus de ton panier moyen', 'Paramètres > Expédition : gratuite à partir de ton panier moyen + 20 % (ex. panier de 40 € → offerte dès 49 €).'],
+      ['Affiche des produits complémentaires', 'L’application gratuite Shopify « Search & Discovery » propose des produits qui vont ensemble sous chaque fiche.']],
+    product: [['Lance le radar sur ta niche pour repérer les produits qui se vendent', 'Onglet Radar : garde les produits vendus par plusieurs boutiques, c’est le signe d’une vraie demande.'],
+      ['Choisis un produit entre 15 et 90 € dont le bénéfice se voit en vidéo', 'Il doit se comprendre en 3 secondes et ne pas se trouver au supermarché du coin.'],
+      ['Teste 3 produits en parallèle avant d’investir en pub', 'Même budget et même type de vidéo pour chacun pendant une semaine : garde celui qui fait le plus de ventes.']],
   };
 
   // Curseur logarithmique pour les visiteurs (100 → 200 000)
@@ -100,7 +109,7 @@
   // Retour en haut instantané : le défilement fluide du site (scroll-behavior) faisait glisser toute la page sur mobile.
   function top0() {
     const h = document.documentElement, prev = h.style.scrollBehavior;
-    h.style.scrollBehavior = 'auto'; scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    h.style.scrollBehavior = 'auto'; scrollTo(0, 0);
     requestAnimationFrame(() => requestAnimationFrame(() => { h.style.scrollBehavior = prev; }));
   }
   function open() {
@@ -310,7 +319,7 @@
       </div>
       <div class="qr-plan">
         <div class="qr-prio"><p class="quiz-kicker"><b>Priorité</b>${BLOCKER[answers.blocker] || BLOCKER.conversion}</p>
-          <ol>${ACTIONS[answers.blocker || 'conversion'].map((a) => `<li>${a}</li>`).join('')}</ol></div>
+          <ol>${ACTIONS[answers.blocker || 'conversion'].map(([a, how]) => `<li><b>${a}</b><small>${how}</small></li>`).join('')}</ol></div>
         <div class="qr-offer"><span>Offre conseillée</span><b>${planName} · ${planPrice} €/mois</b>${r.days ? `<small>Rentabilisée en ${r.days} jour${r.days > 1 ? 's' : ''} au potentiel estimé</small>` : ''}<button type="button" class="btn btn-ghost qr-see">Voir l’offre</button></div>
       </div>
       <div class="qr-links"><button type="button" class="qr-site">Découvrir Shoplift ↓</button><button type="button" class="qr-redo">${window.icon('refresh')} Refaire le quiz</button></div>

@@ -105,6 +105,41 @@ export const WEEK_CHECK = [
   ['Je sais où mes visiteurs décrochent', 'J’ai amélioré ma page produit', 'J’ai un pack ou une livraison offerte', 'J’ai décidé : je garde ou je change de produit'],
 ];
 
+// Un exemple concret par mission (même ordre que les 30 jours). {P} = produit conseillé, {N} = niche, {lo}/{hi} = fourchette de prix.
+const EXAMPLES = [
+  'Exemple : tu vends {P} à 29 €. Il te coûte 9 € livré chez le client : il te reste environ 19 € une fois les frais de paiement payés. 10 ventes = environ 190 € dans ta poche.',
+  'Exemple de ligne dans ta note : {p} · revendu {lo}-{hi} € · vendu par 4 boutiques · plaît car on voit le résultat en vidéo.',
+  'Exemple : une vidéo de ce mois-ci à 200 000 vues avec 40 commentaires « c’est où ? » = signal fort. Une vidéo d’il y a 2 ans sans question = signal faible.',
+  'Exemple : 3 boutiques vendent le même produit à 24 €, 29 € et 34 €. La moins chère n’a qu’une photo : toi, tu feras 6 photos et une vidéo.',
+  'Exemple : produit 7 € + livraison 4 € = 11 € de coût. Prix minimum : 11 × 2,5 = 27,50 €, donc tu vends à 29 €.',
+  'Exemple de grille : effet « waouh » 5/5, problème réglé 4/5, introuvable en magasin 4/5, marge 3/5, facile à expédier 5/5 = 21/25.',
+  'Exemple : nom « {name} », logo en lettres blanches sur fond noir, couleurs noir et {color}. Simple, lisible, prêt en 30 minutes.',
+  'Exemple de comparaison : agent A = 6,50 € + 4 € de livraison en 8 jours ; agent B = 6 € + 5,50 € en 12 jours. Tu prends A : plus rapide pour le même prix total.',
+  'Exemple : l’échantillon arrive en 10 jours. Pendant ce temps, tu montes ta boutique (jours 10 à 14) : tu ne perds pas une minute.',
+  'Exemple de réglages : pays France, devise euro, thème Dawn, police simple, couleurs du jour 7. Rien de plus pour commencer.',
+  'Exemple de titre : « Panier anti-stress pour chien – apaise en 10 minutes » plutôt que « Pet Calming Bed Plush 2026 ».',
+  'Exemple de phrase pour les retours : « Tu as 14 jours après réception pour changer d’avis. Écris-nous et on t’explique comment nous renvoyer l’article. »',
+  'Exemple : livraison standard offerte dès 49 € : un client qui achète un produit à 29 € a envie d’en prendre un deuxième.',
+  'Exemple de test : un proche achète sur son téléphone et te dit à voix haute ce qu’il pense. Note chaque hésitation : c’est ce qu’il faut corriger.',
+  'Exemple de liste de plans : déballage (3 s), mains qui utilisent le produit (4 s), gros plan (2 s), avant/après (5 s), réaction (3 s).',
+  'Exemple de bio : « {name} · {N} · Livraison suivie en France 🇫🇷 · Le lien est juste en dessous 👇 ».',
+  'Exemple de vidéo de 18 s : accroche à l’écran (0-2 s), problème (2-6 s), produit en action (6-14 s), résultat + « lien en bio » (14-18 s).',
+  'Exemple de routine : vidéo publiée à 12 h 30 et une autre à 19 h, réponses aux commentaires à 21 h. 20 minutes par jour.',
+  'Exemple : même vidéo, 3 débuts différents. A : 1 200 vues, B : 4 800 vues, C : 900 vues. Tu gardes l’accroche B pour tes prochaines vidéos.',
+  'Exemple d’annonce : « C’est ouvert ! -10 % avec le code LANCEMENT pendant 48 h » en texte sur ta meilleure vidéo.',
+  'Exemple de ligne de suivi : 22 oct · 3 000 vues · 60 visites · 4 paniers · 1 vente · 0 € de pub. Remplis-la dans l’onglet Suivi.',
+  'Exemple : 3 000 vues mais 15 visites = la vidéo ne donne pas envie de cliquer. 300 visites et 0 panier = la page ou le prix bloque.',
+  'Exemple : ajouter 3 avis avec photo et « Livraison suivie 7-10 jours » sous le bouton peut suffire à débloquer les premières ventes.',
+  'Exemple : 1 produit à 29 €, le pack de 2 à 49 €. Beaucoup de clients prennent le pack : ton panier moyen monte sans un visiteur de plus.',
+  'Exemple : ta vidéo « avant/après » a marché. Variantes : autre décor, autre accroche, version 10 s, version avec un proche, version texte seul.',
+  'Exemple de message : « Merci pour ta commande ! Voici ton suivi : … Si tu nous envoies une photo avec le produit, on t’offre -15 % sur la prochaine. »',
+  '@EX27',
+  'Exemple de règle : moins d’une vente pour 500 visites après 3 angles de vidéo testés = on passe au produit de secours n°1.',
+  'Exemple de tableau : date, client, montant, frais (produit, livraison, pub, Shopify), bénéfice. 5 minutes par semaine.',
+  'Exemple d’objectif pour le mois 2 : « 30 ventes, avec 1 vidéo par jour et 2 nouveaux angles par semaine ».',
+];
+const EX27 = { ads: 'Exemple : pub A = 30 € dépensés, 0 vente → coupée. Pub B = 30 € dépensés, 3 ventes à 19 € de marge → budget monté de 20 %.', organic: 'Exemple de message à un créateur : « Salut ! J’adore tes vidéos. Je t’offre mon {k} contre une vidéo honnête, même si tu n’aimes pas. Ça te dit ? »' };
+
 // Mots du e-commerce expliqués simplement.
 export const GLOSSARY = [
   ['Dropshipping', 'Tu vends un produit que tu n’as pas en stock : ton fournisseur l’expédie directement à ton client.'],
@@ -361,7 +396,10 @@ export function planDays(c) {
     const [out, tools] = EXTRA[i];
     const res = out === '@ADS' ? (c.ads ? 'Ta première campagne en ligne' : 'Ta routine de publication lancée') : out === '@ADS2' ? (c.ads ? 'Des pubs triées : tu gardes celles qui vendent' : '5 créateurs contactés') : out;
     const tl = out === '@ADS' ? (c.ads ? ['tiktokads'] : ['tiktok']) : out === '@ADS2' ? (c.ads ? ['tiktokads'] : ['tiktok', 'instagram']) : tools;
-    return { d: i + 1, week: w + 1, weekTitle: W[w], out: res, tools: tl, why: i === 26 ? WHY27[c.ads ? 'ads' : 'organic'] : WHY[i], ...d };
+    const fill = (t) => t.replace(/\{P\}/g, c.product ? `« ${c.product.length > 40 ? `${c.product.slice(0, 38)}…` : c.product} »` : 'ton produit').replace(/\{p\}/g, c.product ? (c.product.length > 40 ? `${c.product.slice(0, 38)}…` : c.product) : 'ton produit').replace(/\{k\}/g, (c.kind || 'produit').toLowerCase()).replace(/\{N\}/g, c.nicheLabel === 'Je ne sais pas encore' ? 'Tes trouvailles' : c.nicheLabel || '')
+      .replace(/\{lo\}/g, c.lo).replace(/\{hi\}/g, c.hi).replace(/\{name\}/g, c.shopName || 'Maison Nova').replace(/\{color\}/g, 'un jaune vif');
+    const ex = EXAMPLES[i] === '@EX27' ? EX27[c.ads ? 'ads' : 'organic'] : EXAMPLES[i];
+    return { d: i + 1, week: w + 1, weekTitle: W[w], out: res, tools: tl, why: i === 26 ? WHY27[c.ads ? 'ads' : 'organic'] : WHY[i], ex: fill(ex), ...d };
   });
 }
 

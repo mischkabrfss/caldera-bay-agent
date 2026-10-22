@@ -120,7 +120,7 @@
 .pc-btn.main { background: var(--green); border-color: var(--green); color: var(--on-acc); }
 .pc-btn:hover { transform: translateY(-2px); }
 .pc-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
-.pcard .score-badge { position: absolute; z-index: 2; top: 8px; left: 8px; font: 800 12px var(--display); padding: 5px 9px; border-radius: 10px; background: rgba(var(--s0-rgb),.75); backdrop-filter: blur(8px); color: var(--green); }
+.pcard .score-badge { position: absolute; z-index: 2; top: 8px; left: 8px; font: 800 12px var(--display); padding: 5px 9px; border-radius: 10px; background: rgba(var(--s0-rgb),.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: var(--green); }
 .pcard .score-badge.hot { background: var(--grad); color: var(--on-acc); animation: pulse 1.6s infinite; }
 @keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(var(--acc-rgb),.2); } }
 .pcard .body { padding: 10px 12px 12px; display: grid; gap: 6px; flex: 1; }
@@ -165,7 +165,7 @@ td b { font-family: var(--display); }
 .restore { display: grid; gap: 8px; padding: 12px; }
 
 /* Modal + toasts */
-.modal { position: fixed; inset: 0; z-index: 80; display: grid; place-items: end center; background: rgba(0,0,0,.6); backdrop-filter: blur(6px); animation: fade .3s; }
+.modal { position: fixed; inset: 0; z-index: 80; display: grid; place-items: end center; background: rgba(0,0,0,.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); animation: fade .3s; }
 @keyframes fade { from { opacity: 0; } }
 .modal-box { position: relative; width: min(560px, 100%); max-height: 92vh; overflow: auto; padding: 26px 18px calc(24px + env(safe-area-inset-bottom)); border-radius: 28px 28px 0 0; background: #0e0e0e; animation: up .45s cubic-bezier(.2,1.2,.4,1); }
 @keyframes up { from { transform: translateY(100%); } }
@@ -402,3 +402,5 @@ img.noimg { visibility: hidden; }
 .start-form input { height: 46px; padding: 0 12px; border-radius: 12px; background: var(--s1); border: 1px solid var(--line); color: var(--text); font: 600 15px var(--font); min-width: 0; }
 .app .sp-tabs { --sp-top: 64px; }
 .pm-hot { display: inline-block; padding: 2px 7px; border-radius: 6px; background: var(--green); color: var(--on-acc); font: 800 11px var(--font); vertical-align: 2px; }
+.start-form label { min-width: 0; } .start-form select, .start-form input { width: 100%; min-width: 0; }
+@media (max-width: 379px) { .tabbar { padding: 5px 4px; gap: 0; } .tabbar a { font-size: 9.5px; letter-spacing: -.02em; } .tabbar a span { font-size: 18px; } } /* 7 onglets lisibles sur les petits écrans (iPhone SE) */

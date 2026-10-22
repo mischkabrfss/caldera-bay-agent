@@ -110,14 +110,14 @@ export function demoApi(path, body = {}) {
       // Vraies analyses figées des boutiques exemples (chargées à la demande : photos intégrées).
       return import('./audit-snapshot.js').then(({ AUDIT_SNAPSHOT }) => {
         const snap = AUDIT_SNAPSHOT[clean(body.store)];
-        if (snap) return send(structuredClone(snap));
+        if (snap) return send(JSON.parse(JSON.stringify(snap)));
         return fail(422, UNVERIFIABLE(body.store), { code: 'unverifiable', examples: Object.keys(AUDIT_SNAPSHOT) });
       });
     }
     case '/api/spy': {
       // Aperçu : vraies analyses figées de 6 concurrents, ou la boutique Shopify connectée.
       const snap = SPY_SNAPSHOT[clean(body.store)] || SPY_SNAPSHOT[`www.${clean(body.store)}`];
-      if (snap && !body.connected) return ok({ plan, report: lockSpy(structuredClone(snap.report), plan) });
+      if (snap && !body.connected) return ok({ plan, report: lockSpy(JSON.parse(JSON.stringify(snap.report)), plan) });
       if (body.connected) connected = body.connected;
       const real = body.connected || matchConnected(body.store);
       if (!real) return fail(422, `Sur cet aperçu, l’espion fonctionne sur ces vraies boutiques : ${Object.keys(SPY_SNAPSHOT).join(', ')}, ou sur ta boutique connectée. Sur le site en ligne, toutes les boutiques Shopify sont analysables.`, { code: 'unverifiable' });
