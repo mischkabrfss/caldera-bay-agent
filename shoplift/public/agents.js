@@ -95,7 +95,7 @@ const maskMail = (v) => (v ? v.replace(/^(.)[^@]*/, '$1•••••') : '');
 
 // Agents visibles selon l'offre : les autres restent présentés (nom, note) avec les coordonnées floutées.
 export function agentsFor(plan) {
-  const n = AGENT_LIMITS[plan] ?? 0;
+  const n = AGENT_LIMITS[plan === 'launch' ? 'pro' : plan] ?? 0;
   return AGENTS.map((a, i) => (i < n ? { ...a, open: true } : {
     id: a.id, name: a.name, rating: a.rating, reviews: a.reviews, hq: a.hq, pitch: a.pitch, strengths: a.strengths, delay: a.delay,
     whatsapp: mask(a.whatsapp), phone: mask(a.phone), email: maskMail(a.email), open: false,

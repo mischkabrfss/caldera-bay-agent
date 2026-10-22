@@ -401,3 +401,4 @@ img.noimg { visibility: hidden; }
 }
 .start-form input { height: 46px; padding: 0 12px; border-radius: 12px; background: #111; border: 1px solid var(--line); color: var(--text); font: 600 15px var(--font); min-width: 0; }
 .app .sp-tabs { --sp-top: 64px; }
+.pm-hot { display: inline-block; padding: 2px 7px; border-radius: 6px; background: var(--green); color: #0a0a0a; font: 800 11px var(--font); vertical-align: 2px; }

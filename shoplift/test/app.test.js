@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import { beforeEach, test } from 'node:test';
 import { analyzeProduct, auditStore, compareStores, radarFrom, spyStore } from '../public/analyze.js';
 import { sign, verify } from '../src/auth.js';
-import { can } from '../public/plans.js';
+import { can, loyalPrice, tier } from '../public/plans.js';
+import { applyLoyalty } from '../src/stripe.js';
 import { buildStarter, lockStarter } from '../public/starter.js';
 import { bestsellerHandles, fetchProducts, normalizeStore } from '../src/shopify.js';
 import worker from '../src/worker.js';
@@ -462,4 +463,29 @@ test('débutants : plan de lancement selon les réponses, aperçu verrouillé en
   const data = await res.json();
   assert.equal(data.plan, 'test');
   assert.ok(data.starter.locked && data.starter.products.length > 0 && data.starter.products[0].title && !data.starter.days[20].steps);
+});
+
+test('offre Lancement (annuelle = Pro) et prix fidélité', async () => {
+  assert.ok(can('launch', 'radar') && can('launch', 'starter') && !can('launch', 'compare') && tier('launch') === 'pro');
+  const start = Date.UTC(2026, 0, 15);
+  assert.equal(loyalPrice('pro', start, Date.UTC(2026, 0, 20)), 4660); // 2e mois : -5 %
+  assert.equal(loyalPrice('pro', start, Date.UTC(2026, 1, 16)), 4410); // 3e mois : -10 %
+  assert.equal(loyalPrice('pro', start, Date.UTC(2027, 5, 1)), 3430); // plancher -30 %
+  assert.equal(loyalPrice('launch', start, Date.UTC(2026, 3, 1)), 8900); // 2e année
+  assert.equal(loyalPrice('launch', start, Date.UTC(2027, 3, 1)), 7900); // ensuite
+  const updates = [];
+  const sub = (id, plan, amount, extra = {}) => ({ id, metadata: { plan }, start_date: start / 1000, items: { data: [{ id: `si_${id}`, price: { unit_amount: amount, product: 'prod_1' } }] }, ...extra });
+  installFetch({ stripe: {
+    'subscriptions/': (url, init) => { updates.push([url.pathname, new URLSearchParams(init.body)]); return [200, {}]; },
+    subscriptions: () => [200, { has_more: false, data: [sub('a', 'pro', 4900), sub('b', 'pro', 4660), sub('c', 'launch', 9900), sub('d', 'pro', 4900, { cancel_at_period_end: true })] }],
+  } });
+  assert.equal(await applyLoyalty({ STRIPE_SECRET_KEY: 'sk_test_x' }, Date.UTC(2026, 0, 20)), 2);
+  assert.deepEqual(updates.map(([path, b]) => [path, b.get('items[0][price_data][unit_amount]'), b.get('items[0][price_data][recurring][interval]'), b.get('proration_behavior')]),
+    [['/v1/subscriptions/a', '4660', 'month', 'none'], ['/v1/subscriptions/c', '8900', 'year', 'none']]);
+  let body;
+  installFetch({ stripe: { 'checkout/sessions': (url, init) => { body = new URLSearchParams(init.body); return [200, { url: 'https://checkout.stripe.test/x' }]; } } });
+  const res = await call('/api/checkout', { method: 'POST', body: { plan: 'launch' }, e: env({ STRIPE_SECRET_KEY: 'sk_test_x' }) });
+  assert.equal(res.status, 200);
+  assert.equal(body.get('line_items[0][price_data][recurring][interval]'), 'year');
+  assert.equal(body.get('line_items[0][price_data][unit_amount]'), '9900');
 });

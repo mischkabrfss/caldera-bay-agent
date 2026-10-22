@@ -1,6 +1,6 @@
 import { secretOf } from './auth.js';
 // Client Stripe minimal (API REST, aucune dépendance).
-import { PLANS } from '../public/plans.js';
+import { loyalPrice, PLANS } from '../public/plans.js';
 
 const ACTIVE = new Set(['active', 'trialing', 'past_due']);
 
@@ -55,7 +55,7 @@ export function createCheckout(env, plan, origin, email) {
         price_data: {
           currency: 'eur',
           unit_amount: offer.price,
-          recurring: { interval: 'month' },
+          recurring: { interval: offer.interval || 'month' },
           product_data: { name: `Shoplift ${offer.name}`, metadata: { plan } },
         },
       },
@@ -169,10 +169,36 @@ export async function changePlan(env, access, plan) {
   if (!item) throw new Error('Abonnement introuvable');
   const product = typeof item.price.product === 'string' ? item.price.product : item.price.product.id;
   const updated = await stripe(env, 'POST', `subscriptions/${encodeURIComponent(access.sub)}`, {
-    items: { 0: { id: item.id, price_data: { currency: 'eur', product, unit_amount: PLANS[plan].price, recurring: { interval: 'month' } } } },
+    items: { 0: { id: item.id, price_data: { currency: 'eur', product, unit_amount: PLANS[plan].price, recurring: { interval: PLANS[plan].interval || 'month' } } } },
     metadata: { plan },
     proration_behavior: 'always_invoice',
   });
   await stripe(env, 'POST', `products/${encodeURIComponent(product)}`, { name: `Shoplift ${PLANS[plan].name}`, metadata: { plan } }).catch(() => null);
   return subscriptionToAccess(updated, access.email);
+}
+
+// Prix fidélité : appelé régulièrement par la tâche planifiée. Pour chaque abonnement actif, fixe le prix de la
+// PROCHAINE échéance selon son ancienneté (sans prorata : la période déjà payée ne change pas). Idempotent :
+// seuls les abonnements dont le prix doit changer sont modifiés (au plus `max` par passage).
+export async function applyLoyalty(env, now = Date.now(), max = 20) {
+  if (!env.STRIPE_SECRET_KEY) return 0;
+  let after, changed = 0;
+  for (let page = 0; page < 5; page++) {
+    const list = await stripe(env, 'GET', 'subscriptions', { status: 'active', limit: 100, starting_after: after });
+    for (const sub of list.data || []) {
+      const plan = sub.metadata?.plan, items = sub.items?.data || [], item = items[0];
+      if (!PLANS[plan]?.price || items.length !== 1 || sub.cancel_at_period_end || !item.price) continue;
+      const target = loyalPrice(plan, sub.start_date * 1000, now);
+      if (!target || item.price.unit_amount === target) continue;
+      const product = typeof item.price.product === 'string' ? item.price.product : item.price.product.id;
+      await stripe(env, 'POST', `subscriptions/${encodeURIComponent(sub.id)}`, {
+        items: { 0: { id: item.id, price_data: { currency: 'eur', product, unit_amount: target, recurring: { interval: PLANS[plan].interval || 'month' } } } },
+        proration_behavior: 'none',
+      });
+      if (++changed >= max) return changed;
+    }
+    if (!list.has_more || !list.data?.length) break;
+    after = list.data[list.data.length - 1].id;
+  }
+  return changed;
 }

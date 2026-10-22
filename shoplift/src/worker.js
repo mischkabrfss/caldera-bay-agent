@@ -6,7 +6,7 @@ import { agentsFor, AGENTS_CHECKED } from '../public/agents.js';
 import { SNAPSHOT, SNAPSHOT_DATE } from '../public/radar-snapshot.js';
 import { buildStarter, cleanAnswers, lockStarter } from '../public/starter.js';
 import { fetchStoreFull, fetchStoreLite, normalizeStore, StoreError } from './shopify.js';
-import { accessFromCheckout, accessFromEmail, accessFromLogin, changePlan, createCheckout, portalUrl, refreshAccess, setPassword } from './stripe.js';
+import { accessFromCheckout, applyLoyalty, accessFromEmail, accessFromLogin, changePlan, createCheckout, portalUrl, refreshAccess, setPassword } from './stripe.js';
 
 const MONTH = 30 * 86_400_000;
 const RECHECK = 12 * 3_600_000;
@@ -375,7 +375,10 @@ async function route(request, env, ctx) {
 export default {
   // Tâche planifiée gratuite toutes les 7 minutes : une boutique du radar relue à chaque fois (voir radarTick).
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(radarTick(env, event.scheduledTime ?? Date.now()));
+    const when = event.scheduledTime ?? Date.now();
+    ctx.waitUntil(radarTick(env, when));
+    // Prix fidélité : vérifiés environ toutes les 3 h 30 (1 passage sur 30), bien avant chaque échéance.
+    if (Math.floor(when / TICK) % 30 === 0) ctx.waitUntil(applyLoyalty(env, when).catch((e) => console.error('fidélité', e?.message)));
   },
 
   async fetch(request, env, exec) {

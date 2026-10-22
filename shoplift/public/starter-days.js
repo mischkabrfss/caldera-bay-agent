@@ -97,6 +97,14 @@ const WHY = [
 ];
 const WHY27 = { ads: 'Couper ce qui ne marche pas et renforcer ce qui marche : c’est tout l’art de la pub rentable.', organic: 'Des créateurs et tes clients parlent mieux de ton produit que toi : c’est de la visibilité gratuite.' };
 
+// Bilan de fin de semaine : ce que tu dois avoir avant de passer à la suite.
+export const WEEK_CHECK = [
+  ['J’ai mon produit n°1 et 2 produits de secours', 'J’ai vérifié la demande sur TikTok', 'Je connais ma marge minimale', 'J’ai un nom, un logo et 2 couleurs'],
+  ['Mon échantillon est commandé', 'Ma boutique est créée et reliée à mon domaine', 'Ma page produit est complète', 'Paiements, livraison et pages légales sont prêts'],
+  ['J’ai filmé mes premiers plans', 'Mes comptes TikTok et Instagram sont prêts', 'J’ai publié mes premières vidéos', 'Ma boutique est ouverte (mot de passe retiré)'],
+  ['Je sais où mes visiteurs décrochent', 'J’ai amélioré ma page produit', 'J’ai un pack ou une livraison offerte', 'J’ai décidé : je garde ou je change de produit'],
+];
+
 // Mots du e-commerce expliqués simplement.
 export const GLOSSARY = [
   ['Dropshipping', 'Tu vends un produit que tu n’as pas en stock : ton fournisseur l’expédie directement à ton client.'],

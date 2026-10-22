@@ -15,19 +15,22 @@ const money = (n, cur = 'EUR') => { try { return Number(n).toLocaleString('fr-FR
 const store = { get: (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* stockage indisponible */ } } };
 
 const PLAN_INFO = {
+  launch: { name: 'Lancement', price: '99 €', per: '/an', pitch: 'Plan de lancement complet + tout Pro pendant 1 an : 8,25 €/mois au lieu de 49 €', feat: true, hot: '-83 %' },
   basic: { name: 'Basique', price: '19 €', pitch: 'Audit complet illimité + toutes les fiches notées' },
-  pro: { name: 'Pro', price: '49 €', pitch: 'Radar produits gagnants + espion concurrents', feat: true },
+  pro: { name: 'Pro', price: '49 €', pitch: 'Radar produits gagnants + espion concurrents' },
   scale: { name: 'Scale', price: '99 €', pitch: 'Comparateur 4 boutiques + rapports PDF & Excel' },
 };
-const RANK = { test: 0, basic: 1, pro: 2, scale: 3 };
+const RANK = { test: 0, basic: 1, pro: 2, launch: 2, scale: 3 };
 // Ce que chaque offre inclut, dit simplement.
 const INCLUDED = {
+  launch: ['Le plan de lancement complet : 30 missions détaillées, contenus prêts, checklist', 'Tout ce qu’il y a dans Pro pendant 1 an : radar, espion complet, suivi de 5 concurrents', 'Analyses illimitées de ta boutique dès qu’elle est en ligne', '3 agents de sourcing vérifiés', 'Prix fidélité : 89 € la 2e année, puis 79 €'],
   test: ['1 analyse gratuite de ta boutique', 'Ton score et tes 3 corrections les plus importantes', 'Un aperçu de l’espion sur n’importe quel concurrent'],
   basic: ['Analyses illimitées de ta boutique', 'Le plan d’action complet, du plus important au moins important', 'La note de chacun de tes produits, avec quoi corriger', 'L’espion : stratégie, conseils et graphiques de tes concurrents', '1 agent de sourcing vérifié et connectable à Shopify (WhatsApp + e-mail)', 'Ton compte accessible sur tous tes appareils'],
   pro: ['Tout ce qu’il y a dans Basique', 'Le radar des produits qui se vendent le mieux, mis à jour toutes les 6 h', 'Pour chaque produit : 7 fournisseurs connectables à Shopify', 'L’espion complet : 12 best-sellers et 12 nouveautés par concurrent', 'Le suivi de 5 concurrents : leurs nouveautés signalées à chaque visite', '3 agents de sourcing vérifiés (WhatsApp + e-mail)'],
   scale: ['Tout ce qu’il y a dans Pro', 'Les 10 meilleurs agents de sourcing, coordonnées vérifiées', 'Le suivi de 20 concurrents', 'Le comparateur de 4 boutiques côte à côte', 'Tes analyses en rapport PDF pro et en fichier Excel avec photos'],
 };
 const FIRST_STEPS = {
+  launch: [['lancement', 'Ouvre ton plan de lancement', 'Ta mission du jour, étape par étape, et tout le programme débloqué.'], ['radar', 'Trouve des produits gagnants', 'Choisis ta niche : les produits qui se vendent le mieux s’affichent.'], ['agents', 'Contacte un agent', '3 agents de sourcing vérifiés, coordonnées comprises.']],
   basic: [['audit', 'Analyse ta boutique', 'Tu obtiens ton score et la liste de ce qu’il faut corriger.'], ['produits', 'Corrige tes produits', 'Commence par les produits notés en rouge.']],
   pro: [['audit', 'Analyse ta boutique', 'Ton score et la liste complète des corrections.'], ['radar', 'Trouve des produits gagnants', 'Choisis ta niche : les produits qui se vendent le mieux s’affichent.'], ['espion', 'Espionne un concurrent', 'Colle son adresse : tu vois ce qu’il vend le plus.']],
   scale: [['audit', 'Analyse ta boutique', 'Ton score et la liste complète des corrections.'], ['radar', 'Trouve des produits gagnants', 'Les produits qui se vendent le mieux, par niche.'], ['espion', 'Compare jusqu’à 4 boutiques', 'Onglet Espion, puis « Comparer ».']],
@@ -44,7 +47,7 @@ function welcome(plan) {
     <ol class="steps-list">${FIRST_STEPS[plan].map(([tab, t, d], i) => `<li><button type="button" data-go="${tab}"><b>${i + 1}</b><span><strong>${t}</strong><small>${d}</small></span>${icon('arrow')}</button></li>`).join('')}</ol>
     ${state.me.canSetPw && !state.me.pw ? pwForm('pwFormWelcome', !state.me.email) : ''}
     <h3 class="sub-title">Ce qui est inclus</h3>${list(INCLUDED[plan])}
-    <button class="btn btn-main" type="button" data-go="audit" style="width:100%;margin-top:18px">Commencer <span class="arrow">→</span></button>
+    <button class="btn btn-main" type="button" data-go="${plan === 'launch' ? 'lancement' : 'audit'}" style="width:100%;margin-top:18px">Commencer <span class="arrow">→</span></button>
     <p class="plan-note">Factures, carte bancaire, changement d’offre ou résiliation : onglet Compte.</p>`;
   $('#welcomeModal').classList.remove('hidden');
   confetti();
@@ -97,7 +100,7 @@ function show(tab) {
   if (tab === 'produits') renderProducts();
   if (tab === 'compte') renderAccount();
   if (tab === 'agents') loadAgents();
-  if (tab === 'lancement') loadStarter();
+  if (tab === 'lancement') { $('[data-tab="lancement"]').classList.remove('hidden'); loadStarter(); }
 }
 addEventListener('hashchange', () => show(location.hash.slice(1)));
 
@@ -105,7 +108,7 @@ addEventListener('hashchange', () => show(location.hash.slice(1)));
 function planCards(target, current) {
   target.innerHTML = Object.entries(PLAN_INFO).map(([id, p]) => `
     <div class="card pm ${p.feat ? 'feat' : ''} ${id === current ? 'current' : ''}">
-      <div class="info"><b>${p.name}</b> <span class="muted">· ${p.price}/mois</span><p>${p.pitch}</p></div>
+      <div class="info"><b>${p.name}</b>${p.hot ? ` <span class="pm-hot">${p.hot}</span>` : ''} <span class="muted">· ${p.price}${p.per || '/mois'}${p.was ? ` <s>${p.was}</s>` : ''}</span><p>${p.pitch}</p></div>
       ${id === current ? '<span class="pill ok">ACTUEL</span>' : `<button class="btn ${p.feat ? 'btn-main' : 'btn-ghost'}" data-buy="${id}">${RANK[id] > RANK[current] ? 'Choisir' : 'Passer'}</button>`}
     </div>`).join('');
 }
@@ -437,7 +440,7 @@ $('#startForm').addEventListener('submit', (e) => {
   store.set('sl_start', { ...Object.fromEntries(new FormData(e.target)), at: store.get('sl_start')?.at || Date.now() });
   loadStarter();
 });
-document.addEventListener('click', (e) => { if (e.target.closest('[data-start-unlock]')) openUpgrade('Le plan de lancement complet est inclus dès l’offre Basique : les 30 missions détaillées, tous les produits, tous les contenus prêts à copier et la checklist entière.'); });
+document.addEventListener('click', (e) => { if (e.target.closest('[data-start-unlock]')) openUpgrade('Ton plan de lancement complet + tout Pro pendant 1 an avec l’offre Lancement à 99 €/an (soit 8,25 €/mois). Aussi inclus dans Basique, Pro et Scale.'); });
 
 // ---------- Espion & comparateur ----------
 $$('[data-spy-tab]').forEach((b) => b.addEventListener('click', () => {
@@ -453,7 +456,7 @@ $('#spyForm').addEventListener('submit', (e) => {
 });
 
 // ---------- Suivi des concurrents (sur cet appareil) ----------
-const WATCH_MAX = { test: 0, basic: 0, pro: 5, scale: 20 };
+const WATCH_MAX = { test: 0, basic: 0, pro: 5, launch: 5, scale: 20 };
 const watchList = () => store.get('sl_watch') || {};
 function renderWatch() {
   const w = watchList(); const hosts = Object.keys(w);
@@ -586,7 +589,7 @@ async function runExport(btn, kind, data) {
 }
 
 // ---------- Agents de sourcing ----------
-const PLAN_NAME = { basic: 'Basique', pro: 'Pro', scale: 'Scale' };
+const PLAN_NAME = { basic: 'Basique', pro: 'Pro', launch: 'Lancement', scale: 'Scale' };
 const digits = (v) => String(v || '').replace(/\D/g, '');
 function quoteText() {
   const prod = ($('#qProduct')?.value || '').trim() || '[product name / link]';
@@ -633,7 +636,7 @@ async function loadAgents() {
   if (!r.ok) { out.innerHTML = `<div class="card empty"><b>${icon('alert')}</b>${esc(r.data.error || 'Agents indisponibles.')}</div>`; return; }
   state.agentsChecked = r.data.checked;
   const open = r.data.agents.filter((a) => a.open).length;
-  const next = { test: ['basic', 1], basic: ['pro', 3], pro: ['scale', 10] }[state.me.plan];
+  const next = { test: ['basic', 1], basic: ['pro', 3], pro: ['scale', 10], launch: ['scale', 10] }[state.me.plan];
   out.innerHTML = `<p class="src-badge real" style="margin:14px 0">${icon('check')} ${open ? `${open} agent${open > 1 ? 's' : ''} débloqué${open > 1 ? 's' : ''} avec ton offre` : 'Les agents sont inclus dès l’offre Basique'}${next ? ` · ${next[1]} avec l’offre ${PLAN_NAME[next[0]]}` : ''}</p>
     <div class="agents">${r.data.agents.map(agentCard).join('')}</div>`;
 }
@@ -699,7 +702,7 @@ function renderAccount() {
   const paid = plan !== 'test';
   $('#accountCard').innerHTML = `
     <div class="acc-head"><span class="eyebrow">Ton offre</span>${paid ? '<span class="pill ok">ACTIVE</span>' : ''}</div>
-    <div class="big">${paid ? `${esc(PLAN_INFO[plan].name)} <span class="grad-text">${PLAN_INFO[plan].price}/mois</span>` : 'Gratuite'}</div>
+    <div class="big">${paid ? `${esc(PLAN_INFO[plan].name)} <span class="grad-text">${PLAN_INFO[plan].price}${PLAN_INFO[plan].per || '/mois'}</span>` : 'Gratuite'}</div>
     ${email ? `<p class="muted">${esc(email)}</p>` : ''}
     ${list(INCLUDED[plan])}
     <div class="account-actions">
@@ -789,7 +792,7 @@ async function detectBackend() {
   renderWatch();
   $('#niches').innerHTML = Object.entries(cfg.data?.niches || {}).map(([id, n]) => `<button class="seg ${id === state.niche ? 'on' : ''}" data-niche="${id}">${esc(n.label)}</button>`).join('');
   $$('#niches .seg').forEach((b) => b.addEventListener('click', () => loadRadar(b.dataset.niche)));
-  if (store.get('sl_start') || location.hash === '#lancement') $('[data-tab="lancement"]').classList.remove('hidden');
+  if (store.get('sl_start') || location.hash === '#lancement' || state.me.plan === 'launch') $('[data-tab="lancement"]').classList.remove('hidden');
   show(location.hash.slice(1) || 'audit');
   await offerConnect();
   renderAudit();

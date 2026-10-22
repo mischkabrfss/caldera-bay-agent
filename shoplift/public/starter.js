@@ -1,6 +1,6 @@
 // Parcours « je pars de zéro » : plan de lancement assemblé à partir des réponses du quiz (règles fixes : aucun coût
 // par client, rien à maintenir) et de vrais produits relevés par le radar. Utilisé par le serveur, l'aperçu et l'affichage.
-import { GLOSSARY, MISTAKES, NICHE_INFO, planDays, readyContent, roadmap, TOOLS } from './starter-days.js';
+import { GLOSSARY, MISTAKES, NICHE_INFO, planDays, readyContent, roadmap, TOOLS, WEEK_CHECK } from './starter-days.js';
 export const START = {
   budget: { xs: 'Moins de 100 €', s: '100 à 500 €', m: '500 à 2 000 €', l: 'Plus de 2 000 €' },
   time: { low: 'Moins de 5 h/semaine', mid: '5 à 15 h/semaine', high: 'Plus de 15 h/semaine' },
@@ -135,7 +135,7 @@ export function buildStarter(answers, items = []) {
   ];
 
   return { answers: a, id, why, goal, niche: { label: a.niche === 'any' ? 'Ta future niche' : L, ...N }, profile: Object.fromEntries(Object.entries(a).filter(([k]) => START[k]).map(([k, v]) => [k, START[k][v]])), model, channel, pace: PACE[a.time],
-    glossary: GLOSSARY, mistakes: MISTAKES, roadmap: roadmap(ctx),
+    glossary: GLOSSARY, mistakes: MISTAKES, roadmap: roadmap(ctx), weekCheck: WEEK_CHECK,
     budget, calc: { price: p0?.resale && p0.currency === 'EUR' ? Math.round((p0.resale.low + p0.resale.high) / 2) : '' }, kpis, days: planDays(ctx), products, content, checklist };
 }
 
@@ -174,10 +174,13 @@ const mem = {
   get(k) { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch { return {}; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* stockage indisponible */ } },
 };
-const TABS = [['today', 'zap', 'Aujourd’hui'], ['prog', 'target', 'Programme'], ['goal', 'coins', 'Objectif & budget'], ['prods', 'radar', 'Produits'], ['content', 'pen', 'Contenus'], ['check', 'store', 'Checklist'], ['guide', 'help', 'Guide']];
+const offerHtml = (icon, unlock, txt) => `<div class="sp-offer"><span class="sp-pill">Offre Lancement · -83 %</span><h4>${txt}</h4><p><b>99 €/an</b>, soit 8,25 €/mois au lieu de 49 €/mois : ton plan complet + tout Shoplift Pro (radar, espion, agents) pendant 1 an.</p>
+  <button type="button" class="btn btn-main sp-unlock" data-start-unlock>${icon('unlock')} ${unlock}</button><small>Puis 89 € la 2e année, 79 € ensuite. Résiliable en 1 clic.</small></div>`;
+const TABS = [['today', 'zap', 'Aujourd’hui'], ['prog', 'target', 'Programme'], ['track', 'activity', 'Suivi'], ['goal', 'coins', 'Objectif & budget'], ['prods', 'radar', 'Produits'], ['content', 'pen', 'Contenus'], ['check', 'store', 'Checklist'], ['guide', 'help', 'Guide']];
 
 export function starterHtml(p, { icon = () => '', start = Date.now(), unlock = 'Débloquer mon plan complet' } = {}) {
   const lockBtn = (txt = unlock) => `<button type="button" class="btn btn-main sp-unlock" data-start-unlock>${icon('unlock')} ${txt}</button>`;
+  const offer = (txt) => offerHtml(icon, unlock, txt);
   const copyBtn = (text, label) => `<button type="button" class="sp-copy" data-copy="${esc(text)}" data-copy-label="${esc(label)}">${icon('copy')} Copier</button>`;
   const card = (title, body, copy) => `<div class="sp-card"><h4>${title}${copy || ''}</h4>${body}</div>`;
   const prod = (x) => (x.locked
@@ -185,12 +188,13 @@ export function starterHtml(p, { icon = () => '', start = Date.now(), unlock = '
     : `<div class="sp-prod"><span class="sp-img">${img(x.image) ? `<img src="${img(x.image)}" alt="" loading="lazy" decoding="async">` : ''}<em>${x.score}/100</em></span><b>${esc(x.title)}</b>
       ${x.resale ? `<small>Revente conseillée : ${eur(x.resale.low, x.currency)} à ${eur(x.resale.high, x.currency)}</small>` : ''}<ul>${x.reasons.map((r) => `<li>${esc(r)}</li>`).join('')}</ul>
       ${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener nofollow">Voir chez le vendeur →</a>` : ''}</div>`);
-  const ctaLocked = (txt) => (p.locked ? `<div class="sp-cta"><p>${txt}</p>${lockBtn()}</div>` : '');
+  const ctaLocked = (txt) => (p.locked ? offer(txt) : '');
   const c = p.content, b = p.budget, g = p.goal, N = p.niche;
   const weeks = [1, 2, 3, 4].map((w) => {
     const list = p.days.filter((d) => d.week === w);
     return `<div class="sp-wk"><p class="sp-k">Semaine ${w} · ${dur(list.reduce((s, d) => s + d.min, 0))}</p><h4>${esc(list[0].weekTitle)}</h4>
-      ${list.map((d) => `<button type="button" class="sp-row${d.locked ? ' is-locked' : ''}" data-open-day="${d.d}"><span class="sp-dn">${d.d}</span><span class="sp-rt"><b>${esc(d.title)}</b><i>${when(start, d.d, p.answers.time)} · ${dur(d.min)}</i></span>${icon(d.locked ? 'lock' : 'arrow')}</button>`).join('')}</div>`;
+      ${list.map((d) => `<button type="button" class="sp-row${d.locked ? ' is-locked' : ''}" data-open-day="${d.d}"><span class="sp-dn">${d.d}</span><span class="sp-rt"><b>${esc(d.title)}</b><i>${when(start, d.d, p.answers.time)} · ${dur(d.min)}</i></span>${icon(d.locked ? 'lock' : 'arrow')}</button>`).join('')}
+      <div class="sp-cp"><p class="sp-k">${icon('award')} Bilan de la semaine ${w}</p>${p.weekCheck[w - 1].map((t, i) => `<label><input type="checkbox" data-cp="${w}-${i}"><span>${esc(t)}</span></label>`).join('')}</div></div>`;
   }).join('');
   const contents = [
     card('Noms de boutique', `<p class="sp-names">${c.names.map((n) => `<span>${esc(n)}</span>`).join('')}</p><small>${esc(c.namesNote)}</small>`),
@@ -203,7 +207,7 @@ export function starterHtml(p, { icon = () => '', start = Date.now(), unlock = '
       card('Livraison et retours', `<pre>${esc(c.shipping)}</pre>`, copyBtn(c.shipping, 'Page Livraison et retours')),
       card('Message pour ton agent', `<pre>${esc(c.agent)}</pre><small>En anglais, la langue des agents. Envoie-le sur WhatsApp depuis l’onglet Agents.</small>`, copyBtn(c.agent, 'Message pour l’agent')),
     ]),
-    c.locked ? `<div class="sp-card is-locked"><h4>${icon('lock')} Encore ${c.more.length} contenus prêts</h4><ul class="sp-list">${c.more.map((m) => `<li>${esc(m)}</li>`).join('')}</ul>${lockBtn()}</div>` : '',
+    c.locked ? `<div class="sp-card is-locked"><h4>${icon('lock')} Encore ${c.more.length} contenus prêts</h4><ul class="sp-list">${c.more.map((m) => `<li>${esc(m)}</li>`).join('')}</ul></div>${offer('Débloque tous tes contenus prêts à copier')}` : '',
   ].join('');
   const left = p.checklist.filter((t) => t === null).length;
   const panels = {
@@ -212,6 +216,12 @@ export function starterHtml(p, { icon = () => '', start = Date.now(), unlock = '
       ${ctaLocked('Les jours 1 à 7 sont offerts. Débloque les 23 missions suivantes : boutique, vidéos, lancement et premières ventes.')}
       <h3 class="sp-h">${icon('trend')} Et après les 30 jours ?</h3>
       <div class="sp-road">${p.roadmap.map(([w, t, x]) => `<div class="sp-card${x ? '' : ' is-locked'}"><p class="sp-k">${esc(w)}</p><h4>${esc(t)}</h4>${x ? `<p>${esc(x)}</p>` : `<p class="sp-blur">${icon('lock')} Inclus dans le plan complet</p>`}</div>`).join('')}</div>`,
+    track: `<p class="sp-note">Note tes chiffres chaque soir (2 minutes) : tu sauras quoi garder et quoi couper. Tout reste sur ton appareil.</p>
+      <form class="sp-card sp-log" data-log><div class="sp-in"><label>Date<input type="date" name="day" required></label><label>Vues vidéos<input type="number" name="views" min="0" inputmode="numeric" placeholder="0"></label>
+        <label>Visites boutique<input type="number" name="visits" min="0" inputmode="numeric" placeholder="0"></label><label>Ventes<input type="number" name="sales" min="0" inputmode="numeric" placeholder="0"></label>
+        <label>Chiffre d’affaires (€)<input type="number" name="ca" min="0" step="0.01" inputmode="decimal" placeholder="0"></label><label>Dépenses (€)<input type="number" name="spend" min="0" step="0.01" inputmode="decimal" placeholder="0"></label></div>
+        <button type="submit" class="btn btn-main">${icon('check')} Enregistrer ma journée</button></form>
+      <div data-logout></div>`,
     goal: `<div class="sp-out4">${g.target ? `<div><small>Bénéfice visé</small><b>${eur(g.target)}/mois</b></div><div><small>Ventes nécessaires</small><b>≈ ${g.sales.toLocaleString('fr-FR')}/mois</b></div><div><small>Soit par jour</small><b>≈ ${String(g.perDay).replace('.', ',')}</b></div><div><small>Visites à prévoir</small><b>≈ ${g.visits.toLocaleString('fr-FR')}/mois</b></div>`
       : `<div><small>Objectif</small><b>1re vente</b></div><div><small>Visites à prévoir</small><b>50 à 100</b></div><div><small>Prix conseillé</small><b>≈ ${eur(g.price)}</b></div><div><small>Marge estimée</small><b>≈ ${eur(g.margin)}</b></div>`}</div>
       <p class="sp-note">Estimation sur un prix de vente d’environ ${eur(g.price)} et une marge d’environ ${eur(g.margin)} par vente (35 %), avec 2 visiteurs sur 100 qui achètent. Affine avec le calculateur ci-dessous.</p>
@@ -271,7 +281,7 @@ export function burst(el) {
 export function bindStarter(root, p, { icon = () => '', start = Date.now(), unlock = 'Débloquer mon plan complet' } = {}) {
   const sp = root.querySelector('[data-sp]');
   if (!sp) return;
-  const days = mem.get('sl_days'), steps = mem.get('sl_steps'), check = mem.get('sl_check');
+  const days = mem.get('sl_days'), steps = mem.get('sl_steps'), check = mem.get('sl_check'), cps = mem.get('sl_cp'), log = mem.get('sl_log');
   const firstOpen = () => (p.days.find((d) => !d.locked && !days[d.d]) || p.days.find((d) => d.locked) || p.days[29]).d;
   let cur = firstOpen();
   const tab = (id) => {
@@ -298,8 +308,8 @@ export function bindStarter(root, p, { icon = () => '', start = Date.now(), unlo
     const dots = `<div class="sp-dots">${p.days.map((x) => `<button type="button" class="${days[x.d] ? 'done' : ''}${x.d === cur ? ' cur' : ''}${x.locked ? ' lock' : ''}" data-open-day="${x.d}" aria-label="Jour ${x.d}"></button>`).join('')}</div>`;
     if (d.locked) {
       out.innerHTML = `${dots}<div class="sp-today is-locked"><span class="sp-pill">Jour ${d.d} sur 30</span><h3>${esc(d.title)}</h3>
-        <p class="sp-why">Bravo, tu as fini la partie offerte. La suite de ton plan est prête : ${30 - 7} missions détaillées pour monter ta boutique, lancer tes vidéos et faire tes premières ventes.</p>
-        <button type="button" class="btn btn-main sp-unlock" data-start-unlock>${icon('unlock')} ${unlock}</button></div>`;
+        <p class="sp-why">La suite de ton plan est prête : ${30 - 7} missions détaillées pour monter ta boutique, lancer tes vidéos et faire tes premières ventes.</p></div>
+        ${offerHtml(icon, unlock, 'Débloque les 23 missions suivantes')}`;
       return;
     }
     const n = d.steps.filter((_, i) => steps[`${d.d}-${i}`]).length;
@@ -329,12 +339,38 @@ export function bindStarter(root, p, { icon = () => '', start = Date.now(), unlo
         : price < cost * 2.5 ? `Marge serrée : vise au moins ${eur(cost * 2.5)} de prix de vente (2,5 fois ton coût).`
           : `Bonne marge. En pub, chaque euro dépensé doit rapporter au moins ${(price / m).toFixed(1).replace('.', ',')} € de ventes pour être rentable.`);
   });
+  // Suivi quotidien : vues, visites, ventes, chiffre d'affaires, dépenses (14 derniers jours + totaux).
+  const track = () => {
+    const out = sp.querySelector('[data-logout]'), rows = Object.entries(log).sort((x, y) => (x[0] < y[0] ? 1 : -1));
+    if (!rows.length) { out.innerHTML = '<p class="sp-note">Ta première journée enregistrée apparaîtra ici, avec tes totaux et ton taux de conversion.</p>'; return; }
+    const sum = (k) => rows.reduce((s, [, r]) => s + (Number(r[k]) || 0), 0), vis = sum('visits'), sal = sum('sales');
+    const max = Math.max(1, ...rows.slice(0, 14).map(([, r]) => Number(r.visits) || 0));
+    const fmtD = (d) => new Date(`${d}T12:00:00`).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+    out.innerHTML = `<div class="sp-out4"><div><small>Visites</small><b>${vis.toLocaleString('fr-FR')}</b></div><div><small>Ventes</small><b>${sal}</b></div>
+      <div><small>Conversion</small><b>${vis ? `${((sal / vis) * 100).toFixed(1).replace('.', ',')} %` : '–'}</b></div><div><small>CA − dépenses</small><b>${eur(sum('ca') - sum('spend'))}</b></div></div>
+      <div class="sp-card"><p class="sp-k">Visites par jour</p><div class="sp-chart">${rows.slice(0, 14).reverse().map(([d, r]) => `<span title="${fmtD(d)}"><i style="height:${Math.max(4, ((Number(r.visits) || 0) / max) * 100)}%"></i><small>${fmtD(d).split(' ')[0]}</small></span>`).join('')}</div></div>
+      <div class="sp-card"><table class="sp-tab sp-logtab"><tr><td>Jour</td><td>Vues</td><td>Visites</td><td>Ventes</td><td></td></tr>${rows.slice(0, 14).map(([d, r]) => `<tr><td>${fmtD(d)}</td><td>${Number(r.views) || 0}</td><td>${Number(r.visits) || 0}</td><td>${Number(r.sales) || 0}</td><td><button type="button" class="sp-del" data-del="${esc(d)}" aria-label="Supprimer">${icon('x')}</button></td></tr>`).join('')}</table></div>`;
+  };
+  const form = sp.querySelector('[data-log]');
+  if (form) {
+    form.day.value = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const f = Object.fromEntries(new FormData(form));
+      log[f.day] = { views: f.views, visits: f.visits, sales: f.sales, ca: f.ca, spend: f.spend };
+      mem.set('sl_log', log); track(); burst(form.querySelector('button'));
+      ['views', 'visits', 'sales', 'ca', 'spend'].forEach((k) => { form[k].value = ''; });
+    });
+  }
   sp.querySelectorAll('[data-check]').forEach((x) => { x.checked = !!check[x.dataset.check]; });
+  sp.querySelectorAll('[data-cp]').forEach((x) => { x.checked = !!cps[x.dataset.cp]; });
   sp.addEventListener('click', (e) => {
     const t = e.target.closest('[data-tab-sp]'); if (t) return tab(t.dataset.tabSp);
     if (e.target.closest('[data-more]')) { sp.querySelector('.sp-more').hidden = false; e.target.closest('[data-more]').remove(); return; }
     const o = e.target.closest('[data-open-day]');
     if (o) { cur = Number(o.dataset.openDay); today(); return tab('today'); }
+    const del = e.target.closest('[data-del]');
+    if (del) { delete log[del.dataset.del]; mem.set('sl_log', log); return track(); }
     const st = e.target.closest('[data-step]');
     if (st) { steps[st.dataset.step] = !steps[st.dataset.step]; mem.set('sl_steps', steps); return today(); }
     const mv = e.target.closest('[data-day-move]');
@@ -349,7 +385,9 @@ export function bindStarter(root, p, { icon = () => '', start = Date.now(), unlo
   sp.addEventListener('change', (e) => {
     const c = e.target.closest('[data-check]');
     if (c) { check[c.dataset.check] = c.checked; mem.set('sl_check', check); }
+    const k = e.target.closest('[data-cp]');
+    if (k) { cps[k.dataset.cp] = k.checked; mem.set('sl_cp', cps); if (k.checked && [...k.closest('.sp-cp').querySelectorAll('input')].every((x) => x.checked)) burst(k); }
   });
   sp.addEventListener('input', (e) => { if (e.target.closest('[data-calc]')) calc(); });
-  progress(); today(); calc();
+  progress(); today(); calc(); track();
 }

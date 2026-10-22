@@ -4,7 +4,25 @@ export const PLANS = {
   basic: { name: 'Basique', price: 1900, rank: 1 },
   pro: { name: 'Pro', price: 4900, rank: 2 },
   scale: { name: 'Scale', price: 9900, rank: 3 },
+  // Offre annuelle « Lancement » : plan débutant complet + tout Pro pendant 1 an, payée une fois par an.
+  launch: { name: 'Lancement', price: 9900, rank: 2, interval: 'year', tier: 'pro' },
 };
+// Offre équivalente pour les quotas (Lancement = Pro).
+export const tier = (plan) => PLANS[plan]?.tier || plan;
+
+// Prix fidélité : tant que l'abonnement continue, le prix baisse. Résilié puis repris = retour au prix de départ.
+// Mensuel : -5 % par mois d'ancienneté, jusqu'à -30 %. Annuel : 99 € la 1re année, 89 € la 2e, 79 € ensuite.
+export const LOYALTY = { step: 0.05, floor: 0.7, yearly: [9900, 8900, 7900] };
+// Nombre de mois entiers entre deux dates (UTC), comme les échéances Stripe (même jour du mois).
+const monthsBetween = (a, b) => (b.getUTCFullYear() - a.getUTCFullYear()) * 12 + b.getUTCMonth() - a.getUTCMonth() - (b.getUTCDate() < a.getUTCDate() ? 1 : 0);
+// Prix (en centimes) de la PROCHAINE échéance d'un abonnement démarré à `startMs`.
+export function loyalPrice(plan, startMs, nowMs = Date.now()) {
+  const p = PLANS[plan];
+  if (!p?.price) return 0;
+  const done = Math.max(0, monthsBetween(new Date(startMs), new Date(nowMs))); // mois entiers déjà écoulés
+  if (p.interval === 'year') return LOYALTY.yearly[Math.min(LOYALTY.yearly.length - 1, Math.floor(done / 12) + 1)];
+  return Math.round((p.price * Math.max(LOYALTY.floor, 1 - LOYALTY.step * (done + 1))) / 10) * 10;
+}
 
 // Fonctionnalité → offre minimale.
 export const FEATURES = {
@@ -38,7 +56,7 @@ export const lockItems = (items, keep) => items.map((item, i) => (i < keep ? ite
 
 // Espion selon l'offre : Test = aperçu, Basique = conseils + graphiques + top 3, Pro/Scale = tout.
 export function lockSpy(report, plan) {
-  const lim = SPY_LIMITS[plan] || SPY_LIMITS.test;
+  const lim = SPY_LIMITS[tier(plan)] || SPY_LIMITS.test;
   const r = { ...report, level: can(plan, 'spy') ? 'full' : can(plan, 'spyInsights') ? 'insights' : 'teaser' };
   r.bestsellers = lockItems(report.bestsellers, lim.items);
   r.launches = lockItems(report.launches, lim.items);
