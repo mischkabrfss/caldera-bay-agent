@@ -12,6 +12,27 @@ Objectifs : en ligne avant le 05/11/2026 · Black Friday 27/11/2026 · Noël
 - Thème dupliqué : **SOVRY-backup-2026-10-27** (id 208177987927, non publié), copie du thème actif « Horizon ».
 - Aucun produit, page, menu ou thème n'a été modifié.
 
+### 2026-10-27 — Validation du propriétaire
+- Produit principal : plaid/poncho **sans fil USB 5 V**. Le « Velours XL » filaire est abandonné.
+- Boutique sous mot de passe pendant la transition : oui (action à faire par toi).
+- Étape 2 validée.
+- Échantillon : accord de principe (~18 € + port), **uniquement après** validation du fournisseur, du coût total, du modèle exact et des documents. Aucun achat sans accord final sur le montant.
+
+### 2026-10-27 — Étape 2 : Remise à zéro ✅ (sauf 1 point manuel)
+- 5 produits **archivés** (réversible : Produits › filtre Archivé › Définir comme brouillon) :
+  Cloud — Canapé design gris (était ACTIF à 0 €), SOVRY Ligne — Lit escamotable, Plaid chauffant USB zip, Kit crochet Capybara, Plaid chauffant velours XL.
+- Menu principal : remplacé par **Accueil** + **Aide & Contact**. L'ancien contenu est noté plus bas (« État constaté »).
+- Pages **dépubliées** (pas supprimées) : Notre Histoire, FAQ, Livraison, Retours. Aide & Contact reste en ligne, Conseils était déjà masquée.
+- Thème de travail créé : **SOVRY-plaid-2026** (id 208178872663, non publié). Le thème actif Horizon n'a pas été modifié.
+- ⚠️ **Retrait de la collection « Canapés design » refusé par le connecteur** (règle de sécurité). Elle est vide côté client, puisque son produit est archivé. À faire par toi : Produits › Collections › Canapés design › Canaux de vente › décocher Boutique en ligne et Shop.
+
+### 2026-10-27 — Étape 3 : Sourcing (1er tour) ✅ → `sovry/fournisseurs.md`
+- Alibaba et Global Sources bloquent la lecture automatique. Aucun navigateur réel (Chrome ou contrôle d'ordinateur) n'est disponible dans cette session cloud. Le blocage n'a pas été contourné : l'analyse repose sur ton brief et des sources web publiques.
+- Notes provisoires : CJ (canal de lancement) 7,5 · Mydays 7 · Heatmate 5 · Maxtop 4,5 · Texpro 4 · Lixiang 4 · marques UE 3 · Ningbo 3 · AliExpress Local Depot 2 (écartée).
+- Décision proposée : lancement via **CJ, stock à Francfort**, avec Mydays en parallèle (stockage possible chez CJ DE).
+- Correctif réglementaire : la LVD ne s'applique pas en 5 V. On exige à la place la DoC EMC+RoHS, le rapport EN 60335-2-17, UN38.3/MSDS et la personne responsable GPSR.
+- Messages fournisseurs en anglais rédigés (Mydays, Heatmate, CJ Sourcing).
+
 ## État constaté (avant remise à zéro)
 | Élément | Détail |
 |---|---|
@@ -30,9 +51,15 @@ Points à corriger repérés dans les brouillons plaid :
 - Les sauvegardes et les contenus sont stockés dans `sovry/` (dépôt git, branche claude/trusting-ptolemy-a2csbm).
 
 ## Reste à faire
-- [ ] Validation du plan des étapes 2 à 5 par le propriétaire
-- [ ] Étape 2 : remise à zéro réversible
-- [ ] Étape 3 : sourcing et notation des fournisseurs, messages à envoyer
+### Toi
+- [ ] Mettre la boutique sous mot de passe : Boutique en ligne › Préférences › Protection par mot de passe
+- [ ] Retirer « Canapés design » des canaux Boutique en ligne et Shop
+- [ ] Envoyer les messages A (Mydays) et B (Heatmate) sur Alibaba
+- [ ] Créer un compte CJ Dropshipping (gratuit), envoyer le message C via « Sourcing », chercher « heated blanket USB » avec le filtre entrepôt DE, et me coller les liens et les prix
+- [ ] Me coller les réponses des fournisseurs (et les PDF des certificats)
+### Moi
+- [ ] Étape 3 : notes définitives dès réception des réponses et documents
+- [ ] Étape 5 (préparable dès maintenant) : noms + domaines, page produit, pages légales, prix, offres BF, flux Merchant Center
 - [ ] Étape 4 : connexion du fournisseur à Shopify
 - [ ] Étape 5 : boutique mono-produit
 - [ ] Étape 6 : check-list de lancement
