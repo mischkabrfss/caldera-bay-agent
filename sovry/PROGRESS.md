@@ -33,6 +33,15 @@ Objectifs : en ligne avant le 05/11/2026 · Black Friday 27/11/2026 · Noël
 - Correctif réglementaire : la LVD ne s'applique pas en 5 V. On exige à la place la DoC EMC+RoHS, le rapport EN 60335-2-17, UN38.3/MSDS et la personne responsable GPSR.
 - Messages fournisseurs en anglais rédigés (Mydays, Heatmate, CJ Sourcing).
 
+### 2026-10-27 — Autorisation permanente du propriétaire
+- « Ne me demande plus l'autorisation, j'accepte tout sauf les paiements. »
+- Toujours exclus : tout paiement, abonnement ou commande. Par prudence, je garde aussi : aucune suppression définitive (archiver ou masquer à la place) et une validation finale avant la mise en ligne publique.
+
+### 2026-10-27 — Étape 5 : préparation ✅ → `sovry/etape5.md`
+- 5 noms avec domaines vérifiés : SOVRY (sovry.fr), **Ponchaud (ponchaud.fr, recommandé)**, FroidFini (.fr), Chaleur Nomade (.com), Câlin Chaud (.com).
+- 6 pages légales créées et **masquées** : mentions-legales, cgv, retractation, politique-livraison, politique-retours, confidentialite. Les champs [ENTRE CROCHETS] sont à compléter.
+- Grille de prix (84,90 / 89,90 €), offres BF honnêtes, structure de la page produit, plan Merchant Center.
+
 ## État constaté (avant remise à zéro)
 | Élément | Détail |
 |---|---|
@@ -57,6 +66,9 @@ Points à corriger repérés dans les brouillons plaid :
 - [ ] Envoyer les messages A (Mydays) et B (Heatmate) sur Alibaba
 - [ ] Créer un compte CJ Dropshipping (gratuit), envoyer le message C via « Sourcing », chercher « heated blanket USB » avec le filtre entrepôt DE, et me coller les liens et les prix
 - [ ] Me coller les réponses des fournisseurs (et les PDF des certificats)
+- [ ] Choisir le nom de marque, puis acheter le domaine (paiement)
+- [ ] M'envoyer : nom, adresse, SIRET, e-mail et téléphone pros (pour les pages légales)
+- [ ] Choisir un médiateur de la consommation et s'inscrire à la REP DEEE / piles (IDU)
 ### Moi
 - [ ] Étape 3 : notes définitives dès réception des réponses et documents
 - [ ] Lire le Google Doc « SOVRY – Rapport sourcing plaid » produit par la session Claude Desktop (prompt : sovry/PROMPT-recherche-auto.md)
