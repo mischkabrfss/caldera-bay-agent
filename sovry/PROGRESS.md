@@ -59,6 +59,7 @@ Points à corriger repérés dans les brouillons plaid :
 - [ ] Me coller les réponses des fournisseurs (et les PDF des certificats)
 ### Moi
 - [ ] Étape 3 : notes définitives dès réception des réponses et documents
+- [ ] Lire le Google Doc « SOVRY – Rapport sourcing plaid » produit par la session Claude Desktop (prompt : sovry/PROMPT-recherche-auto.md)
 - [ ] Étape 5 (préparable dès maintenant) : noms + domaines, page produit, pages légales, prix, offres BF, flux Merchant Center
 - [ ] Étape 4 : connexion du fournisseur à Shopify
 - [ ] Étape 5 : boutique mono-produit
